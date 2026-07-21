@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export", // xuất tĩnh -> deploy Netlify một chạm (chưa cần server)
+  images: { unoptimized: true },
+  trailingSlash: true,
 };
 
 export default nextConfig;
