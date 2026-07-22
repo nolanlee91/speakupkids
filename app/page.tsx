@@ -60,7 +60,6 @@ export default function App() {
   const [menu, setMenu] = useState(false);
   const [reward, setReward] = useState<Reward | null>(null);
   const [showSplash, setShowSplash] = useState(false);
-  const [selWorld, setSelWorld] = useState<World | null>(null);
   const lessons = useMemo(() => (ready ? allLessons() : []), [ready]);
 
   useEffect(() => {
@@ -130,14 +129,12 @@ export default function App() {
 
   return (
     <div id="app">
-      <div className="topbar">
-        <button className="avatar" onClick={() => setMenu((m) => !m)} aria-label="Tài khoản">{state.avatar}</button>
-        <div className="who">
-          <div className="hi">Xin chào,</div>
-          <div className="nm">{state.nickname || "bạn nhỏ"}</div>
+      <header className={`hud ${view === "home" ? "on-scene" : ""}`}>
+        <button className="hud-avatar" onClick={() => setMenu((m) => !m)} aria-label="Tài khoản">{state.avatar}</button>
+        <div className="hud-tokens">
+          <span className="wtag fire">🔥 {state.streak}</span>
+          <span className="wtag star">⭐ {stars}</span>
         </div>
-        <span className="chip fire">🔥 {state.streak}</span>
-        <span className="chip sun">⭐ {stars}</span>
         {menu && (
           <>
             <div className="menu-back" onClick={() => setMenu(false)} />
@@ -148,11 +145,11 @@ export default function App() {
             </div>
           </>
         )}
-      </div>
+      </header>
 
-      <div className="wrap">
-        {view === "home" && <Home state={state} stopDone={stopDone} setView={setView} launchStop={launchStop} openWorld={(w) => { setSelWorld(w); setView("adventure"); }} />}
-        {view === "adventure" && <Adventure state={state} stopDone={stopDone} launchStop={launchStop} sel={selWorld} setSel={setSelWorld} />}
+      <div className={`wrap ${view === "home" || view === "adventure" ? "wide" : ""}`}>
+        {view === "home" && <Home state={state} stopDone={stopDone} setView={setView} launchStop={launchStop} />}
+        {view === "adventure" && <Adventure state={state} stopDone={stopDone} launchStop={launchStop} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: FIRST_REF[kind], recId: "quick-" + kind, title: "Trò chơi" })} />}
         {view === "speak" && <SpeakLab lessons={lessons} onEcho={() => launch({ kind: "echo", recId: "quick-echo", sticker: "st-mic", title: "Echo" })} onTalk={() => launch({ kind: "talk", refId: "pt-park", recId: "quick-talk", title: "Picture Talk" })} openLesson={openLesson} />}
         {view === "collection" && <Collection state={state} lessons={lessons} stars={stars} />}
@@ -225,108 +222,132 @@ export default function App() {
   );
 }
 
-/* ==================== HOME ==================== */
-function Home({ state, stopDone, setView, launchStop, openWorld }: {
+/* ==================== Helpers dùng chung ==================== */
+const KIND_EMOJI: Record<StopKind, string> = { picdet: "🔎", puzzle: "🧩", riddle: "🦉", talk: "💬", echo: "🎤", shadow: "🎬" };
+// scenery theme cho mỗi thế giới (đổi phong cảnh nhưng nối liền thành 1 hành trình)
+const WORLD_THEME: Record<string, string> = {
+  "everyday-town": "town", school: "school", forest: "forest",
+  vancouver: "coast", story: "library", space: "space",
+};
+
+/* ==================== HOME — arrival scene ==================== */
+function Home({ state, stopDone, setView, launchStop }: {
   state: AppState; stopDone: (id: string) => boolean; setView: (v: View) => void;
-  launchStop: (st: Stop, w: World) => void; openWorld: (w: World) => void;
+  launchStop: (st: Stop, w: World) => void;
 }) {
   const world = WORLDS[0]; // Everyday Town
   const doneCount = world.stops.filter((s) => stopDone(s.id)).length;
   const nextStop = world.stops.find((s) => !stopDone(s.id)) || world.stops[0];
   const goal = 3;
   const pct = Math.min(100, Math.round((state.dailyDone / goal) * 100));
-  const kindEmoji: Record<StopKind, string> = { picdet: "🔎", puzzle: "🧩", riddle: "🦉", talk: "💬", echo: "🎤", shadow: "🎬" };
+  const name = state.nickname || "bạn nhỏ";
 
   return (
-    <section className="view">
-      <div className="homehero">
-        <div className="hh-glass">
-          <div className="hh-hi">Chào {state.nickname || "bạn nhỏ"}! 👋</div>
-          <div className="hh-sub">Cùng Maple chơi, giải đố và nói tiếng Anh nhé!</div>
-          <button className="btn" onClick={() => launchStop(nextStop, world)}>▶ Nhiệm vụ hôm nay</button>
+    <section className="home">
+      {/* --- Cảnh chào đón toàn khung: Maple đứng trong thế giới --- */}
+      <div className="arrival fullbleed">
+        <div className="arrival-copy">
+          <div className="hello-sign">Chào {name}! <span className="hs-wave">👋</span></div>
+          <p className="arrival-line">Cùng Maple bước vào thế giới tiếng Anh hôm nay nhé!</p>
+          <button className="quest-btn" onClick={() => launchStop(nextStop, world)}>
+            <span className="qb-ic">{KIND_EMOJI[nextStop.kind]}</span> Tiếp tục phiêu lưu
+          </button>
+        </div>
+        <div className="arrival-flag" aria-hidden="true">
+          <span className="flag-emoji">🍁</span>
+          <span className="flag-txt">{doneCount}/{world.stops.length} chặng</span>
         </div>
       </div>
 
-      {/* Nhiệm vụ hôm nay */}
-      <div className="section-title"><h2>🎯 Nhiệm vụ hôm nay</h2></div>
-      <div className="card mission" onClick={() => launchStop(nextStop, world)}>
-        <div className="mission-ic">{kindEmoji[nextStop.kind]}</div>
-        <div className="mission-info">
-          <div className="k">{world.emoji} {world.name}</div>
-          <div className="t">{nextStop.label} — {nextStop.vi}</div>
-        </div>
-        <span className="btn sm">Chơi ▶</span>
-      </div>
-
-      {/* Tiếp tục hành trình */}
-      <div className="section-title"><h2>🗺️ Tiếp tục hành trình</h2><span className="more" onClick={() => setView("adventure")}>Xem bản đồ →</span></div>
-      <div className="card world-continue" style={{ "--zt": world.tint } as React.CSSProperties} onClick={() => openWorld(world)}>
-        <div className="wc-emoji">{world.emoji}</div>
-        <div style={{ flex: 1 }}>
-          <div className="wc-name">{world.name}</div>
-          <div className="wc-sub">{world.sub}</div>
-          <div className="goalbar"><i style={{ width: `${(doneCount / world.stops.length) * 100}%` }} /></div>
-        </div>
-        <span className="chip">{doneCount}/{world.stops.length}</span>
-      </div>
-
-      {/* Thử thách hằng ngày */}
-      <div className="section-title"><h2>🔥 Thử thách hằng ngày</h2></div>
-      <div className="card" style={{ padding: 14 }}>
-        <div style={{ fontWeight: 700 }}>{state.dailyDone >= goal ? "🎉 Hoàn thành thử thách hôm nay! Giỏi quá!" : `Chơi ${goal} hoạt động hôm nay (${state.dailyDone}/${goal})`}</div>
-        <div className="goalbar"><i style={{ width: `${pct}%` }} /></div>
-      </div>
-
-      {/* Game đề xuất */}
-      <div className="section-title"><h2>🎮 Chơi ngay</h2><span className="more" onClick={() => setView("games")}>Tất cả game →</span></div>
-      <div className="game-row">
-        {GAMES.map((g) => (
-          <div key={g.id} className="minigame" style={{ "--zt": g.tint } as React.CSSProperties} onClick={() => setView("games")}>
-            <div className="mg-emoji">{g.emoji}</div>
-            <div className="mg-name">{g.vi}</div>
+      {/* --- Hành trình hôm nay: các cột mốc nối trên một con đường --- */}
+      <h2 className="chapter">Hôm nay của bạn</h2>
+      <ol className="daypath">
+        <li className="cp cp-now" onClick={() => launchStop(nextStop, world)}>
+          <span className="cp-dot">{KIND_EMOJI[nextStop.kind]}</span>
+          <div className="cp-body">
+            <div className="cp-k">Nhiệm vụ tiếp theo · {world.name}</div>
+            <div className="cp-t">{nextStop.label} — {nextStop.vi}</div>
           </div>
-        ))}
-      </div>
+          <span className="cp-go">▶</span>
+        </li>
+        <li className="cp">
+          <span className="cp-dot ch">🔥</span>
+          <div className="cp-body">
+            <div className="cp-k">Thử thách hằng ngày</div>
+            <div className="cp-t">{state.dailyDone >= goal ? "Hoàn thành hôm nay — giỏi quá! 🎉" : `Chơi ${goal} hoạt động (${state.dailyDone}/${goal})`}</div>
+            <div className="cp-bar"><i style={{ width: `${pct}%` }} /></div>
+          </div>
+        </li>
+        <li className="cp cp-reward">
+          <span className="cp-dot rw">🎁</span>
+          <div className="cp-body">
+            <div className="cp-k">Phần thưởng cuối chặng</div>
+            <div className="cp-t">Hoàn thành để nhận sticker mới cho sổ tay!</div>
+          </div>
+        </li>
+      </ol>
+
+      {/* --- Cụm dẫn vào Sân chơi --- */}
+      <button className="play-teaser" onClick={() => setView("games")}>
+        <span className="pt-scene" aria-hidden="true">
+          {GAMES.map((g, i) => <span key={g.id} className="pt-orb" style={{ "--i": i } as React.CSSProperties}>{g.emoji}</span>)}
+        </span>
+        <span className="pt-copy">
+          <span className="pt-t">Vào sân chơi của Maple</span>
+          <span className="pt-s">4 trò chơi đang đợi bạn</span>
+        </span>
+        <span className="cp-go">▶</span>
+      </button>
     </section>
   );
 }
 
-/* ==================== ADVENTURE ==================== */
-function Adventure({ state, stopDone, launchStop, sel, setSel }: {
-  state: AppState; stopDone: (id: string) => boolean;
-  launchStop: (st: Stop, w: World) => void; sel: World | null; setSel: (w: World | null) => void;
+/* ==================== ADVENTURE — một bản đồ cuộn dọc liên tục ==================== */
+function Adventure({ state, stopDone, launchStop }: {
+  state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void;
 }) {
-  if (sel) return <WorldView world={sel} state={state} stopDone={stopDone} launchStop={launchStop} back={() => setSel(null)} />;
   return (
-    <section className="view">
-      <div className="section-title"><h2>🗺️ Bản đồ phiêu lưu</h2></div>
-      <p style={{ color: "var(--muted)", marginTop: -6 }}>Chọn một thế giới để bắt đầu chuyến phiêu lưu tiếng Anh!</p>
-      <div className="worlds">
-        {WORLDS.map((w) => {
-          const dc = w.stops.filter((s) => stopDone(s.id)).length;
-          const locked = !w.ready;
-          return (
-            <div key={w.id} className={`card world ${locked ? "locked" : ""}`} style={{ "--zt": w.tint } as React.CSSProperties} onClick={() => w.ready && setSel(w)}>
-              <div className="w-emoji">{w.emoji}</div>
-              <div className="w-name">{w.name}</div>
-              <div className="w-vi">{w.vi}</div>
-              <div className="w-sub">{w.sub}</div>
-              {locked ? <span className="w-badge soon">🛠️ Sắp ra mắt</span> : <span className="w-badge">{dc}/{w.stops.length} ⭐</span>}
-            </div>
-          );
-        })}
+    <section className="worldmap">
+      <div className="wm-intro">
+        <h2 className="chapter light">Bản đồ phiêu lưu</h2>
+        <p className="wm-sub">Đi theo con đường, mở từng vùng đất mới cùng Maple.</p>
       </div>
+      {WORLDS.map((w) => (
+        <Region key={w.id} world={w} state={state} stopDone={stopDone} launchStop={launchStop} />
+      ))}
+      <div className="wm-end"><span>🏁</span>Còn nhiều vùng đất mới đang được vẽ…</div>
     </section>
   );
 }
 
-function WorldView({ world, state, stopDone, launchStop, back }: {
-  world: World; state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void; back: () => void;
+function Region({ world, state, stopDone, launchStop }: {
+  world: World; state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void;
 }) {
-  const kindEmoji: Record<StopKind, string> = { picdet: "🔎", puzzle: "🧩", riddle: "🦉", talk: "💬", echo: "🎤", shadow: "🎬" };
-  const XC = 170, AMP = 90, GAP = 120;
+  const theme = WORLD_THEME[world.id] || "town";
+  const dc = world.stops.filter((s) => stopDone(s.id)).length;
+  return (
+    <div className={`region theme-${theme} ${world.ready ? "" : "locked"}`}>
+      <div className="region-horizon" aria-hidden="true" />
+      <div className="region-head">
+        <span className="signpost">{world.emoji}</span>
+        <div className="region-name">{world.name}<small>{world.vi} · {world.sub}</small></div>
+        {world.ready
+          ? <span className="region-flag open">{dc}/{world.stops.length} ⭐</span>
+          : <span className="region-flag">🔒 Sắp mở</span>}
+      </div>
+      {world.ready
+        ? <WorldTrail world={world} state={state} stopDone={stopDone} launchStop={launchStop} />
+        : <div className="road-seg" aria-hidden="true"><span className="road-lock">🔒</span></div>}
+    </div>
+  );
+}
+
+function WorldTrail({ world, state, stopDone, launchStop }: {
+  world: World; state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void;
+}) {
+  const XC = 170, AMP = 92, GAP = 122;
   const pts = world.stops.map((_, i) => [i === 0 ? XC : i % 2 ? XC + AMP : XC - AMP, 56 + i * GAP] as [number, number]);
-  const H = world.stops.length ? 56 + (world.stops.length - 1) * GAP + 90 : 0;
+  const H = world.stops.length ? 56 + (world.stops.length - 1) * GAP + 92 : 0;
   let d = pts.length ? `M ${pts[0][0]} ${pts[0][1]}` : "";
   for (let i = 1; i < pts.length; i++) {
     const [x1, y1] = pts[i - 1], [x2, y2] = pts[i];
@@ -334,137 +355,150 @@ function WorldView({ world, state, stopDone, launchStop, back }: {
   }
   const nextIdx = world.stops.findIndex((s) => !stopDone(s.id));
   return (
-    <section className="view">
-      <div className="st-top"><button className="bk" onClick={back}>← Bản đồ</button><h3>{world.emoji} {world.name}</h3></div>
-      <div className="card zone" style={{ "--zt": world.tint } as React.CSSProperties}>
-        <div className="trail" style={{ height: H }}>
-          <svg width="340" height={H} viewBox={`0 0 340 ${H}`} aria-hidden="true">
-            <path d={d} fill="none" stroke="#dcc9a4" strokeWidth={7} strokeLinecap="round" strokeDasharray="1 15" />
-          </svg>
-          {world.stops.map((st, i) => {
-            const done = stopDone(st.id), cur = i === nextIdx;
-            const [x, y] = pts[i];
-            return (
-              <div key={st.id}>
-                <div className={`node ${done ? "done" : ""} ${cur ? "current" : ""}`} style={{ left: x, top: y }} onClick={() => launchStop(st, world)}>
-                  {done ? "✓" : kindEmoji[st.kind]}
-                </div>
-                <div className="nlabel" style={{ left: x, top: y + 40 }}>{st.label}<small>{st.vi}</small></div>
-                {cur && <img className="maple-here" src={`${GEN}mascot-wave.png`} alt="" style={{ left: x, top: y - 98 }} />}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <div className="trail" style={{ height: H }}>
+      <svg width="340" height={H} viewBox={`0 0 340 ${H}`} aria-hidden="true">
+        <path d={d} fill="none" stroke="rgba(255,255,255,.85)" strokeWidth={10} strokeLinecap="round" />
+        <path d={d} fill="none" stroke="#caa96f" strokeWidth={6} strokeLinecap="round" strokeDasharray="2 16" />
+      </svg>
+      {world.stops.map((st, i) => {
+        const done = stopDone(st.id), cur = i === nextIdx;
+        const [x, y] = pts[i];
+        return (
+          <div key={st.id}>
+            <button className={`node ${done ? "done" : ""} ${cur ? "current" : ""}`} style={{ left: x, top: y }}
+              onClick={() => launchStop(st, world)} aria-label={st.label}>
+              {done ? "✓" : KIND_EMOJI[st.kind]}
+            </button>
+            <div className="nlabel" style={{ left: x, top: y + 40 }}>{st.label}<small>{st.vi}</small></div>
+            {cur && <img className="maple-here" src={`${GEN}mascot-wave.png`} alt="" style={{ left: x, top: y - 100 }} />}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
-/* ==================== GAMES HUB ==================== */
+/* ==================== GAMES — sân chơi bất đối xứng ==================== */
 function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
+  const feat = GAMES[0];
+  const rest = GAMES.slice(1);
   return (
-    <section className="view">
-      <div className="section-title"><h2>🎮 Khu trò chơi</h2></div>
-      <p style={{ color: "var(--muted)", marginTop: -6 }}>Chọn một trò chơi để luyện tiếng Anh thật vui!</p>
-      <div className="grid">
-        {GAMES.map((g) => (
-          <div key={g.id} className="card gamecard" style={{ "--zt": g.tint } as React.CSSProperties} onClick={() => launch(g.id)}>
-            <div className="gc-thumb"><span className="gc-emoji">{g.emoji}</span><span className="gc-note">{g.assetNote}</span></div>
-            <div className="gc-body">
-              <div className="gc-name">{g.name}</div>
-              <div className="gc-vi">{g.vi}</div>
-              <div className="gc-blurb">{g.blurb}</div>
-              <span className="btn sm accent">Chơi ▶</span>
-            </div>
-          </div>
+    <section className="playground">
+      <h2 className="chapter">Sân chơi của Maple</h2>
+      <p className="pg-sub">Chọn một trò chơi để luyện tiếng Anh thật vui!</p>
+
+      <button className={`portal featured theme-g-${feat.id}`} onClick={() => launch(feat.id)}>
+        <span className="portal-scene" aria-hidden="true"><span className="portal-obj">{feat.emoji}</span></span>
+        <span className="portal-copy">
+          <span className="po-name">{feat.name}</span>
+          <span className="po-vi">{feat.vi}</span>
+          <span className="po-blurb">{feat.blurb}</span>
+          <span className="po-go">Vào chơi ▶</span>
+        </span>
+        <span className="portal-spec">{feat.assetNote}</span>
+      </button>
+
+      <div className="portal-row">
+        {rest.map((g, i) => (
+          <button key={g.id} className={`portal small theme-g-${g.id} pos-${i}`} onClick={() => launch(g.id)}>
+            <span className="portal-obj">{g.emoji}</span>
+            <span className="po-name sm">{g.vi}</span>
+            <span className="po-en">{g.name}</span>
+          </button>
         ))}
       </div>
     </section>
   );
 }
 
-/* ==================== SPEAK LAB ==================== */
+/* ==================== SPEAK LAB — sân khấu hội thoại với Maple ==================== */
 function SpeakLab({ lessons, onEcho, onTalk, openLesson }: {
   lessons: Lesson[]; onEcho: () => void; onTalk: () => void; openLesson: (id: string) => void;
 }) {
   const shadowable = lessons.filter((l) => l.lines.length > 0);
   return (
-    <section className="view">
-      <div className="section-title"><h2>🎤 Phòng luyện nói</h2></div>
-      <p style={{ color: "var(--muted)", marginTop: -6 }}>Nghe Maple đọc rồi nói theo — không chấm điểm, cứ nói thật vui!</p>
-      <div className="speak-modes">
-        <div className="card speakcard" onClick={onEcho}>
-          <div className="sc-emoji">🎤</div>
-          <div><div className="sc-name">Echo với Maple</div><div className="sc-sub">Nghe & nói theo từng câu ngắn</div></div>
-          <span className="btn sm">Bắt đầu ▶</span>
-        </div>
-        <div className="card speakcard" onClick={onTalk}>
-          <div className="sc-emoji">💬</div>
-          <div><div className="sc-name">Mô tả hình ảnh</div><div className="sc-sub">Nhìn tranh rồi tự nói thành câu</div></div>
-          <span className="btn sm">Bắt đầu ▶</span>
-        </div>
+    <section className="stage">
+      <div className="stage-scene fullbleed">
+        <div className="speech">Nghe mình đọc rồi nói theo nhé — cứ nói thật to! 🎶</div>
+        <img className="stage-maple" src={`${GEN}mascot-headphones.png`} alt="Maple đeo tai nghe" />
       </div>
 
-      <div className="section-title"><h2>🎬 Shadowing theo video</h2></div>
-      <p style={{ color: "var(--muted)", marginTop: -6, fontSize: ".85rem" }}>Xem video, chạm vào câu để nghe và tập nói theo.</p>
-      <div className="grid">
+      <h2 className="chapter">Chọn cách luyện nói</h2>
+      <div className="mode-objects">
+        <button className="mode-obj mic" onClick={onEcho}>
+          <span className="mo-ic">🎤</span>
+          <span className="mo-name">Echo với Maple</span>
+          <span className="mo-sub">Nghe & nói theo câu ngắn</span>
+        </button>
+        <button className="mode-obj frame" onClick={onTalk}>
+          <span className="mo-ic">🖼️</span>
+          <span className="mo-name">Mô tả hình ảnh</span>
+          <span className="mo-sub">Nhìn tranh rồi tự nói</span>
+        </button>
+      </div>
+
+      <h2 className="chapter">Shadowing theo video</h2>
+      <div className="filmstrip">
         {shadowable.map((l) => (
-          <div key={l.id} className="card lcard" onClick={() => openLesson(l.id)}>
-            <div className="thumb" style={{ backgroundImage: `url('${thumbFor(l)}')` }} />
-            <div className="body">
-              <div className="ttl">{l.title}</div>
-              <div className="meta">
-                <span className="badge lv">Level {l.level}</span>
-                <span className="badge">{l.skill}</span>
-                <span className={`badge ${l.free ? "free" : "pro"}`}>{l.free ? "Miễn phí" : "Premium"}</span>
-              </div>
-            </div>
-          </div>
+          <button key={l.id} className="film" onClick={() => openLesson(l.id)}>
+            <span className="film-thumb" style={{ backgroundImage: `url('${thumbFor(l)}')` }}>
+              {!l.free && <span className="film-lock">Premium</span>}
+            </span>
+            <span className="film-ttl">{l.title}</span>
+            <span className="film-meta">Level {l.level} · {l.skill}</span>
+          </button>
         ))}
       </div>
     </section>
   );
 }
 
-/* ==================== COLLECTION ==================== */
+/* ==================== COLLECTION — sổ tay sticker & kệ huy hiệu ==================== */
 function Collection({ state, lessons, stars }: { state: AppState; lessons: Lesson[]; stars: number }) {
   const got = new Set(state.stickers || []);
-  const statTiles: [string, number, string][] = [
-    ["🔥", state.streak, "ngày streak"],
+  const stamps: [string, number, string][] = [
+    ["🔥", state.streak, "ngày"],
     ["⭐", stars, "sao"],
-    ["🎮", gamesDone(state), "game xong"],
-    ["📖", totalLearned(state), "câu đã thuộc"],
+    ["🎮", gamesDone(state), "game"],
+    ["📖", totalLearned(state), "câu"],
   ];
   return (
-    <section className="view">
-      <div className="section-title"><h2>🎁 Kho báu của mình</h2></div>
-      <div className="card" style={{ padding: 14 }}>
-        <div className="col-head">🏅 Sticker sưu tầm ({got.size}/{STICKERS.length})</div>
-        <div className="stickers">
+    <section className="journal">
+      <div className="journal-head">
+        <img className="journal-maple" src={`${GEN}mascot-book.png`} alt="" />
+        <div>
+          <h2 className="chapter">Sổ tay phiêu lưu</h2>
+          <p className="journal-sub">Sticker & huy hiệu bạn sưu tầm được cùng Maple</p>
+        </div>
+      </div>
+
+      <div className="sticker-page">
+        <div className="sp-title">Sticker · {got.size}/{STICKERS.length}</div>
+        <div className="sticker-slots">
           {STICKERS.map((s) => (
-            <div key={s.id} className={`sticker ${got.has(s.id) ? "on" : ""}`}>
-              <div className="sk-emoji">{got.has(s.id) ? s.emoji : "❓"}</div>
-              <div className="sk-name">{got.has(s.id) ? s.name : "Chưa mở"}</div>
+            <div key={s.id} className={`slot ${got.has(s.id) ? "filled" : ""}`}>
+              <span className="slot-art">{got.has(s.id) ? s.emoji : "?"}</span>
+              <span className="slot-name">{got.has(s.id) ? s.name : "Chưa mở"}</span>
             </div>
+          ))}
+        </div>
+        <div className="stamps">
+          {stamps.map(([ic, n, l]) => (
+            <span key={l} className="stamp"><b>{ic} {n}</b>{l}</span>
           ))}
         </div>
       </div>
 
-      <div className="section-title"><h2>🎖️ Huy hiệu</h2></div>
-      <div className="badges">
-        {BADGES.map((b) => (
-          <div key={b.img} className={`medal ${b.has(state, lessons) ? "on" : ""}`}>
-            <img className="bic" src={`${BDG}${b.img}`} alt="" />
-            <div className="nm">{b.nm}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="section-title"><h2>📊 Thống kê</h2></div>
-      <div className="statgrid">
-        {statTiles.map(([i, n, l]) => (
-          <div key={l} className="card stat"><div className="n">{i} {n}</div><div className="l">{l}</div></div>
-        ))}
+      <div className="shelf">
+        <div className="shelf-title">Huy hiệu</div>
+        <div className="shelf-row">
+          {BADGES.map((b) => (
+            <div key={b.img} className={`trophy ${b.has(state, lessons) ? "on" : ""}`}>
+              <img src={`${BDG}${b.img}`} alt="" />
+              <span>{b.nm}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
