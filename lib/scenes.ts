@@ -1,7 +1,6 @@
 // Ngân hàng cảnh cho Picture Detective & Picture Talk (chơi tự do, bốc ngẫu nhiên, chơi lại không lặp).
 // Mỗi cảnh có nhiều câu; nội dung viết khớp đúng chi tiết trong ảnh.
 // Ảnh do codex tạo; emoji chỉ là fallback nếu thiếu ảnh.
-import type { TalkScene } from "./games";
 
 export type SceneQKind = "observe" | "locate" | "compare" | "infer" | "sequence";
 export type SceneQ = {
@@ -123,96 +122,108 @@ export function randomDetectiveScene(exceptId?: string): DetectiveScene {
   return list[Math.floor(Math.random() * list.length)];
 }
 
-/* ============ Picture Talk — dùng chung 6 ảnh, mỗi cảnh 8 prompt (nói) ============ */
+/* ============ Picture Talk — thử thách mô tả tranh CÓ ĐÁP ÁN (máy chấm được) ============ */
+// Không thu âm. Bé chọn/xếp câu mô tả đúng bức tranh → chấm điểm thật.
+// "say" = câu mô tả hoàn chỉnh để nói theo Maple (bước phụ, KHÔNG tính điểm).
+export type TalkTaskKind = "choose" | "spot" | "fill" | "position" | "arrange";
+export type TalkTask = {
+  id: string;
+  kind: TalkTaskKind;
+  vi: string;                 // hướng dẫn/nghĩa tiếng Việt
+  q?: string;                 // choose/spot/position: câu hỏi · fill: câu có chỗ "___"
+  options?: string[];         // choose/spot/fill/position
+  answer?: string;            // đáp án đúng (mọi kind trừ arrange)
+  solution?: string[];        // arrange: các từ theo đúng thứ tự
+  say: string;                // câu mô tả hoàn chỉnh để nói theo (không tính điểm)
+};
+export type TalkScene = {
+  id: string; title: string; vi: string; image: string; emojis: string[];
+  intro: string; tasks: TalkTask[];
+};
+
 export const TALK_SCENES: TalkScene[] = [
   {
-    id: "park", title: "Talk about the Park", vi: "Nói về công viên", image: IMG + "scene-park.webp",
-    emojis: ["🌳", "🐕", "⚽", "🧒", "👧", "🌷", "🪑", "🍁"], assetNote: "",
-    intro: "Look at the park. Say each sentence out loud, then answer!",
-    prompts: [
-      { en: "I can see two children running in the park.", vi: "Mình thấy hai bạn nhỏ chạy trong công viên." },
-      { en: "There is a dog chasing a ball.", vi: "Có một chú chó đang đuổi theo quả bóng." },
-      { en: "The trees have red and orange leaves.", vi: "Cây có lá đỏ và cam." },
-      { en: "It is a warm, sunny autumn day.", vi: "Trời thu ấm áp và nắng đẹp." },
-      { en: "What are the children doing?", vi: "Các bạn nhỏ đang làm gì?" },
-      { en: "How do you think they feel? Why?", vi: "Bạn nghĩ họ cảm thấy thế nào? Vì sao?" },
-      { en: "What can you see far in the background?", vi: "Phía xa bạn thấy gì?" },
-      { en: "Describe the park in three sentences.", vi: "Mô tả công viên trong ba câu." },
+    id: "park", title: "Describe the Park", vi: "Mô tả công viên", image: IMG + "scene-park.webp",
+    emojis: ["🌳", "🐕", "⚽", "🧒", "👧", "🌷", "🪑", "🍁"],
+    intro: "Nhìn công viên. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tp1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The dog is chasing a ball.", "The dog is sleeping.", "The dog is eating dinner."], answer: "The dog is chasing a ball.", say: "The dog is chasing a ball." },
+      { id: "tp2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["Two children are running.", "It is snowing in the park.", "The trees have red leaves."], answer: "It is snowing in the park.", say: "It is not snowing. It is a sunny autumn day." },
+      { id: "tp3", kind: "fill", vi: "Điền từ đúng: Các bạn đang … trong công viên.", q: "The children are ___ in the park.", options: ["running", "sleeping", "swimming"], answer: "running", say: "The children are running in the park." },
+      { id: "tp4", kind: "position", vi: "Cái ghế trống ở đâu?", q: "Where is the empty bench?", options: ["next to the tree", "under the water", "up in the sky"], answer: "next to the tree", say: "The empty bench is next to the tree." },
+      { id: "tp5", kind: "arrange", vi: "Xếp câu: Chú chó đang đuổi theo quả bóng.", solution: ["The", "dog", "is", "chasing", "a", "ball"], say: "The dog is chasing a ball." },
+      { id: "tp6", kind: "arrange", vi: "Xếp câu: Hai bạn nhỏ đang chạy.", solution: ["Two", "children", "are", "running"], say: "Two children are running." },
+      { id: "tp7", kind: "fill", vi: "Điền màu: Lá cây màu đỏ và …", q: "The leaves are red and ___.", options: ["orange", "blue", "white"], answer: "orange", say: "The leaves are red and orange." },
     ],
   },
   {
-    id: "kitchen", title: "Talk about the Kitchen", vi: "Nói về nhà bếp", image: IMG + "scene-kitchen.webp",
-    emojis: ["🍳", "🍎", "🍌", "🥛", "🍞", "🧀", "🥕", "🫖"], assetNote: "",
-    intro: "Look at the kitchen. Say and answer out loud!",
-    prompts: [
-      { en: "The cook is making a fried egg.", vi: "Người nấu đang chiên trứng." },
-      { en: "There are apples, bananas and bread on the table.", vi: "Trên bàn có táo, chuối và bánh mì." },
-      { en: "I can see a blue teapot on the stove.", vi: "Mình thấy một ấm trà xanh trên bếp." },
-      { en: "The kitchen is warm and full of food.", vi: "Nhà bếp ấm cúng và đầy đồ ăn." },
-      { en: "What food can you see on the table?", vi: "Trên bàn có những món ăn nào?" },
-      { en: "What is the cook doing?", vi: "Người nấu đang làm gì?" },
-      { en: "Which foods are healthy? Why?", vi: "Món nào tốt cho sức khoẻ? Vì sao?" },
-      { en: "Describe the kitchen in three sentences.", vi: "Mô tả nhà bếp trong ba câu." },
+    id: "kitchen", title: "Describe the Kitchen", vi: "Mô tả nhà bếp", image: IMG + "scene-kitchen.webp",
+    emojis: ["🍳", "🍎", "🍌", "🥛", "🍞", "🧀", "🥕", "🫖"],
+    intro: "Nhìn nhà bếp. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tk1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The cook is making a fried egg.", "The cook is washing a car.", "The cook is reading a book."], answer: "The cook is making a fried egg.", say: "The cook is making a fried egg." },
+      { id: "tk2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["There are apples on the table.", "There is bread on the board.", "The cook is riding a bike."], answer: "The cook is riding a bike.", say: "The cook is cooking, not riding a bike." },
+      { id: "tk3", kind: "fill", vi: "Điền từ: Người nấu đang … một quả trứng.", q: "The cook is ___ a fried egg.", options: ["making", "driving", "singing"], answer: "making", say: "The cook is making a fried egg." },
+      { id: "tk4", kind: "position", vi: "Miếng phô mai ở đâu?", q: "Where is the cheese?", options: ["on the small plate", "under the floor", "inside the teapot"], answer: "on the small plate", say: "The cheese is on the small plate." },
+      { id: "tk5", kind: "arrange", vi: "Xếp câu: Người nấu đang chiên một quả trứng.", solution: ["The", "cook", "is", "frying", "an", "egg"], say: "The cook is frying an egg." },
+      { id: "tk6", kind: "arrange", vi: "Xếp câu: Mình thấy bánh mì tươi.", solution: ["I", "can", "see", "fresh", "bread"], say: "I can see fresh bread." },
+      { id: "tk7", kind: "fill", vi: "Điền từ: Trên bàn có táo và …", q: "There are apples and ___ on the table.", options: ["bananas", "cars", "shoes"], answer: "bananas", say: "There are apples and bananas on the table." },
     ],
   },
   {
-    id: "classroom", title: "Talk about the Classroom", vi: "Nói về lớp học", image: IMG + "scene-classroom.webp",
-    emojis: ["🧑‍🏫", "🗺️", "📖", "✋", "🌋", "🎒", "🕐", "🪴"], assetNote: "",
-    intro: "Look at the classroom. Say and answer out loud!",
-    prompts: [
-      { en: "The teacher is pointing at the world map.", vi: "Cô giáo đang chỉ vào bản đồ thế giới." },
-      { en: "One boy is reading a book at his desk.", vi: "Một cậu bé đang đọc sách ở bàn." },
-      { en: "Two students are doing a volcano experiment.", vi: "Hai bạn đang làm thí nghiệm núi lửa." },
-      { en: "The classroom is busy and fun.", vi: "Lớp học nhộn nhịp và vui." },
-      { en: "What is happening in the classroom?", vi: "Trong lớp đang xảy ra chuyện gì?" },
-      { en: "Why do you think the girl is raising her hand?", vi: "Vì sao bạn nữ giơ tay?" },
-      { en: "What is the boy under the desk looking for?", vi: "Cậu bé dưới gầm bàn đang tìm gì?" },
-      { en: "Describe the classroom in three sentences.", vi: "Mô tả lớp học trong ba câu." },
+    id: "classroom", title: "Describe the Classroom", vi: "Mô tả lớp học", image: IMG + "scene-classroom.webp",
+    emojis: ["🧑‍🏫", "🗺️", "📖", "✋", "🌋", "🎒", "🕐", "🪴"],
+    intro: "Nhìn lớp học. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tc1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The teacher is pointing at the world map.", "The teacher is cooking dinner.", "The teacher is sleeping."], answer: "The teacher is pointing at the world map.", say: "The teacher is pointing at the world map." },
+      { id: "tc2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["A boy is reading a book.", "Two students do an experiment.", "A dog is teaching the class."], answer: "A dog is teaching the class.", say: "A teacher is teaching the class, not a dog." },
+      { id: "tc3", kind: "fill", vi: "Điền từ: Bạn nữ đang … tay.", q: "The girl is ___ her hand.", options: ["raising", "eating", "washing"], answer: "raising", say: "The girl is raising her hand." },
+      { id: "tc4", kind: "position", vi: "Chiếc máy bay giấy ở đâu?", q: "Where is the paper airplane?", options: ["on the floor", "on the moon", "in the water"], answer: "on the floor", say: "The paper airplane is on the floor." },
+      { id: "tc5", kind: "arrange", vi: "Xếp câu: Cô giáo chỉ vào bản đồ.", solution: ["The", "teacher", "points", "at", "the", "map"], say: "The teacher points at the map." },
+      { id: "tc6", kind: "arrange", vi: "Xếp câu: Hai bạn làm một thí nghiệm.", solution: ["Two", "students", "do", "an", "experiment"], say: "Two students do an experiment." },
+      { id: "tc7", kind: "fill", vi: "Điền từ: Lớp học nhộn nhịp và …", q: "The classroom is busy and ___.", options: ["fun", "dark", "cold"], answer: "fun", say: "The classroom is busy and fun." },
     ],
   },
   {
-    id: "supermarket", title: "Talk about the Supermarket", vi: "Nói về siêu thị", image: IMG + "scene-supermarket.webp",
-    emojis: ["🛒", "🍎", "🍌", "🍊", "🥖", "🥛", "📝", "☂️"], assetNote: "",
-    intro: "Look at the supermarket. Say and answer out loud!",
-    prompts: [
-      { en: "A boy is pushing a shopping cart full of food.", vi: "Một cậu bé đẩy xe đầy đồ ăn." },
-      { en: "There are apples, bananas and oranges in the boxes.", vi: "Trong các thùng có táo, chuối và cam." },
-      { en: "An old woman's shopping bag has spilled on the floor.", vi: "Túi hàng của bà cụ đổ ra sàn." },
-      { en: "The supermarket is busy today.", vi: "Hôm nay siêu thị đông." },
-      { en: "What is the woman with the cereal boxes doing?", vi: "Người phụ nữ cầm hộp ngũ cốc đang làm gì?" },
-      { en: "What just happened to the old woman's bag?", vi: "Túi của bà cụ vừa xảy ra chuyện gì?" },
-      { en: "What should the boy do at the checkout?", vi: "Ở quầy tính tiền, cậu bé nên làm gì?" },
-      { en: "Describe the supermarket in three sentences.", vi: "Mô tả siêu thị trong ba câu." },
+    id: "supermarket", title: "Describe the Supermarket", vi: "Mô tả siêu thị", image: IMG + "scene-supermarket.webp",
+    emojis: ["🛒", "🍎", "🍌", "🍊", "🥖", "🥛", "📝", "☂️"],
+    intro: "Nhìn siêu thị. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "ts1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["A boy is pushing a shopping cart.", "A boy is flying a kite.", "A boy is swimming."], answer: "A boy is pushing a shopping cart.", say: "A boy is pushing a shopping cart." },
+      { id: "ts2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["A cashier is at the checkout.", "The old woman's bag spilled.", "An elephant is buying milk."], answer: "An elephant is buying milk.", say: "There is no elephant. People are shopping." },
+      { id: "ts3", kind: "fill", vi: "Điền từ: Cậu bé cầm một … mua sắm.", q: "The boy is holding a shopping ___.", options: ["list", "cat", "car"], answer: "list", say: "The boy is holding a shopping list." },
+      { id: "ts4", kind: "position", vi: "Chiếc ô xanh ở đâu?", q: "Where is the blue umbrella?", options: ["by the door", "in the sky", "under the sea"], answer: "by the door", say: "The blue umbrella is by the door." },
+      { id: "ts5", kind: "arrange", vi: "Xếp câu: Một cậu bé đẩy xe hàng.", solution: ["A", "boy", "pushes", "a", "shopping", "cart"], say: "A boy pushes a shopping cart." },
+      { id: "ts6", kind: "arrange", vi: "Xếp câu: Có táo và cam trong thùng.", solution: ["There", "are", "apples", "and", "oranges"], say: "There are apples and oranges." },
+      { id: "ts7", kind: "fill", vi: "Điền từ: Bạn nữ với lấy táo màu …", q: "The girl is reaching for green ___.", options: ["apples", "cars", "books"], answer: "apples", say: "The girl is reaching for green apples." },
     ],
   },
   {
-    id: "busstop", title: "Talk about the Bus Stop", vi: "Nói về trạm xe buýt", image: IMG + "scene-bus-stop-rain.webp",
-    emojis: ["🌧️", "🚌", "☂️", "🎒", "🎫", "👟", "🍁", "⌚"], assetNote: "",
-    intro: "Look at the rainy bus stop. Say and answer out loud!",
-    prompts: [
-      { en: "It is a rainy day at the bus stop.", vi: "Một ngày mưa ở trạm xe buýt." },
-      { en: "A man is looking at his watch.", vi: "Một người đàn ông đang xem đồng hồ." },
-      { en: "A boy is running, and his shoelace is untied.", vi: "Một cậu bé đang chạy, dây giày bị tuột." },
-      { en: "The blue bus is coming to the stop.", vi: "Chiếc xe buýt xanh đang tới trạm." },
-      { en: "What is the weather like? How do you know?", vi: "Thời tiết thế nào? Làm sao bạn biết?" },
-      { en: "Why is the man checking his watch?", vi: "Vì sao chú ấy xem đồng hồ?" },
-      { en: "What might happen to the running boy? Why?", vi: "Điều gì có thể xảy ra với cậu bé đang chạy? Vì sao?" },
-      { en: "Describe the scene in three sentences.", vi: "Mô tả cảnh này trong ba câu." },
+    id: "busstop", title: "Describe the Bus Stop", vi: "Mô tả trạm xe buýt", image: IMG + "scene-bus-stop-rain.webp",
+    emojis: ["🌧️", "🚌", "☂️", "🎒", "🎫", "👟", "🍁", "⌚"],
+    intro: "Nhìn trạm xe buýt ngày mưa. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tb1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["It is a rainy day.", "It is a hot sunny day.", "It is a snowy night."], answer: "It is a rainy day.", say: "It is a rainy day at the bus stop." },
+      { id: "tb2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["A man is checking his watch.", "A blue bus is coming.", "A lion is driving the bus."], answer: "A lion is driving the bus.", say: "A driver is on the bus, not a lion." },
+      { id: "tb3", kind: "fill", vi: "Điền từ: Cậu bé đang … để kịp xe buýt.", q: "The boy is ___ to catch the bus.", options: ["running", "sleeping", "cooking"], answer: "running", say: "The boy is running to catch the bus." },
+      { id: "tb4", kind: "position", vi: "Chiếc balô ở đâu?", q: "Where is the backpack?", options: ["on the bench", "in the bus", "on the roof"], answer: "on the bench", say: "The backpack is on the bench." },
+      { id: "tb5", kind: "arrange", vi: "Xếp câu: Một chú đang xem đồng hồ.", solution: ["A", "man", "checks", "his", "watch"], say: "A man checks his watch." },
+      { id: "tb6", kind: "arrange", vi: "Xếp câu: Xe buýt xanh đang tới.", solution: ["The", "blue", "bus", "is", "coming"], say: "The blue bus is coming." },
+      { id: "tb7", kind: "fill", vi: "Điền màu: Ô của bà cụ màu …", q: "The old woman's umbrella is ___.", options: ["yellow", "green", "black"], answer: "yellow", say: "The old woman's umbrella is yellow." },
     ],
   },
   {
-    id: "library", title: "Talk about the Library", vi: "Nói về thư viện", image: IMG + "scene-library.webp",
-    emojis: ["📚", "🪜", "🔖", "👓", "🧣", "🎒", "🪑", "🏙️"], assetNote: "",
-    intro: "Look at the library. Say and answer out loud!",
-    prompts: [
-      { en: "Two children are reading books at a table.", vi: "Hai bạn đang đọc sách ở bàn." },
-      { en: "A girl is standing on a stool to reach a high shelf.", vi: "Một bạn nữ đứng lên ghế đẩu để với kệ cao." },
-      { en: "The librarian is pushing a book cart.", vi: "Cô thủ thư đang đẩy xe sách." },
-      { en: "The library is calm and quiet.", vi: "Thư viện yên tĩnh và êm đềm." },
-      { en: "What are the children doing in the library?", vi: "Các bạn đang làm gì trong thư viện?" },
-      { en: "What could the trail of bookmarks lead to?", vi: "Chuỗi bookmark có thể dẫn đến đâu?" },
-      { en: "Why is there an open book on the armchair?", vi: "Vì sao có cuốn sách mở trên ghế bành?" },
-      { en: "Describe the library in three sentences.", vi: "Mô tả thư viện trong ba câu." },
+    id: "library", title: "Describe the Library", vi: "Mô tả thư viện", image: IMG + "scene-library.webp",
+    emojis: ["📚", "🪜", "🔖", "👓", "🧣", "🎒", "🪑", "🏙️"],
+    intro: "Nhìn thư viện. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tl1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The librarian is pushing a book cart.", "The librarian is cooking soup.", "The librarian is swimming."], answer: "The librarian is pushing a book cart.", say: "The librarian is pushing a book cart." },
+      { id: "tl2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["Two children are reading.", "A girl stands on a stool.", "A shark is reading a book."], answer: "A shark is reading a book.", say: "Children are reading, there is no shark." },
+      { id: "tl3", kind: "fill", vi: "Điền từ: Bạn nữ đứng trên một … để với kệ.", q: "A girl is standing on a ___ to reach the shelf.", options: ["stool", "bus", "boat"], answer: "stool", say: "A girl is standing on a stool to reach the shelf." },
+      { id: "tl4", kind: "position", vi: "Chiếc balô ở đâu?", q: "Where is the backpack?", options: ["under the table", "on the ceiling", "in the river"], answer: "under the table", say: "The backpack is under the table." },
+      { id: "tl5", kind: "arrange", vi: "Xếp câu: Thư viện yên tĩnh và êm đềm.", solution: ["The", "library", "is", "calm", "and", "quiet"], say: "The library is calm and quiet." },
+      { id: "tl6", kind: "arrange", vi: "Xếp câu: Hai bạn đọc sách ở bàn.", solution: ["Two", "children", "read", "at", "a", "table"], say: "Two children read at a table." },
+      { id: "tl7", kind: "fill", vi: "Điền màu: Bạn nữ áo vàng đọc cuốn sách màu …", q: "The girl in yellow is reading a ___ book.", options: ["pink", "green", "black"], answer: "pink", say: "The girl in yellow is reading a pink book." },
     ],
   },
 ];

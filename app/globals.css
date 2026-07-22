@@ -321,6 +321,7 @@
   .scene-card.explored { border-color: #cdeede; }
   .sc-name { font-weight: 900; font-size: 1rem; padding: 10px 12px 2px; }
   .sc-sub { font-size: .74rem; color: var(--muted); font-weight: 700; padding: 0 12px 12px; }
+  .sc-stars { font-size: .82rem; letter-spacing: 1px; padding: 0 12px 10px; }
 
   /* game result */
   .game-result { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);
@@ -352,15 +353,17 @@
   .riddle-text { font-size: 1.15rem; font-weight: 800; margin: 8px 0 12px; }
   .riddle-vi { font-size: .84rem; color: var(--muted); margin-top: 10px; }
 
-  /* picture talk */
-  .talk-intro { background: var(--brand-soft); color: var(--brand-d); border-radius: 12px; padding: 10px 14px;
-    font-weight: 700; margin-bottom: 12px; }
-  .talk-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-  .talk-item { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 12px 14px; }
-  .talk-item.done { border-color: var(--green); background: #f2fbf5; }
-  .talk-en { font-size: 1.1rem; font-weight: 800; }
-  .talk-vi { font-size: .84rem; color: var(--muted); margin: 2px 0 8px; }
-  .talk-ctrls { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* picture talk — thử thách mô tả tranh có đáp án */
+  .talk-task { background: var(--card); border: 3px solid #fff; border-radius: var(--radius); padding: 16px;
+    box-shadow: 0 10px 26px rgba(45,49,66,.10); }
+  .talk-kind { display: inline-block; background: var(--brand-soft); color: var(--brand-d); font-weight: 800;
+    font-size: .72rem; padding: 3px 10px; border-radius: 999px; }
+  .talk-instr { font-weight: 800; margin: 8px 0 10px; }
+  .talk-q { font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; }
+  .talk-say { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #f2fbf5;
+    border: 2px solid #cdeede; border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
+  .talk-say-en { font-weight: 800; color: var(--brand-d); }
+  .talk-say-note { font-size: .72rem; color: var(--muted); }
 
   /* echo */
   .echo-card { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);

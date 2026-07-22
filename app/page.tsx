@@ -106,11 +106,15 @@ export default function App() {
     if (st.kind === "shadow") { if (st.ref) openLesson(st.ref); return; }
     launch({ kind: st.kind, refId: st.ref, recId: st.id, sticker: st.sticker, title: st.label });
   }
-  function finishGame(starsWon: number) {
+  // Ghi nhận 1 lượt chơi. finish=false: ghi thầm rồi ở lại (chọn "bức khác");
+  // finish=true: ghi nhận + bật màn thưởng + đóng game.
+  function handleRound(sceneKey: string, starsWon: number, finish: boolean) {
     if (!game) return;
-    const firstSticker = game.sticker && !hasSticker(state, game.sticker);
-    const { state: ns } = recordGame(state, game.recId, starsWon, game.sticker);
+    const firstSticker = finish && !!game.sticker && !hasSticker(state, game.sticker);
+    let ns = recordGame(state, game.recId, starsWon, finish ? game.sticker : undefined).state;
+    if (sceneKey) ns = recordBest(ns, sceneKey, starsWon); // sao tốt nhất riêng từng cảnh/chủ đề
     setState(ns);
+    if (!finish) return;
     setGame(null);
     const sk = firstSticker && game.sticker ? stickerById(game.sticker) : null;
     setReward({
@@ -224,10 +228,10 @@ export default function App() {
       )}
 
       {game && <GamePlay kind={game.kind} refId={game.refId} accent={state.prefs.accent}
-        seen={state.games.seen}
+        seen={state.games.seen} best={state.games.best}
         onSeen={(key, ids) => setState((s) => markGameSeen(s, key, ids))}
-        onBest={(score) => setState((s) => recordBest(s, game.kind, score))}
-        onExit={() => setGame(null)} onFinish={finishGame} />}
+        onRound={handleRound}
+        onExit={() => setGame(null)} />}
 
       {studio && (
         <Studio key={studio.id} lesson={studio} prefs={state.prefs}

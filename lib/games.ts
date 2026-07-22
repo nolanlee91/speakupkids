@@ -92,24 +92,6 @@ export const RIDDLES: RiddleSet[] = [
 ];
 export const riddleSetById = (id: string) => RIDDLES.find((s) => s.id === id);
 
-/* ---------- Picture Talk (nói, không ghi âm) ---------- */
-export type TalkScene = { id: string; title: string; vi: string; image?: string; emojis: string[]; assetNote: string; intro: string; prompts: { en: string; vi: string }[] };
-export const TALKS: TalkScene[] = [
-  {
-    id: "pt-park", title: "Talk about the Park", vi: "Nói về công viên", image: "/assets/images/gen/scene-park.webp",
-    emojis: ["🌳", "☀️", "🐕", "🐦", "⚽", "🧒", "👧", "🌷"],
-    assetNote: "Dùng chung ảnh cảnh công viên 4:3 · 1600×1200",
-    intro: "Look at the picture. Say each sentence out loud with Maple!",
-    prompts: [
-      { en: "I can see a big green tree.", vi: "Mình thấy một cái cây xanh to." },
-      { en: "The dog is playing with a ball.", vi: "Chú chó đang chơi bóng." },
-      { en: "It is a warm, sunny day.", vi: "Trời ấm áp và nắng đẹp." },
-      { en: "The children are very happy.", vi: "Các bạn nhỏ rất vui." },
-    ],
-  },
-];
-export const talkSceneById = (id: string) => TALKS.find((s) => s.id === id);
-
 /* ---------- Echo Challenge (Shadowing rút gọn, không ghi âm) ---------- */
 export type EchoPhrase = { en: string; vi: string };
 export const ECHO: EchoPhrase[] = [
