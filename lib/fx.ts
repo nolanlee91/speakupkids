@@ -36,3 +36,14 @@ export function pick<T>(correct: T, pool: T[], n = 2): T[] {
   const d = shuffle([...new Set(pool)].filter((x) => x !== correct)).slice(0, n);
   return shuffle([correct, ...d]);
 }
+
+// Bốc n mục CHƯA gặp (theo danh sách id đã thấy); hết mục mới thì reset để chơi lại.
+// Trả {picked, nextSeen} — nextSeen dùng lưu vào state để lần sau khác đi.
+export function pickUnseen<T extends { id: string }>(items: T[], seen: string[], n: number): { picked: T[]; nextSeen: string[] } {
+  let pool = items.filter((i) => !seen.includes(i.id));
+  let base = seen;
+  if (pool.length < n) { pool = items.slice(); base = []; } // đã gặp gần hết → reset vòng mới
+  const picked = shuffle(pool).slice(0, Math.min(n, pool.length));
+  const nextSeen = [...base, ...picked.map((p) => p.id)];
+  return { picked, nextSeen };
+}

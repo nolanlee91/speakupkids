@@ -2,18 +2,22 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  allLessons, lessonById, thumbFor, type Lesson,
+  allLessons, lessonById, type Lesson,
 } from "@/lib/data";
 import {
   type AppState, defaultState, loadState, saveState, totalStars, lessonsDone,
   isPremium, canOpen, touchStreak, resetDailyIfNeeded, todayStr, totalLearned,
-  awardCompletion, recordGame, hasSticker, gamesDone,
+  awardCompletion, recordGame, hasSticker, gamesDone, addSticker,
+  completeLearnLesson, learnLessonDone, lessonPct, learnLessonsDone,
+  markGameSeen, recordBest,
 } from "@/lib/state";
 import {
   WORLDS, GAMES, STICKERS, stickerById,
   type World, type Stop, type StopKind, type GameKind,
 } from "@/lib/games";
-import { GamePlay, FIRST_REF } from "./games";
+import { SECTIONS, learnLessonById } from "@/lib/learn";
+import { GamePlay } from "./games";
+import { Learn } from "./learn";
 import { speak, celebrate, shuffle } from "@/lib/fx";
 
 const BDG = "/assets/images/badges/";
@@ -37,15 +41,15 @@ const PLANS: { id: AppState["membership"]; name: string; price: string; feats: s
   { id: "family", name: "Family", price: "149k/tháng", feats: ["2–4 hồ sơ trẻ em", "Tiến độ riêng từng bé", "Phụ huynh xem báo cáo", "Tất cả quyền lợi Premium"] },
 ];
 
-type View = "home" | "adventure" | "games" | "speak" | "collection";
+type View = "home" | "learn" | "adventure" | "games" | "collection";
 type Launch = { kind: StopKind; refId?: string; recId: string; sticker?: string; title: string };
 type Reward = { title: string; html: string; stars?: number; sticker?: { emoji: string; name: string } | null };
 
 const NAV: [View, string, string][] = [
   ["home", "🏠", "Trang chủ"],
+  ["learn", "📖", "Học"],
   ["adventure", "🗺️", "Phiêu lưu"],
   ["games", "🎮", "Trò chơi"],
-  ["speak", "🎤", "Luyện nói"],
   ["collection", "🎁", "Bộ sưu tập"],
 ];
 
@@ -124,6 +128,23 @@ export default function App() {
     celebrate(state.prefs.motion !== false);
     setReward({ title, html: newly ? html : "Bạn đã hoàn thành bài này rồi. Ôn lại luôn tốt nhé!", stars: starsWon });
   }
+  // Hoàn thành bài Learn (sau Mini Check)
+  function completeLearn(lessonId: string, score: number, total: number) {
+    const firstMap = !hasSticker(state, "st-map");
+    let { state: ns } = completeLearnLesson(state, lessonId, score, total);
+    if (firstMap) ns = addSticker(ns, "st-map");
+    setState(ns);
+    celebrate(state.prefs.motion !== false);
+    const les = learnLessonById(lessonId);
+    const sk = firstMap ? stickerById("st-map") : null;
+    const stars = score >= total ? 3 : score >= total - 1 ? 2 : 1;
+    setReward({
+      title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
+      html: `Bạn hoàn thành bài <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ!<br>Giờ sang Phiêu lưu để dùng thử nhé.`,
+      stars,
+      sticker: sk ? { emoji: sk.emoji, name: sk.name } : null,
+    });
+  }
 
   if (!ready) return <div style={{ padding: 40, color: "#7a8194" }}>Đang tải…</div>;
 
@@ -148,10 +169,13 @@ export default function App() {
       </header>
 
       <div className={`wrap ${view === "home" || view === "adventure" ? "wide" : ""}`}>
-        {view === "home" && <Home state={state} stopDone={stopDone} setView={setView} launchStop={launchStop} />}
-        {view === "adventure" && <Adventure state={state} stopDone={stopDone} launchStop={launchStop} />}
-        {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: FIRST_REF[kind], recId: "quick-" + kind, title: "Trò chơi" })} />}
-        {view === "speak" && <SpeakLab lessons={lessons} onEcho={() => launch({ kind: "echo", recId: "quick-echo", sticker: "st-mic", title: "Echo" })} onTalk={() => launch({ kind: "talk", refId: "pt-park", recId: "quick-talk", title: "Picture Talk" })} openLesson={openLesson} />}
+        {view === "home" && <Home state={state} stopDone={stopDone} setView={setView} />}
+        {view === "learn" && <Learn state={state} setState={setState}
+          onEcho={() => launch({ kind: "echo", recId: "quick-echo", sticker: "st-mic", title: "Echo" })}
+          onTalk={() => launch({ kind: "talk", refId: "park", recId: "quick-talk", title: "Picture Talk" })}
+          openLesson={openLesson} onComplete={completeLearn} />}
+        {view === "adventure" && <Adventure state={state} stopDone={stopDone} launchStop={launchStop} onLearn={() => setView("learn")} />}
+        {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: undefined, recId: "quick-" + kind, title: "Trò chơi" })} />}
         {view === "collection" && <Collection state={state} lessons={lessons} stars={stars} />}
       </div>
 
@@ -191,7 +215,11 @@ export default function App() {
         </div>
       )}
 
-      {game && <GamePlay kind={game.kind} refId={game.refId} accent={state.prefs.accent} onExit={() => setGame(null)} onFinish={finishGame} />}
+      {game && <GamePlay kind={game.kind} refId={game.refId} accent={state.prefs.accent}
+        seen={state.games.seen}
+        onSeen={(key, ids) => setState((s) => markGameSeen(s, key, ids))}
+        onBest={(score) => setState((s) => recordBest(s, game.kind, score))}
+        onExit={() => setGame(null)} onFinish={finishGame} />}
 
       {studio && (
         <Studio key={studio.id} lesson={studio} prefs={state.prefs}
@@ -230,81 +258,73 @@ const WORLD_THEME: Record<string, string> = {
   vancouver: "coast", story: "library", space: "space",
 };
 
-/* ==================== HOME — arrival scene ==================== */
-function Home({ state, stopDone, setView, launchStop }: {
+/* ==================== HOME — hai hành trình rõ ràng ==================== */
+function Home({ state, stopDone, setView }: {
   state: AppState; stopDone: (id: string) => boolean; setView: (v: View) => void;
-  launchStop: (st: Stop, w: World) => void;
 }) {
   const world = WORLDS[0]; // Everyday Town
   const doneCount = world.stops.filter((s) => stopDone(s.id)).length;
-  const nextStop = world.stops.find((s) => !stopDone(s.id)) || world.stops[0];
-  const goal = 3;
-  const pct = Math.min(100, Math.round((state.dailyDone / goal) * 100));
   const name = state.nickname || "bạn nhỏ";
+  const lesson = learnLessonById(state.learn.currentLesson);
+  const lpct = lesson ? lessonPct(state, lesson.id, SECTIONS.length) : 0;
+  const learnFinished = lesson ? learnLessonDone(state, lesson.id) : false;
+  const goal = 3;
+  const dpct = Math.min(100, Math.round((state.dailyDone / goal) * 100));
 
   return (
     <section className="home">
-      {/* --- Cảnh chào đón toàn khung: Maple đứng trong thế giới --- */}
+      {/* --- Cảnh chào đón: hai hành động rõ ràng --- */}
       <div className="arrival fullbleed">
         <div className="arrival-copy">
           <div className="hello-sign">Chào {name}! <span className="hs-wave">👋</span></div>
-          <p className="arrival-line">Cùng Maple bước vào thế giới tiếng Anh hôm nay nhé!</p>
-          <button className="quest-btn" onClick={() => launchStop(nextStop, world)}>
-            <span className="qb-ic">{KIND_EMOJI[nextStop.kind]}</span> Tiếp tục phiêu lưu
-          </button>
+          <p className="arrival-line">Hôm nay học một bài mới, rồi mang kiến thức đi phiêu lưu nhé!</p>
+          <div className="home-cta">
+            <button className="quest-btn" onClick={() => setView("learn")}>📖 Học bài hôm nay</button>
+            <button className="quest-btn ghost2" onClick={() => setView("adventure")}>🗺️ Tiếp tục phiêu lưu</button>
+          </div>
         </div>
         <div className="arrival-flag" aria-hidden="true">
-          <span className="flag-emoji">🍁</span>
-          <span className="flag-txt">{doneCount}/{world.stops.length} chặng</span>
+          <span className="flag-emoji">🔥</span>
+          <span className="flag-txt">{state.streak} ngày</span>
         </div>
       </div>
 
-      {/* --- Hành trình hôm nay: các cột mốc nối trên một con đường --- */}
-      <h2 className="chapter">Hôm nay của bạn</h2>
-      <ol className="daypath">
-        <li className="cp cp-now" onClick={() => launchStop(nextStop, world)}>
-          <span className="cp-dot">{KIND_EMOJI[nextStop.kind]}</span>
-          <div className="cp-body">
-            <div className="cp-k">Nhiệm vụ tiếp theo · {world.name}</div>
-            <div className="cp-t">{nextStop.label} — {nextStop.vi}</div>
-          </div>
+      {/* --- Hai hành trình --- */}
+      <h2 className="chapter">Hai hành trình của bạn</h2>
+      <div className="journeys">
+        <button className="journey learn-j" onClick={() => setView("learn")}>
+          <span className="j-ic">📖</span>
+          <span className="j-body">
+            <span className="j-k">Học · {lesson ? lesson.title : "Bài học"}</span>
+            <span className="j-t">{learnFinished ? "Đã học xong — ôn lại nhé!" : lpct > 0 ? "Học tiếp bài đang dở" : "Bắt đầu bài hôm nay"}</span>
+            <span className="j-bar"><i style={{ width: `${learnFinished ? 100 : lpct}%` }} /></span>
+          </span>
           <span className="cp-go">▶</span>
-        </li>
-        <li className="cp">
-          <span className="cp-dot ch">🔥</span>
-          <div className="cp-body">
-            <div className="cp-k">Thử thách hằng ngày</div>
-            <div className="cp-t">{state.dailyDone >= goal ? "Hoàn thành hôm nay — giỏi quá! 🎉" : `Chơi ${goal} hoạt động (${state.dailyDone}/${goal})`}</div>
-            <div className="cp-bar"><i style={{ width: `${pct}%` }} /></div>
-          </div>
-        </li>
-        <li className="cp cp-reward">
-          <span className="cp-dot rw">🎁</span>
-          <div className="cp-body">
-            <div className="cp-k">Phần thưởng cuối chặng</div>
-            <div className="cp-t">Hoàn thành để nhận sticker mới cho sổ tay!</div>
-          </div>
-        </li>
-      </ol>
+        </button>
+        <button className="journey adv-j" onClick={() => setView("adventure")}>
+          <span className="j-ic">🗺️</span>
+          <span className="j-body">
+            <span className="j-k">Phiêu lưu · {world.name}</span>
+            <span className="j-t">Áp dụng tiếng Anh vào nhiệm vụ</span>
+            <span className="j-bar"><i style={{ width: `${(doneCount / world.stops.length) * 100}%` }} /></span>
+          </span>
+          <span className="j-badge">{doneCount}/{world.stops.length}</span>
+        </button>
+      </div>
 
-      {/* --- Cụm dẫn vào Sân chơi --- */}
-      <button className="play-teaser" onClick={() => setView("games")}>
-        <span className="pt-scene" aria-hidden="true">
-          {GAMES.map((g, i) => <span key={g.id} className="pt-orb" style={{ "--i": i } as React.CSSProperties}>{g.emoji}</span>)}
-        </span>
-        <span className="pt-copy">
-          <span className="pt-t">Vào sân chơi của Maple</span>
-          <span className="pt-s">4 trò chơi đang đợi bạn</span>
-        </span>
-        <span className="cp-go">▶</span>
-      </button>
+      {/* --- Tiến độ hôm nay (nhỏ gọn) --- */}
+      <div className="today-mini">
+        <span className="tm-ic">🎯</span>
+        <span className="tm-txt">{state.dailyDone >= goal ? "Hoàn thành mục tiêu hôm nay! 🎉" : `Hôm nay: ${state.dailyDone}/${goal} hoạt động`}</span>
+        <span className="tm-bar"><i style={{ width: `${dpct}%` }} /></span>
+      </div>
     </section>
   );
 }
 
 /* ==================== ADVENTURE — một bản đồ cuộn dọc liên tục ==================== */
-function Adventure({ state, stopDone, launchStop }: {
-  state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void;
+function Adventure({ state, stopDone, launchStop, onLearn }: {
+  state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void; onLearn: () => void;
 }) {
   return (
     <section className="worldmap">
@@ -313,18 +333,21 @@ function Adventure({ state, stopDone, launchStop }: {
         <p className="wm-sub">Đi theo con đường, mở từng vùng đất mới cùng Maple.</p>
       </div>
       {WORLDS.map((w) => (
-        <Region key={w.id} world={w} state={state} stopDone={stopDone} launchStop={launchStop} />
+        <Region key={w.id} world={w} state={state} stopDone={stopDone} launchStop={launchStop} onLearn={onLearn} />
       ))}
       <div className="wm-end"><span>🏁</span>Còn nhiều vùng đất mới đang được vẽ…</div>
     </section>
   );
 }
 
-function Region({ world, state, stopDone, launchStop }: {
-  world: World; state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void;
+function Region({ world, state, stopDone, launchStop, onLearn }: {
+  world: World; state: AppState; stopDone: (id: string) => boolean; launchStop: (st: Stop, w: World) => void; onLearn: () => void;
 }) {
   const theme = WORLD_THEME[world.id] || "town";
   const dc = world.stops.filter((s) => stopDone(s.id)).length;
+  // Gợi ý học bài liên kết (không khoá cứng): Everyday Town luyện bài "At the Park"
+  const linkedLesson = world.id === "everyday-town" ? learnLessonById("park") : undefined;
+  const lessonReady = linkedLesson ? learnLessonDone(state, linkedLesson.id) : true;
   return (
     <div className={`region theme-${theme} ${world.ready ? "" : "locked"}`}>
       <div className="region-horizon" aria-hidden="true" />
@@ -335,6 +358,14 @@ function Region({ world, state, stopDone, launchStop }: {
           ? <span className="region-flag open">{dc}/{world.stops.length} ⭐</span>
           : <span className="region-flag">🔒 Sắp mở</span>}
       </div>
+      {world.ready && linkedLesson && (
+        lessonReady
+          ? <div className="learn-link ok" aria-hidden="true">📘 Luyện bài <b>{linkedLesson.title}</b> — bạn đã học rồi, chơi thôi!</div>
+          : <div className="learn-link">
+              <span>📘 Vùng này luyện bài <b>{linkedLesson.title}</b>.</span>
+              <button className="btn sm" onClick={onLearn}>Học trước cho chắc</button>
+            </div>
+      )}
       {world.ready
         ? <WorldTrail world={world} state={state} stopDone={stopDone} launchStop={launchStop} />
         : <div className="road-seg" aria-hidden="true"><span className="road-lock">🔒</span></div>}
@@ -410,56 +441,14 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
   );
 }
 
-/* ==================== SPEAK LAB — sân khấu hội thoại với Maple ==================== */
-function SpeakLab({ lessons, onEcho, onTalk, openLesson }: {
-  lessons: Lesson[]; onEcho: () => void; onTalk: () => void; openLesson: (id: string) => void;
-}) {
-  const shadowable = lessons.filter((l) => l.lines.length > 0);
-  return (
-    <section className="stage">
-      <div className="stage-scene fullbleed">
-        <div className="speech">Nghe mình đọc rồi nói theo nhé — cứ nói thật to! 🎶</div>
-        <img className="stage-maple" src={`${GEN}mascot-headphones.webp`} alt="Maple đeo tai nghe" />
-      </div>
-
-      <h2 className="chapter">Chọn cách luyện nói</h2>
-      <div className="mode-objects">
-        <button className="mode-obj mic" onClick={onEcho}>
-          <span className="mo-ic">🎤</span>
-          <span className="mo-name">Echo với Maple</span>
-          <span className="mo-sub">Nghe & nói theo câu ngắn</span>
-        </button>
-        <button className="mode-obj frame" onClick={onTalk}>
-          <span className="mo-ic">🖼️</span>
-          <span className="mo-name">Mô tả hình ảnh</span>
-          <span className="mo-sub">Nhìn tranh rồi tự nói</span>
-        </button>
-      </div>
-
-      <h2 className="chapter">Shadowing theo video</h2>
-      <div className="filmstrip">
-        {shadowable.map((l) => (
-          <button key={l.id} className="film" onClick={() => openLesson(l.id)}>
-            <span className="film-thumb" style={{ backgroundImage: `url('${thumbFor(l)}')` }}>
-              {!l.free && <span className="film-lock">Premium</span>}
-            </span>
-            <span className="film-ttl">{l.title}</span>
-            <span className="film-meta">Level {l.level} · {l.skill}</span>
-          </button>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ==================== COLLECTION — sổ tay sticker & kệ huy hiệu ==================== */
 function Collection({ state, lessons, stars }: { state: AppState; lessons: Lesson[]; stars: number }) {
   const got = new Set(state.stickers || []);
   const stamps: [string, number, string][] = [
     ["🔥", state.streak, "ngày"],
     ["⭐", stars, "sao"],
+    ["📖", learnLessonsDone(state), "bài học"],
     ["🎮", gamesDone(state), "game"],
-    ["📖", totalLearned(state), "câu"],
   ];
   return (
     <section className="journal">
