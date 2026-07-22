@@ -37,13 +37,17 @@ export function pick<T>(correct: T, pool: T[], n = 2): T[] {
   return shuffle([correct, ...d]);
 }
 
-// Bốc n mục CHƯA gặp (theo danh sách id đã thấy); hết mục mới thì reset để chơi lại.
+// Bốc n mục CHƯA gặp (theo danh sách id đã thấy). Ưu tiên hết mục mới trước;
+// nếu không đủ thì mới bổ sung từ mục cũ (đảo lại) — KHÔNG lặp trong cùng một lượt.
 // Trả {picked, nextSeen} — nextSeen dùng lưu vào state để lần sau khác đi.
 export function pickUnseen<T extends { id: string }>(items: T[], seen: string[], n: number): { picked: T[]; nextSeen: string[] } {
-  let pool = items.filter((i) => !seen.includes(i.id));
-  let base = seen;
-  if (pool.length < n) { pool = items.slice(); base = []; } // đã gặp gần hết → reset vòng mới
-  const picked = shuffle(pool).slice(0, Math.min(n, pool.length));
-  const nextSeen = [...base, ...picked.map((p) => p.id)];
-  return { picked, nextSeen };
+  const unseen = shuffle(items.filter((i) => !seen.includes(i.id)));
+  if (unseen.length >= n) {
+    const picked = unseen.slice(0, n);
+    return { picked, nextSeen: [...seen, ...picked.map((p) => p.id)] };
+  }
+  // Không đủ mục mới: lấy hết mục mới, rồi bổ sung từ mục cũ để đủ n (bắt đầu vòng mới).
+  const rest = shuffle(items.filter((i) => seen.includes(i.id)));
+  const picked = [...unseen, ...rest].slice(0, Math.min(n, items.length));
+  return { picked, nextSeen: picked.map((p) => p.id) };
 }

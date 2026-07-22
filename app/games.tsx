@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { speak, shuffle, celebrate, pickUnseen } from "@/lib/fx";
 import { ECHO, type StopKind } from "@/lib/games";
-import { detectiveSceneById, randomDetectiveScene, talkSceneById, randomTalkScene } from "@/lib/scenes";
-import { puzzleSetById, randomPuzzleSet, riddleSetById, randomRiddleSet } from "@/lib/banks";
+import { DETECTIVE_SCENES, TALK_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scenes";
+import { PUZZLE_SETS, RIDDLE_SETS, puzzleSetById, riddleSetById } from "@/lib/banks";
 
 /* ============ Khung chung + màn kết quả ============ */
 function Scene({ image, emojis, note }: { image?: string; emojis: string[]; note: string }) {
@@ -22,14 +22,18 @@ function starsFor(score: number, total: number): number {
   return pct >= 0.8 ? 3 : pct >= 0.5 ? 2 : 1;
 }
 
-function GameResult({ title, sub, stars, onDone }: { title: string; sub: string; stars: number; onDone: () => void }) {
+function GameResult({ title, sub, stars, onDone, doneLabel = "Tuyệt vời! →", secondary }: {
+  title: string; sub: string; stars: number; onDone: () => void;
+  doneLabel?: string; secondary?: { label: string; onClick: () => void };
+}) {
   useEffect(() => { celebrate(!document.body.classList.contains("no-motion")); }, []);
   return (
     <div className="game-result">
       <div className="gr-stars">{"⭐".repeat(stars)}{"☆".repeat(3 - stars)}</div>
       <h3>{title}</h3>
       <p>{sub}</p>
-      <button className="btn green" onClick={onDone}>Tuyệt vời! →</button>
+      <button className="btn green" onClick={onDone}>{doneLabel}</button>
+      {secondary && <button className="btn ghost sm" onClick={secondary.onClick}>{secondary.label}</button>}
     </div>
   );
 }
@@ -47,15 +51,43 @@ function GameShell({ emoji, title, vi, onExit, children }: { emoji: string; titl
   );
 }
 
-/* ============ 1. Picture Detective (ngân hàng cảnh + bốc 5 câu, chống lặp) ============ */
-function PictureDetective({ sceneId, seen, onSeen, onBest, onExit, onFinish }: {
-  sceneId?: string; seen: Record<string, string[]>;
-  onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
-  onExit: () => void; onFinish: (stars: number) => void;
+/* ============ Thư viện cảnh/chủ đề: cho bé THẤY tất cả các bức & tự chọn ============ */
+type GalleryItem = { id: string; name: string; sub: string; image?: string; emoji?: string };
+function GameGallery({ emoji, title, vi, intro, items, seenPrefix, seen, onPick, onExit }: {
+  emoji: string; title: string; vi: string; intro: string;
+  items: GalleryItem[]; seenPrefix: string; seen: Record<string, string[]>;
+  onPick: (id: string) => void; onExit: () => void;
 }) {
-  // Dựng 1 lượt chơi: cảnh (chỉ định hoặc ngẫu nhiên) + 5 câu chưa gặp
+  return (
+    <GameShell emoji={emoji} title={title} vi={vi} onExit={onExit}>
+      <p className="gallery-intro">{intro}</p>
+      <div className="scene-gallery">
+        {items.map((it) => {
+          const explored = (seen[seenPrefix + ":" + it.id]?.length || 0) > 0;
+          return (
+            <button key={it.id} className={`scene-card ${explored ? "explored" : ""}`} onClick={() => onPick(it.id)}>
+              <span className="sc-thumb">
+                {it.image ? <img src={it.image} alt="" /> : <span className="sc-emoji">{it.emoji}</span>}
+                {explored && <span className="sc-check">✓</span>}
+              </span>
+              <span className="sc-name">{it.name}</span>
+              <span className="sc-sub">{explored ? "Đã khám phá · chơi lại" : it.sub}</span>
+            </button>
+          );
+        })}
+      </div>
+    </GameShell>
+  );
+}
+
+/* ============ 1. Picture Detective ============ */
+function DetectiveRound({ sceneId, seen, onSeen, onBest, onExit, onFinish, onNext }: {
+  sceneId: string; seen: Record<string, string[]>;
+  onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
+  onExit: () => void; onFinish: (stars: number) => void; onNext?: () => void;
+}) {
   const [session] = useState(() => {
-    const scene = (sceneId && detectiveSceneById(sceneId)) || randomDetectiveScene();
+    const scene = detectiveSceneById(sceneId) || DETECTIVE_SCENES[0];
     const key = "picdet:" + scene.id;
     const { picked, nextSeen } = pickUnseen(scene.questions, seen[key] || [], 5);
     const qs = picked.map((q) => ({ ...q, options: shuffle(q.options) }));
@@ -69,12 +101,15 @@ function PictureDetective({ sceneId, seen, onSeen, onBest, onExit, onFinish }: {
   const q = qs[i];
   const answered = picked !== null;
 
-  useEffect(() => { onSeen?.(session.key, session.nextSeen); }, []); // lưu "đã gặp" 1 lần
+  useEffect(() => { if (fin) onSeen?.(session.key, session.nextSeen); }, [fin]); // lưu "đã gặp" khi HOÀN THÀNH lượt
 
   if (fin) {
     const s = starsFor(score, qs.length);
     return <GameShell emoji="🔎" title={scene.title} vi={scene.vi} onExit={onExit}>
-      <GameResult title={`Đúng ${score}/${qs.length} câu!`} sub="Con mắt thám tử thật tinh! Chơi lại sẽ gặp câu khác." stars={s} onDone={() => { onBest?.(score); onFinish(s); }} />
+      <GameResult title={`Đúng ${score}/${qs.length} câu!`} sub="Con mắt thám tử thật tinh! Chơi lại sẽ gặp câu khác."
+        stars={s} doneLabel={onNext ? "Chơi bức khác →" : "Tuyệt vời! →"}
+        onDone={() => { onBest?.(score); if (onNext) onNext(); else onFinish(s); }}
+        secondary={onNext ? { label: "Xong →", onClick: () => { onBest?.(score); onFinish(s); } } : undefined} />
     </GameShell>;
   }
   function answer(o: string) {
@@ -107,15 +142,36 @@ function PictureDetective({ sceneId, seen, onSeen, onBest, onExit, onFinish }: {
     </GameShell>
   );
 }
-
-/* ============ 2. Sentence Puzzle (ngân hàng 6 chủ đề, bốc 6 câu, chống lặp) ============ */
-function SentencePuzzle({ setId, seen, onSeen, onBest, onExit, onFinish }: {
-  setId?: string; seen: Record<string, string[]>;
+function PictureDetective({ sceneId, seen, onSeen, onBest, onExit, onFinish }: {
+  sceneId?: string; seen: Record<string, string[]>;
   onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
   onExit: () => void; onFinish: (stars: number) => void;
 }) {
+  const gallery = !sceneId;
+  const [chosen, setChosen] = useState<string | undefined>(sceneId);
+  if (gallery && !chosen) {
+    return <GameGallery emoji="🔎" title="Thám tử hình ảnh" vi="Chọn bức tranh để điều tra"
+      intro="Chọn một bức tranh để bắt đầu điều tra — mỗi bức có nhiều câu hỏi khác nhau!"
+      items={DETECTIVE_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image }))}
+      seenPrefix="picdet" seen={seen} onPick={setChosen} onExit={onExit} />;
+  }
+  return <DetectiveRound key={chosen} sceneId={chosen!} seen={seen} onSeen={onSeen} onBest={onBest}
+    onExit={gallery ? () => setChosen(undefined) : onExit}
+    onFinish={onFinish} onNext={gallery ? () => setChosen(undefined) : undefined} />;
+}
+
+/* ============ 2. Sentence Puzzle ============ */
+const PUZZLE_META: Record<string, [string, string]> = {
+  daily: ["Đời sống", "🏠"], school: ["Trường lớp", "🏫"], food: ["Đồ ăn", "🍎"],
+  places: ["Nơi chốn & Du lịch", "🗺️"], feelings: ["Cảm xúc", "😊"], past: ["Chuyện đã qua", "⏰"],
+};
+function PuzzleRound({ setId, seen, onSeen, onBest, onExit, onFinish, onNext }: {
+  setId: string; seen: Record<string, string[]>;
+  onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
+  onExit: () => void; onFinish: (stars: number) => void; onNext?: () => void;
+}) {
   const [session] = useState(() => {
-    const set = (setId && puzzleSetById(setId)) || randomPuzzleSet();
+    const set = puzzleSetById(setId) || PUZZLE_SETS[0];
     const key = "puzzle:" + set.id;
     const { picked, nextSeen } = pickUnseen(set.items, seen[key] || [], 6);
     return { set, key, items: picked, nextSeen };
@@ -129,13 +185,16 @@ function SentencePuzzle({ setId, seen, onSeen, onBest, onExit, onFinish }: {
   const [placed, setPlaced] = useState<string[]>([]);
   const [result, setResult] = useState<null | boolean>(null);
 
-  useEffect(() => { onSeen?.(session.key, session.nextSeen); }, []);
+  useEffect(() => { if (fin) onSeen?.(session.key, session.nextSeen); }, [fin]);
   useEffect(() => { setBank(shuffle(items[i].solution)); setPlaced([]); setResult(null); }, [i, items]);
 
   if (fin) {
     const s = starsFor(score, items.length);
     return <GameShell emoji="🧩" title="Sentence Puzzle" vi={`Xếp câu · ${set.title}`} onExit={onExit}>
-      <GameResult title={`Xếp đúng ${score}/${items.length} câu!`} sub="Ghép câu siêu đỉnh! Chơi lại sẽ gặp câu khác." stars={s} onDone={() => { onBest?.(score); onFinish(s); }} />
+      <GameResult title={`Xếp đúng ${score}/${items.length} câu!`} sub="Ghép câu siêu đỉnh! Chơi lại sẽ gặp câu khác."
+        stars={s} doneLabel={onNext ? "Chủ đề khác →" : "Tuyệt vời! →"}
+        onDone={() => { onBest?.(score); if (onNext) onNext(); else onFinish(s); }}
+        secondary={onNext ? { label: "Xong →", onClick: () => { onBest?.(score); onFinish(s); } } : undefined} />
     </GameShell>;
   }
   function place(w: string, idx: number) {
@@ -179,15 +238,36 @@ function SentencePuzzle({ setId, seen, onSeen, onBest, onExit, onFinish }: {
     </GameShell>
   );
 }
-
-/* ============ 3. English Riddles (ngân hàng 6 bộ, bốc 5 câu, chống lặp) ============ */
-function RiddleGame({ setId, seen, onSeen, onBest, accent, onExit, onFinish }: {
+function SentencePuzzle({ setId, seen, onSeen, onBest, onExit, onFinish }: {
   setId?: string; seen: Record<string, string[]>;
   onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
-  accent: "US" | "CA"; onExit: () => void; onFinish: (stars: number) => void;
+  onExit: () => void; onFinish: (stars: number) => void;
+}) {
+  const gallery = !setId;
+  const [chosen, setChosen] = useState<string | undefined>(setId);
+  if (gallery && !chosen) {
+    return <GameGallery emoji="🧩" title="Xếp câu" vi="Chọn một chủ đề"
+      intro="Chọn một chủ đề để luyện xếp câu — mỗi chủ đề có 8 câu khác nhau!"
+      items={PUZZLE_SETS.map((s) => ({ id: s.id, name: PUZZLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: PUZZLE_META[s.id]?.[1] || "🧩" }))}
+      seenPrefix="puzzle" seen={seen} onPick={setChosen} onExit={onExit} />;
+  }
+  return <PuzzleRound key={chosen} setId={chosen!} seen={seen} onSeen={onSeen} onBest={onBest}
+    onExit={gallery ? () => setChosen(undefined) : onExit}
+    onFinish={onFinish} onNext={gallery ? () => setChosen(undefined) : undefined} />;
+}
+
+/* ============ 3. English Riddles ============ */
+const RIDDLE_META: Record<string, [string, string]> = {
+  animals: ["Con vật", "🐘"], food: ["Đồ ăn", "🍎"], places: ["Nơi chốn", "🏖️"],
+  objects: ["Đồ vật", "🎒"], nature: ["Thiên nhiên", "🌈"], logic: ["Đố mẹo", "🧠"],
+};
+function RiddleRound({ setId, seen, onSeen, onBest, accent, onExit, onFinish, onNext }: {
+  setId: string; seen: Record<string, string[]>;
+  onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
+  accent: "US" | "CA"; onExit: () => void; onFinish: (stars: number) => void; onNext?: () => void;
 }) {
   const [session] = useState(() => {
-    const set = (setId && riddleSetById(setId)) || randomRiddleSet();
+    const set = riddleSetById(setId) || RIDDLE_SETS[0];
     const key = "riddle:" + set.id;
     const { picked, nextSeen } = pickUnseen(set.items, seen[key] || [], 5);
     const items = picked.map((r) => ({ ...r, options: shuffle(r.options) }));
@@ -201,12 +281,15 @@ function RiddleGame({ setId, seen, onSeen, onBest, accent, onExit, onFinish }: {
   const r = items[i];
   const answered = picked !== null;
 
-  useEffect(() => { onSeen?.(session.key, session.nextSeen); }, []);
+  useEffect(() => { if (fin) onSeen?.(session.key, session.nextSeen); }, [fin]);
 
   if (fin) {
     const s = starsFor(score, items.length);
     return <GameShell emoji="🦉" title="English Riddles" vi={`Đố vui · ${set.title}`} onExit={onExit}>
-      <GameResult title={`Giải đúng ${score}/${items.length} câu!`} sub="Cú thông thái gật gù khen bạn! Chơi lại sẽ gặp câu khác." stars={s} onDone={() => { onBest?.(score); onFinish(s); }} />
+      <GameResult title={`Giải đúng ${score}/${items.length} câu!`} sub="Cú thông thái gật gù khen bạn! Chơi lại sẽ gặp câu khác."
+        stars={s} doneLabel={onNext ? "Bộ khác →" : "Tuyệt vời! →"}
+        onDone={() => { onBest?.(score); if (onNext) onNext(); else onFinish(s); }}
+        secondary={onNext ? { label: "Xong →", onClick: () => { onBest?.(score); onFinish(s); } } : undefined} />
     </GameShell>;
   }
   function answer(o: string) {
@@ -241,14 +324,31 @@ function RiddleGame({ setId, seen, onSeen, onBest, accent, onExit, onFinish }: {
     </GameShell>
   );
 }
-
-/* ============ 4. Picture Talk (6 cảnh, bốc 6 prompt, chống lặp — nói, không ghi âm) ============ */
-function PictureTalk({ sceneId, seen, onSeen, accent, onExit, onFinish }: {
-  sceneId?: string; seen: Record<string, string[]>; onSeen?: (key: string, ids: string[]) => void;
+function RiddleGame({ setId, seen, onSeen, onBest, accent, onExit, onFinish }: {
+  setId?: string; seen: Record<string, string[]>;
+  onSeen?: (key: string, ids: string[]) => void; onBest?: (score: number) => void;
   accent: "US" | "CA"; onExit: () => void; onFinish: (stars: number) => void;
 }) {
+  const gallery = !setId;
+  const [chosen, setChosen] = useState<string | undefined>(setId);
+  if (gallery && !chosen) {
+    return <GameGallery emoji="🦉" title="Đố vui tiếng Anh" vi="Chọn một bộ câu đố"
+      intro="Chọn một bộ câu đố — mỗi bộ có 8 câu đố khác nhau!"
+      items={RIDDLE_SETS.map((s) => ({ id: s.id, name: RIDDLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: RIDDLE_META[s.id]?.[1] || "🦉" }))}
+      seenPrefix="riddle" seen={seen} onPick={setChosen} onExit={onExit} />;
+  }
+  return <RiddleRound key={chosen} setId={chosen!} seen={seen} onSeen={onSeen} onBest={onBest} accent={accent}
+    onExit={gallery ? () => setChosen(undefined) : onExit}
+    onFinish={onFinish} onNext={gallery ? () => setChosen(undefined) : undefined} />;
+}
+
+/* ============ 4. Picture Talk (nói, không ghi âm) ============ */
+function TalkRound({ sceneId, seen, onSeen, accent, onExit, onFinish, onNext }: {
+  sceneId: string; seen: Record<string, string[]>; onSeen?: (key: string, ids: string[]) => void;
+  accent: "US" | "CA"; onExit: () => void; onFinish: (stars: number) => void; onNext?: () => void;
+}) {
   const [session] = useState(() => {
-    const scene = (sceneId && talkSceneById(sceneId)) || randomTalkScene();
+    const scene = talkSceneById(sceneId) || TALK_SCENES[0];
     const key = "talk:" + scene.id;
     const withId = scene.prompts.map((p, idx) => ({ ...p, id: scene.id + "p" + idx }));
     const { picked, nextSeen } = pickUnseen(withId, seen[key] || [], 6);
@@ -259,11 +359,17 @@ function PictureTalk({ sceneId, seen, onSeen, accent, onExit, onFinish }: {
   const [fin, setFin] = useState(false);
   const count = said.filter(Boolean).length;
 
-  useEffect(() => { onSeen?.(session.key, session.nextSeen); }, []);
+  useEffect(() => { if (fin) onSeen?.(session.key, session.nextSeen); }, [fin]);
 
   if (fin) {
+    // Sao theo số câu đã nói: đủ hết = 3★, quá nửa = 2★, còn lại = 1★
+    const s = count >= prompts.length ? 3 : count >= Math.ceil(prompts.length / 2) ? 2 : 1;
     return <GameShell emoji="💬" title={scene.title} vi={scene.vi} onExit={onExit}>
-      <GameResult title="Nói hay lắm! 🌟" sub={`Bạn đã nói ${count}/${prompts.length} câu về bức tranh.`} stars={3} onDone={() => onFinish(3)} />
+      <GameResult title={s >= 3 ? "Nói hay lắm! 🌟" : "Cố thêm chút nữa nhé! 💪"}
+        sub={`Bạn đã nói ${count}/${prompts.length} câu về bức tranh.`}
+        stars={s} doneLabel={onNext ? "Bức khác →" : "Tuyệt vời! →"}
+        onDone={() => { if (onNext) onNext(); else onFinish(s); }}
+        secondary={onNext ? { label: "Xong →", onClick: () => onFinish(s) } : undefined} />
     </GameShell>;
   }
   return (
@@ -289,6 +395,22 @@ function PictureTalk({ sceneId, seen, onSeen, accent, onExit, onFinish }: {
       </button>
     </GameShell>
   );
+}
+function PictureTalk({ sceneId, seen, onSeen, accent, onExit, onFinish }: {
+  sceneId?: string; seen: Record<string, string[]>; onSeen?: (key: string, ids: string[]) => void;
+  accent: "US" | "CA"; onExit: () => void; onFinish: (stars: number) => void;
+}) {
+  const gallery = !sceneId;
+  const [chosen, setChosen] = useState<string | undefined>(sceneId);
+  if (gallery && !chosen) {
+    return <GameGallery emoji="💬" title="Mô tả hình ảnh" vi="Chọn bức tranh để nói"
+      intro="Chọn một bức tranh rồi tập nói thành câu — có 6 bức tranh khác nhau!"
+      items={TALK_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image }))}
+      seenPrefix="talk" seen={seen} onPick={setChosen} onExit={onExit} />;
+  }
+  return <TalkRound key={chosen} sceneId={chosen!} seen={seen} onSeen={onSeen} accent={accent}
+    onExit={gallery ? () => setChosen(undefined) : onExit}
+    onFinish={onFinish} onNext={gallery ? () => setChosen(undefined) : undefined} />;
 }
 
 /* ============ 5. Echo Challenge (Shadowing rút gọn) ============ */
@@ -345,7 +467,7 @@ export function GamePlay({ kind, refId, accent, seen, onSeen, onBest, onExit, on
   return null;
 }
 
-// (giữ để tương thích) — Games nay mở ngẫu nhiên nên không dùng nữa
+// (giữ để tương thích) — Games nay mở thư viện cảnh; Adventure mở đúng ref
 export const FIRST_REF: Record<Exclude<StopKind, "echo" | "shadow">, string> = {
-  picdet: "pd-park", puzzle: "puzzle-everyday", riddle: "riddle-animals", talk: "pt-park",
+  picdet: "park", puzzle: "daily", riddle: "animals", talk: "park",
 };
