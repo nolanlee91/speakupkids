@@ -151,7 +151,7 @@ export const ZOO_LINES: Line[] = [
 const GEN = "/assets/images/gen/";
 export const BASE_LESSONS: Lesson[] = [
   { id: "zoo", title: "At the Zoo — Elephants", level: 1, topic: "Animals", accent: "US", skill: "Nói",
-    dur: 19, free: true, videoId: "jNQXAC9IVRw", thumb: GEN + "thumb-aquarium.png", lines: ZOO_LINES },
+    dur: 19, free: true, videoId: "jNQXAC9IVRw", thumb: GEN + "thumb-aquarium.webp", lines: ZOO_LINES },
   { id: "dino", title: "Dinosaurs — Big & Small", level: 1, topic: "Animals", accent: "US", skill: "Từ vựng",
     dur: 78, free: true, videoId: "oDSlU0QRUcQ", lines: DINO_LINES },
   { id: "like", title: "What I Like", level: 1, topic: "Sở thích", accent: "US", skill: "Nói",
@@ -161,15 +161,15 @@ export const BASE_LESSONS: Lesson[] = [
   { id: "bluey_teeth", title: "Bluey — Brush Your Teeth!", level: 2, topic: "Thói quen hằng ngày", accent: "US", skill: "Nghe",
     dur: 116, free: false, videoId: "n4rh2jD8OkY", lines: BLUEY_LINES },
   { id: "food", title: "Food I Like", level: 1, topic: "Food", accent: "US", skill: "Từ vựng",
-    dur: 130, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-supermarket.png", lines: [] },
+    dur: 130, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-supermarket.webp", lines: [] },
   { id: "friends", title: "My Best Friend", level: 2, topic: "School & Friends", accent: "US", skill: "Nghe",
-    dur: 150, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-classroom.png", lines: [] },
+    dur: 150, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-classroom.webp", lines: [] },
   { id: "vancouver", title: "A Day in Vancouver", level: 3, topic: "Life in Canada", accent: "CA", skill: "Nói",
-    dur: 180, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-picnic.png", lines: [] },
+    dur: 180, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-picnic.webp", lines: [] },
   { id: "fox", title: "The Brave Little Fox", level: 4, topic: "Stories", accent: "US", skill: "Nghe",
-    dur: 200, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-bus.png", lines: [] },
+    dur: 200, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-bus.webp", lines: [] },
   { id: "intro", title: "Introduce Yourself", level: 5, topic: "Speak with Confidence", accent: "US", skill: "Nói",
-    dur: 90, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-cafe.png", lines: [] },
+    dur: 90, free: false, videoId: "J20eXhZTHEo", thumb: GEN + "thumb-cafe.webp", lines: [] },
 ];
 
 export function userLessons(): Lesson[] {

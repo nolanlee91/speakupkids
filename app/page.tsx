@@ -20,14 +20,14 @@ const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
 
 const BADGES: { img: string; nm: string; has: (s: AppState, ls: Lesson[]) => boolean }[] = [
-  { img: "badge-star.png", nm: "Bài đầu tiên", has: (s) => lessonsDone(s) >= 1 },
-  { img: "badge-streak.png", nm: "3 ngày liên tiếp", has: (s) => s.streak >= 3 },
-  { img: "badge-speaking.png", nm: "Chơi 3 game", has: (s) => gamesDone(s) >= 3 },
-  { img: "badge-pronunciation.png", nm: "Thuộc 15 câu", has: (s) => totalLearned(s) >= 15 },
-  { img: "badge-listening.png", nm: "Chăm nghe", has: (s) => lessonsDone(s) >= 3 },
-  { img: "badge-trophy.png", nm: "10 sao", has: (s) => totalStars(s) >= 10 },
-  { img: "badge-explorer.png", nm: "Nhà khám phá", has: (s) => gamesDone(s) >= 5 },
-  { img: "badge-vancouver.png", nm: "Đủ 5 sticker", has: (s) => (s.stickers || []).length >= 5 },
+  { img: "badge-star.webp", nm: "Bài đầu tiên", has: (s) => lessonsDone(s) >= 1 },
+  { img: "badge-streak.webp", nm: "3 ngày liên tiếp", has: (s) => s.streak >= 3 },
+  { img: "badge-speaking.webp", nm: "Chơi 3 game", has: (s) => gamesDone(s) >= 3 },
+  { img: "badge-pronunciation.webp", nm: "Thuộc 15 câu", has: (s) => totalLearned(s) >= 15 },
+  { img: "badge-listening.webp", nm: "Chăm nghe", has: (s) => lessonsDone(s) >= 3 },
+  { img: "badge-trophy.webp", nm: "10 sao", has: (s) => totalStars(s) >= 10 },
+  { img: "badge-explorer.webp", nm: "Nhà khám phá", has: (s) => gamesDone(s) >= 5 },
+  { img: "badge-vancouver.webp", nm: "Đủ 5 sticker", has: (s) => (s.stickers || []).length >= 5 },
 ];
 
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
@@ -182,7 +182,7 @@ export default function App() {
       {upsell && (
         <div className="modal" onClick={(e) => e.target === e.currentTarget && setUpsell(false)}>
           <div className="box">
-            <img src={`${GEN}mascot-book.png`} style={{ width: 110, height: 110, objectFit: "contain" }} alt="" />
+            <img src={`${GEN}mascot-book.webp`} style={{ width: 110, height: 110, objectFit: "contain" }} alt="" />
             <h3>Nội dung Premium 🔒</h3>
             <p style={{ color: "var(--muted)" }}>Mở khoá tất cả thế giới phiêu lưu, game và câu đố với gói Premium.</p>
             <button className="btn accent" onClick={() => { setUpsell(false); setAccount(true); }}>Xem gói thành viên</button>
@@ -208,7 +208,7 @@ export default function App() {
             {reward.sticker ? (
               <div className="reward-sticker">{reward.sticker.emoji}</div>
             ) : (
-              <img src={`${GEN}mascot-star.png`} style={{ width: 120, height: 120, objectFit: "contain" }} alt="" />
+              <img src={`${GEN}mascot-star.webp`} style={{ width: 120, height: 120, objectFit: "contain" }} alt="" />
             )}
             <h3>{reward.title}</h3>
             {typeof reward.stars === "number" && <div className="gr-stars sm">{"⭐".repeat(reward.stars)}{"☆".repeat(3 - reward.stars)}</div>}
@@ -370,7 +370,7 @@ function WorldTrail({ world, state, stopDone, launchStop }: {
               {done ? "✓" : KIND_EMOJI[st.kind]}
             </button>
             <div className="nlabel" style={{ left: x, top: y + 40 }}>{st.label}<small>{st.vi}</small></div>
-            {cur && <img className="maple-here" src={`${GEN}mascot-wave.png`} alt="" style={{ left: x, top: y - 100 }} />}
+            {cur && <img className="maple-here" src={`${GEN}mascot-wave.webp`} alt="" style={{ left: x, top: y - 100 }} />}
           </div>
         );
       })}
@@ -419,7 +419,7 @@ function SpeakLab({ lessons, onEcho, onTalk, openLesson }: {
     <section className="stage">
       <div className="stage-scene fullbleed">
         <div className="speech">Nghe mình đọc rồi nói theo nhé — cứ nói thật to! 🎶</div>
-        <img className="stage-maple" src={`${GEN}mascot-headphones.png`} alt="Maple đeo tai nghe" />
+        <img className="stage-maple" src={`${GEN}mascot-headphones.webp`} alt="Maple đeo tai nghe" />
       </div>
 
       <h2 className="chapter">Chọn cách luyện nói</h2>
@@ -464,7 +464,7 @@ function Collection({ state, lessons, stars }: { state: AppState; lessons: Lesso
   return (
     <section className="journal">
       <div className="journal-head">
-        <img className="journal-maple" src={`${GEN}mascot-book.png`} alt="" />
+        <img className="journal-maple" src={`${GEN}mascot-book.webp`} alt="" />
         <div>
           <h2 className="chapter">Sổ tay phiêu lưu</h2>
           <p className="journal-sub">Sticker & huy hiệu bạn sưu tầm được cùng Maple</p>

@@ -11,14 +11,14 @@ Art direction chung: 3D-render ấm áp, thủ công, hơi phép thuật, dẫn 
 
 | Tên file | Kích thước | Nền | Dùng ở đâu |
 |---|---|---|---|
-| `vancouver-hero-maple-girl-v3.png` | 1844×853 (2.16:1) | full-bg | Home — arrival scene; Splash |
-| `shadowing-background.png` | 1672×941 (1.78:1) | full-bg | Speak Lab — stage; Shadowing Studio |
-| `gen/mascot-wave.png` | 627×627 | transparent | Adventure — Maple tại checkpoint hiện tại |
-| `gen/mascot-headphones.png` | 627×627 | transparent | Speak Lab — Maple trên sân khấu |
-| `gen/mascot-book.png` | 627×627 | transparent | Collection — header sổ tay; upsell modal |
-| `gen/mascot-star.png` | 627×627 | transparent | Reward modal |
-| `badges/badge-*.png` (12) | 320×320 | transparent | Collection — kệ huy hiệu |
-| `gen/thumb-*.png` (6) | 836×313 | full-bg | Speak Lab — filmstrip (bài chưa có video thật) |
+| `vancouver-hero-maple-girl-v3.webp` | 1844×853 · 94KB | full-bg | Home — arrival scene; Splash |
+| `shadowing-background.webp` | 1672×941 · 43KB | full-bg | Speak Lab — stage; Shadowing Studio |
+| `gen/mascot-wave.webp` | 627×627 · 27KB | transparent | Adventure — Maple tại checkpoint hiện tại |
+| `gen/mascot-headphones.webp` | 627×627 · 31KB | transparent | Speak Lab — Maple trên sân khấu |
+| `gen/mascot-book.webp` | 627×627 · 28KB | transparent | Collection — header sổ tay; upsell modal |
+| `gen/mascot-star.webp` | 627×627 · 28KB | transparent | Reward modal |
+| `badges/badge-*.webp` (12) | 320×320 · ~20KB | transparent | Collection — kệ huy hiệu |
+| `gen/thumb-*.webp` (6) | 836×313 · ~38KB | full-bg | Speak Lab — filmstrip (bài chưa có video thật) |
 | `gen/scene-park.webp` | 4:3 · 277KB | full-bg | Picture Detective `pd-park` + Picture Talk `pt-park` ✅ **đã vẽ** |
 | `gen/scene-kitchen.webp` | 4:3 · 159KB | full-bg | Picture Detective `pd-kitchen` ✅ **đã vẽ** |
 | `gen/game-picdet.webp` | 4:3 · 280KB | full-bg | Games — portal Picture Detective ✅ **đã vẽ** |
@@ -36,7 +36,7 @@ Hiện mỗi vùng chỉ là gradient + silhouette SVG đơn giản (nhà/cây/n
 
 | Tên đề xuất | Mô tả hình | Tỷ lệ / kích thước | Nền | Dùng ở đâu |
 |---|---|---|---|---|
-| `world-everyday-town.png` | Phố nhỏ Canada ấm áp: cửa hàng, cây phong, đường mòn uốn | 3:4 dọc · 1200×1600 | full-bg (mép trên trong suốt để nối vùng trên) | Adventure — dải vùng Everyday Town |
+| `world-everyday-town.webp` | Phố nhỏ Canada ấm áp: café và cây phong bên trái, bookshop và trạm xe bên phải; hành lang gameplay thoáng ở giữa, không vẽ sẵn đường mòn | 16:9 ngang · 1600×900 | full-bg | Adventure — dải vùng Everyday Town · đã hoàn thành |
 | `world-school.png` | Sân trường, cột cờ, xe buýt vàng, lá rơi | 3:4 · 1200×1600 | full-bg mép hoà tan | Adventure — vùng School Adventure |
 | `world-forest.png` | Rừng thông bí ẩn, sương, đom đóm, con vật thấp thoáng | 3:4 · 1200×1600 | full-bg mép hoà tan | Adventure — Mystery Forest |
 | `world-vancouver.png` | Bờ biển Vancouver, núi tuyết, cầu Lions Gate | 3:4 · 1200×1600 | full-bg mép hoà tan | Adventure — Vancouver Journey |
