@@ -184,7 +184,7 @@ export default function App() {
         {view === "home" && <Home state={state} stopDone={stopDone} setView={setView} />}
         {view === "learn" && <Learn state={state} setState={setState}
           onEcho={() => launch({ kind: "echo", recId: "quick-echo", sticker: "st-mic", title: "Echo" })}
-          onTalk={() => launch({ kind: "talk", refId: "park", recId: "quick-talk", title: "Picture Talk" })}
+          onTalk={(sceneId) => launch({ kind: "talk", refId: sceneId ?? "park", recId: "quick-talk", title: "Picture Talk" })}
           openLesson={openLesson} onComplete={completeLearn} />}
         {view === "adventure" && <Adventure state={state} stopDone={stopDone} launchStop={launchStop} onLearn={() => setView("learn")} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: undefined, recId: "quick-" + kind, title: "Trò chơi" })} />}

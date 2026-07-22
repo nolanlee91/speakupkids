@@ -17,7 +17,7 @@ export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete 
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   onEcho: () => void;
-  onTalk: () => void;
+  onTalk: (sceneId?: string) => void;
   openLesson: (id: string) => void;
   onComplete: (lessonId: string, score: number, total: number) => void;
 }) {
@@ -190,7 +190,7 @@ function WordsView({ lesson, diff, accent, onDone, back }: { lesson: Lesson; dif
   const vis = showVi(diff);
   return (
     <Page icon="📖" title="Từ vựng" vi="Words" back={back}>
-      <Bubble>Nghe và đọc {lesson.vocab.length} từ mới về công viên. Chạm 🔊 để nghe nhé!</Bubble>
+      <Bubble>Nghe và đọc {lesson.vocab.length} từ mới ({lesson.vi}). Chạm 🔊 để nghe nhé!</Bubble>
       <div className="voca-list">
         {lesson.vocab.map((v) => (
           <div key={v.word} className="voca">
@@ -299,7 +299,7 @@ function ListeningView({ lesson, diff, accent, onDone, back }: { lesson: Lesson;
 
 /* ---------- SPEAKING ---------- */
 function SpeakingView({ lesson, diff, accent, onEcho, onTalk, openLesson, onDone, back }: {
-  lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onEcho: () => void; onTalk: () => void; openLesson: (id: string) => void; onDone: () => void; back: () => void;
+  lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onEcho: () => void; onTalk: (sceneId?: string) => void; openLesson: (id: string) => void; onDone: () => void; back: () => void;
 }) {
   const S = lesson.speaking;
   const vis = showVi(diff);
@@ -338,11 +338,11 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, openLesson, onDone
       </div>
 
       <div className="speak-block">
-        <div className="sb-h">3 · Mô tả công viên ({S.describe.min}–{S.describe.max} câu)</div>
+        <div className="sb-h">3 · Mô tả tranh ({S.describe.min}–{S.describe.max} câu)</div>
         <div className={`sb-line ${said["describe"] ? "ok" : ""}`}>
           <div className="sb-en">{S.describe.prompt}{vis && <em> — {S.describe.vi}</em>}</div>
           <div className="sb-ctrls">
-            <button className="icbtn" onClick={onTalk}>🖼️ Mở tranh mô tả</button>
+            <button className="icbtn" onClick={() => onTalk(lesson.id)}>🖼️ Mở tranh mô tả</button>
             <button className="icbtn learn" onClick={() => done("describe")}>{said["describe"] ? "✓ Đã mô tả" : "🎙️ Mô tả xong"}</button>
           </div>
         </div>
@@ -352,7 +352,7 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, openLesson, onDone
         <div className="sb-h">Luyện thêm cùng Maple</div>
         <div className="extra-acts">
           <button className="extra-btn" onClick={onEcho}><span>🎤</span>Echo với Maple</button>
-          <button className="extra-btn" onClick={onTalk}><span>💬</span>Mô tả hình ảnh</button>
+          <button className="extra-btn" onClick={() => onTalk(lesson.id)}><span>💬</span>Mô tả hình ảnh</button>
         </div>
         <ShadowStrip openLesson={openLesson} />
       </div>
