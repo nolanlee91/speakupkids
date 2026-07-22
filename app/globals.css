@@ -283,3 +283,162 @@
   .qfb { margin-top: 16px; font-size: 1rem; font-weight: 600; }
   .qfb .ok { color: var(--green); font-weight: 800; } .qfb .no { color: #e8590c; font-weight: 800; }
   .qnext { margin-top: 18px; width: 100%; padding: 14px; font-size: 1.05rem; }
+
+  /* ============================================================
+     PHIÊU LƯU / GAME / BỘ SƯU TẬP (vertical slice)
+     ============================================================ */
+
+  /* --- Avatar menu (từ topbar) --- */
+  .topbar .avatar { border: none; cursor: pointer; padding: 0; }
+  .menu-back { position: fixed; inset: 0; z-index: 90; }
+  .avatar-menu { position: absolute; top: 58px; left: 12px; z-index: 100; background: #fff;
+    border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 30px rgba(45,49,66,.18);
+    padding: 6px; display: flex; flex-direction: column; min-width: 190px; }
+  .avatar-menu button { text-align: left; background: none; border: none; font-family: inherit; font-size: .95rem;
+    font-weight: 600; color: var(--ink); padding: 11px 12px; border-radius: 11px; cursor: pointer; }
+  .avatar-menu button:hover { background: var(--brand-soft); }
+
+  /* --- Home: mission / continue / minigames --- */
+  .mission { display: flex; align-items: center; gap: 14px; padding: 14px; cursor: pointer; }
+  .mission-ic { width: 54px; height: 54px; display: grid; place-items: center; font-size: 1.8rem;
+    background: var(--active); border-radius: 16px; flex: 0 0 auto; }
+  .mission-info { flex: 1; min-width: 0; }
+  .mission-info .k { font-size: .8rem; color: var(--muted); font-weight: 700; }
+  .mission-info .t { font-weight: 800; }
+  .world-continue { display: flex; align-items: center; gap: 14px; padding: 14px; cursor: pointer;
+    background: var(--zt, #fff); }
+  .wc-emoji { font-size: 2.4rem; flex: 0 0 auto; }
+  .wc-name { font-weight: 800; }
+  .wc-sub { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
+  .game-row { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; }
+  .minigame { flex: 0 0 auto; width: 96px; background: var(--zt, #fff); border: 2px solid #fff;
+    border-radius: 18px; padding: 14px 6px; text-align: center; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(45,49,66,.08); transition: transform .1s; }
+  .minigame:hover { transform: translateY(-2px); }
+  .mg-emoji { font-size: 2rem; } .mg-name { font-size: .78rem; font-weight: 700; margin-top: 4px; }
+
+  /* --- Adventure worlds grid --- */
+  .worlds { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 6px; }
+  .world { background: var(--zt, #fff); text-align: center; padding: 18px 12px; cursor: pointer;
+    position: relative; transition: transform .1s; }
+  .world:hover { transform: translateY(-2px); }
+  .world.locked { cursor: default; filter: saturate(.5); opacity: .82; }
+  .world.locked:hover { transform: none; }
+  .w-emoji { font-size: 2.8rem; }
+  .w-name { font-weight: 800; margin-top: 4px; }
+  .w-vi { font-size: .82rem; color: var(--brand-d); font-weight: 700; }
+  .w-sub { font-size: .78rem; color: var(--muted); margin: 4px 0 10px; }
+  .w-badge { display: inline-block; background: #fff; border: 1px solid var(--line); color: var(--muted);
+    font-size: .76rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; }
+  .w-badge.soon { background: var(--active); border-color: var(--active-border); color: #a06a00; }
+
+  /* --- Games hub cards --- */
+  .gamecard { display: flex; flex-direction: column; overflow: hidden; padding: 0; cursor: pointer;
+    transition: transform .1s; }
+  .gamecard:hover { transform: translateY(-3px); }
+  .gc-thumb { height: 132px; background: var(--zt, #eef); display: grid; place-items: center; position: relative; }
+  .gc-emoji { font-size: 3.4rem; }
+  .gc-note { position: absolute; bottom: 6px; right: 8px; font-size: .66rem; color: var(--muted);
+    background: rgba(255,255,255,.75); padding: 2px 7px; border-radius: 8px; }
+  .gc-body { padding: 12px 14px 16px; }
+  .gc-name { font-weight: 800; }
+  .gc-vi { font-size: .82rem; color: var(--brand-d); font-weight: 700; }
+  .gc-blurb { font-size: .82rem; color: var(--muted); margin: 4px 0 10px; }
+
+  /* --- Speak Lab --- */
+  .speak-modes { display: flex; flex-direction: column; gap: 12px; }
+  .speakcard { display: flex; align-items: center; gap: 14px; padding: 16px; cursor: pointer; transition: transform .1s; }
+  .speakcard:hover { transform: translateY(-2px); }
+  .sc-emoji { font-size: 2.2rem; width: 54px; height: 54px; display: grid; place-items: center;
+    background: var(--brand-soft); border-radius: 16px; flex: 0 0 auto; }
+  .sc-name { font-weight: 800; } .sc-sub { font-size: .82rem; color: var(--muted); }
+  .speakcard .btn { margin-left: auto; }
+
+  /* --- Collection: stickers --- */
+  .col-head { font-weight: 800; margin-bottom: 10px; }
+  .stickers { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 12px; }
+  .sticker { text-align: center; background: #f7f2ea; border: 2px dashed var(--line); border-radius: 16px;
+    padding: 12px 6px; }
+  .sticker.on { background: #fff; border-style: solid; border-color: var(--sun);
+    box-shadow: 0 4px 12px rgba(255,204,51,.25); }
+  .sk-emoji { font-size: 2.1rem; filter: grayscale(1) opacity(.5); }
+  .sticker.on .sk-emoji { filter: none; }
+  .sk-name { font-size: .74rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+  .sticker.on .sk-name { color: var(--ink); }
+
+  /* ============================================================
+     GAME OVERLAY (app/games.tsx) + Account panel
+     ============================================================ */
+  .game-overlay { position: fixed; inset: 0; z-index: 150; overflow-y: auto; background: var(--bg);
+    background-image:
+      radial-gradient(circle at 12% 6%, rgba(255,171,120,.16) 0, transparent 40%),
+      radial-gradient(circle at 88% 4%, rgba(23,162,162,.14) 0, transparent 38%); }
+  .game-top { display: flex; align-items: center; gap: 12px; padding: 14px 18px; max-width: 620px; margin: 0 auto; }
+  .game-top .bk { background: #fff; border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px;
+    cursor: pointer; font-weight: 800; color: var(--muted); font-family: inherit; }
+  .game-top h3 { margin: 0; font-size: 1.1rem; }
+  .game-vi { margin-left: auto; font-size: .82rem; color: var(--muted); font-weight: 700; }
+  .game-body { max-width: 620px; margin: 6px auto; padding: 0 18px 44px; }
+
+  /* scene emoji (placeholder cho ảnh minh hoạ thật) */
+  .scene { border-radius: 20px; overflow: hidden; border: 3px solid #fff; box-shadow: 0 10px 26px rgba(45,49,66,.10);
+    background: linear-gradient(135deg, #eaf6ff, #fff6df); position: relative; margin-bottom: 14px; }
+  .scene-art { min-height: 168px; display: flex; flex-wrap: wrap; align-content: center; justify-content: center;
+    gap: 6px 14px; padding: 22px; font-size: 2.6rem; }
+  .scene-note { position: absolute; bottom: 0; left: 0; right: 0; font-size: .72rem; color: var(--muted);
+    background: rgba(255,255,255,.82); padding: 5px 10px; text-align: center; }
+
+  .q-progress { font-size: .82rem; font-weight: 800; color: var(--muted); margin: 4px 0 10px; }
+
+  /* game result */
+  .game-result { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);
+    padding: 30px 24px; box-shadow: 0 10px 26px rgba(45,49,66,.10); }
+  .gr-stars { font-size: 2.4rem; letter-spacing: 4px; }
+  .gr-stars.sm { font-size: 1.6rem; margin: 4px 0; }
+  .game-result h3 { margin: 10px 0 4px; }
+  .game-result p { color: var(--muted); margin: 0 0 18px; }
+
+  /* sentence puzzle */
+  .puzzle-hint { background: var(--active); border-radius: 12px; padding: 10px 14px; font-weight: 700;
+    margin-bottom: 12px; }
+  .puzzle-line { min-height: 60px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: #fff; border: 2px dashed var(--line); border-radius: 16px; padding: 12px; }
+  .puzzle-line.ok { border-color: var(--green); background: #eafaf0; border-style: solid; }
+  .puzzle-line.no { border-color: #ff8787; background: #fff0f0; border-style: solid; }
+  .puzzle-line .ph { color: var(--lock); font-size: .9rem; }
+  .puzzle-bank { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .tile { border: 2px solid var(--brand); background: #fff; color: var(--brand-d); font-weight: 800;
+    font-family: inherit; font-size: 1.05rem; padding: 10px 16px; border-radius: 12px; cursor: pointer;
+    box-shadow: 0 3px 0 rgba(23,162,162,.18); }
+  .tile.placed { border-color: var(--accent); color: #b23a1e; box-shadow: 0 3px 0 rgba(255,122,89,.2); }
+
+  /* riddle */
+  .riddle-card { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);
+    padding: 22px; box-shadow: 0 10px 26px rgba(45,49,66,.10); margin-bottom: 4px; }
+  .riddle-emoji { font-size: 3.2rem; }
+  .riddle-text { font-size: 1.15rem; font-weight: 800; margin: 8px 0 12px; }
+  .riddle-vi { font-size: .84rem; color: var(--muted); margin-top: 10px; }
+
+  /* picture talk */
+  .talk-intro { background: var(--brand-soft); color: var(--brand-d); border-radius: 12px; padding: 10px 14px;
+    font-weight: 700; margin-bottom: 12px; }
+  .talk-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .talk-item { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+  .talk-item.done { border-color: var(--green); background: #f2fbf5; }
+  .talk-en { font-size: 1.1rem; font-weight: 800; }
+  .talk-vi { font-size: .84rem; color: var(--muted); margin: 2px 0 8px; }
+  .talk-ctrls { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* echo */
+  .echo-card { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);
+    padding: 24px; box-shadow: 0 10px 26px rgba(45,49,66,.10); margin-bottom: 16px; }
+  .echo-step { font-size: .82rem; font-weight: 800; color: var(--brand-d); margin: 14px 0 6px; }
+  .echo-en { font-size: 1.5rem; font-weight: 800; }
+  .echo-vi { color: var(--muted); margin-bottom: 12px; }
+  .echo-card .btn { margin: 4px; }
+
+  /* reward sticker */
+  .reward-sticker { font-size: 4.6rem; animation: pop .5s ease; }
+  .reward-newsticker { font-weight: 700; color: var(--brand-d); }
+  @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  body.no-motion .reward-sticker { animation: none; }

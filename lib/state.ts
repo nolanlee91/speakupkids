@@ -19,6 +19,7 @@ export type AppState = {
   recordings: number;
   lastLesson: string;
   progress: Record<string, Progress>;
+  stickers: string[];
   dailyDate: string;
   dailyDone: number;
   splashDate: string;
@@ -40,6 +41,7 @@ export function defaultState(): AppState {
     recordings: 0,
     lastLesson: "",
     progress: {},
+    stickers: [],
     dailyDate: "",
     dailyDone: 0,
     splashDate: "",
@@ -103,6 +105,33 @@ export function ensureProg(s: AppState, id: string): AppState {
   if (!p.learned) p.learned = [];
   return { ...s, progress: { ...s.progress, [id]: p } };
 }
+// Bộ sưu tập sticker
+export function hasSticker(s: AppState, id: string): boolean {
+  return (s.stickers || []).includes(id);
+}
+export function addSticker(s: AppState, id: string): AppState {
+  if (!id || hasSticker(s, id)) return s;
+  return { ...s, stickers: [...(s.stickers || []), id] };
+}
+export function gamesDone(s: AppState): number {
+  return Object.keys(s.progress).filter((k) => k.startsWith("g:") && s.progress[k].done).length;
+}
+// Ghi nhận 1 lượt chơi game (lặp lại được): giữ số sao cao nhất; trả {state, newly}
+export function recordGame(s: AppState, id: string, stars: number, sticker?: string): { state: AppState; newly: boolean } {
+  const key = "g:" + id;
+  const cur = s.progress[key];
+  const newly = !cur?.done;
+  let ns = resetDailyIfNeeded(s);
+  ns = {
+    ...ns,
+    minutes: ns.minutes + (newly ? 2 : 0),
+    dailyDone: ns.dailyDone + (newly ? 1 : 0),
+    progress: { ...ns.progress, [key]: { done: true, stars: Math.max(stars, cur?.stars || 0), learned: cur?.learned || [] } },
+  };
+  if (sticker) ns = addSticker(ns, sticker);
+  return { state: ns, newly };
+}
+
 // cộng sao 1 lần khi hoàn thành; trả {state, newly}
 export function awardCompletion(s: AppState, id: string, stars: number): { state: AppState; newly: boolean } {
   const cur = s.progress[id];
