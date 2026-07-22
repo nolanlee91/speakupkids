@@ -355,7 +355,15 @@
   .reward-sticker { font-size: 4.6rem; animation: pop .5s ease; }
   .reward-newsticker { font-weight: 700; color: var(--brand-d); }
   @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
-  body.no-motion .reward-sticker { animation: none; }
+  body.no-motion .reward-sticker, body.no-motion .reward-maple { animation: none; }
+
+  /* Ảnh sticker thật (Collection + màn thưởng) + pose Maple */
+  .slot-art .sticker-img { display: block; margin: 0 auto; width: 56px; height: 56px; object-fit: contain;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,.18)); }
+  .reward-sticker .sticker-img { width: 132px; height: 132px; object-fit: contain;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,.2)); }
+  .reward-maple { width: 138px; height: 138px; object-fit: contain; animation: pop .5s ease;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,.18)); }
 
   /* ============================================================
      STORYBOOK COMPOSITION — Home / Adventure / Games / Speak / Collection

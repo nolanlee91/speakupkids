@@ -22,6 +22,14 @@ import { speak, celebrate, shuffle } from "@/lib/fx";
 
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
+const STK = "/assets/images/stickers/";
+
+// Ảnh sticker thật; nếu thiếu file thì fallback về emoji
+function StickerArt({ id, emoji }: { id: string; emoji: string }) {
+  const [err, setErr] = useState(false);
+  return err ? <span className="sticker-emoji">{emoji}</span>
+    : <img className="sticker-img" src={`${STK}${id}.webp`} alt="" onError={() => setErr(true)} />;
+}
 
 const BADGES: { img: string; nm: string; has: (s: AppState, ls: Lesson[]) => boolean }[] = [
   { img: "badge-star.webp", nm: "Bài đầu tiên", has: (s) => lessonsDone(s) >= 1 },
@@ -43,7 +51,7 @@ const PLANS: { id: AppState["membership"]; name: string; price: string; feats: s
 
 type View = "home" | "learn" | "adventure" | "games" | "collection";
 type Launch = { kind: StopKind; refId?: string; recId: string; sticker?: string; title: string };
-type Reward = { title: string; html: string; stars?: number; sticker?: { emoji: string; name: string } | null };
+type Reward = { title: string; html: string; stars?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
 const NAV: [View, string, string][] = [
   ["home", "🏠", "Trang chủ"],
@@ -109,7 +117,7 @@ export default function App() {
       title: starsWon >= 3 ? "Xuất sắc! 🌟" : starsWon >= 2 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
       html: `Bạn nhận <b>+${starsWon} ⭐</b>!`,
       stars: starsWon,
-      sticker: sk ? { emoji: sk.emoji, name: sk.name } : null,
+      sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
     });
   }
 
@@ -142,7 +150,7 @@ export default function App() {
       title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
       html: `Bạn hoàn thành bài <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ!<br>Giờ sang Phiêu lưu để dùng thử nhé.`,
       stars,
-      sticker: sk ? { emoji: sk.emoji, name: sk.name } : null,
+      sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
     });
   }
 
@@ -234,9 +242,9 @@ export default function App() {
         <div className="modal" onClick={(e) => e.target === e.currentTarget && setReward(null)}>
           <div className="box">
             {reward.sticker ? (
-              <div className="reward-sticker">{reward.sticker.emoji}</div>
+              <div className="reward-sticker"><StickerArt id={reward.sticker.id} emoji={reward.sticker.emoji} /></div>
             ) : (
-              <img src={`${GEN}mascot-star.webp`} style={{ width: 120, height: 120, objectFit: "contain" }} alt="" />
+              <img className="reward-maple" src={`${GEN}${(reward.stars ?? 3) >= 2 ? "maple-pose-cheer" : "maple-pose-think"}.webp`} alt="" />
             )}
             <h3>{reward.title}</h3>
             {typeof reward.stars === "number" && <div className="gr-stars sm">{"⭐".repeat(reward.stars)}{"☆".repeat(3 - reward.stars)}</div>}
@@ -465,7 +473,7 @@ function Collection({ state, lessons, stars }: { state: AppState; lessons: Lesso
         <div className="sticker-slots">
           {STICKERS.map((s) => (
             <div key={s.id} className={`slot ${got.has(s.id) ? "filled" : ""}`}>
-              <span className="slot-art">{got.has(s.id) ? s.emoji : "?"}</span>
+              <span className="slot-art">{got.has(s.id) ? <StickerArt id={s.id} emoji={s.emoji} /> : "?"}</span>
               <span className="slot-name">{got.has(s.id) ? s.name : "Chưa mở"}</span>
             </div>
           ))}
