@@ -86,9 +86,11 @@
   .node.current { animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { box-shadow: 0 6px 0 rgba(0,0,0,.14), 0 0 0 0 rgba(255,179,0,.55); }
     50% { box-shadow: 0 6px 0 rgba(0,0,0,.14), 0 0 0 14px rgba(255,179,0,0); } }
-  .nlabel { position: absolute; width: 132px; margin-left: -66px; text-align: center; z-index: 2;
-    font-size: .74rem; font-weight: 700; color: var(--ink); text-shadow: 0 1px 0 rgba(255,255,255,.8); pointer-events: none; }
-  .nlabel small { display: block; font-weight: 600; color: var(--muted); }
+  .nlabel { position: absolute; width: 128px; margin-left: -64px; text-align: center; z-index: 2;
+    font-size: .74rem; font-weight: 800; color: var(--ink); pointer-events: none;
+    background: rgba(255,255,255,.74); border: 1px solid rgba(255,255,255,.92); border-radius: 11px;
+    padding: 4px 6px; backdrop-filter: blur(3px); box-shadow: 0 3px 9px rgba(45,49,66,.16); }
+  .nlabel small { display: block; font-weight: 600; color: #5a6172; }
   .maple-here { position: absolute; width: 76px; margin-left: -38px; z-index: 3; pointer-events: none;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,.22)); animation: bob 2.2s ease-in-out infinite; }
   @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
@@ -484,7 +486,8 @@
   .signpost { width: 54px; height: 54px; border-radius: 16px; background: #fff; display: grid; place-items: center;
     font-size: 1.9rem; box-shadow: 0 6px 0 rgba(0,0,0,.1), 0 8px 16px rgba(45,49,66,.16); transform: rotate(-3deg);
     border: 3px solid #fff; flex: 0 0 auto; }
-  .region-name { font-weight: 800; } .region-name small { display: block; font-weight: 600; color: var(--muted); font-size: .74rem; }
+  .region-name { font-weight: 800; text-shadow: 0 1px 4px rgba(255,255,255,.75); }
+  .region-name small { display: block; font-weight: 700; color: #4a5568; font-size: .74rem; text-shadow: 0 1px 3px rgba(255,255,255,.8); }
   .region-flag { margin-left: 4px; background: rgba(255,255,255,.85); border-radius: 999px; padding: 5px 12px;
     font-size: .74rem; font-weight: 800; color: #a06a00; flex: 0 0 auto; }
   .region-flag.open { color: #1b7a3a; }
