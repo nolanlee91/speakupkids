@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { markSection, sectionDone, setDifficulty } from "@/lib/state";
+import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
-  SECTIONS, DIFFICULTY, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
-  type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ,
+  SECTIONS, DIFFICULTY, LEVEL1_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
+  type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit,
 } from "@/lib/learn";
 import { speak, shuffle } from "@/lib/fx";
 import { allLessons, thumbFor } from "@/lib/data";
@@ -24,7 +24,19 @@ export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete 
   const lesson = learnLessonById(state.learn.currentLesson) || allLearnLessons()[0];
   const diff = state.learn.difficulty;
   const accent = state.prefs.accent;
+  const [screen, setScreen] = useState<"map" | "lesson">("map");
   const [view, setView] = useState<SecView>("overview");
+
+  // Màn chương trình học: chọn Unit trước khi vào bài
+  if (screen === "map") {
+    return <CourseMap state={state} onPick={(u) => {
+      if (!u.ready || !u.lessonId) return;
+      const id = u.lessonId;
+      setState((s) => setCurrentLesson(s, id));
+      setView("overview");
+      setScreen("lesson");
+    }} />;
+  }
 
   const doneCount = SECTIONS.filter((sc) => sectionDone(state, lesson.id, sc.key)).length;
   const pct = Math.round((doneCount / SECTIONS.length) * 100);
@@ -44,6 +56,7 @@ export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete 
   const learnState = state.learn.lessons[lesson.id];
   return (
     <section className="learn">
+      <button className="bk course-back" onClick={() => setScreen("map")}>← Chương trình học</button>
       {/* Hero + Continue learning */}
       <div className="learn-hero fullbleed" style={{ backgroundImage: lesson.sceneImage ? `url('${lesson.sceneImage}')` : undefined }}>
         <div className="lh-overlay" />
@@ -95,6 +108,55 @@ export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete 
           <span className="track-go">{learnState?.done ? "✓" : "▸"}</span>
         </li>
       </ol>
+    </section>
+  );
+}
+
+/* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
+function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
+  return (
+    <section className="learn course">
+      <div className="course-head">
+        <img className="course-maple" src={`${GEN}mascot-book.webp`} alt="" />
+        <div>
+          <h2 className="chapter">Chương trình học</h2>
+          <p className="course-sub">Level 1 · Everyday English — học từng chặng cùng Maple</p>
+        </div>
+      </div>
+
+      <ol className="unit-list">
+        {LEVEL1_UNITS.map((u) => {
+          const done = u.lessonId ? learnLessonDone(state, u.lessonId) : false;
+          const pct = u.lessonId ? lessonPct(state, u.lessonId, SECTIONS.length) : 0;
+          const check = u.lessonId ? state.learn.lessons[u.lessonId]?.check : undefined;
+          return (
+            <li key={u.id} className={`unit ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
+              <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
+                <span className="unit-thumb" style={{ backgroundImage: `url('${u.image}')` }}>
+                  <span className="unit-n">{u.n}</span>
+                  {!u.ready && <span className="unit-badge lock">🔒</span>}
+                  {done && <span className="unit-badge ok">✓</span>}
+                </span>
+                <span className="unit-body">
+                  <span className="unit-title">{u.vi} <small>· {u.title}</small></span>
+                  <span className="unit-focus">{u.focus}</span>
+                  {u.ready
+                    ? <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
+                        <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
+                      </span>
+                    : <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>}
+                </span>
+                <span className="unit-go">{u.ready ? (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸") : "🔒"}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+
+      <div className="course-more">
+        <div className="course-lvl">📗 Level 2 · Stories & Situations <small>Sắp mở</small></div>
+        <div className="course-lvl">📕 Level 3 · Opinions & Conversations <small>Sắp mở</small></div>
+      </div>
     </section>
   );
 }

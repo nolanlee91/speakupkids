@@ -131,6 +131,22 @@ export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️", lessons: [AT_THE_PARK] },
 ];
 
+/* ============ Chương trình học: Level 1 · Everyday English (6 Unit) ============ */
+// Dùng chung 6 ảnh cảnh. Chỉ Unit 1 (At the Park) đã đủ nội dung; 5 unit sau đang biên soạn.
+const SIMG = "/assets/images/gen/";
+export type CourseUnit = {
+  id: string; n: number; title: string; vi: string; image: string; focus: string;
+  lessonId?: string; ready: boolean;
+};
+export const LEVEL1_UNITS: CourseUnit[] = [
+  { id: "park",        n: 1, title: "At the Park",        vi: "Ở công viên",      image: SIMG + "scene-park.webp",         focus: "Hành động · thời tiết · vị trí",   lessonId: "park", ready: true },
+  { id: "kitchen",     n: 2, title: "In the Kitchen",     vi: "Trong bếp",         image: SIMG + "scene-kitchen.webp",      focus: "Đồ ăn · hiện tại tiếp diễn",       ready: false },
+  { id: "classroom",   n: 3, title: "In the Classroom",   vi: "Trong lớp học",     image: SIMG + "scene-classroom.webp",    focus: "Đồ vật · hỏi–đáp",                 ready: false },
+  { id: "supermarket", n: 4, title: "At the Supermarket", vi: "Ở siêu thị",        image: SIMG + "scene-supermarket.webp",  focus: "Số lượng · lựa chọn · mua sắm",    ready: false },
+  { id: "busstop",     n: 5, title: "At the Bus Stop",    vi: "Trạm xe buýt",      image: SIMG + "scene-bus-stop-rain.webp", focus: "Thời tiết · thời gian · dự đoán",  ready: false },
+  { id: "library",     n: 6, title: "At the Library",     vi: "Ở thư viện",        image: SIMG + "scene-library.webp",      focus: "Sách · vị trí · suy luận",         ready: false },
+];
+
 /* ============ helpers ============ */
 export const allLearnLessons = (): Lesson[] => THEMES.flatMap((t) => t.lessons);
 export const learnLessonById = (id: string): Lesson | undefined => allLearnLessons().find((l) => l.id === id);
