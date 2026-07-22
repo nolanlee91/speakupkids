@@ -23,11 +23,11 @@ export type GameInfo = {
 export const GAMES: GameInfo[] = [
   { id: "picdet", name: "Picture Detective", vi: "Thám tử hình ảnh", emoji: "🔎", image: "/assets/images/gen/game-picdet.webp", tint: "#e9f6ff",
     blurb: "Nhìn tranh, trả lời câu hỏi tiếng Anh.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "talk", name: "Picture Talk", vi: "Mô tả hình ảnh", emoji: "💬", tint: "#ffece3",
+  { id: "talk", name: "Picture Talk", vi: "Mô tả hình ảnh", emoji: "💬", image: "/assets/images/gen/game-talk.webp", tint: "#ffece3",
     blurb: "Nhìn tranh rồi tự nói thành câu.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "puzzle", name: "Sentence Puzzle", vi: "Xếp câu", emoji: "🧩", tint: "#f1e9ff",
+  { id: "puzzle", name: "Sentence Puzzle", vi: "Xếp câu", emoji: "🧩", image: "/assets/images/gen/game-puzzle.webp", tint: "#f1e9ff",
     blurb: "Kéo các từ thành câu đúng.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "riddle", name: "English Riddles", vi: "Đố vui tiếng Anh", emoji: "🦉", tint: "#e5f9ee",
+  { id: "riddle", name: "English Riddles", vi: "Đố vui tiếng Anh", emoji: "🦉", image: "/assets/images/gen/game-riddle.webp", tint: "#e5f9ee",
     blurb: "Giải câu đố ngắn bằng tiếng Anh.", assetNote: "Thumbnail 4:3 · 800×600" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;

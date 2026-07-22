@@ -522,6 +522,9 @@
   .portal.small { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 20px 10px 22px;
     text-align: center; min-height: 132px; justify-content: center; }
   .portal.small .portal-obj { font-size: 2.6rem; }
+  .portal-thumb { display: block; width: calc(100% + 20px); aspect-ratio: 4 / 3; margin: -20px -10px 9px;
+    overflow: hidden; border-radius: 26px 26px 14px 14px; }
+  .portal-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .po-name.sm { font-size: .92rem; font-weight: 800; } .po-en { font-size: .68rem; color: var(--muted); }
   .pos-0 { transform: translateY(0) rotate(-1.6deg); } .pos-1 { transform: translateY(18px) rotate(1.2deg); }
   .pos-2 { transform: translateY(6px) rotate(-.8deg); }
