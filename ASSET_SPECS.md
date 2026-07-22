@@ -19,6 +19,11 @@ Art direction chung: 3D-render ấm áp, thủ công, hơi phép thuật, dẫn 
 | `gen/mascot-star.png` | 627×627 | transparent | Reward modal |
 | `badges/badge-*.png` (12) | 320×320 | transparent | Collection — kệ huy hiệu |
 | `gen/thumb-*.png` (6) | 836×313 | full-bg | Speak Lab — filmstrip (bài chưa có video thật) |
+| `gen/scene-park.webp` | 4:3 · 277KB | full-bg | Picture Detective `pd-park` + Picture Talk `pt-park` ✅ **đã vẽ** |
+| `gen/scene-kitchen.webp` | 4:3 · 159KB | full-bg | Picture Detective `pd-kitchen` ✅ **đã vẽ** |
+| `gen/game-picdet.webp` | 4:3 · 280KB | full-bg | Games — portal Picture Detective ✅ **đã vẽ** |
+
+> Đợt 1 đã tích hợp 3 ảnh WebP trên (Maple hero làm tham chiếu phong cách). Emoji vẫn giữ làm fallback nếu game chưa có `image`. Đã xoá 3 PNG gốc (~7 MB).
 
 ---
 

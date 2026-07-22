@@ -8,13 +8,12 @@ import {
 } from "@/lib/games";
 
 /* ============ Khung chung + màn kết quả ============ */
-function Scene({ emojis, note }: { emojis: string[]; note: string }) {
+function Scene({ image, emojis, note }: { image?: string; emojis: string[]; note: string }) {
   return (
     <div className="scene">
-      <div className="scene-art" aria-hidden="true">
-        {emojis.map((e, i) => <span key={i}>{e}</span>)}
-      </div>
-      <div className="scene-note">🖼️ {note}</div>
+      {image
+        ? <img className="scene-image" src={image} alt="" />
+        : <><div className="scene-art" aria-hidden="true">{emojis.map((e, i) => <span key={i}>{e}</span>)}</div><div className="scene-note">🖼️ {note}</div></>}
     </div>
   );
 }
@@ -72,7 +71,7 @@ function PictureDetective({ scene, onExit, onFinish }: { scene: PicScene; onExit
   }
   return (
     <GameShell emoji="🔎" title={scene.title} vi={scene.vi} onExit={onExit}>
-      <Scene emojis={scene.emojis} note={scene.assetNote} />
+      <Scene image={scene.image} emojis={scene.emojis} note={scene.assetNote} />
       <div className="q-progress">Câu {i + 1}/{qs.length}</div>
       <div className="qcard">
         <div className="qtext">{q.q}<div className="qsub">{q.vi}</div></div>
@@ -219,7 +218,7 @@ function PictureTalk({ scene, accent, onExit, onFinish }: { scene: TalkScene; ac
   }
   return (
     <GameShell emoji="💬" title={scene.title} vi={scene.vi} onExit={onExit}>
-      <Scene emojis={scene.emojis} note={scene.assetNote} />
+      <Scene image={scene.image} emojis={scene.emojis} note={scene.assetNote} />
       <div className="talk-intro">🦫 {scene.intro}</div>
       <div className="talk-list">
         {scene.prompts.map((p, k) => (

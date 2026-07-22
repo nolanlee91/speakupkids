@@ -18,10 +18,10 @@ export const stickerById = (id: string) => STICKERS.find((s) => s.id === id);
 /* ---------- GAME: danh mục khu Trò chơi ---------- */
 export type GameKind = "picdet" | "puzzle" | "riddle" | "talk";
 export type GameInfo = {
-  id: GameKind; name: string; vi: string; emoji: string; tint: string; blurb: string; assetNote: string;
+  id: GameKind; name: string; vi: string; emoji: string; image?: string; tint: string; blurb: string; assetNote: string;
 };
 export const GAMES: GameInfo[] = [
-  { id: "picdet", name: "Picture Detective", vi: "Thám tử hình ảnh", emoji: "🔎", tint: "#e9f6ff",
+  { id: "picdet", name: "Picture Detective", vi: "Thám tử hình ảnh", emoji: "🔎", image: "/assets/images/gen/game-picdet.webp", tint: "#e9f6ff",
     blurb: "Nhìn tranh, trả lời câu hỏi tiếng Anh.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "talk", name: "Picture Talk", vi: "Mô tả hình ảnh", emoji: "💬", tint: "#ffece3",
     blurb: "Nhìn tranh rồi tự nói thành câu.", assetNote: "Thumbnail 4:3 · 800×600" },
@@ -34,10 +34,10 @@ export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
 /* ---------- Picture Detective ---------- */
 export type PicQ = { q: string; vi: string; options: string[]; answer: string };
-export type PicScene = { id: string; title: string; vi: string; emojis: string[]; assetNote: string; questions: PicQ[] };
+export type PicScene = { id: string; title: string; vi: string; image?: string; emojis: string[]; assetNote: string; questions: PicQ[] };
 export const PICDET: PicScene[] = [
   {
-    id: "pd-park", title: "At the Park", vi: "Ở công viên",
+    id: "pd-park", title: "At the Park", vi: "Ở công viên", image: "/assets/images/gen/scene-park.webp",
     emojis: ["🌳", "☀️", "🐕", "🐦", "⚽", "🧒", "👧", "🌷", "🪑", "🦋"],
     assetNote: "Ảnh cảnh công viên 4:3 · 1600×1200 — thay cho ô emoji này",
     questions: [
@@ -48,7 +48,7 @@ export const PICDET: PicScene[] = [
     ],
   },
   {
-    id: "pd-kitchen", title: "In the Kitchen", vi: "Trong bếp",
+    id: "pd-kitchen", title: "In the Kitchen", vi: "Trong bếp", image: "/assets/images/gen/scene-kitchen.webp",
     emojis: ["🍎", "🍌", "🥕", "🥛", "🍞", "🧀", "🍳", "👩‍🍳", "🍽️", "🫖"],
     assetNote: "Ảnh cảnh nhà bếp 4:3 · 1600×1200",
     questions: [
@@ -93,10 +93,10 @@ export const RIDDLES: RiddleSet[] = [
 export const riddleSetById = (id: string) => RIDDLES.find((s) => s.id === id);
 
 /* ---------- Picture Talk (nói, không ghi âm) ---------- */
-export type TalkScene = { id: string; title: string; vi: string; emojis: string[]; assetNote: string; intro: string; prompts: { en: string; vi: string }[] };
+export type TalkScene = { id: string; title: string; vi: string; image?: string; emojis: string[]; assetNote: string; intro: string; prompts: { en: string; vi: string }[] };
 export const TALKS: TalkScene[] = [
   {
-    id: "pt-park", title: "Talk about the Park", vi: "Nói về công viên",
+    id: "pt-park", title: "Talk about the Park", vi: "Nói về công viên", image: "/assets/images/gen/scene-park.webp",
     emojis: ["🌳", "☀️", "🐕", "🐦", "⚽", "🧒", "👧", "🌷"],
     assetNote: "Dùng chung ảnh cảnh công viên 4:3 · 1600×1200",
     intro: "Look at the picture. Say each sentence out loud with Maple!",

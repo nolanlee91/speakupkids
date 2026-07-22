@@ -388,14 +388,13 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
       <p className="pg-sub">Chọn một trò chơi để luyện tiếng Anh thật vui!</p>
 
       <button className={`portal featured theme-g-${feat.id}`} onClick={() => launch(feat.id)}>
-        <span className="portal-scene" aria-hidden="true"><span className="portal-obj">{feat.emoji}</span></span>
+        <span className="portal-scene" aria-hidden="true">{feat.image ? <img src={feat.image} alt="" /> : <span className="portal-obj">{feat.emoji}</span>}</span>
         <span className="portal-copy">
           <span className="po-name">{feat.name}</span>
           <span className="po-vi">{feat.vi}</span>
           <span className="po-blurb">{feat.blurb}</span>
           <span className="po-go">Vào chơi ▶</span>
         </span>
-        <span className="portal-spec">{feat.assetNote}</span>
       </button>
 
       <div className="portal-row">
