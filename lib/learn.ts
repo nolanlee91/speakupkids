@@ -896,13 +896,432 @@ const THE_SCHOOL_TALENT_SHOW: Lesson = {
   },
 };
 
+/* Unit 4: The Ferry Trip Mix-Up */
+const THE_FERRY_TRIP_MIX_UP: Lesson = {
+  id: "ferry", theme: "story-time", title: "The Ferry Trip Mix-Up", vi: "Chuyến phà nhầm lẫn", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-04-ferry-trip-mix-up.webp",
+  vocab: [
+    { word: "ferry", ipa: "/ˈferi/", vi: "phà", emoji: "⛴️", example: "The blue ferry is at the dock.", exampleVi: "Chiếc phà xanh đang ở bến." },
+    { word: "terminal", ipa: "/ˈtɜːrmɪnl/", vi: "bến, nhà ga", emoji: "🏢", example: "We waited at the ferry terminal.", exampleVi: "Chúng mình chờ ở bến phà." },
+    { word: "ticket", ipa: "/ˈtɪkɪt/", vi: "vé", emoji: "🎫", example: "Theo held two ferry tickets.", exampleVi: "Theo cầm hai vé phà." },
+    { word: "schedule", ipa: "/ˈskedʒuːl/", vi: "lịch trình", emoji: "🗓️", example: "The schedule shows the ferry times.", exampleVi: "Lịch trình ghi giờ các chuyến phà." },
+    { word: "departure", ipa: "/dɪˈpɑːrtʃər/", vi: "giờ khởi hành", emoji: "🕔", example: "Our departure is at five o'clock.", exampleVi: "Chuyến của mình khởi hành lúc năm giờ." },
+    { word: "gate", ipa: "/ɡeɪt/", vi: "cổng lên tàu", emoji: "🚪", example: "Go to Gate 2 for the blue ferry.", exampleVi: "Ra Cổng 2 để lên phà xanh." },
+    { word: "compare", ipa: "/kəmˈper/", vi: "so sánh", emoji: "⚖️", example: "Compare the ticket and the board.", exampleVi: "So sánh cái vé với bảng giờ." },
+    { word: "board", ipa: "/bɔːrd/", vi: "lên (tàu, phà)", emoji: "🛳️", example: "Hurry, it's time to board!", exampleVi: "Nhanh lên, đến giờ lên phà rồi!" },
+  ],
+  patterns: [
+    { pattern: "What time does the … leave?", vi: "Mấy giờ … khởi hành?", examples: [
+      { en: "What time does the blue ferry leave?", vi: "Mấy giờ phà xanh khởi hành?" },
+      { en: "What time does the next boat leave?", vi: "Mấy giờ chuyến sau khởi hành?" }] },
+    { pattern: "We must … or we will …", vi: "Chúng ta phải … nếu không sẽ …", examples: [
+      { en: "We must hurry or we will miss it.", vi: "Chúng ta phải nhanh không thì lỡ chuyến." },
+      { en: "We must read the board or we will get lost.", vi: "Phải xem bảng giờ, không thì bị lạc." }] },
+    { pattern: "The blue one, not the red one.", vi: "Cái xanh, không phải cái đỏ.", examples: [
+      { en: "Our ticket is the blue one, not the red one.", vi: "Vé của mình là cái xanh, không phải cái đỏ." },
+      { en: "Take the blue ferry, not the red ferry.", vi: "Đi phà xanh, đừng đi phà đỏ." }] },
+    { pattern: "Which gate is for …?", vi: "Cổng nào dành cho …?", examples: [
+      { en: "Which gate is for the blue ferry?", vi: "Cổng nào dành cho phà xanh?" },
+      { en: "Which gate is for our boat?", vi: "Cổng nào dành cho chuyến của mình?" }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Read the times carefully!",
+    introVi: "Nghe câu chuyện rồi trả lời. Hãy đọc kỹ giờ giấc!",
+    script: "Maple and her friends were at the ferry terminal. Theo was holding two tickets: a blue one and a red one. Each ticket showed a different time. \"Quick, the red ferry is leaving!\" said one boy, and he started to run. But Maple looked up at the big board. \"Wait — our tickets are blue. The blue ferry leaves at five o'clock from Gate 2.\" They compared the times on the board with the times on the tickets. If they had run onto the red ferry, they would have gone to the wrong island! So they hurried to Gate 2 and boarded the right ferry just in time.",
+    questions: [
+      { q: "How many tickets was Theo holding?", vi: "Theo cầm mấy tấm vé?",
+        options: ["Two — a blue one and a red one", "One red one", "Three blue ones"], answer: "Two — a blue one and a red one" },
+      { q: "How did Maple know which ferry was theirs?", vi: "Làm sao Maple biết phà nào là của mình?",
+        options: ["She compared the board with their tickets", "She asked the seagulls", "She guessed"], answer: "She compared the board with their tickets",
+        explainVi: "Maple đối chiếu bảng giờ với màu và giờ trên vé." },
+      { q: "What would have happened on the red ferry?", vi: "Nếu lên phà đỏ thì chuyện gì xảy ra?",
+        options: ["They would have gone to the wrong island", "They would have arrived faster", "Nothing would change"], answer: "They would have gone to the wrong island",
+        explainVi: "Vé xanh không hợp phà đỏ nên sẽ tới sai đảo." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Our ticket is the blue one, not the red one.", vi: "Vé của mình là cái xanh, không phải cái đỏ." },
+      { en: "The blue ferry leaves at five o'clock from Gate 2.", vi: "Phà xanh khởi hành lúc năm giờ ở Cổng 2." },
+    ],
+    guided: { q: "What do you check before a trip?", vi: "Trước chuyến đi bạn kiểm tra gì?", hint: "Before a trip, I check the ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Use \"First\", \"Then\", and one \"or we will …\".",
+      vi: "Kể lại câu chuyện 3–5 câu, dùng \"First\", \"Then\" và một câu \"or we will …\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a list of times when ferries leave\"?", vi: "Từ nào nghĩa là \"bảng giờ các chuyến phà\"?",
+        options: ["schedule", "ticket", "gate"], answer: "schedule" },
+      { type: "reading", q: "If you get on the wrong ferry, what happens?", vi: "Nếu lên nhầm phà thì sao?",
+        options: ["You go to the wrong place", "You get there faster", "The ferry turns around for you"], answer: "You go to the wrong place",
+        explainVi: "Sai phà thì sẽ đến sai nơi." },
+      { type: "listening", q: "In the story, what time did the blue ferry leave?", vi: "Trong truyện, phà xanh khởi hành lúc mấy giờ?",
+        options: ["Five o'clock", "Two o'clock", "Ten o'clock"], answer: "Five o'clock" },
+      { type: "reading", q: "The tickets were blue, but a boy ran to the red ferry. Why was that a mistake?", vi: "Vé màu xanh nhưng một bạn chạy tới phà đỏ. Vì sao đó là lỗi?",
+        options: ["Blue tickets are for the blue ferry, not the red one", "Red is faster", "Blue ferries are always late"], answer: "Blue tickets are for the blue ferry, not the red one" },
+    ],
+  },
+};
+
+/* Unit 5: The Robot That Wouldn't Start */
+const THE_ROBOT_THAT_WOULDNT_START: Lesson = {
+  id: "robot", theme: "story-time", title: "The Robot That Wouldn't Start", vi: "Con robot không chịu khởi động", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-05-robot-wouldnt-start.webp",
+  vocab: [
+    { word: "robot", ipa: "/ˈroʊbɒt/", vi: "người máy, robot", emoji: "🤖", example: "The team built a small robot.", exampleVi: "Cả nhóm chế tạo một con robot nhỏ." },
+    { word: "battery", ipa: "/ˈbætəri/", vi: "pin", emoji: "🔋", example: "First they checked the battery.", exampleVi: "Đầu tiên các bạn kiểm tra pin." },
+    { word: "wire", ipa: "/ˈwaɪər/", vi: "dây điện", emoji: "🔌", example: "One yellow wire was loose.", exampleVi: "Một sợi dây vàng bị lỏng." },
+    { word: "loose", ipa: "/luːs/", vi: "lỏng, không chặt", emoji: "🔧", example: "The loose wire fell off.", exampleVi: "Sợi dây lỏng bị tuột ra." },
+    { word: "connect", ipa: "/kəˈnekt/", vi: "nối, kết nối", emoji: "➰", example: "They connected the wire again.", exampleVi: "Các bạn nối lại sợi dây." },
+    { word: "power", ipa: "/ˈpaʊər/", vi: "điện, nguồn", emoji: "⚡", example: "The battery still had power.", exampleVi: "Pin vẫn còn điện." },
+    { word: "guess", ipa: "/ɡes/", vi: "đoán, phỏng đoán", emoji: "💭", example: "\"Maybe the wire,\" guessed Theo.", exampleVi: "\"Có lẽ là sợi dây,\" Theo đoán." },
+    { word: "fix", ipa: "/fɪks/", vi: "sửa", emoji: "🛠️", example: "They fixed the wheel too.", exampleVi: "Các bạn cũng sửa lại cái bánh xe." },
+  ],
+  patterns: [
+    { pattern: "Maybe the problem is …", vi: "Có lẽ vấn đề là …", examples: [
+      { en: "Maybe the problem is a loose wire.", vi: "Có lẽ vấn đề là một sợi dây lỏng." },
+      { en: "Maybe the problem is the battery.", vi: "Có lẽ vấn đề là ở cục pin." }] },
+    { pattern: "First check … , then check …", vi: "Đầu tiên kiểm tra … , sau đó kiểm tra …", examples: [
+      { en: "First check the battery, then check the wires.", vi: "Đầu tiên kiểm tra pin, sau đó kiểm tra dây." },
+      { en: "First check the wheels, then check the switch.", vi: "Đầu tiên kiểm tra bánh xe, sau đó kiểm tra công tắc." }] },
+    { pattern: "Because … , the robot …", vi: "Vì … nên robot …", examples: [
+      { en: "Because the wire was loose, the robot did not start.", vi: "Vì sợi dây bị lỏng nên robot không khởi động." },
+      { en: "Because the wheel fell off, the robot could not move.", vi: "Vì bánh xe rơi ra nên robot không chạy được." }] },
+    { pattern: "Let's try …", vi: "Thử … xem nào.", examples: [
+      { en: "Let's try the button again.", vi: "Thử bấm nút lại xem nào." },
+      { en: "Let's try connecting the wire.", vi: "Thử nối lại sợi dây xem nào." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Check the clues in order!",
+    introVi: "Nghe câu chuyện rồi trả lời. Kiểm tra manh mối theo thứ tự!",
+    script: "The team built a small robot for the race, but when they pressed the button, nothing happened. The robot would not start. \"Let's not panic. Let's check it step by step,\" said Maple. First, they checked the battery — it still had power. Then they looked at the wires, and they found that one yellow wire was loose and not connected. They also saw that a wheel had fallen off. \"Maybe the loose wire is the problem,\" guessed Theo. So they connected the wire again and fixed the wheel. When they pressed the button once more, the robot's eyes lit up and it rolled forward. The whole team cheered.",
+    questions: [
+      { q: "What was the problem at the start?", vi: "Lúc đầu vấn đề là gì?",
+        options: ["The robot would not start", "The robot was too fast", "The robot was lost"], answer: "The robot would not start" },
+      { q: "What did the team check first?", vi: "Nhóm kiểm tra thứ gì đầu tiên?",
+        options: ["The battery", "The wheels", "The paint"], answer: "The battery" },
+      { q: "Why did the robot not work?", vi: "Vì sao robot không hoạt động?",
+        options: ["A wire was loose and a wheel had fallen off", "It was too heavy", "It was asleep"], answer: "A wire was loose and a wheel had fallen off",
+        explainVi: "Dây bị lỏng và bánh xe rơi ra khiến robot không chạy." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Let's check it step by step.", vi: "Cùng kiểm tra từng bước một nào." },
+      { en: "Because the wire was loose, the robot did not start.", vi: "Vì sợi dây bị lỏng nên robot không khởi động." },
+    ],
+    guided: { q: "What would you build with a robot kit?", vi: "Bạn sẽ chế tạo gì với bộ lắp robot?", hint: "I would build a robot that ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Use \"First\", \"Then\", and one \"Because …\".",
+      vi: "Kể lại câu chuyện 3–5 câu, dùng \"First\", \"Then\" và một câu \"Because …\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"not tight, able to fall off\"?", vi: "Từ nào nghĩa là \"lỏng, dễ tuột ra\"?",
+        options: ["loose", "power", "fix"], answer: "loose" },
+      { type: "reading", q: "What did the team check FIRST?", vi: "Nhóm kiểm tra gì ĐẦU TIÊN?",
+        options: ["The battery", "The wire", "The button"], answer: "The battery",
+        explainVi: "Thứ tự trong truyện: pin → dây → bánh xe." },
+      { type: "reading", q: "Because the wire was loose, what happened?", vi: "Vì sợi dây bị lỏng nên điều gì xảy ra?",
+        options: ["The robot would not start", "The robot went faster", "The lights got brighter"], answer: "The robot would not start",
+        explainVi: "Dây lỏng làm mất kết nối nên robot không khởi động." },
+      { type: "listening", q: "How did they fix the robot?", vi: "Các bạn sửa robot bằng cách nào?",
+        options: ["They connected the wire and fixed the wheel", "They bought a new one", "They painted it"], answer: "They connected the wire and fixed the wheel" },
+    ],
+  },
+};
+
+/* Unit 6: The Community Garden Mystery */
+const THE_COMMUNITY_GARDEN_MYSTERY: Lesson = {
+  id: "garden", theme: "story-time", title: "The Community Garden Mystery", vi: "Bí ẩn vườn cộng đồng", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-06-community-garden-mystery.webp",
+  vocab: [
+    { word: "garden", ipa: "/ˈɡɑːrdn/", vi: "khu vườn", emoji: "🌱", example: "The community garden was a mess.", exampleVi: "Khu vườn cộng đồng bừa bộn." },
+    { word: "mess", ipa: "/mes/", vi: "sự bừa bộn", emoji: "🌀", example: "Who made this mess?", exampleVi: "Ai đã làm bừa thế này?" },
+    { word: "footprint", ipa: "/ˈfʊtprɪnt/", vi: "dấu chân", emoji: "🐾", example: "There were muddy footprints.", exampleVi: "Có những dấu chân lấm bùn." },
+    { word: "track", ipa: "/træk/", vi: "dấu vết (của thú)", emoji: "🔎", example: "The tracks led to the bin.", exampleVi: "Dấu vết dẫn tới cái thùng." },
+    { word: "evidence", ipa: "/ˈevɪdəns/", vi: "bằng chứng", emoji: "🧾", example: "They looked for evidence.", exampleVi: "Các bạn tìm bằng chứng." },
+    { word: "tomato", ipa: "/təˈmɑːtoʊ/", vi: "quả cà chua", emoji: "🍅", example: "Tomatoes were on the ground.", exampleVi: "Cà chua rơi trên mặt đất." },
+    { word: "raccoon", ipa: "/ræˈkuːn/", vi: "gấu mèo", emoji: "🦝", example: "A raccoon was hiding in the bin.", exampleVi: "Một con gấu mèo trốn trong thùng." },
+    { word: "hide", ipa: "/haɪd/", vi: "trốn, ẩn nấp", emoji: "🙈", example: "The animal tried to hide.", exampleVi: "Con vật cố trốn đi." },
+  ],
+  patterns: [
+    { pattern: "Something knocked over the …", vi: "Có thứ gì đó làm đổ …", examples: [
+      { en: "Something knocked over the watering can.", vi: "Có thứ gì đó làm đổ bình tưới." },
+      { en: "Something knocked over the plant pot.", vi: "Có thứ gì đó làm đổ chậu cây." }] },
+    { pattern: "There are … on the ground.", vi: "Có … trên mặt đất.", examples: [
+      { en: "There are footprints on the ground.", vi: "Có dấu chân trên mặt đất." },
+      { en: "There are tomatoes on the ground.", vi: "Có cà chua rơi trên mặt đất." }] },
+    { pattern: "The tracks lead to …", vi: "Dấu vết dẫn tới …", examples: [
+      { en: "The tracks lead to the compost bin.", vi: "Dấu vết dẫn tới thùng ủ phân." },
+      { en: "The tracks lead to the fence.", vi: "Dấu vết dẫn tới hàng rào." }] },
+    { pattern: "It must have been a …", vi: "Chắc hẳn đó là một con …", examples: [
+      { en: "It must have been a raccoon.", vi: "Chắc hẳn đó là một con gấu mèo." },
+      { en: "It must have been an animal, not a person.", vi: "Chắc hẳn là con vật, không phải người." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Follow the evidence!",
+    introVi: "Nghe câu chuyện rồi trả lời. Hãy lần theo bằng chứng!",
+    script: "When the friends arrived at the community garden, something was wrong. A green watering can was tipped over, and red tomatoes were scattered on the ground. \"This is a real mystery,\" said Maple. So they looked for evidence. The girl with the magnifying glass found small muddy footprints in the soft mud. The prints were not from shoes — they were animal tracks! The tracks led all the way to the compost bin. Very slowly, the friends looked inside… and two shiny eyes looked back. It was a raccoon! The clever animal had visited the garden during the night to look for food.",
+    questions: [
+      { q: "What was tipped over in the garden?", vi: "Thứ gì bị đổ trong vườn?",
+        options: ["A green watering can", "A bicycle", "A bookshelf"], answer: "A green watering can" },
+      { q: "What kind of footprints did they find?", vi: "Các bạn tìm thấy loại dấu chân nào?",
+        options: ["Animal tracks, not shoe prints", "Big boot prints", "No prints at all"], answer: "Animal tracks, not shoe prints",
+        explainVi: "Dấu chân nhỏ, lấm bùn, không phải của giày → của con vật." },
+      { q: "Who made the mess?", vi: "Ai đã bày bừa?",
+        options: ["A raccoon", "The teacher", "A robot"], answer: "A raccoon" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "There are muddy footprints on the ground.", vi: "Có những dấu chân lấm bùn trên mặt đất." },
+      { en: "It must have been a raccoon.", vi: "Chắc hẳn đó là một con gấu mèo." },
+    ],
+    guided: { q: "How would you solve a garden mystery?", vi: "Bạn sẽ giải bí ẩn khu vườn thế nào?", hint: "First, I would look for ___." },
+    describe: {
+      prompt: "Retell the story in 3–5 sentences using the past tense. Say what they found and who did it.",
+      vi: "Kể lại câu chuyện 3–5 câu ở thì quá khứ. Nói các bạn tìm thấy gì và ai gây ra.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"clues that show what happened\"?", vi: "Từ nào nghĩa là \"manh mối cho thấy điều đã xảy ra\"?",
+        options: ["evidence", "garden", "tomato"], answer: "evidence" },
+      { type: "reading", q: "The prints were not from shoes. What does this tell us?", vi: "Dấu chân không phải của giày. Điều đó cho thấy gì?",
+        options: ["An animal, not a person, made them", "A giant made them", "Nobody made them"], answer: "An animal, not a person, made them",
+        explainVi: "Không phải dấu giày nghĩa là do con vật gây ra." },
+      { type: "listening", q: "In the story, where did the tracks lead?", vi: "Trong truyện, dấu vết dẫn tới đâu?",
+        options: ["To the compost bin", "To the school", "To the sea"], answer: "To the compost bin" },
+      { type: "reading", q: "The raccoon came at night to find food. Why were the tomatoes on the ground?", vi: "Con gấu mèo tới ban đêm tìm thức ăn. Vì sao cà chua rơi xuống đất?",
+        options: ["The raccoon knocked them down while looking for food", "They grew on the ground", "The wind planted them"], answer: "The raccoon knocked them down while looking for food" },
+    ],
+  },
+};
+
+/* Unit 7: The Time Capsule Discovery */
+const THE_TIME_CAPSULE_DISCOVERY: Lesson = {
+  id: "capsule", theme: "story-time", title: "The Time Capsule Discovery", vi: "Khám phá hộp thời gian", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-07-time-capsule-discovery.webp",
+  vocab: [
+    { word: "capsule", ipa: "/ˈkæpsjuːl/", vi: "hộp thời gian", emoji: "📦", example: "They found a time capsule.", exampleVi: "Các bạn tìm thấy một hộp thời gian." },
+    { word: "bury", ipa: "/ˈberi/", vi: "chôn", emoji: "⛏️", example: "Someone buried the box long ago.", exampleVi: "Ai đó đã chôn cái hộp từ lâu." },
+    { word: "discover", ipa: "/dɪˈskʌvər/", vi: "khám phá, tìm ra", emoji: "🔦", example: "They discovered old treasures.", exampleVi: "Các bạn tìm ra những báu vật cũ." },
+    { word: "past", ipa: "/pæst/", vi: "quá khứ, ngày xưa", emoji: "⏳", example: "In the past, the trees were tiny.", exampleVi: "Ngày xưa, cây còn bé xíu." },
+    { word: "photograph", ipa: "/ˈfoʊtəɡræf/", vi: "bức ảnh", emoji: "🖼️", example: "The photograph was black and white.", exampleVi: "Bức ảnh có màu đen trắng." },
+    { word: "coin", ipa: "/kɔɪn/", vi: "đồng xu", emoji: "🪙", example: "The old coin had a date on it.", exampleVi: "Đồng xu cũ có ghi năm." },
+    { word: "ribbon", ipa: "/ˈrɪbən/", vi: "dải ruy-băng", emoji: "🎀", example: "A faded red ribbon was inside.", exampleVi: "Bên trong có một dải ruy-băng đỏ đã bạc màu." },
+    { word: "ago", ipa: "/əˈɡoʊ/", vi: "cách đây, trước đây", emoji: "📅", example: "It was buried fifty years ago.", exampleVi: "Nó được chôn cách đây năm mươi năm." },
+  ],
+  patterns: [
+    { pattern: "Long ago, people …", vi: "Ngày xưa, người ta …", examples: [
+      { en: "Long ago, people played with wooden toys.", vi: "Ngày xưa, người ta chơi đồ chơi bằng gỗ." },
+      { en: "Long ago, students planted these trees.", vi: "Ngày xưa, học sinh đã trồng những cây này." }] },
+    { pattern: "In the past it was … , but now it is …", vi: "Trước kia … , còn bây giờ …", examples: [
+      { en: "In the past the trees were small, but now they are tall.", vi: "Trước kia cây nhỏ, còn bây giờ chúng cao lớn." },
+      { en: "In the past photos were black and white, but now they are in colour.", vi: "Trước kia ảnh đen trắng, còn bây giờ có màu." }] },
+    { pattern: "This must be about … years old.", vi: "Cái này chắc khoảng … năm tuổi.", examples: [
+      { en: "This must be about fifty years old.", vi: "Cái này chắc khoảng năm mươi năm tuổi." },
+      { en: "This coin must be very old.", vi: "Đồng xu này chắc rất cũ." }] },
+    { pattern: "We found a …", vi: "Chúng mình đã tìm thấy một …", examples: [
+      { en: "We found a photograph and a coin.", vi: "Chúng mình tìm thấy một bức ảnh và một đồng xu." },
+      { en: "We found a wooden toy car.", vi: "Chúng mình tìm thấy một chiếc xe đồ chơi bằng gỗ." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Compare the past and now!",
+    introVi: "Nghe câu chuyện rồi trả lời. Hãy so sánh xưa và nay!",
+    script: "While digging in the school garden, Theo's shovel hit something hard. It was an old, rusty metal box buried deep in the ground — a time capsule! Very carefully, they opened it. Inside they discovered a black-and-white photograph of students standing in front of the school, an old coin, a small wooden toy car, and a faded red ribbon. Maple held up the photo and compared it with the school today. \"The brick building looks the same,\" she said, \"but long ago the trees were tiny. Now they are tall.\" The coin had a date printed on it. Counting the years, they guessed the capsule had been buried about fifty years ago, by students just like them.",
+    questions: [
+      { q: "What did they dig up in the garden?", vi: "Các bạn đào được gì trong vườn?",
+        options: ["An old metal box (a time capsule)", "A treasure chest of gold", "A sleeping cat"], answer: "An old metal box (a time capsule)" },
+      { q: "When they compared the old photo with today, what was different?", vi: "Khi so bức ảnh cũ với hiện tại, điều gì khác?",
+        options: ["Long ago the trees were tiny; now they are tall", "The school was bigger before", "The sky was green"], answer: "Long ago the trees were tiny; now they are tall",
+        explainVi: "Toà nhà vẫn thế, nhưng cây ngày xưa bé, nay đã cao." },
+      { q: "How did they guess how old the capsule was?", vi: "Làm sao các bạn đoán được tuổi của hộp?",
+        options: ["From the date on the coin", "From the colour of the box", "By asking a bird"], answer: "From the date on the coin" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "In the past the trees were small, but now they are tall.", vi: "Trước kia cây nhỏ, còn bây giờ chúng cao lớn." },
+      { en: "This time capsule must be about fifty years old.", vi: "Hộp thời gian này chắc khoảng năm mươi năm tuổi." },
+    ],
+    guided: { q: "What would you put in a time capsule?", vi: "Bạn sẽ bỏ gì vào hộp thời gian?", hint: "In my time capsule, I would put a ___." },
+    describe: {
+      prompt: "Retell the story in 3–5 sentences using the past tense. Compare one thing then and now.",
+      vi: "Kể lại câu chuyện 3–5 câu ở thì quá khứ. So sánh một điều xưa và nay.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"to put something under the ground\"?", vi: "Từ nào nghĩa là \"đặt vật xuống dưới đất\"?",
+        options: ["bury", "discover", "compare"], answer: "bury" },
+      { type: "reading", q: "In the photo the trees are tiny, but today they are tall. What does this show?", vi: "Trong ảnh cây bé xíu, nay lại cao lớn. Điều đó cho thấy gì?",
+        options: ["A lot of time has passed", "The photo is fake", "The trees shrank"], answer: "A lot of time has passed",
+        explainVi: "Cây lớn lên chứng tỏ đã qua rất nhiều năm." },
+      { type: "reading", q: "The coin has an old date and the photo is black-and-white. What can we guess?", vi: "Đồng xu ghi năm cũ, ảnh đen trắng. Ta đoán được gì?",
+        options: ["The capsule is from long ago", "It was made yesterday", "It is from the future"], answer: "The capsule is from long ago" },
+      { type: "listening", q: "Who probably buried the time capsule?", vi: "Ai có lẽ đã chôn hộp thời gian?",
+        options: ["Students long ago", "A pilot last week", "The friends themselves"], answer: "Students long ago" },
+    ],
+  },
+};
+
+/* Unit 8: The Beach Cleanup Change of Plan */
+const THE_BEACH_CLEANUP_CHANGE_OF_PLAN: Lesson = {
+  id: "beach", theme: "story-time", title: "The Beach Cleanup Change of Plan", vi: "Đổi kế hoạch dọn bãi biển", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-08-beach-cleanup-change-of-plan.webp",
+  vocab: [
+    { word: "beach", ipa: "/biːtʃ/", vi: "bãi biển", emoji: "🏖️", example: "They came to clean the beach.", exampleVi: "Các bạn tới dọn bãi biển." },
+    { word: "cleanup", ipa: "/ˈkliːnʌp/", vi: "buổi dọn dẹp", emoji: "🧤", example: "The beach cleanup started at nine.", exampleVi: "Buổi dọn bãi biển bắt đầu lúc chín giờ." },
+    { word: "weather", ipa: "/ˈweðər/", vi: "thời tiết", emoji: "🌥️", example: "The weather was getting worse.", exampleVi: "Thời tiết đang xấu đi." },
+    { word: "wave", ipa: "/weɪv/", vi: "sóng", emoji: "🌊", example: "The waves were very big today.", exampleVi: "Hôm nay sóng rất to." },
+    { word: "warning", ipa: "/ˈwɔːrnɪŋ/", vi: "cảnh báo", emoji: "⚠️", example: "The warning sign showed big waves.", exampleVi: "Biển cảnh báo hiện sóng lớn." },
+    { word: "flag", ipa: "/flæɡ/", vi: "lá cờ", emoji: "🚩", example: "A red flag means danger.", exampleVi: "Cờ đỏ nghĩa là nguy hiểm." },
+    { word: "plan", ipa: "/plæn/", vi: "kế hoạch", emoji: "📋", example: "They had to change the plan.", exampleVi: "Các bạn phải đổi kế hoạch." },
+    { word: "safe", ipa: "/seɪf/", vi: "an toàn", emoji: "✅", example: "The picnic area was safer.", exampleVi: "Khu dã ngoại an toàn hơn." },
+  ],
+  patterns: [
+    { pattern: "We are going to …", vi: "Chúng mình sẽ …", examples: [
+      { en: "We are going to clean the beach.", vi: "Chúng mình sẽ dọn bãi biển." },
+      { en: "We are going to fill three bags.", vi: "Chúng mình sẽ nhặt đầy ba túi." }] },
+    { pattern: "It's not safe to … , so let's … instead.", vi: "Không an toàn khi … , nên thay vào đó …", examples: [
+      { en: "It's not safe to go near the waves, so let's clean the path instead.", vi: "Không an toàn khi lại gần sóng, nên dọn lối đi thay vào đó." },
+      { en: "It's not safe here, so let's move to the shelter instead.", vi: "Ở đây không an toàn, nên chuyển tới chỗ trú thay vào đó." }] },
+    { pattern: "If the weather is bad, we can …", vi: "Nếu thời tiết xấu, mình có thể …", examples: [
+      { en: "If the weather is bad, we can work in the picnic area.", vi: "Nếu thời tiết xấu, mình có thể dọn ở khu dã ngoại." },
+      { en: "If the weather is bad, we can try tomorrow.", vi: "Nếu thời tiết xấu, mình có thể thử lại ngày mai." }] },
+    { pattern: "Let's … because …", vi: "Cùng … vì …", examples: [
+      { en: "Let's clean the picnic area because it is safer.", vi: "Cùng dọn khu dã ngoại vì nó an toàn hơn." },
+      { en: "Let's wait because the flag is red.", vi: "Cùng chờ đã vì cờ đang đỏ." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. What is the new plan?",
+    introVi: "Nghe câu chuyện rồi trả lời. Kế hoạch mới là gì?",
+    script: "The friends arrived at the beach ready for a cleanup, with buckets, gloves and trash grabbers. But the sky was grey and the wind was strong. On the warning sign, they saw pictures of big waves and rising wind, and a red flag was flying. \"The waves are too big today. The beach is not safe,\" said their teacher. So they had to change their plan. \"We could go home,\" said one boy, \"or we could clean the picnic area up the path instead.\" They talked it over and made a choice: they would clean the safer picnic area and the shelter, because it was away from the big waves and still helped the park. Everyone agreed it was a smart plan.",
+    questions: [
+      { q: "Why was the beach not safe that day?", vi: "Vì sao hôm đó bãi biển không an toàn?",
+        options: ["The waves were too big and the wind was strong", "It was too sunny", "There were too many shells"], answer: "The waves were too big and the wind was strong" },
+      { q: "What were the two choices the friends talked about?", vi: "Các bạn bàn về hai lựa chọn nào?",
+        options: ["Go home, or clean the picnic area instead", "Swim, or sleep", "Sail a boat, or fish"], answer: "Go home, or clean the picnic area instead" },
+      { q: "What did they finally decide, and why?", vi: "Cuối cùng các bạn quyết định gì, và vì sao?",
+        options: ["Clean the picnic area, because it was safer", "Swim in the big waves, because it was fun", "Go home, because they were tired"], answer: "Clean the picnic area, because it was safer",
+        explainVi: "Khu dã ngoại xa sóng lớn nên an toàn mà vẫn giúp ích." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The waves are too big, so the beach is not safe.", vi: "Sóng quá to nên bãi biển không an toàn." },
+      { en: "Let's clean the picnic area because it is safer.", vi: "Cùng dọn khu dã ngoại vì nó an toàn hơn." },
+    ],
+    guided: { q: "What would you do if the weather changed your plan?", vi: "Nếu thời tiết làm hỏng kế hoạch, bạn sẽ làm gì?", hint: "If the weather is bad, I will ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Describe the weather, then say what new plan they chose and why.",
+      vi: "Kể lại câu chuyện 3–5 câu. Tả thời tiết, rồi nói kế hoạch mới và lý do.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a sign that tells you about danger\"?", vi: "Từ nào nghĩa là \"biển báo cho biết nguy hiểm\"?",
+        options: ["warning", "plan", "beach"], answer: "warning" },
+      { type: "reading", q: "The beach is not safe today. What is the best plan?", vi: "Hôm nay bãi biển không an toàn. Kế hoạch tốt nhất là gì?",
+        options: ["Move the cleanup to a safer place", "Swim into the big waves", "Ignore the warning"], answer: "Move the cleanup to a safer place",
+        explainVi: "Khi nguy hiểm, đổi sang nơi an toàn là hợp lý." },
+      { type: "reading", q: "Why did they choose the picnic area?", vi: "Vì sao các bạn chọn khu dã ngoại?",
+        options: ["It was safer, away from the big waves", "It had ice cream", "It was closer to the water"], answer: "It was safer, away from the big waves" },
+      { type: "listening", q: "What did the red flag and the sign mean?", vi: "Cờ đỏ và biển báo nghĩa là gì?",
+        options: ["Danger — big waves and strong wind", "Free food", "The cleanup is over"], answer: "Danger — big waves and strong wind" },
+    ],
+  },
+};
+
+/* Unit 9: The Aquarium Night Mystery */
+const THE_AQUARIUM_NIGHT_MYSTERY: Lesson = {
+  id: "aquarium", theme: "story-time", title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-09-aquarium-night-mystery.webp",
+  vocab: [
+    { word: "aquarium", ipa: "/əˈkweriəm/", vi: "thuỷ cung", emoji: "🐠", example: "The aquarium was quiet at night.", exampleVi: "Thuỷ cung yên tĩnh vào ban đêm." },
+    { word: "tank", ipa: "/tæŋk/", vi: "bể (cá)", emoji: "🌊", example: "The big tank held an octopus.", exampleVi: "Bể lớn nuôi một con bạch tuộc." },
+    { word: "leak", ipa: "/liːk/", vi: "rò rỉ", emoji: "💧", example: "Was the tank leaking?", exampleVi: "Liệu bể có bị rò rỉ không?" },
+    { word: "puddle", ipa: "/ˈpʌdl/", vi: "vũng nước", emoji: "🫗", example: "There was a puddle on the floor.", exampleVi: "Có một vũng nước trên sàn." },
+    { word: "octopus", ipa: "/ˈɒktəpəs/", vi: "con bạch tuộc", emoji: "🐙", example: "The clever octopus watched them.", exampleVi: "Con bạch tuộc tinh ranh nhìn các bạn." },
+    { word: "splash", ipa: "/splæʃ/", vi: "làm bắn nước", emoji: "💦", example: "It splashed water over the edge.", exampleVi: "Nó làm nước bắn qua mép bể." },
+    { word: "explanation", ipa: "/ˌekspləˈneɪʃn/", vi: "lời giải thích", emoji: "🗨️", example: "They found the real explanation.", exampleVi: "Các bạn tìm ra lời giải thích thật sự." },
+    { word: "solve", ipa: "/sɒlv/", vi: "giải (bí ẩn)", emoji: "🧩", example: "They helped solve the mystery.", exampleVi: "Các bạn giúp giải bí ẩn." },
+  ],
+  patterns: [
+    { pattern: "We noticed that …", vi: "Tụi mình để ý rằng …", examples: [
+      { en: "We noticed that the glass had no crack.", vi: "Tụi mình để ý rằng kính không hề nứt." },
+      { en: "We noticed a wet trail from the tank.", vi: "Tụi mình để ý một vệt nước từ bể chảy ra." }] },
+    { pattern: "Some people think … , but …", vi: "Vài người nghĩ … , nhưng …", examples: [
+      { en: "Some people think the tank is leaking, but there is no crack.", vi: "Vài người nghĩ bể bị rò, nhưng không có vết nứt." },
+      { en: "Some people think a pipe broke, but it is dry.", vi: "Vài người nghĩ ống vỡ, nhưng nó khô ráo." }] },
+    { pattern: "There is no … , so it cannot be …", vi: "Không có … nên không thể là …", examples: [
+      { en: "There is no crack, so it cannot be a leak.", vi: "Không có vết nứt nên không thể là rò rỉ." },
+      { en: "There is no rain, so it cannot be the weather.", vi: "Không có mưa nên không thể do thời tiết." }] },
+    { pattern: "The answer must be …", vi: "Câu trả lời chắc chắn là …", examples: [
+      { en: "The answer must be the octopus.", vi: "Câu trả lời chắc chắn là con bạch tuộc." },
+      { en: "The answer must be simple.", vi: "Câu trả lời chắc chắn rất đơn giản." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Which explanation is right?",
+    introVi: "Nghe câu chuyện rồi trả lời. Lời giải thích nào đúng?",
+    script: "One night, after the aquarium closed, a worker found a big puddle of water on the floor near the octopus tank. \"Is the tank leaking?\" she asked. Maple and her friends came to help solve the mystery. First, they looked closely at the glass. There was no crack, so the tank was not broken. Next, they saw a wet trail leading from the top of the tank down to the puddle. Then they noticed the octopus sitting right next to the edge, watching them with clever eyes. \"Some people think the tank is leaking,\" said Maple, \"but there is no crack, and the water came from the top.\" At last everyone understood: the playful octopus had reached over the edge and splashed water onto the floor during the night. There was no leak — the mystery was solved.",
+    questions: [
+      { q: "What did the worker find on the floor?", vi: "Người nhân viên tìm thấy gì trên sàn?",
+        options: ["A puddle of water", "A lost fish", "A broken window"], answer: "A puddle of water" },
+      { q: "Why did the friends decide the tank was NOT leaking?", vi: "Vì sao các bạn kết luận bể KHÔNG bị rò?",
+        options: ["There was no crack in the glass", "The water was warm", "The octopus told them"], answer: "There was no crack in the glass",
+        explainVi: "Kính không nứt nên nước không thể rò từ bể ra." },
+      { q: "What really happened?", vi: "Chuyện thật sự là gì?",
+        options: ["The octopus splashed water over the edge", "The roof was leaking", "A visitor spilled a drink"], answer: "The octopus splashed water over the edge" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Some people think the tank is leaking, but there is no crack.", vi: "Vài người nghĩ bể bị rò, nhưng không có vết nứt." },
+      { en: "The answer must be the clever octopus.", vi: "Câu trả lời chắc chắn là con bạch tuộc tinh ranh." },
+    ],
+    guided: { q: "How would you solve a mystery like a detective?", vi: "Bạn sẽ giải bí ẩn như một thám tử thế nào?", hint: "First, I would check the ___." },
+    describe: {
+      prompt: "Retell the story in 3–5 sentences. Give the clues in order, then say the real explanation.",
+      vi: "Kể lại câu chuyện 3–5 câu. Nêu các manh mối theo thứ tự, rồi nói lời giải thích thật.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"when water escapes through a hole or crack\"?", vi: "Từ nào nghĩa là \"nước thoát ra qua lỗ hoặc vết nứt\"?",
+        options: ["leak", "puddle", "tank"], answer: "leak" },
+      { type: "reading", q: "Some thought the tank was leaking. Why was that wrong?", vi: "Vài người nghĩ bể bị rò. Vì sao điều đó sai?",
+        options: ["There was no crack in the glass", "The tank was empty", "It never rains inside"], answer: "There was no crack in the glass",
+        explainVi: "Không có vết nứt thì nước không thể rò từ bể." },
+      { type: "reading", q: "What did the friends check FIRST?", vi: "Các bạn kiểm tra gì ĐẦU TIÊN?",
+        options: ["The glass, for a crack", "The ceiling", "The front door"], answer: "The glass, for a crack",
+        explainVi: "Thứ tự: kiểm tra kính → thấy vệt nước → thấy bạch tuộc." },
+      { type: "reading", q: "The wet trail came from the top and the octopus was at the edge. What is the best conclusion?", vi: "Vệt nước chảy từ trên xuống và bạch tuộc ở sát mép. Kết luận hợp lý nhất?",
+        options: ["The octopus splashed the water out", "The floor made its own water", "The lights melted"], answer: "The octopus splashed the water out" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
   { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
     lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
   { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
-    lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW] },
+    lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW,
+      THE_FERRY_TRIP_MIX_UP, THE_ROBOT_THAT_WOULDNT_START, THE_COMMUNITY_GARDEN_MYSTERY,
+      THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -929,9 +1348,15 @@ export const LEVEL1_UNITS: CourseUnit[] = [
 /* ============ Level 2 · Stories & Situations (3 Unit) ============ */
 // Bài kể chuyện nhiều bước: mở đầu → vấn đề → manh mối/sự việc → kết quả.
 export const LEVEL2_UNITS: CourseUnit[] = [
-  { id: "backpack",   n: 1, title: "The Missing Backpack",   vi: "Chiếc ba lô thất lạc",   image: L2IMG + "level-2-unit-01-missing-backpack.webp",    focus: "Manh mối · vị trí · suy luận",       lessonId: "backpack",   ready: true },
-  { id: "camping",    n: 2, title: "The Stormy Camping Trip", vi: "Chuyến cắm trại giông bão", image: L2IMG + "level-2-unit-02-stormy-camping-trip.webp", focus: "Thời tiết · đồng đội · dự đoán",     lessonId: "camping",    ready: true },
-  { id: "talentshow", n: 3, title: "The School Talent Show",  vi: "Hội diễn tài năng",       image: L2IMG + "level-2-unit-03-school-talent-show.webp",  focus: "Cảm xúc · động viên · trình tự",     lessonId: "talentshow", ready: true },
+  { id: "backpack",   n: 1, title: "The Missing Backpack",    vi: "Chiếc ba lô thất lạc",      image: L2IMG + "level-2-unit-01-missing-backpack.webp",         focus: "Manh mối · vị trí · suy luận",       lessonId: "backpack",   ready: true },
+  { id: "camping",    n: 2, title: "The Stormy Camping Trip", vi: "Chuyến cắm trại giông bão", image: L2IMG + "level-2-unit-02-stormy-camping-trip.webp",      focus: "Thời tiết · đồng đội · dự đoán",     lessonId: "camping",    ready: true },
+  { id: "talentshow", n: 3, title: "The School Talent Show",  vi: "Hội diễn tài năng",         image: L2IMG + "level-2-unit-03-school-talent-show.webp",       focus: "Cảm xúc · động viên · trình tự",     lessonId: "talentshow", ready: true },
+  { id: "ferry",      n: 4, title: "The Ferry Trip Mix-Up",   vi: "Chuyến phà nhầm lẫn",       image: L2IMG + "level-2-unit-04-ferry-trip-mix-up.webp",        focus: "Giờ giấc · phương hướng · nhân–quả", lessonId: "ferry",      ready: true },
+  { id: "robot",      n: 5, title: "The Robot That Wouldn't Start", vi: "Robot không chịu khởi động", image: L2IMG + "level-2-unit-05-robot-wouldnt-start.webp", focus: "Manh mối kỹ thuật · giả thuyết · nhân–quả", lessonId: "robot", ready: true },
+  { id: "garden",     n: 6, title: "The Community Garden Mystery", vi: "Bí ẩn vườn cộng đồng", image: L2IMG + "level-2-unit-06-community-garden-mystery.webp", focus: "Quan sát · kể lại quá khứ · bằng chứng", lessonId: "garden",  ready: true },
+  { id: "capsule",    n: 7, title: "The Time Capsule Discovery", vi: "Khám phá hộp thời gian",  image: L2IMG + "level-2-unit-07-time-capsule-discovery.webp",   focus: "Quá khứ · so xưa–nay · bằng chứng",  lessonId: "capsule",    ready: true },
+  { id: "beach",      n: 8, title: "The Beach Cleanup Change of Plan", vi: "Đổi kế hoạch dọn biển", image: L2IMG + "level-2-unit-08-beach-cleanup-change-of-plan.webp", focus: "Thời tiết · kế hoạch · lựa chọn", lessonId: "beach",  ready: true },
+  { id: "aquarium",   n: 9, title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung",   image: L2IMG + "level-2-unit-09-aquarium-night-mystery.webp",   focus: "Trình tự · loại trừ · kết luận",     lessonId: "aquarium",   ready: true },
 ];
 
 /* ============ helpers ============ */
