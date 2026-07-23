@@ -340,6 +340,9 @@
   .game-result h3 { margin: 10px 0 4px; }
   .game-result p { color: var(--muted); margin: 0 0 18px; }
   .game-result .btn + .btn { margin-top: 10px; }
+  .gr-explore { font-weight: 700; }
+  .gr-explore b { color: var(--teal-d); }
+  .echo-note { text-align: center; color: var(--muted); font-weight: 700; font-size: .82rem; margin-top: 10px; }
 
   /* sentence puzzle */
   .puzzle-hint { background: var(--active); border-radius: 12px; padding: 10px 14px; font-weight: 700;

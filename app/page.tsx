@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import {
-  type AppState, defaultState, loadState, saveState, totalStars,
+  type AppState, type RoundResult, defaultState, loadState, saveState, totalStars,
   touchStreak, resetDailyIfNeeded, resetDailyTasks, todayStr, totalLearned,
-  recordGame, hasSticker, gamesDone, addSticker,
+  hasSticker, gamesDone, addSticker,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
-  markGameSeen, recordBest, gameBest, sectionDone,
+  recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
   completeMission, missionOf, adventuresDone,
 } from "@/lib/state";
 import {
-  GAMES, STICKERS, stickerById,
+  GAMES, STICKERS, stickerById, STICKER_FOR_GAME,
   type StopKind, type GameKind,
 } from "@/lib/games";
 import { SECTIONS, learnLessonById } from "@/lib/learn";
@@ -45,7 +45,7 @@ const BADGES: { img: string; nm: string; has: (s: AppState) => boolean }[] = [
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
 
 type View = "home" | "learn" | "adventure" | "games";
-type Launch = { kind: StopKind; refId?: string; recId: string; sticker?: string; title: string };
+type Launch = { kind: StopKind; refId?: string; title: string };
 type Reward = { title: string; html: string; stars?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
 const NAV: [View, string, string][] = [
@@ -92,24 +92,32 @@ export default function App() {
     setLearnEntry("lesson"); setView("learn");
   }
 
-  // Ghi nhận 1 lượt Luyện tập. finish=false: ghi thầm rồi ở lại (chọn "bức khác").
-  function handleRound(sceneKey: string, starsWon: number, finish: boolean) {
-    if (!game) return;
-    const improved = sceneKey ? starsWon > gameBest(state, sceneKey) : false;
-    const firstSticker = finish && !!game.sticker && !hasSticker(state, game.sticker);
-    let ns = recordGame(state, game.recId, starsWon, finish ? game.sticker : undefined).state;
-    if (sceneKey) ns = recordBest(ns, sceneKey, starsWon);
-    setState(ns);
-    if (!finish) return;
-    setGame(null);
-    const sk = firstSticker && game.sticker ? stickerById(game.sticker) : null;
-    setReward({
-      title: starsWon >= 3 ? "Xuất sắc! 🌟" : starsWon >= 2 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
-      html: `Bạn đạt <b>${starsWon} ⭐</b>.${improved ? " Điểm tốt nhất mới! 🏆" : ""}`,
-      stars: starsWon,
-      sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
-    });
+  // Ghi câu đã trả lời (đúng/sai + seen) — dùng khi thoát giữa chừng. KHÔNG tăng playCount.
+  function commitGame(key: string, results: RoundResult[]) {
+    if (results.length) setState((s) => recordGameAnswers(s, key, results));
   }
+  // Hoàn thành TRỌN một lượt: ghi câu + playCount + bestStars + lastPlayedAt + Practice hôm nay.
+  // Sticker chỉ tặng khi đã khám phá HẾT câu/task của topic, và chỉ một lần. Trả info để màn kết quả hiển thị.
+  function finishGame(key: string, results: RoundResult[], stars: number, topicTotal: number) {
+    const prev = topicOf(state, key);
+    const explored = new Set(prev.seen);
+    results.forEach((r) => explored.add(r.id));
+    const newly = results.filter((r) => !prev.seen.includes(r.id)).length;
+    const fully = topicTotal > 0 && explored.size >= topicTotal;
+    const gameType = key.split(":")[0] as GameKind;
+    const stId = STICKER_FOR_GAME[gameType];
+    const award = fully && !!stId && !hasSticker(state, stId);
+    setState((s) => {
+      let ns = recordGameAnswers(s, key, results);
+      ns = finishGameRound(ns, key, stars, todayStr());
+      if (award && stId) ns = addSticker(ns, stId);
+      return ns;
+    });
+    const sk = award && stId ? stickerById(stId) : undefined;
+    return { newly, explored: explored.size, total: topicTotal, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
+  }
+  // Echo (luyện nói tùy chọn): chỉ đánh dấu đã luyện Practice hôm nay.
+  function echoDone() { setState((s) => markPracticeDone(s)); }
 
   // Hoàn thành bài Learn (sau Mini Check)
   function completeLearn(lessonId: string, score: number, total: number) {
@@ -172,10 +180,10 @@ export default function App() {
       <div className={`wrap ${view === "home" || view === "adventure" ? "wide" : ""}`}>
         {view === "home" && <Today state={state} go={goView} openLesson={openCurrentLesson} />}
         {view === "learn" && <Learn state={state} setState={setState} entry={learnEntry}
-          onEcho={() => launch({ kind: "echo", recId: "quick-echo", sticker: "st-mic", title: "Echo" })}
-          onTalk={(sceneId) => launch({ kind: "talk", refId: sceneId ?? "park", recId: "quick-talk", title: "Describe the Picture" })}
+          onEcho={() => launch({ kind: "echo", title: "Echo" })}
+          onTalk={(sceneId) => launch({ kind: "talk", refId: sceneId, title: "Build the Description" })}
           onComplete={completeLearn} />}
-        {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: undefined, recId: "quick-" + kind, title: "Luyện tập" })} />}
+        {view === "games" && <GamesHub launch={(kind) => launch({ kind, title: "Luyện tập" })} />}
         {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent}
           onComplete={completeAdventure} />}
       </div>
@@ -204,9 +212,7 @@ export default function App() {
       )}
 
       {game && <GamePlay kind={game.kind} refId={game.refId} accent={state.prefs.accent}
-        seen={state.games.seen} best={state.games.best}
-        onSeen={(key, ids) => setState((s) => markGameSeen(s, key, ids))}
-        onRound={handleRound}
+        cb={{ topics: state.games.topics, commit: commitGame, finish: finishGame, echoDone }}
         onExit={() => setGame(null)} />}
 
       {collection && <CollectionPanel state={state} stars={stars} onClose={() => setCollection(false)} />}

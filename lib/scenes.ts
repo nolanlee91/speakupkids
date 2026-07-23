@@ -2,11 +2,14 @@
 // Mỗi cảnh có nhiều câu; nội dung viết khớp đúng chi tiết trong ảnh.
 // Ảnh do codex tạo; emoji chỉ là fallback nếu thiếu ảnh.
 
+import type { Difficulty } from "./gameplay";
+
 export type SceneQKind = "observe" | "locate" | "compare" | "infer" | "sequence";
 export type SceneQ = {
   id: string; kind: SceneQKind;
   q: string; vi: string;
   options: string[]; answer: string; explainVi?: string;
+  difficulty?: Difficulty; // tùy chọn — nếu thiếu sẽ suy ra từ kind
 };
 export type DetectiveScene = {
   id: string; title: string; vi: string; image: string; emojis: string[];
@@ -184,6 +187,7 @@ export type TalkTask = {
   answer?: string;            // đáp án đúng (mọi kind trừ arrange)
   solution?: string[];        // arrange: các từ theo đúng thứ tự
   say: string;                // câu mô tả hoàn chỉnh để nói theo (không tính điểm)
+  difficulty?: Difficulty;    // tùy chọn — nếu thiếu sẽ suy ra từ kind
 };
 export type TalkScene = {
   id: string; title: string; vi: string; image: string; emojis: string[];

@@ -2,6 +2,8 @@
 import type { Lesson } from "./data";
 import { lessonById } from "./data";
 import type { DifficultyLevel, LearningSectionKey } from "./learn";
+import { EMPTY_TOPIC, type GameTopicProgress, type RoundResult } from "./gameplay";
+export type { GameTopicProgress, RoundResult };
 
 export type Prefs = { ipa: boolean; vi: boolean; accent: "US" | "CA"; motion: boolean };
 export type Progress = { done: boolean; stars: number; learned: number[] };
@@ -15,10 +17,9 @@ export type LearnState = {
   lessons: Record<string, LearnLessonState>;
 };
 
-// Tiến trình riêng của khu Trò chơi (tách khỏi Adventure)
+// Tiến trình riêng của khu Trò chơi (tách khỏi Adventure): tiến độ theo từng topic/scene.
 export type GamesState = {
-  seen: Record<string, string[]>; // key vd "picdet:classroom" -> id câu đã gặp (chống lặp)
-  best: Record<string, number>;   // key vd "picdet:park" -> sao tốt nhất theo scene/topic
+  topics: Record<string, GameTopicProgress>; // key vd "picdet:park", "talk:classroom"
 };
 
 // Nhiệm vụ hôm nay tách theo module (Learn / Practice / Adventure)
@@ -75,7 +76,7 @@ export function defaultState(): AppState {
     dailyDone: 0,
     splashDate: "",
     learn: { currentLesson: "park", difficulty: "detective", lessons: {} },
-    games: { seen: {}, best: {} },
+    games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { missions: {} },
   };
@@ -91,13 +92,39 @@ export function loadState(): AppState {
       ...d, ...s,
       prefs: { ...d.prefs, ...(s.prefs || {}) },
       learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
-      games: { ...d.games, ...(s.games || {}), seen: { ...(s.games?.seen || {}) }, best: { ...(s.games?.best || {}) } },
+      games: migrateGames(s.games),
       daily: { ...d.daily, ...(s.daily || {}) },
       adventure: { ...d.adventure, ...(s.adventure || {}), missions: { ...(s.adventure?.missions || {}) } },
     };
   } catch {
     return defaultState();
   }
+}
+
+// Chuyển GamesState cũ ({seen,best}) hoặc bản mới ({topics}) về schema topics; không mất dữ liệu.
+function migrateGames(g: unknown): GamesState {
+  const src = (g || {}) as { topics?: Record<string, Partial<GameTopicProgress>>; seen?: Record<string, string[]>; best?: Record<string, number> };
+  const topics: Record<string, GameTopicProgress> = {};
+  if (src.topics && typeof src.topics === "object") {
+    for (const [k, v] of Object.entries(src.topics)) {
+      topics[k] = {
+        ...EMPTY_TOPIC, ...(v || {}),
+        seen: Array.isArray(v?.seen) ? v!.seen! : [],
+        wrong: (v?.wrong as Record<string, number>) || {},
+        correct: (v?.correct as Record<string, number>) || {},
+        playCount: v?.playCount || 0,
+        bestStars: v?.bestStars || 0,
+      };
+    }
+    return { topics };
+  }
+  // Cũ: { seen: {key:ids}, best: {key:stars} } → gộp thành topics (giữ seen + bestStars).
+  const seen = src.seen || {};
+  const best = src.best || {};
+  for (const k of new Set([...Object.keys(seen), ...Object.keys(best)])) {
+    topics[k] = { ...EMPTY_TOPIC, seen: Array.isArray(seen[k]) ? seen[k] : [], bestStars: best[k] || 0 };
+  }
+  return { topics };
 }
 
 export function saveState(s: AppState) {
@@ -110,8 +137,13 @@ export function todayStr(d = new Date()): string {
 }
 
 /* ---------- helper thuần (không đổi state) ---------- */
+// Tổng sao = sao "legacy" (không phải game) + tổng bestStars của từng topic Game.
+// KHÔNG cộng key "g:*" cũ để tránh đếm trùng với games.topics.
 export function totalStars(s: AppState): number {
-  return Object.values(s.progress).reduce((a, x) => a + (x.stars || 0), 0);
+  const legacy = Object.entries(s.progress)
+    .filter(([k]) => !k.startsWith("g:"))
+    .reduce((a, [, x]) => a + (x.stars || 0), 0);
+  return legacy + gameStars(s);
 }
 export function lessonsDone(s: AppState): number {
   return Object.values(s.progress).filter((x) => x.done).length;
@@ -154,37 +186,54 @@ export function addSticker(s: AppState, id: string): AppState {
   if (!id || hasSticker(s, id)) return s;
   return { ...s, stickers: [...(s.stickers || []), id] };
 }
+/* ---------- Practice/Game: tiến độ riêng theo topic ---------- */
+export function topicOf(s: AppState, key: string): GameTopicProgress {
+  return s.games.topics[key] || EMPTY_TOPIC;
+}
+// Tổng sao Game = tổng bestStars của từng topic (không cộng mỗi lượt chơi).
+export function gameStars(s: AppState): number {
+  return Object.values(s.games.topics).reduce((a, t) => a + (t.bestStars || 0), 0);
+}
+// Tổng số lượt Game đã hoàn thành (dùng cho huy hiệu "Luyện N lượt").
+export function gamePlays(s: AppState): number {
+  return Object.values(s.games.topics).reduce((a, t) => a + (t.playCount || 0), 0);
+}
 export function gamesDone(s: AppState): number {
-  return Object.keys(s.progress).filter((k) => k.startsWith("g:") && s.progress[k].done).length;
+  return gamePlays(s);
 }
-// Lưu các câu đã gặp (chống lặp giữa các lượt chơi cùng một cảnh)
-export function markGameSeen(s: AppState, key: string, ids: string[]): AppState {
-  return { ...s, games: { ...s.games, seen: { ...s.games.seen, [key]: ids } } };
+export function topicSeenCount(s: AppState, key: string): number {
+  return topicOf(s, key).seen.length;
 }
-// Ghi điểm cao nhất theo game (vd "picdet")
-export function recordBest(s: AppState, gameId: string, score: number): AppState {
-  if (score <= (s.games.best[gameId] || 0)) return s;
-  return { ...s, games: { ...s.games, best: { ...s.games.best, [gameId]: score } } };
+// Ghi nhận câu đã trả lời (đúng/sai + seen). KHÔNG tăng playCount. Dùng cả khi thoát giữa chừng.
+export function recordGameAnswers(s: AppState, key: string, results: RoundResult[]): AppState {
+  if (!results.length) return s;
+  const cur = topicOf(s, key);
+  const seen = cur.seen.slice();
+  const wrong = { ...cur.wrong };
+  const correct = { ...cur.correct };
+  for (const r of results) {
+    if (!seen.includes(r.id)) seen.push(r.id);
+    if (r.correct) correct[r.id] = (correct[r.id] || 0) + 1;
+    else wrong[r.id] = (wrong[r.id] || 0) + 1;
+  }
+  return { ...s, games: { topics: { ...s.games.topics, [key]: { ...cur, seen, wrong, correct } } } };
 }
-export function gameBest(s: AppState, gameId: string): number {
-  return s.games.best[gameId] || 0;
-}
-
-// Ghi nhận 1 lượt chơi game (lặp lại được): giữ số sao cao nhất; trả {state, newly}
-export function recordGame(s: AppState, id: string, stars: number, sticker?: string): { state: AppState; newly: boolean } {
-  const key = "g:" + id;
-  const cur = s.progress[key];
-  const newly = !cur?.done;
+// Hoàn thành TRỌN một lượt: +1 playCount, giữ bestStars cao nhất, cập nhật lastPlayedAt, đánh dấu Practice hôm nay.
+export function finishGameRound(s: AppState, key: string, stars: number, now: string): AppState {
   let ns = resetDailyIfNeeded(s);
   ns = markDaily(ns, "practice");
-  ns = {
-    ...ns,
-    minutes: ns.minutes + (newly ? 2 : 0),
-    dailyDone: ns.dailyDone + (newly ? 1 : 0),
-    progress: { ...ns.progress, [key]: { done: true, stars: Math.max(stars, cur?.stars || 0), learned: cur?.learned || [] } },
+  const cur = topicOf(ns, key);
+  const next: GameTopicProgress = {
+    ...cur,
+    playCount: cur.playCount + 1,
+    bestStars: Math.max(stars, cur.bestStars),
+    lastPlayedAt: now,
   };
-  if (sticker) ns = addSticker(ns, sticker);
-  return { state: ns, newly };
+  return { ...ns, minutes: ns.minutes + 2, games: { topics: { ...ns.games.topics, [key]: next } } };
+}
+// Echo (luyện nói tùy chọn): chỉ đánh dấu đã luyện Practice hôm nay, KHÔNG chạm sao/bestStars/playCount.
+export function markPracticeDone(s: AppState): AppState {
+  return markDaily(resetDailyIfNeeded(s), "practice");
 }
 
 /* ---------- Learn (khu học tập) ---------- */
