@@ -66,14 +66,27 @@ function rankByPriority<T extends { id: string }>(items: T[], prog: GameTopicPro
   return [...shuffle(unseen), ...struggled, ...rest];
 }
 
-// Chọn n câu cho một lượt: ưu tiên (unseen → sai nhiều → cũ) + phối độ khó + tránh lặp bộ của lượt trước.
+// Đếm số câu theo từng mức độ khó trong một bank (dùng cho thẻ chủ đề ở gallery).
+export function countByDifficulty<T>(items: T[], difficultyOf: (item: T) => Difficulty): Record<Difficulty, number> {
+  const c: Record<Difficulty, number> = { easy: 0, medium: 0, hard: 0 };
+  for (const it of items) c[difficultyOf(it)]++;
+  return c;
+}
+
+// Chọn n câu cho một lượt.
+// - only = undefined: phối độ khó (~20% dễ / 40% vừa / 40% khó) như cũ.
+// - only = "easy"|"medium"|"hard": CHỈ lấy câu đúng mức đó (trẻ tự chọn mức), ưu tiên chưa gặp → sai nhiều → cũ.
+// Cả hai đều: ưu tiên (unseen → sai nhiều → cũ), xoay điểm bắt đầu khi đã khám phá hết, tránh lặp bộ lượt trước.
 export function selectRound<T extends { id: string }>(
   items: T[],
   prog: GameTopicProgress,
   n: number,
   difficultyOf: (item: T) => Difficulty,
   lastIds: string[] = [],
+  only?: Difficulty,
 ): T[] {
+  // Lọc theo mức đã chọn (nếu có) — trẻ muốn cày mức nào thì chỉ nhận câu mức đó.
+  if (only) return selectSingle(items.filter((it) => difficultyOf(it) === only), prog, n, lastIds);
   n = Math.min(n, items.length);
   if (n <= 0) return [];
   const ranked = rankByPriority(items, prog);
@@ -102,6 +115,31 @@ export function selectRound<T extends { id: string }>(
   const round = picked.slice(0, n);
   // Tránh tái tạo y hệt bộ của lượt gần nhất nếu còn lựa chọn khác.
   if (lastIds.length === round.length && round.length > 0 && items.length > n) {
+    const same = round.every((r) => lastIds.includes(r.id));
+    if (same) { const alt = ranked.find((it) => !chosen.has(it.id)); if (alt) round[round.length - 1] = alt; }
+  }
+  return shuffle(round);
+}
+
+// Chọn n câu trong MỘT nhóm cùng mức độ khó: ưu tiên (unseen → sai nhiều → cũ),
+// xoay điểm bắt đầu khi đã khám phá hết nhóm, tránh lặp y hệt bộ lượt trước.
+function selectSingle<T extends { id: string }>(
+  pool: T[], prog: GameTopicProgress, n: number, lastIds: string[] = [],
+): T[] {
+  n = Math.min(n, pool.length);
+  if (n <= 0) return [];
+  let ranked = rankByPriority(pool, prog);
+  // Đã gặp hết nhóm này rồi thì xoay để lần sau khác đi.
+  const seenSet = new Set(prog.seen);
+  const allSeen = pool.every((it) => seenSet.has(it.id));
+  if (allSeen && prog.playCount > 0 && ranked.length > 1) {
+    const offset = prog.playCount % ranked.length;
+    ranked = [...ranked.slice(offset), ...ranked.slice(0, offset)];
+  }
+  const round = ranked.slice(0, n);
+  // Tránh tái tạo y hệt bộ của lượt gần nhất nếu còn lựa chọn khác.
+  if (lastIds.length === round.length && round.length > 0 && pool.length > n) {
+    const chosen = new Set(round.map((r) => r.id));
     const same = round.every((r) => lastIds.includes(r.id));
     if (same) { const alt = ranked.find((it) => !chosen.has(it.id)); if (alt) round[round.length - 1] = alt; }
   }

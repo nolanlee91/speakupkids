@@ -6,9 +6,28 @@ import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
 import { DETECTIVE_SCENES, TALK_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scenes";
 import { PUZZLE_SETS, RIDDLE_SETS, puzzleSetById, riddleSetById } from "@/lib/banks";
 import {
-  EMPTY_TOPIC, selectRound, starsFor, picdetDifficulty, talkDifficulty, puzzleDifficulty,
-  type GameTopicProgress, type RoundResult,
+  EMPTY_TOPIC, selectRound, countByDifficulty, starsFor, picdetDifficulty, talkDifficulty, puzzleDifficulty,
+  type GameTopicProgress, type RoundResult, type Difficulty,
 } from "@/lib/gameplay";
+
+/* Chọn độ khó: trẻ TỰ CHỌN mức muốn chơi (không khoá) — như chọn Level ở Learn. */
+const DIFF_LIST: Difficulty[] = ["easy", "medium", "hard"];
+const DIFF_VI: Record<Difficulty, string> = { easy: "Dễ", medium: "Vừa", hard: "Khó" };
+function DifficultyBar({ value, onChange }: { value: Difficulty; onChange: (d: Difficulty) => void }) {
+  return (
+    <div className="diff-bar" role="tablist" aria-label="Chọn độ khó">
+      {DIFF_LIST.map((d) => (
+        <button key={d} role="tab" aria-selected={value === d}
+          className={`diff-tab ${d} ${value === d ? "on" : ""}`} onClick={() => onChange(d)}>
+          {DIFF_VI[d]}
+        </button>
+      ))}
+    </div>
+  );
+}
+function RoundDiff({ difficulty }: { difficulty: Difficulty }) {
+  return <span className={`round-diff ${difficulty}`}>Mức {DIFF_VI[difficulty]}</span>;
+}
 
 /* Thông tin trả về sau khi hoàn thành một lượt — dùng để hiển thị màn kết quả. */
 export type FinishInfo = { newly: number; explored: number; total: number; sticker?: { id: string; name: string; emoji: string } };
@@ -72,28 +91,35 @@ function resultActions(onNext: (() => void) | undefined, onExit: () => void, nex
 }
 
 /* ============ Thư viện scene/topic: cho bé THẤY tất cả & tự chọn ============ */
-type GalleryItem = { id: string; name: string; sub: string; image?: string; emoji?: string; total: number };
-function GameGallery({ emoji, title, vi, intro, items, prefix, topics, onPick, onExit }: {
+type GalleryItem = { id: string; name: string; sub: string; image?: string; emoji?: string; total: number; counts: Record<Difficulty, number> };
+function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficulty, onDifficulty, onPick, onExit }: {
   emoji: string; title: string; vi: string; intro: string;
   items: GalleryItem[]; prefix: string; topics: Record<string, GameTopicProgress>;
+  difficulty: Difficulty; onDifficulty: (d: Difficulty) => void;
   onPick: (id: string) => void; onExit: () => void;
 }) {
   return (
     <GameShell emoji={emoji} title={title} vi={vi} onExit={onExit}>
       <p className="gallery-intro">{intro}</p>
+      <DifficultyBar value={difficulty} onChange={onDifficulty} />
       <div className="scene-gallery">
         {items.map((it) => {
           const prog = topics[prefix + ":" + it.id] || EMPTY_TOPIC;
           const discovered = Math.min(prog.seen.length, it.total);
           const complete = it.total > 0 && discovered >= it.total;
+          const nAtDiff = it.counts[difficulty];
+          const empty = nAtDiff === 0;
           return (
-            <button key={it.id} className={`scene-card ${discovered > 0 ? "explored" : ""}`} onClick={() => onPick(it.id)}>
+            <button key={it.id} disabled={empty}
+              className={`scene-card ${discovered > 0 ? "explored" : ""} ${empty ? "empty" : ""}`}
+              onClick={() => onPick(it.id)}>
               <span className="sc-thumb">
                 {it.image ? <img src={it.image} alt="" /> : <span className="sc-emoji" aria-hidden="true">{it.emoji}</span>}
                 {complete && <span className="sc-check">✓</span>}
               </span>
               <span className="sc-name">{it.name}</span>
               <span className="sc-sub">{it.sub}</span>
+              <span className={`sc-count ${difficulty}`}>{empty ? `Chưa có câu mức ${DIFF_VI[difficulty]}` : `${DIFF_VI[difficulty]} · ${nAtDiff} câu`}</span>
               <span className="sc-sub">{discovered}/{it.total} thử thách{prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}</span>
               {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
             </button>
@@ -114,15 +140,17 @@ function useFinish(fin: boolean, run: () => FinishInfo): FinishInfo | null {
 }
 
 /* ============ 1. Picture Detective ============ */
-function DetectiveRound({ sceneId, cb, onExit, onNext }: {
-  sceneId: string; cb: GameCallbacks; onExit: () => void; onNext?: () => void;
+function DetectiveRound({ sceneId, difficulty, cb, onExit, onNext }: {
+  sceneId: string; difficulty: Difficulty; cb: GameCallbacks; onExit: () => void; onNext?: () => void;
 }) {
   const [session] = useState(() => {
     const scene = detectiveSceneById(sceneId) || DETECTIVE_SCENES[0];
     const key = "picdet:" + scene.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const qs = selectRound(scene.questions, prog, ROUND_SIZE.picdet, (q) => picdetDifficulty(q.kind, q.difficulty))
-      .map((q) => ({ ...q, options: shuffle(q.options) }));
+    const diffOf = (q: (typeof scene.questions)[number]) => picdetDifficulty(q.kind, q.difficulty);
+    const chosen = selectRound(scene.questions, prog, ROUND_SIZE.picdet, diffOf, [], difficulty);
+    const picked = (chosen.length ? chosen : selectRound(scene.questions, prog, ROUND_SIZE.picdet, diffOf));
+    const qs = picked.map((q) => ({ ...q, options: shuffle(q.options) }));
     return { scene, key, qs, total: scene.questions.length };
   });
   const { scene, qs, key, total } = session;
@@ -151,7 +179,7 @@ function DetectiveRound({ sceneId, cb, onExit, onNext }: {
   return (
     <GameShell emoji="🔎" title={scene.title} vi={scene.vi} onExit={exit}>
       <Scene image={scene.image} emojis={scene.emojis} name={scene.vi} />
-      <div className="q-progress">Câu {i + 1}/{qs.length}</div>
+      <div className="q-progress">Câu {i + 1}/{qs.length} <RoundDiff difficulty={difficulty} /></div>
       <div className="qcard">
         <div className="qtext">{q.q}<div className="qsub">{q.vi}</div></div>
         <div className={`qopts ${answered ? "answered" : ""}`}>
@@ -177,13 +205,15 @@ function PictureDetective({ sceneId, cb, onExit }: { sceneId?: string; cb: GameC
   const initial = sceneId && detectiveSceneById(sceneId) ? sceneId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   if (galleryMode && !chosen) {
     return <GameGallery emoji="🔎" title="Thám tử hình ảnh" vi="Chọn bức tranh để điều tra"
-      intro="Chọn một bức tranh để điều tra — mỗi bức có nhiều thử thách quan sát, tìm vị trí, so sánh và suy luận."
-      items={DETECTIVE_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image, total: s.questions.length }))}
-      prefix="picdet" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
+      intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bức tranh để điều tra — quan sát, tìm vị trí, so sánh và suy luận."
+      items={DETECTIVE_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image, total: s.questions.length,
+        counts: countByDifficulty(s.questions, (q) => picdetDifficulty(q.kind, q.difficulty)) }))}
+      prefix="picdet" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
-  return <DetectiveRound key={chosen} sceneId={chosen!} cb={cb}
+  return <DetectiveRound key={`${chosen}-${difficulty}`} sceneId={chosen!} difficulty={difficulty} cb={cb}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }
@@ -193,12 +223,14 @@ const PUZZLE_META: Record<string, [string, string]> = {
   daily: ["Đời sống", "🏠"], school: ["Trường lớp", "🏫"], food: ["Đồ ăn", "🍎"],
   places: ["Nơi chốn & Du lịch", "🗺️"], feelings: ["Cảm xúc", "😊"], past: ["Chuyện đã qua", "⏰"],
 };
-function PuzzleRound({ setId, cb, onExit, onNext }: { setId: string; cb: GameCallbacks; onExit: () => void; onNext?: () => void }) {
+function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string; difficulty: Difficulty; cb: GameCallbacks; onExit: () => void; onNext?: () => void }) {
   const [session] = useState(() => {
     const set = puzzleSetById(setId) || PUZZLE_SETS[0];
     const key = "puzzle:" + set.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const items = selectRound(set.items, prog, ROUND_SIZE.puzzle, (p) => puzzleDifficulty(p.solution.length, p.difficulty));
+    const diffOf = (p: (typeof set.items)[number]) => puzzleDifficulty(p.solution.length, p.difficulty);
+    const chosen = selectRound(set.items, prog, ROUND_SIZE.puzzle, diffOf, [], difficulty);
+    const items = chosen.length ? chosen : selectRound(set.items, prog, ROUND_SIZE.puzzle, diffOf);
     return { set, key, items, total: set.items.length };
   });
   const { set, items, key, total } = session;
@@ -239,7 +271,7 @@ function PuzzleRound({ setId, cb, onExit, onNext }: { setId: string; cb: GameCal
   const target = item.solution.join(" ") + ".";
   return (
     <GameShell emoji="🧩" title="Sentence Puzzle" vi={`Xếp câu · ${set.title}`} onExit={exit}>
-      <div className="q-progress">Câu {i + 1}/{items.length}</div>
+      <div className="q-progress">Câu {i + 1}/{items.length} <RoundDiff difficulty={difficulty} /></div>
       <div className="puzzle-hint">💡 {item.vi}</div>
       <div className={`puzzle-line ${result === true ? "ok" : result === false ? "no" : ""}`}>
         {placed.length === 0 && <span className="ph">Chạm từ bên dưới để xếp câu…</span>}
@@ -265,13 +297,15 @@ function SentencePuzzle({ setId, cb, onExit }: { setId?: string; cb: GameCallbac
   const initial = setId && puzzleSetById(setId) ? setId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   if (galleryMode && !chosen) {
     return <GameGallery emoji="🧩" title="Xếp câu" vi="Chọn một chủ đề"
-      intro="Chọn một chủ đề để luyện trật tự từ — mỗi chủ đề có nhiều câu khác nhau!"
-      items={PUZZLE_SETS.map((s) => ({ id: s.id, name: PUZZLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: PUZZLE_META[s.id]?.[1] || "🧩", total: s.items.length }))}
-      prefix="puzzle" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
+      intro="Chọn mức Dễ / Vừa / Khó rồi chọn một chủ đề để luyện trật tự từ."
+      items={PUZZLE_SETS.map((s) => ({ id: s.id, name: PUZZLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: PUZZLE_META[s.id]?.[1] || "🧩", total: s.items.length,
+        counts: countByDifficulty(s.items, (p) => puzzleDifficulty(p.solution.length, p.difficulty)) }))}
+      prefix="puzzle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
-  return <PuzzleRound key={chosen} setId={chosen!} cb={cb}
+  return <PuzzleRound key={`${chosen}-${difficulty}`} setId={chosen!} difficulty={difficulty} cb={cb}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }
@@ -281,15 +315,16 @@ const RIDDLE_META: Record<string, [string, string]> = {
   animals: ["Con vật", "🐘"], food: ["Đồ ăn", "🍎"], places: ["Nơi chốn", "🏖️"],
   objects: ["Đồ vật", "🎒"], nature: ["Thiên nhiên", "🌈"], logic: ["Đố mẹo", "🧠"],
 };
-function RiddleRound({ setId, cb, accent, onExit, onNext }: {
-  setId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
+function RiddleRound({ setId, difficulty, cb, accent, onExit, onNext }: {
+  setId: string; difficulty: Difficulty; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
 }) {
   const [session] = useState(() => {
     const set = riddleSetById(setId) || RIDDLE_SETS[0];
     const key = "riddle:" + set.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const hard = set.id === "logic";
-    const items = selectRound(set.items, prog, ROUND_SIZE.riddle, (r) => r.difficulty || (hard ? "hard" : "medium"))
+    const diffOf = (r: (typeof set.items)[number]) => r.difficulty || "medium";
+    const chosen = selectRound(set.items, prog, ROUND_SIZE.riddle, diffOf, [], difficulty);
+    const items = (chosen.length ? chosen : selectRound(set.items, prog, ROUND_SIZE.riddle, diffOf))
       .map((r) => ({ ...r, options: shuffle(r.options) }));
     return { set, key, items, total: set.items.length };
   });
@@ -318,7 +353,7 @@ function RiddleRound({ setId, cb, accent, onExit, onNext }: {
   }
   return (
     <GameShell emoji="🦉" title="English Riddles" vi={`Đố vui · ${set.title}`} onExit={exit}>
-      <div className="q-progress">Câu đố {i + 1}/{items.length}</div>
+      <div className="q-progress">Câu đố {i + 1}/{items.length} <RoundDiff difficulty={difficulty} /></div>
       <div className="riddle-card">
         <div className="riddle-emoji">{r.hint}</div>
         <div className="riddle-text">{r.text}</div>
@@ -347,13 +382,15 @@ function RiddleGame({ setId, cb, accent, onExit }: { setId?: string; cb: GameCal
   const initial = setId && riddleSetById(setId) ? setId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   if (galleryMode && !chosen) {
     return <GameGallery emoji="🦉" title="Đố vui tiếng Anh" vi="Chọn một bộ câu đố"
-      intro="Chọn một bộ câu đố — đọc/nghe manh mối rồi chọn đáp án. Mỗi bộ có nhiều câu khác nhau!"
-      items={RIDDLE_SETS.map((s) => ({ id: s.id, name: RIDDLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: RIDDLE_META[s.id]?.[1] || "🦉", total: s.items.length }))}
-      prefix="riddle" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
+      intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bộ câu đố — đọc/nghe manh mối rồi chọn đáp án."
+      items={RIDDLE_SETS.map((s) => ({ id: s.id, name: RIDDLE_META[s.id]?.[0] || s.title, sub: s.title, emoji: RIDDLE_META[s.id]?.[1] || "🦉", total: s.items.length,
+        counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
+      prefix="riddle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
-  return <RiddleRound key={chosen} setId={chosen!} cb={cb} accent={accent}
+  return <RiddleRound key={`${chosen}-${difficulty}`} setId={chosen!} difficulty={difficulty} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }
@@ -362,14 +399,16 @@ function RiddleGame({ setId, cb, accent, onExit }: { setId?: string; cb: GameCal
 const TALK_KIND_LABEL: Record<string, string> = {
   choose: "Chọn câu đúng", spot: "Tìm câu sai", fill: "Điền từ", position: "Vị trí", arrange: "Xếp câu mô tả",
 };
-function TalkRound({ sceneId, cb, accent, onExit, onNext }: {
-  sceneId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
+function TalkRound({ sceneId, difficulty, cb, accent, onExit, onNext }: {
+  sceneId: string; difficulty: Difficulty; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
 }) {
   const [session] = useState(() => {
     const scene = talkSceneById(sceneId) || TALK_SCENES[0];
     const key = "talk:" + scene.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const tasks = selectRound(scene.tasks, prog, ROUND_SIZE.talk, (t) => talkDifficulty(t.kind, t.difficulty))
+    const diffOf = (t: (typeof scene.tasks)[number]) => talkDifficulty(t.kind, t.difficulty);
+    const chosen = selectRound(scene.tasks, prog, ROUND_SIZE.talk, diffOf, [], difficulty);
+    const tasks = (chosen.length ? chosen : selectRound(scene.tasks, prog, ROUND_SIZE.talk, diffOf))
       .map((t) => (t.options ? { ...t, options: shuffle(t.options) } : t));
     return { scene, key, tasks, total: scene.tasks.length };
   });
@@ -428,7 +467,7 @@ function TalkRound({ sceneId, cb, accent, onExit, onNext }: {
   return (
     <GameShell emoji="💬" title={scene.title} vi={scene.vi} onExit={exit}>
       <Scene image={scene.image} emojis={scene.emojis} name={scene.vi} />
-      <div className="q-progress">Thử thách {i + 1}/{tasks.length}</div>
+      <div className="q-progress">Thử thách {i + 1}/{tasks.length} <RoundDiff difficulty={difficulty} /></div>
       <div className="talk-task">
         <span className="talk-kind">{TALK_KIND_LABEL[t.kind]}</span>
         <div className="talk-instr">{t.vi}</div>
@@ -484,13 +523,15 @@ function PictureTalk({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
   const initial = sceneId && talkSceneById(sceneId) ? sceneId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   if (galleryMode && !chosen) {
     return <GameGallery emoji="💬" title="Xây câu từ hình ảnh" vi="Chọn bức tranh để mô tả"
-      intro="Chọn một bức tranh — nhìn kỹ rồi chọn từ, điền từ, dùng giới từ và xếp câu mô tả."
-      items={TALK_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image, total: s.tasks.length }))}
-      prefix="talk" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
+      intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bức tranh — chọn từ, điền từ, dùng giới từ và xếp câu mô tả."
+      items={TALK_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image, total: s.tasks.length,
+        counts: countByDifficulty(s.tasks, (t) => talkDifficulty(t.kind, t.difficulty)) }))}
+      prefix="talk" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
-  return <TalkRound key={chosen} sceneId={chosen!} cb={cb} accent={accent}
+  return <TalkRound key={`${chosen}-${difficulty}`} sceneId={chosen!} difficulty={difficulty} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }

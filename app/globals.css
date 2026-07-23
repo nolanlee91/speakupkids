@@ -335,9 +335,22 @@
     background: rgba(255,255,255,.82); padding: 5px 10px; text-align: center; }
 
   .q-progress { font-size: .82rem; font-weight: 800; color: var(--muted); margin: 4px 0 10px; }
+  /* nhãn mức độ khó trong lượt chơi */
+  .round-diff { display: inline-block; margin-left: 6px; padding: 2px 9px; border-radius: 999px; font-size: .72rem; font-weight: 800; vertical-align: middle; }
+  .round-diff.easy { background: #e7f7f0; color: var(--teal-d); }
+  .round-diff.medium { background: #fff2cf; color: #a8730b; }
+  .round-diff.hard { background: #ffe4dc; color: var(--coral-d); }
 
   /* thư viện cảnh/chủ đề — cho bé thấy tất cả các bức & tự chọn */
   .gallery-intro { font-weight: 700; color: var(--muted); margin: 2px 0 14px; }
+  /* thanh chọn độ khó Dễ/Vừa/Khó (tự chọn, không khoá) */
+  .diff-bar { display: inline-flex; gap: 6px; background: #f2ede3; border-radius: 999px; padding: 4px; margin: 0 0 16px; }
+  .diff-tab { border: none; background: transparent; font-family: inherit; font-weight: 800; font-size: .86rem;
+    color: var(--muted); padding: 7px 18px; border-radius: 999px; cursor: pointer; transition: background .12s, color .12s; }
+  .diff-tab:hover { color: var(--navy); }
+  .diff-tab.on.easy { background: var(--teal-d); color: #fff; }
+  .diff-tab.on.medium { background: var(--sunshine); color: #5a4200; }
+  .diff-tab.on.hard { background: var(--coral); color: #fff; }
   .scene-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .scene-card { display: flex; flex-direction: column; text-align: left; cursor: pointer; padding: 0;
     background: var(--card); border: 3px solid #fff; border-radius: 18px; overflow: hidden; font-family: inherit;
@@ -353,6 +366,13 @@
   .scene-card.explored { border-color: #cdeede; }
   .sc-name { font-weight: 900; font-size: 1rem; padding: 10px 12px 2px; }
   .sc-sub { font-size: .74rem; color: var(--muted); font-weight: 700; padding: 0 12px 12px; }
+  .sc-count { font-size: .74rem; font-weight: 800; padding: 2px 12px 0; }
+  .sc-count.easy { color: var(--teal-d); }
+  .sc-count.medium { color: #a8730b; }
+  .sc-count.hard { color: var(--coral-d); }
+  .scene-card.empty { opacity: .5; cursor: not-allowed; }
+  .scene-card.empty:hover { transform: none; box-shadow: 0 8px 20px rgba(45,49,66,.10); }
+  .scene-card.empty .sc-count { color: var(--lock); }
   .sc-stars { font-size: .82rem; letter-spacing: 1px; padding: 0 12px 10px; }
 
   /* game result */
