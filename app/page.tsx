@@ -49,10 +49,10 @@ type Launch = { kind: StopKind; refId?: string; recId: string; sticker?: string;
 type Reward = { title: string; html: string; stars?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
 const NAV: [View, string, string][] = [
-  ["home", "☀️", "Hôm nay"],
-  ["learn", "📖", "Học"],
-  ["games", "🎮", "Luyện tập"],
-  ["adventure", "🗺️", "Phiêu lưu"],
+  ["home", "☀️", "Today"],
+  ["learn", "📖", "Learn"],
+  ["games", "🎮", "Practice"],
+  ["adventure", "🗺️", "Adventure"],
 ];
 
 export default function App() {

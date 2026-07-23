@@ -113,6 +113,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 
 /* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
 function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
+  const [openLevel, setOpenLevel] = useState<string>("1");
   const renderUnit = (u: CourseUnit) => {
     const done = u.lessonId ? learnLessonDone(state, u.lessonId) : false;
     const pct = u.lessonId ? lessonPct(state, u.lessonId, SECTIONS.length) : 0;
@@ -140,24 +141,44 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
     );
   };
 
+  const levelDone = (units: CourseUnit[]) =>
+    units.filter((u) => u.lessonId && learnLessonDone(state, u.lessonId)).length;
+
+  const Level = ({ id, icon, title, sub, units }: { id: string; icon: string; title: string; sub: string; units: CourseUnit[] }) => {
+    const isOpen = openLevel === id;
+    const done = levelDone(units);
+    return (
+      <div className={`course-level ${isOpen ? "open" : ""}`}>
+        <button className="course-lvl-head" onClick={() => setOpenLevel(isOpen ? "" : id)} aria-expanded={isOpen}>
+          <span className="clh-ic">{icon}</span>
+          <span className="clh-txt"><b>{title}</b><small>{sub}</small></span>
+          <span className={`clh-meta ${done === units.length ? "all" : ""}`}>{done}/{units.length}</span>
+          <span className="clh-chev">{isOpen ? "▾" : "▸"}</span>
+        </button>
+        {isOpen && <ol className="unit-list">{units.map(renderUnit)}</ol>}
+      </div>
+    );
+  };
+
   return (
     <section className="learn course">
       <div className="course-head">
         <img className="course-maple" src={`${GEN}mascot-book.webp`} alt="" />
         <div>
           <h2 className="chapter">Chương trình học</h2>
-          <p className="course-sub">3 cấp độ · học từng chặng cùng Maple</p>
+          <p className="course-sub">3 cấp độ · chạm vào từng cấp để mở các bài</p>
         </div>
       </div>
 
-      <div className="course-lvl-head">📘 Level 1 · Everyday English <small>Phố ngày thường & ngày khám phá</small></div>
-      <ol className="unit-list">{LEVEL1_UNITS.map(renderUnit)}</ol>
+      <Level id="1" icon="📘" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
+      <Level id="2" icon="📗" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
 
-      <div className="course-lvl-head">📗 Level 2 · Stories &amp; Situations <small>Bài kể chuyện nhiều bước</small></div>
-      <ol className="unit-list">{LEVEL2_UNITS.map(renderUnit)}</ol>
-
-      <div className="course-more">
-        <div className="course-lvl">📕 Level 3 · Opinions &amp; Conversations <small>Sắp mở</small></div>
+      <div className="course-level locked">
+        <div className="course-lvl-head static">
+          <span className="clh-ic">📕</span>
+          <span className="clh-txt"><b>Level 3 · Opinions &amp; Conversations</b><small>Sắp mở</small></span>
+          <span className="clh-chev">🔒</span>
+        </div>
       </div>
     </section>
   );
