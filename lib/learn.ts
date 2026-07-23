@@ -1313,6 +1313,218 @@ const THE_AQUARIUM_NIGHT_MYSTERY: Lesson = {
   },
 };
 
+/* ============ Level 3 · Opinions & Conversations — Bộ 1: Making Choices ============ */
+/* Mỗi bài nêu ≥2 quan điểm hợp lý; máy chấm mà KHÔNG phán bên nào "đúng". */
+const L3C1 = "/assets/images/learn/level-3/collection-01-making-choices/";
+
+/* Unit 1: Planning a Class Trip */
+const PLANNING_A_CLASS_TRIP: Lesson = {
+  id: "classtrip", theme: "making-choices", title: "Planning a Class Trip", vi: "Lên kế hoạch đi dã ngoại", ageRange: "9–12",
+  sceneImage: L3C1 + "level-3-c01-unit-01-planning-class-trip.webp",
+  vocab: [
+    { word: "opinion", ipa: "/əˈpɪnjən/", vi: "ý kiến", emoji: "💬", example: "Everyone shared an opinion.", exampleVi: "Ai cũng nêu một ý kiến." },
+    { word: "prefer", ipa: "/prɪˈfɜːr/", vi: "thích hơn", emoji: "👍", example: "I prefer the forest hike.", exampleVi: "Mình thích đi bộ trong rừng hơn." },
+    { word: "option", ipa: "/ˈɒpʃn/", vi: "lựa chọn", emoji: "🔀", example: "There were three options.", exampleVi: "Có ba lựa chọn." },
+    { word: "reason", ipa: "/ˈriːzn/", vi: "lý do", emoji: "❓", example: "Give a reason for your choice.", exampleVi: "Hãy nêu lý do cho lựa chọn của bạn." },
+    { word: "agree", ipa: "/əˈɡriː/", vi: "đồng ý", emoji: "🤝", example: "We all agreed in the end.", exampleVi: "Cuối cùng tất cả đều đồng ý." },
+    { word: "vote", ipa: "/voʊt/", vi: "bỏ phiếu", emoji: "🗳️", example: "Let's vote for a trip.", exampleVi: "Cùng bỏ phiếu chọn chuyến đi nào." },
+    { word: "suggest", ipa: "/səˈdʒest/", vi: "đề xuất, gợi ý", emoji: "🙋", example: "She suggested the science centre.", exampleVi: "Bạn ấy gợi ý đi trung tâm khoa học." },
+    { word: "decide", ipa: "/dɪˈsaɪd/", vi: "quyết định", emoji: "✅", example: "The class decided together.", exampleVi: "Cả lớp cùng nhau quyết định." },
+  ],
+  patterns: [
+    { pattern: "I think we should …", vi: "Mình nghĩ chúng ta nên …", examples: [
+      { en: "I think we should choose the forest hike.", vi: "Mình nghĩ chúng ta nên chọn đi bộ trong rừng." },
+      { en: "I think we should ask the teacher.", vi: "Mình nghĩ chúng ta nên hỏi cô giáo." }] },
+    { pattern: "I prefer … because …", vi: "Mình thích … hơn vì …", examples: [
+      { en: "I prefer the boat tour because it is exciting.", vi: "Mình thích đi thuyền hơn vì rất thú vị." },
+      { en: "I prefer the hike because it is cheap.", vi: "Mình thích đi bộ hơn vì rẻ." }] },
+    { pattern: "That's a good idea, but …", vi: "Ý hay đấy, nhưng …", examples: [
+      { en: "That's a good idea, but it costs a lot.", vi: "Ý hay đấy, nhưng tốn khá nhiều tiền." },
+      { en: "That's a good idea, but I prefer the hike.", vi: "Ý hay đấy, nhưng mình thích đi bộ hơn." }] },
+    { pattern: "Let's agree on …", vi: "Cùng thống nhất chọn …", examples: [
+      { en: "Let's agree on one trip.", vi: "Cùng thống nhất một chuyến đi nào." },
+      { en: "Let's agree on the forest hike.", vi: "Cùng thống nhất chọn đi bộ trong rừng nhé." }] },
+  ],
+  listening: {
+    intro: "Listen to the class discussion, then answer.",
+    introVi: "Nghe cả lớp thảo luận rồi trả lời.",
+    script: "Maple's class was planning a trip, and they had three choices: a science centre, a forest hike, or a harbour boat tour. \"I think we should choose the forest hike,\" said Maple. \"It doesn't cost much, and we might see deer.\" Theo shook his head politely. \"That's a good idea, but I prefer the boat tour, because I have never been on a boat.\" Another student suggested the science centre, because they could look through a real telescope. Everyone had a good reason, so the teacher said, \"Let's vote.\" Most of the class voted for the forest hike, so they all agreed to go there together.",
+    questions: [
+      { q: "How many choices did the class have?", vi: "Cả lớp có mấy lựa chọn?",
+        options: ["Three", "One", "Five"], answer: "Three" },
+      { q: "What was Maple's reason for the forest hike?", vi: "Lý do Maple chọn đi bộ trong rừng là gì?",
+        options: ["It was cheap and they might see deer", "It was the most expensive", "It was on a boat"], answer: "It was cheap and they might see deer",
+        explainVi: "Maple nói chuyến đó rẻ và có thể thấy hươu." },
+      { q: "How did the class make the final decision?", vi: "Cả lớp đưa ra quyết định cuối cùng bằng cách nào?",
+        options: ["They voted and agreed", "The teacher chose alone", "They flipped a coin"], answer: "They voted and agreed" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "I prefer the forest hike because we might see deer.", vi: "Mình thích đi bộ trong rừng hơn vì có thể thấy hươu." },
+      { en: "That's a good idea, but I prefer the boat tour.", vi: "Ý hay đấy, nhưng mình thích đi thuyền hơn." },
+    ],
+    guided: { q: "Which class trip would you choose, and why?", vi: "Bạn sẽ chọn chuyến đi nào, và vì sao?", hint: "I would choose the ___ because ___." },
+    describe: {
+      prompt: "Share your opinion in 3–5 sentences. Say which trip you prefer, give one reason, and respond politely to another idea.",
+      vi: "Nêu ý kiến 3–5 câu: bạn thích chuyến nào, một lý do, và phản hồi lịch sự với một ý khác.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"to like one thing more than another\"?", vi: "Từ nào nghĩa là \"thích cái này hơn cái kia\"?",
+        options: ["prefer", "vote", "reason"], answer: "prefer" },
+      { type: "reading", q: "Theo preferred the boat tour. What was his reason?", vi: "Theo thích đi thuyền hơn. Lý do của cậu là gì?",
+        options: ["He had never been on a boat", "Boats are cheap", "He wanted to see deer"], answer: "He had never been on a boat",
+        explainVi: "Theo nói cậu chưa từng đi thuyền." },
+      { type: "sentence", q: "A friend suggests an idea you don't fully like. Which is a POLITE reply?", vi: "Bạn gợi ý một ý bạn chưa hẳn thích. Câu nào là phản hồi LỊCH SỰ?",
+        options: ["That's a good idea, but I prefer another one.", "No, that's a silly idea.", "Stop talking, please."], answer: "That's a good idea, but I prefer another one.",
+        explainVi: "Khen trước rồi nêu ý mình là cách nói lịch sự." },
+      { type: "listening", q: "How did the class choose which trip to take?", vi: "Cả lớp chọn chuyến đi bằng cách nào?",
+        options: ["They voted and agreed", "They asked a robot", "Nobody decided"], answer: "They voted and agreed" },
+    ],
+  },
+};
+
+/* Unit 2: Screen Time or Outdoor Time? */
+const SCREEN_OR_OUTDOOR_TIME: Lesson = {
+  id: "screentime", theme: "making-choices", title: "Screen Time or Outdoor Time?", vi: "Chơi màn hình hay ra ngoài trời?", ageRange: "9–12",
+  sceneImage: L3C1 + "level-3-c01-unit-02-screen-or-outdoor-time.webp",
+  vocab: [
+    { word: "screen", ipa: "/skriːn/", vi: "màn hình", emoji: "📱", example: "He plays games on a screen.", exampleVi: "Cậu ấy chơi game trên màn hình." },
+    { word: "outdoor", ipa: "/ˈaʊtdɔːr/", vi: "ngoài trời", emoji: "🌳", example: "Outdoor time is fun with friends.", exampleVi: "Chơi ngoài trời vui khi có bạn bè." },
+    { word: "benefit", ipa: "/ˈbenɪfɪt/", vi: "lợi ích", emoji: "➕", example: "One benefit is fresh air.", exampleVi: "Một lợi ích là không khí trong lành." },
+    { word: "drawback", ipa: "/ˈdrɔːbæk/", vi: "điểm dở, hạn chế", emoji: "➖", example: "A drawback is tired eyes.", exampleVi: "Một điểm dở là mỏi mắt." },
+    { word: "balance", ipa: "/ˈbæləns/", vi: "sự cân bằng", emoji: "⚖️", example: "A good balance is best.", exampleVi: "Cân bằng tốt là hay nhất." },
+    { word: "compromise", ipa: "/ˈkɒmprəmaɪz/", vi: "sự thoả hiệp", emoji: "🤝", example: "They made a fair compromise.", exampleVi: "Các bạn thoả hiệp công bằng." },
+    { word: "healthy", ipa: "/ˈhelθi/", vi: "khoẻ mạnh, lành mạnh", emoji: "💪", example: "Exercise keeps us healthy.", exampleVi: "Vận động giúp mình khoẻ mạnh." },
+    { word: "both", ipa: "/boʊθ/", vi: "cả hai", emoji: "🔁", example: "Why not enjoy both?", exampleVi: "Sao không tận hưởng cả hai nhỉ?" },
+  ],
+  patterns: [
+    { pattern: "One benefit of … is …", vi: "Một lợi ích của … là …", examples: [
+      { en: "One benefit of outdoor time is fresh air.", vi: "Một lợi ích của việc ra ngoài là không khí trong lành." },
+      { en: "One benefit of screen time is learning from videos.", vi: "Một lợi ích của màn hình là học từ video." }] },
+    { pattern: "One drawback of … is …", vi: "Một điểm dở của … là …", examples: [
+      { en: "One drawback of too much screen time is tired eyes.", vi: "Một điểm dở của việc dùng màn hình quá nhiều là mỏi mắt." },
+      { en: "One drawback of outdoor time is bad weather.", vi: "Một điểm dở của việc ra ngoài là thời tiết xấu." }] },
+    { pattern: "On the other hand, …", vi: "Mặt khác, …", examples: [
+      { en: "On the other hand, we can't play outside in the rain.", vi: "Mặt khác, mình không thể chơi ngoài trời khi mưa." },
+      { en: "On the other hand, screens can tire your eyes.", vi: "Mặt khác, màn hình có thể làm mỏi mắt." }] },
+    { pattern: "Why don't we do both?", vi: "Sao mình không làm cả hai nhỉ?", examples: [
+      { en: "Why don't we do both, a little each day?", vi: "Sao mình không làm cả hai, mỗi ngày một chút?" },
+      { en: "Why don't we play outside, then read?", vi: "Sao mình không chơi ngoài rồi đọc sách nhỉ?" }] },
+  ],
+  listening: {
+    intro: "Listen to the discussion about free time, then answer.",
+    introVi: "Nghe cuộc trò chuyện về thời gian rảnh rồi trả lời.",
+    script: "Theo and Maple were talking about free time. \"I love screen time,\" said Theo. \"One benefit is that I can learn from videos and play games even when it rains.\" \"That's true,\" said Maple, \"but one drawback is that too much screen time can tire your eyes. I prefer outdoor time. One benefit is fresh air and exercise.\" \"On the other hand,\" said Theo, \"we can't always play outside when the weather is bad.\" They thought carefully about the benefits and drawbacks of both. In the end, they made a compromise: play outside when the weather is nice, and use screens for a short time when it rains. That way, they had a good, healthy balance.",
+    questions: [
+      { q: "What benefit of screen time did Theo give?", vi: "Theo nêu lợi ích nào của việc dùng màn hình?",
+        options: ["He can learn from videos and play when it rains", "It gives fresh air", "It is free exercise"], answer: "He can learn from videos and play when it rains" },
+      { q: "What drawback of too much screen time did Maple mention?", vi: "Maple nhắc tới điểm dở nào của việc dùng màn hình quá nhiều?",
+        options: ["It can tire your eyes", "It makes you too strong", "It is too cheap"], answer: "It can tire your eyes" },
+      { q: "What compromise did they make?", vi: "Hai bạn thoả hiệp thế nào?",
+        options: ["Play outside in nice weather, use screens a short time when it rains", "Only use screens all day", "Never go outside again"], answer: "Play outside in nice weather, use screens a short time when it rains",
+        explainVi: "Cả hai chọn cách cân bằng: ra ngoài khi trời đẹp, dùng màn hình ngắn khi mưa." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "One benefit of outdoor time is fresh air and exercise.", vi: "Một lợi ích của việc ra ngoài là không khí trong lành và vận động." },
+      { en: "Why don't we do both, a little each day?", vi: "Sao mình không làm cả hai, mỗi ngày một chút nhỉ?" },
+    ],
+    guided: { q: "Do you prefer screen time or outdoor time? Give one reason.", vi: "Bạn thích chơi màn hình hay ra ngoài trời hơn? Nêu một lý do.", hint: "I prefer ___ because ___." },
+    describe: {
+      prompt: "Give a balanced opinion in 3–5 sentences. Say one benefit and one drawback, then suggest a compromise.",
+      vi: "Nêu ý kiến cân bằng 3–5 câu: một lợi ích, một điểm dở, rồi đề xuất một cách thoả hiệp.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a good thing about something\"?", vi: "Từ nào nghĩa là \"điểm tốt của một thứ\"?",
+        options: ["benefit", "drawback", "screen"], answer: "benefit" },
+      { type: "reading", q: "Which of these is a DRAWBACK of too much screen time?", vi: "Điều nào là ĐIỂM DỞ của việc dùng màn hình quá nhiều?",
+        options: ["It can tire your eyes", "You get fresh air", "You meet friends outside"], answer: "It can tire your eyes" },
+      { type: "reading", q: "What does \"compromise\" mean?", vi: "\"Compromise\" (thoả hiệp) nghĩa là gì?",
+        options: ["A choice where both sides give a little and agree", "When one person always wins", "Doing nothing at all"], answer: "A choice where both sides give a little and agree" },
+      { type: "listening", q: "What did Theo and Maple finally agree to do?", vi: "Cuối cùng Theo và Maple đồng ý làm gì?",
+        options: ["Do both — outside when nice, screens a short time when it rains", "Only stay inside", "Argue and stop being friends"], answer: "Do both — outside when nice, screens a short time when it rains" },
+    ],
+  },
+};
+
+/* Unit 3: Choosing a Team Project */
+const CHOOSING_A_TEAM_PROJECT: Lesson = {
+  id: "teamproject", theme: "making-choices", title: "Choosing a Team Project", vi: "Chọn dự án nhóm", ageRange: "9–12",
+  sceneImage: L3C1 + "level-3-c01-unit-03-choosing-team-project.webp",
+  vocab: [
+    { word: "propose", ipa: "/prəˈpoʊz/", vi: "đề xuất", emoji: "🙋", example: "I'd like to propose a bee garden.", exampleVi: "Mình muốn đề xuất một khu vườn cho ong." },
+    { word: "role", ipa: "/roʊl/", vi: "vai trò", emoji: "🎭", example: "Everyone has a role in the team.", exampleVi: "Mỗi người có một vai trò trong nhóm." },
+    { word: "strength", ipa: "/streŋθ/", vi: "điểm mạnh", emoji: "⭐", example: "Drawing is her strength.", exampleVi: "Vẽ là điểm mạnh của bạn ấy." },
+    { word: "volunteer", ipa: "/ˌvɒlənˈtɪr/", vi: "xung phong", emoji: "✋", example: "He volunteered to take photos.", exampleVi: "Cậu ấy xung phong chụp ảnh." },
+    { word: "responsible", ipa: "/rɪˈspɒnsəbl/", vi: "có trách nhiệm", emoji: "🫡", example: "She is responsible for the map.", exampleVi: "Bạn ấy phụ trách phần bản đồ." },
+    { word: "fair", ipa: "/fer/", vi: "công bằng", emoji: "⚖️", example: "The jobs felt fair to everyone.", exampleVi: "Việc phân công thấy công bằng với mọi người." },
+    { word: "teamwork", ipa: "/ˈtiːmwɜːrk/", vi: "làm việc nhóm", emoji: "🤝", example: "Good teamwork wins.", exampleVi: "Làm việc nhóm tốt sẽ thắng." },
+    { word: "support", ipa: "/səˈpɔːrt/", vi: "ủng hộ", emoji: "👏", example: "We support each other's ideas.", exampleVi: "Chúng mình ủng hộ ý tưởng của nhau." },
+  ],
+  patterns: [
+    { pattern: "I'd like to propose …", vi: "Mình muốn đề xuất …", examples: [
+      { en: "I'd like to propose a community map.", vi: "Mình muốn đề xuất một bản đồ khu phố." },
+      { en: "I'd like to propose a solar station.", vi: "Mình muốn đề xuất một trạm sạc mặt trời." }] },
+    { pattern: "That sounds great! I can …", vi: "Nghe hay đấy! Mình có thể …", examples: [
+      { en: "That sounds great! I can help draw it.", vi: "Nghe hay đấy! Mình có thể giúp vẽ." },
+      { en: "That sounds great! I can present it.", vi: "Nghe hay đấy! Mình có thể thuyết trình." }] },
+    { pattern: "You are good at … , so you could …", vi: "Bạn giỏi … nên bạn có thể …", examples: [
+      { en: "You are good at drawing, so you could draw the map.", vi: "Bạn giỏi vẽ nên bạn có thể vẽ bản đồ." },
+      { en: "You are good at speaking, so you could present.", vi: "Bạn giỏi nói nên bạn có thể thuyết trình." }] },
+    { pattern: "Is everyone happy with …?", vi: "Mọi người ổn với … chứ?", examples: [
+      { en: "Is everyone happy with their job?", vi: "Mọi người ổn với phần việc của mình chứ?" },
+      { en: "Is everyone happy with this plan?", vi: "Mọi người ổn với kế hoạch này chứ?" }] },
+  ],
+  listening: {
+    intro: "Listen to the team discussion, then answer.",
+    introVi: "Nghe cả nhóm thảo luận rồi trả lời.",
+    script: "Maple's team had to choose one project. \"I'd like to propose a bee garden,\" said one girl, \"because bees help our plants grow.\" \"That sounds great,\" said Theo, \"but I'd like to propose a solar charging station, because it saves energy.\" After sharing ideas, they decided together on the community map, because everyone could help with it. Next, they shared the roles. \"You are good at drawing, so you could draw the map,\" said Maple. \"I'm good at speaking, so I can present it.\" A quiet boy volunteered to take the photos. \"Is everyone happy with their job?\" asked Maple. Everyone nodded — it felt fair, and that is good teamwork.",
+    questions: [
+      { q: "Why did the girl propose a bee garden?", vi: "Vì sao bạn nữ đề xuất khu vườn cho ong?",
+        options: ["Because bees help plants grow", "Because bees are scary", "Because gardens are cheap"], answer: "Because bees help plants grow" },
+      { q: "Which project did the team finally choose together?", vi: "Cuối cùng nhóm cùng chọn dự án nào?",
+        options: ["The community map", "The bee garden", "The solar station"], answer: "The community map",
+        explainVi: "Cả nhóm chọn bản đồ khu phố vì ai cũng góp sức được." },
+      { q: "How did they share the roles?", vi: "Các bạn phân chia vai trò thế nào?",
+        options: ["By each person's strength", "By who is tallest", "By age only"], answer: "By each person's strength" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "That sounds great! I can help with the map.", vi: "Nghe hay đấy! Mình có thể giúp làm bản đồ." },
+      { en: "You are good at drawing, so you could draw the map.", vi: "Bạn giỏi vẽ nên bạn có thể vẽ bản đồ." },
+    ],
+    guided: { q: "What are you good at in a team?", vi: "Trong nhóm bạn giỏi việc gì?", hint: "I am good at ___, so I could ___." },
+    describe: {
+      prompt: "Discuss a team project in 3–5 sentences. Propose one idea politely and give one person a role that fits their strength.",
+      vi: "Bàn về một dự án nhóm 3–5 câu: đề xuất lịch sự một ý và giao cho một bạn vai trò hợp điểm mạnh.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"something you do well\"?", vi: "Từ nào nghĩa là \"việc bạn làm giỏi\"?",
+        options: ["strength", "role", "support"], answer: "strength" },
+      { type: "sentence", q: "A friend proposes an idea. Which is a kind, helpful reply?", vi: "Một bạn đề xuất ý tưởng. Câu nào là phản hồi tử tế, hợp tác?",
+        options: ["That sounds great! I can help.", "That's a boring idea.", "I really don't care."], answer: "That sounds great! I can help.",
+        explainVi: "Ủng hộ và đề nghị giúp là cách phản hồi tích cực." },
+      { type: "reading", q: "Someone is good at drawing. Which job fits best?", vi: "Một bạn giỏi vẽ. Việc nào hợp nhất?",
+        options: ["Draw the map", "Cook the lunch", "Drive the bus"], answer: "Draw the map",
+        explainVi: "Giao việc theo điểm mạnh: giỏi vẽ thì vẽ bản đồ." },
+      { type: "listening", q: "Why did the team feel the roles were fair?", vi: "Vì sao nhóm thấy việc phân vai công bằng?",
+        options: ["Everyone got a job that matched their strength", "Only one person did all the work", "They gave the hardest job to the youngest"], answer: "Everyone got a job that matched their strength" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
@@ -1322,6 +1534,8 @@ export const THEMES: CourseTheme[] = [
     lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW,
       THE_FERRY_TRIP_MIX_UP, THE_ROBOT_THAT_WOULDNT_START, THE_COMMUNITY_GARDEN_MYSTERY,
       THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY] },
+  { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
+    lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -1357,6 +1571,15 @@ export const LEVEL2_UNITS: CourseUnit[] = [
   { id: "capsule",    n: 7, title: "The Time Capsule Discovery", vi: "Khám phá hộp thời gian",  image: L2IMG + "level-2-unit-07-time-capsule-discovery.webp",   focus: "Quá khứ · so xưa–nay · bằng chứng",  lessonId: "capsule",    ready: true },
   { id: "beach",      n: 8, title: "The Beach Cleanup Change of Plan", vi: "Đổi kế hoạch dọn biển", image: L2IMG + "level-2-unit-08-beach-cleanup-change-of-plan.webp", focus: "Thời tiết · kế hoạch · lựa chọn", lessonId: "beach",  ready: true },
   { id: "aquarium",   n: 9, title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung",   image: L2IMG + "level-2-unit-09-aquarium-night-mystery.webp",   focus: "Trình tự · loại trừ · kết luận",     lessonId: "aquarium",   ready: true },
+];
+
+/* ============ Level 3 · Opinions & Conversations — Bộ 1: Making Choices (3 Unit) ============ */
+// Bài hội thoại/ý kiến: nêu ≥2 quan điểm, ghép lý do, so lợi–hại, chọn phương án có lý.
+const L3IMG = "/assets/images/learn/level-3/collection-01-making-choices/";
+export const LEVEL3_UNITS: CourseUnit[] = [
+  { id: "classtrip",   n: 1, title: "Planning a Class Trip",       vi: "Lên kế hoạch đi dã ngoại",     image: L3IMG + "level-3-c01-unit-01-planning-class-trip.webp",   focus: "So lựa chọn · lý do · thống nhất",   lessonId: "classtrip",   ready: true },
+  { id: "screentime",  n: 2, title: "Screen Time or Outdoor Time?", vi: "Màn hình hay ngoài trời?",     image: L3IMG + "level-3-c01-unit-02-screen-or-outdoor-time.webp", focus: "Lợi ích · điểm dở · thoả hiệp",     lessonId: "screentime",  ready: true },
+  { id: "teamproject", n: 3, title: "Choosing a Team Project",     vi: "Chọn dự án nhóm",              image: L3IMG + "level-3-c01-unit-03-choosing-team-project.webp", focus: "Đề xuất · vai trò · quyết định nhóm", lessonId: "teamproject", ready: true },
 ];
 
 /* ============ helpers ============ */

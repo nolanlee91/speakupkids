@@ -1,12 +1,28 @@
 # Learn — Level 3: Opinions & Conversations
 
-This folder is reserved for Level 3 lesson images.
+Level 3 develops age-appropriate opinions, reasons, choices and conversations for learners aged 9–12.
 
-Level 3 should focus on age-appropriate opinions, reasons, choices and conversations for learners aged 9–12. No final scene assets have been approved yet. Do not substitute Level 1 or Level 2 images without updating the curriculum plan.
+## Content model
 
-Suggested future units:
+```text
+Level 3
+  Collection
+    Unit
+      Structured lesson activities
+      Machine-graded Mini Check
+```
 
-1. My Favourite Place
-2. Should Children Have Homework?
-3. Planning a Weekend Together
+A collection is a themed release group, not the whole level. More collections and units can be added without changing the level definition.
+
+## Available collections
+
+| Collection | Folder | Focus |
+| --- | --- | --- |
+| 01 — Making Choices | `collection-01-making-choices/` | Compare options, give reasons, respond politely and reach agreement |
+
+## Level 3 curriculum rule
+
+Every unit should present at least two reasonable positions. Learners identify speakers' views, match reasons to opinions, complete dialogue turns, compare benefits and drawbacks, and choose a justified response. Do not make one position visually or morally “correct”.
+
+Free speaking may be offered as optional practice, but it must not receive fake automated scoring or block completion.
 

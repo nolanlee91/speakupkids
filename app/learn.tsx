@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
-  SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
+  SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
   type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit,
 } from "@/lib/learn";
 import { speak, shuffle } from "@/lib/fx";
@@ -172,14 +172,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
 
       <Level id="1" icon="📘" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
       <Level id="2" icon="📗" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
-
-      <div className="course-level locked">
-        <div className="course-lvl-head static">
-          <span className="clh-ic">📕</span>
-          <span className="clh-txt"><b>Level 3 · Opinions &amp; Conversations</b><small>Sắp mở</small></span>
-          <span className="clh-chev">🔒</span>
-        </div>
-      </div>
+      <Level id="3" icon="📕" title="Level 3 · Opinions & Conversations" sub="Bộ 1 · Making Choices — nêu ý kiến & lựa chọn" units={LEVEL3_UNITS} />
     </section>
   );
 }
