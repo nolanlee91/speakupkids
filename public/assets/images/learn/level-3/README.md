@@ -16,14 +16,15 @@ A collection is a themed release group, not the whole level. More collections an
 
 ## Available collections
 
-| Collection | Folder | Focus |
-| --- | --- | --- |
-| 01 — Making Choices | `collection-01-making-choices/` | Compare options, state preferences, respond politely and reach agreement |
-| 02 — Giving Reasons | `collection-02-giving-reasons/` | Support opinions with examples, examine consequences and respond to other reasons |
+| Collection | Folder | Focus | Visual language |
+| --- | --- | --- | --- |
+| 01 — Making Choices | `collection-01-making-choices/` | Compare options, state preferences, respond politely and reach agreement | Choices and prototypes visible together |
+| 02 — Giving Reasons | `collection-02-giving-reasons/` | Support opinions with examples, examine consequences and respond to other reasons | Peer discussion supported by visual examples |
+| 03 — Solving Problems Together | `collection-03-solving-problems/` | Investigate constraints, test proposals, evaluate trade-offs and revise a solution | Active fieldwork, testing and implementation |
 
 ## Level 3 curriculum rule
 
-Every unit should present at least two reasonable positions. Learners identify speakers' views, match reasons to opinions, complete dialogue turns, compare benefits and drawbacks, and choose a justified response. Do not make one position visually or morally “correct”.
+Every unit should present at least two reasonable positions or solutions. Learners identify views, connect reasons and evidence, complete dialogue turns, compare benefits and drawbacks, and choose a justified response. Do not make one position visually or morally “correct”.
 
 Free speaking may be offered as optional practice, but it must not receive fake automated scoring or block completion.
 

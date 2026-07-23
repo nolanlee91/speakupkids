@@ -1738,6 +1738,216 @@ const WHAT_MAKES_A_GOOD_FRIEND: Lesson = {
   },
 };
 
+/* ============ Level 3 · Bộ 3: Solving Problems — khảo sát, thử nghiệm & cải tiến giải pháp ============ */
+const L3C3 = "/assets/images/learn/level-3/collection-03-solving-problems/";
+
+/* Unit 1: A Quieter Lunchroom */
+const A_QUIETER_LUNCHROOM: Lesson = {
+  id: "lunchroom", theme: "solving-problems", title: "A Quieter Lunchroom", vi: "Nhà ăn bớt ồn hơn", ageRange: "9–12",
+  sceneImage: L3C3 + "level-3-c03-unit-01-quieter-lunchroom.webp",
+  vocab: [
+    { word: "noisy", ipa: "/ˈnɔɪzi/", vi: "ồn ào", emoji: "🔊", example: "The lunchroom is too noisy.", exampleVi: "Nhà ăn quá ồn ào." },
+    { word: "problem", ipa: "/ˈprɒbləm/", vi: "vấn đề", emoji: "❗", example: "Let's solve the noise problem.", exampleVi: "Cùng giải quyết vấn đề tiếng ồn nào." },
+    { word: "solution", ipa: "/səˈluːʃn/", vi: "giải pháp", emoji: "💡", example: "We need a good solution.", exampleVi: "Mình cần một giải pháp tốt." },
+    { word: "measure", ipa: "/ˈmeʒər/", vi: "đo", emoji: "📏", example: "They measure the sound.", exampleVi: "Các bạn đo mức âm thanh." },
+    { word: "panel", ipa: "/ˈpænl/", vi: "tấm ốp (tiêu âm)", emoji: "🟦", example: "Soft panels soak up noise.", exampleVi: "Tấm ốp mềm hút bớt tiếng ồn." },
+    { word: "reduce", ipa: "/rɪˈdjuːs/", vi: "giảm bớt", emoji: "📉", example: "We want to reduce the noise.", exampleVi: "Mình muốn giảm tiếng ồn." },
+    { word: "test", ipa: "/test/", vi: "thử nghiệm", emoji: "🧪", example: "Let's test the idea.", exampleVi: "Cùng thử nghiệm ý tưởng nào." },
+    { word: "improve", ipa: "/ɪmˈpruːv/", vi: "cải thiện", emoji: "📈", example: "How can we improve it?", exampleVi: "Làm sao để cải thiện nó?" },
+  ],
+  patterns: [
+    { pattern: "The problem is that …", vi: "Vấn đề là …", examples: [
+      { en: "The problem is that it's too loud to talk.", vi: "Vấn đề là ồn quá không nói chuyện được." },
+      { en: "The problem is that the chairs scrape.", vi: "Vấn đề là ghế kéo lê kêu rất to." }] },
+    { pattern: "What if we …?", vi: "Hay là mình … thì sao?", examples: [
+      { en: "What if we put soft panels on the walls?", vi: "Hay là mình ốp tấm mềm lên tường thì sao?" },
+      { en: "What if we add felt pads under the chairs?", vi: "Hay là mình dán nỉ dưới chân ghế thì sao?" }] },
+    { pattern: "Before, it was … ; now it is …", vi: "Trước đây … ; giờ thì …", examples: [
+      { en: "Before, the meter was red; now it is yellow.", vi: "Trước đây đồng hồ đỏ; giờ chuyển vàng." },
+      { en: "Before, it was very loud; now it is calmer.", vi: "Trước đây rất ồn; giờ dịu hơn." }] },
+    { pattern: "Let's try … instead.", vi: "Thử … thay vào đó xem.", examples: [
+      { en: "Let's try adding plants instead.", vi: "Thử thêm cây xanh thay vào đó xem." },
+      { en: "Let's try softer trays instead.", vi: "Thử dùng khay mềm hơn thay vào đó xem." }] },
+  ],
+  listening: {
+    intro: "Listen to the team test a solution, then answer.",
+    introVi: "Nghe cả nhóm thử nghiệm giải pháp rồi trả lời.",
+    script: "The lunchroom was very noisy. \"The problem is that it's too loud to talk,\" said Maple. The team wanted a solution. First, they used a noise meter to measure the sound — it was in the red zone. \"What if we put soft panels on the walls?\" said Theo. They also stuck felt pads under the chair legs so they would not scrape on the floor. After lunch, they measured the sound again. Before, the meter was red; now it was yellow — a bit quieter. \"It's better, but not quiet enough,\" said Maple. \"Let's try adding some plants instead.\" They tested it once more, and the noise went down even more.",
+    questions: [
+      { q: "What was the problem in the lunchroom?", vi: "Vấn đề ở nhà ăn là gì?",
+        options: ["It was too loud to talk", "It was too cold", "There was no food"], answer: "It was too loud to talk" },
+      { q: "What did the team use to measure the sound?", vi: "Nhóm dùng gì để đo âm thanh?",
+        options: ["A noise meter", "A ruler", "A clock"], answer: "A noise meter" },
+      { q: "After the panels and pads, how did the noise change?", vi: "Sau khi ốp tấm và dán nỉ, tiếng ồn thay đổi thế nào?",
+        options: ["It went from red to yellow (a bit quieter)", "It got much louder", "It stayed exactly the same"], answer: "It went from red to yellow (a bit quieter)",
+        explainVi: "Đồng hồ đo từ vùng đỏ chuyển sang vàng nghĩa là bớt ồn hơn." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The problem is that it's too loud to talk.", vi: "Vấn đề là ồn quá không nói chuyện được." },
+      { en: "Before, the meter was red; now it is yellow.", vi: "Trước đây đồng hồ đỏ; giờ chuyển vàng." },
+    ],
+    guided: { q: "How would you make a noisy room quieter?", vi: "Bạn sẽ làm một căn phòng ồn bớt ồn thế nào?", hint: "What if we ___?" },
+    describe: {
+      prompt: "Describe a solution in 3–5 sentences. State the problem, propose a change, and compare the result before and after.",
+      vi: "Mô tả một giải pháp 3–5 câu: nêu vấn đề, đề xuất thay đổi, và so kết quả trước–sau.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a way to fix a problem\"?", vi: "Từ nào nghĩa là \"cách giải quyết một vấn đề\"?",
+        options: ["solution", "problem", "panel"], answer: "solution" },
+      { type: "reading", q: "The noise meter went from red to yellow. What does that mean?", vi: "Đồng hồ đo tiếng ồn từ đỏ chuyển vàng. Điều đó nghĩa là gì?",
+        options: ["The room got a bit quieter", "The room got louder", "Nothing changed"], answer: "The room got a bit quieter",
+        explainVi: "Đỏ → vàng là mức ồn đã giảm bớt." },
+      { type: "reading", q: "Which idea would help make a room QUIETER?", vi: "Ý nào giúp căn phòng YÊN HƠN?",
+        options: ["Put soft panels on the walls", "Add more metal chairs", "Play loud music"], answer: "Put soft panels on the walls" },
+      { type: "listening", q: "After the panels and pads, what did they add to make it quieter?", vi: "Sau tấm ốp và miếng nỉ, các bạn thêm gì cho yên hơn?",
+        options: ["Plants", "More tables", "A big speaker"], answer: "Plants" },
+    ],
+  },
+};
+
+/* Unit 2: A Safer Bike Route */
+const A_SAFER_BIKE_ROUTE: Lesson = {
+  id: "bikeroute", theme: "solving-problems", title: "A Safer Bike Route", vi: "Tuyến xe đạp an toàn hơn", ageRange: "9–12",
+  sceneImage: L3C3 + "level-3-c03-unit-02-safer-bike-route.webp",
+  vocab: [
+    { word: "route", ipa: "/ruːt/", vi: "tuyến đường", emoji: "🛣️", example: "We need a safer route.", exampleVi: "Mình cần một tuyến đường an toàn hơn." },
+    { word: "traffic", ipa: "/ˈtræfɪk/", vi: "giao thông, xe cộ", emoji: "🚗", example: "That street has busy traffic.", exampleVi: "Con phố đó xe cộ đông đúc." },
+    { word: "lane", ipa: "/leɪn/", vi: "làn đường", emoji: "🚴", example: "The bike lane is wide.", exampleVi: "Làn xe đạp khá rộng." },
+    { word: "helmet", ipa: "/ˈhelmɪt/", vi: "mũ bảo hiểm", emoji: "⛑️", example: "Always wear a helmet.", exampleVi: "Luôn đội mũ bảo hiểm nhé." },
+    { word: "crossing", ipa: "/ˈkrɒsɪŋ/", vi: "vạch qua đường", emoji: "🚸", example: "Use the safe crossing.", exampleVi: "Hãy đi ở vạch qua đường an toàn." },
+    { word: "distance", ipa: "/ˈdɪstəns/", vi: "khoảng cách", emoji: "📐", example: "They measured the distance.", exampleVi: "Các bạn đo khoảng cách." },
+    { word: "ramp", ipa: "/ræmp/", vi: "đường dốc (lối tiếp cận)", emoji: "♿", example: "The ramp helps everyone.", exampleVi: "Đường dốc giúp mọi người đều đi được." },
+    { word: "safe", ipa: "/seɪf/", vi: "an toàn", emoji: "✅", example: "This route is safe.", exampleVi: "Tuyến này an toàn." },
+  ],
+  patterns: [
+    { pattern: "We have to think about …", vi: "Mình phải tính đến …", examples: [
+      { en: "We have to think about traffic and safety.", vi: "Mình phải tính đến xe cộ và sự an toàn." },
+      { en: "We have to think about the distance.", vi: "Mình phải tính đến khoảng cách." }] },
+    { pattern: "This route is … , but that route is …", vi: "Tuyến này … , còn tuyến kia …", examples: [
+      { en: "This route is shorter, but that route is safer.", vi: "Tuyến này ngắn hơn, còn tuyến kia an toàn hơn." },
+      { en: "This route is busy, but that route has a bike lane.", vi: "Tuyến này đông xe, còn tuyến kia có làn xe đạp." }] },
+    { pattern: "We could combine both by …", vi: "Mình có thể kết hợp cả hai bằng cách …", examples: [
+      { en: "We could combine both by using the quiet start, then the bike lane.", vi: "Mình có thể kết hợp: đi đoạn đầu vắng rồi vào làn xe đạp." },
+      { en: "We could combine both by adding a crossing.", vi: "Mình có thể kết hợp bằng cách thêm một vạch qua đường." }] },
+    { pattern: "I recommend … because …", vi: "Mình đề xuất … vì …", examples: [
+      { en: "I recommend the red route because it has a bike lane.", vi: "Mình đề xuất tuyến đỏ vì có làn xe đạp." },
+      { en: "I recommend the combined route because it is safer.", vi: "Mình đề xuất tuyến kết hợp vì an toàn hơn." }] },
+  ],
+  listening: {
+    intro: "Listen to the team survey the streets, then answer.",
+    introVi: "Nghe cả nhóm khảo sát đường phố rồi trả lời.",
+    script: "The class wanted to find a safer bike route to school. First, they put on their helmets and surveyed the streets. They measured the bike lanes with a tape measure and looked at the crossings. \"We have to think about traffic and safety,\" said Maple. There were two routes. \"The blue route is shorter, but it has busy traffic and no bike lane,\" said Theo. \"The red route is longer, but it has a wide bike lane and a safe crossing.\" They also noticed the red route had a ramp, so everyone could use it, even someone on wheels. \"We could combine both,\" said Maple. \"Use the quiet start of the blue route, then join the red bike lane.\" In the end, they recommended the combined route, because it was safer for everyone.",
+    questions: [
+      { q: "What did they put on before surveying the streets?", vi: "Trước khi khảo sát, các bạn đội gì?",
+        options: ["Their helmets", "Their raincoats", "Their sunglasses"], answer: "Their helmets" },
+      { q: "What was the drawback of the blue route?", vi: "Điểm dở của tuyến xanh là gì?",
+        options: ["Busy traffic and no bike lane", "Too many bike lanes", "It was too green"], answer: "Busy traffic and no bike lane",
+        explainVi: "Tuyến xanh ngắn nhưng đông xe và không có làn xe đạp." },
+      { q: "Why did they recommend the combined route?", vi: "Vì sao các bạn đề xuất tuyến kết hợp?",
+        options: ["It was safer for everyone", "It was the longest", "It had the most cars"], answer: "It was safer for everyone" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "This route is shorter, but that route is safer.", vi: "Tuyến này ngắn hơn, còn tuyến kia an toàn hơn." },
+      { en: "I recommend the red route because it has a bike lane.", vi: "Mình đề xuất tuyến đỏ vì có làn xe đạp." },
+    ],
+    guided: { q: "What makes a bike route safe?", vi: "Điều gì khiến một tuyến xe đạp an toàn?", hint: "A safe route has ___." },
+    describe: {
+      prompt: "Compare two routes in 3–5 sentences. Give a trade-off, then recommend one and justify it.",
+      vi: "So sánh hai tuyến trong 3–5 câu: nêu một điểm đánh đổi, rồi đề xuất một tuyến và giải thích.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"the path you take to go somewhere\"?", vi: "Từ nào nghĩa là \"con đường bạn đi để tới nơi\"?",
+        options: ["route", "helmet", "traffic"], answer: "route" },
+      { type: "reading", q: "The blue route is short but has busy traffic. What is its drawback?", vi: "Tuyến xanh ngắn nhưng đông xe. Điểm dở của nó là gì?",
+        options: ["It is less safe because of traffic", "It is too green", "It has too many bike lanes"], answer: "It is less safe because of traffic" },
+      { type: "reading", q: "The red route has a ramp. Why is that helpful?", vi: "Tuyến đỏ có đường dốc. Vì sao điều đó hữu ích?",
+        options: ["So everyone, even someone on wheels, can use it", "So cars go faster", "So it rains less"], answer: "So everyone, even someone on wheels, can use it",
+        explainVi: "Đường dốc giúp tất cả mọi người tiếp cận, kể cả người dùng xe lăn." },
+      { type: "listening", q: "What did the team recommend in the end?", vi: "Cuối cùng nhóm đề xuất gì?",
+        options: ["The combined route, because it was safer", "The busiest street", "No route at all"], answer: "The combined route, because it was safer" },
+    ],
+  },
+};
+
+/* Unit 3: A Greener School Festival */
+const A_GREENER_SCHOOL_FESTIVAL: Lesson = {
+  id: "festival", theme: "solving-problems", title: "A Greener School Festival", vi: "Lễ hội trường xanh hơn", ageRange: "9–12",
+  sceneImage: L3C3 + "level-3-c03-unit-03-greener-school-festival.webp",
+  vocab: [
+    { word: "festival", ipa: "/ˈfestɪvl/", vi: "lễ hội", emoji: "🎪", example: "The school festival is on Friday.", exampleVi: "Lễ hội trường vào thứ Sáu." },
+    { word: "green", ipa: "/ɡriːn/", vi: "thân thiện môi trường", emoji: "🌿", example: "We want a green festival.", exampleVi: "Mình muốn một lễ hội xanh." },
+    { word: "plastic", ipa: "/ˈplæstɪk/", vi: "nhựa", emoji: "🧴", example: "Let's use less plastic.", exampleVi: "Cùng dùng ít nhựa hơn nào." },
+    { word: "recycle", ipa: "/ˌriːˈsaɪkl/", vi: "tái chế", emoji: "♻️", example: "We recycle cans and bottles.", exampleVi: "Mình tái chế lon và chai." },
+    { word: "reuse", ipa: "/ˌriːˈjuːz/", vi: "tái sử dụng", emoji: "🔄", example: "Reuse the cups, don't throw them away.", exampleVi: "Tái sử dụng cốc, đừng vứt đi." },
+    { word: "waste", ipa: "/weɪst/", vi: "rác thải", emoji: "🗑️", example: "Sort the waste into bins.", exampleVi: "Phân loại rác vào các thùng." },
+    { word: "energy", ipa: "/ˈenərdʒi/", vi: "năng lượng", emoji: "⚡", example: "Solar panels give clean energy.", exampleVi: "Tấm pin mặt trời cho năng lượng sạch." },
+    { word: "priority", ipa: "/praɪˈɒrəti/", vi: "ưu tiên", emoji: "🥇", example: "Our top priority is less plastic.", exampleVi: "Ưu tiên hàng đầu là bớt nhựa." },
+  ],
+  patterns: [
+    { pattern: "Our top priority is …", vi: "Ưu tiên hàng đầu của mình là …", examples: [
+      { en: "Our top priority is to use less plastic.", vi: "Ưu tiên hàng đầu là dùng ít nhựa hơn." },
+      { en: "Our top priority is to reduce waste.", vi: "Ưu tiên hàng đầu là giảm rác thải." }] },
+    { pattern: "We only have … , so …", vi: "Mình chỉ có … nên …", examples: [
+      { en: "We only have a little money, so we can't buy everything.", vi: "Mình chỉ có ít tiền nên không mua được hết." },
+      { en: "We only have two hours, so let's plan well.", vi: "Mình chỉ có hai tiếng nên phải tính kỹ." }] },
+    { pattern: "Instead of … , we could …", vi: "Thay vì … , mình có thể …", examples: [
+      { en: "Instead of plastic cups, we could use reusable ones.", vi: "Thay vì cốc nhựa, mình có thể dùng cốc tái sử dụng." },
+      { en: "Instead of buying lights, we could use solar power.", vi: "Thay vì mua đèn, mình có thể dùng năng lượng mặt trời." }] },
+    { pattern: "Can we agree to …?", vi: "Mình thống nhất … được chứ?", examples: [
+      { en: "Can we agree to start with the refill station?", vi: "Mình thống nhất bắt đầu với trạm tiếp nước được chứ?" },
+      { en: "Can we agree to sort the waste?", vi: "Mình thống nhất phân loại rác được chứ?" }] },
+  ],
+  listening: {
+    intro: "Listen to the team plan a greener festival, then answer.",
+    introVi: "Nghe cả nhóm lên kế hoạch lễ hội xanh rồi trả lời.",
+    script: "The team wanted to make the school festival greener, but they only had a small budget. \"Our top priority is to use less plastic,\" said Maple. \"Instead of plastic cups, we could set up a water refill station with reusable cups.\" Theo pointed at three bins. \"We can also sort our waste — one for compost, one for recycling, and one for trash.\" Another student suggested solar panels to power the lights. \"We only have a little money,\" said the teacher, \"so we can't buy everything.\" They talked it over and made a shared decision: the refill station and the sorting bins first, because they helped the most and cost the least. Everyone agreed it was a good, green plan.",
+    questions: [
+      { q: "What was the team's top priority?", vi: "Ưu tiên hàng đầu của nhóm là gì?",
+        options: ["To use less plastic", "To buy more balloons", "To make more noise"], answer: "To use less plastic" },
+      { q: "What did they suggest instead of plastic cups?", vi: "Thay vì cốc nhựa, các bạn đề xuất gì?",
+        options: ["A refill station with reusable cups", "Bigger plastic cups", "Paper on the ground"], answer: "A refill station with reusable cups" },
+      { q: "Why did they choose the refill station and bins first?", vi: "Vì sao các bạn chọn trạm tiếp nước và thùng phân loại trước?",
+        options: ["They helped the most and cost the least", "They were the most expensive", "They looked the coolest"], answer: "They helped the most and cost the least",
+        explainVi: "Với ngân sách ít, các bạn ưu tiên việc hiệu quả nhất mà rẻ nhất." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Instead of plastic cups, we could use reusable ones.", vi: "Thay vì cốc nhựa, mình có thể dùng cốc tái sử dụng." },
+      { en: "Our top priority is to use less plastic.", vi: "Ưu tiên hàng đầu là dùng ít nhựa hơn." },
+    ],
+    guided: { q: "How would you make an event greener?", vi: "Bạn sẽ làm một sự kiện xanh hơn thế nào?", hint: "Instead of ___, we could ___." },
+    describe: {
+      prompt: "Plan a greener event in 3–5 sentences. Name a priority, one alternative, and one shared decision.",
+      vi: "Lên kế hoạch một sự kiện xanh 3–5 câu: nêu ưu tiên, một phương án thay thế, và một quyết định chung.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"to use something again instead of throwing it away\"?", vi: "Từ nào nghĩa là \"dùng lại thay vì vứt đi\"?",
+        options: ["reuse", "waste", "plastic"], answer: "reuse" },
+      { type: "reading", q: "Instead of plastic cups, which is a GREENER choice?", vi: "Thay vì cốc nhựa, lựa chọn nào XANH hơn?",
+        options: ["Reusable cups at a refill station", "More plastic bottles", "Paper thrown on the ground"], answer: "Reusable cups at a refill station" },
+      { type: "reading", q: "The team had little money. Why did they choose the refill station and bins first?", vi: "Nhóm có ít tiền. Vì sao chọn trạm tiếp nước và thùng phân loại trước?",
+        options: ["They helped the most and cost the least", "They were the most expensive", "They looked the coolest"], answer: "They helped the most and cost the least",
+        explainVi: "Nguồn lực có hạn nên ưu tiên việc hiệu quả nhất, rẻ nhất." },
+      { type: "listening", q: "How did the team make the final decision?", vi: "Nhóm đưa ra quyết định cuối cùng thế nào?",
+        options: ["They talked it over and agreed together", "One person decided alone", "They gave up"], answer: "They talked it over and agreed together" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
@@ -1751,6 +1961,8 @@ export const THEMES: CourseTheme[] = [
     lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
     lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND] },
+  { id: "solving-problems", name: "Solving Problems", vi: "Giải Quyết Vấn Đề", emoji: "🛠️",
+    lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -1793,6 +2005,7 @@ export const LEVEL2_UNITS: CourseUnit[] = [
 export type CourseCollection = { id: string; name: string; vi: string; units: CourseUnit[] };
 const L3C1IMG = "/assets/images/learn/level-3/collection-01-making-choices/";
 const L3C2IMG = "/assets/images/learn/level-3/collection-02-giving-reasons/";
+const L3C3IMG = "/assets/images/learn/level-3/collection-03-solving-problems/";
 export const LEVEL3_COLLECTIONS: CourseCollection[] = [
   { id: "c1", name: "Making Choices", vi: "Bộ 1 · Đưa ra lựa chọn", units: [
     { id: "classtrip",   n: 1, title: "Planning a Class Trip",       vi: "Lên kế hoạch đi dã ngoại",  image: L3C1IMG + "level-3-c01-unit-01-planning-class-trip.webp",   focus: "So lựa chọn · lý do · thống nhất",   lessonId: "classtrip",   ready: true },
@@ -1803,6 +2016,11 @@ export const LEVEL3_COLLECTIONS: CourseCollection[] = [
     { id: "homework",   n: 1, title: "Should Homework Be Shorter?", vi: "Bài tập có nên ngắn hơn?",   image: L3C2IMG + "level-3-c02-unit-01-shorter-homework.webp", focus: "Nêu ý kiến · ví dụ · phản đối lịch sự", lessonId: "homework",   ready: true },
     { id: "savespend",  n: 2, title: "Save It or Spend It?",       vi: "Tiết kiệm hay tiêu?",        image: L3C2IMG + "level-3-c02-unit-02-save-or-spend.webp",    focus: "Ưu tiên · hệ quả · thoả hiệp",         lessonId: "savespend",  ready: true },
     { id: "goodfriend", n: 3, title: "What Makes a Good Friend?",  vi: "Điều gì tạo nên bạn tốt?",   image: L3C2IMG + "level-3-c02-unit-03-good-friend.webp",      focus: "Phẩm chất · dẫn chứng · kết luận",     lessonId: "goodfriend", ready: true },
+  ] },
+  { id: "c3", name: "Solving Problems", vi: "Bộ 3 · Giải quyết vấn đề", units: [
+    { id: "lunchroom", n: 1, title: "A Quieter Lunchroom",      vi: "Nhà ăn bớt ồn hơn",       image: L3C3IMG + "level-3-c03-unit-01-quieter-lunchroom.webp",       focus: "Nêu nhu cầu · thử nghiệm · chỉnh sửa",  lessonId: "lunchroom", ready: true },
+    { id: "bikeroute", n: 2, title: "A Safer Bike Route",       vi: "Tuyến xe đạp an toàn hơn", image: L3C3IMG + "level-3-c03-unit-02-safer-bike-route.webp",        focus: "Ràng buộc · đánh đổi · khuyến nghị",    lessonId: "bikeroute", ready: true },
+    { id: "festival",  n: 3, title: "A Greener School Festival", vi: "Lễ hội trường xanh hơn",  image: L3C3IMG + "level-3-c03-unit-03-greener-school-festival.webp", focus: "Ưu tiên · nguồn lực · thương lượng",    lessonId: "festival",  ready: true },
   ] },
 ];
 
