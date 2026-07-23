@@ -27,9 +27,8 @@ export type SpeakingActivity = {
   guided: { q: string; vi: string; hint: string };
   describe: { prompt: string; vi: string; min: number; max: number };
 };
-export type MiniCheckTask =
-  | ({ type: "vocab" | "sentence" | "listening" } & MCQ)
-  | { type: "speaking"; q: string; vi: string };
+// Mini Check chỉ gồm bài MÁY CHẤM được (không có điểm tự khai).
+export type MiniCheckTask = { type: "vocab" | "sentence" | "listening" | "reading" } & MCQ;
 export type MiniCheck = { tasks: MiniCheckTask[] };
 
 export type LearningSectionKey = "words" | "sentences" | "listening" | "speaking";
@@ -38,7 +37,7 @@ export const SECTIONS: LearningSection[] = [
   { key: "words",     name: "Words",     vi: "Từ vựng",  icon: "📖", desc: "Từ mới · phát âm · ví dụ" },
   { key: "sentences", name: "Sentences", vi: "Mẫu câu",  icon: "✏️", desc: "Mẫu câu & ngữ pháp nhẹ" },
   { key: "listening", name: "Listening", vi: "Nghe hiểu", icon: "🎧", desc: "Nghe Maple & trả lời" },
-  { key: "speaking",  name: "Speaking",  vi: "Nói",      icon: "🎤", desc: "Nhại · mô tả · shadowing" },
+  { key: "speaking",  name: "Listen & Repeat", vi: "Nghe & nói theo", icon: "🎤", desc: "Nghe Maple rồi nói theo · không chấm điểm" },
 ];
 
 export type Lesson = {
@@ -121,8 +120,8 @@ const AT_THE_PARK: Lesson = {
         explainVi: "Công viên đông thì không thể vắng và yên tĩnh." },
       { type: "listening", q: "In the story, why was Maple excited?", vi: "Trong truyện, vì sao Maple hào hứng?",
         options: ["She found her friend Theo", "She bought ice cream", "She won a game"], answer: "She found her friend Theo" },
-      { type: "speaking", q: "Describe the park in 3–5 sentences. Give two details and explain one using \"because\".",
-        vi: "Mô tả công viên 3–5 câu. Nêu hai chi tiết và giải thích một điều bằng \"because\"." },
+      { type: "reading", q: "Read: “The children are running and smiling in the park.” How do they feel?", vi: "Đọc câu trên. Các bạn cảm thấy thế nào?",
+        options: ["Happy", "Scared", "Bored"], answer: "Happy", explainVi: "Chạy nhảy và mỉm cười nghĩa là đang vui (happy)." },
     ],
   },
 };
@@ -192,8 +191,9 @@ const IN_THE_KITCHEN: Lesson = {
         explainVi: "Không ai bơi trong chảo được — câu này vô lý." },
       { type: "listening", q: "In the story, what food did Maple see on the table?", vi: "Trong truyện, Maple thấy món gì trên bàn?",
         options: ["An apple, a banana and bread", "Pizza and soda", "Rice and fish"], answer: "An apple, a banana and bread" },
-      { type: "speaking", q: "Describe the kitchen in 3–5 sentences. Say what is on the table and what the cook is doing.",
-        vi: "Mô tả nhà bếp 3–5 câu. Nói xem trên bàn có gì và người nấu đang làm gì." },
+      { type: "sentence", q: "Which sentence is correct?", vi: "Câu nào đúng ngữ pháp?",
+        options: ["The cook is frying an egg.", "The cook frying an egg.", "The cook is fry an egg."], answer: "The cook is frying an egg.",
+        explainVi: "Hiện tại tiếp diễn: is + V-ing (frying)." },
     ],
   },
 };
@@ -262,8 +262,8 @@ const IN_THE_CLASSROOM: Lesson = {
         explainVi: "Lớp đang học đông vui, không thể trống và tối." },
       { type: "listening", q: "In the story, what landed on the floor?", vi: "Trong truyện, vật gì rơi xuống sàn?",
         options: ["A paper airplane", "A book", "A backpack"], answer: "A paper airplane" },
-      { type: "speaking", q: "Describe the classroom in 3–5 sentences. Say what the teacher and one student are doing.",
-        vi: "Mô tả lớp học 3–5 câu. Nói cô giáo và một bạn học đang làm gì." },
+      { type: "reading", q: "Read: “The girl raises her hand to answer.” What does she want to do?", vi: "Đọc câu trên. Bạn nữ muốn làm gì?",
+        options: ["Answer a question", "Leave the room", "Go to sleep"], answer: "Answer a question", explainVi: "Giơ tay để phát biểu/trả lời." },
     ],
   },
 };
@@ -332,8 +332,9 @@ const AT_THE_SUPERMARKET: Lesson = {
         explainVi: "Siêu thị không phải bể bơi — câu này vô lý." },
       { type: "listening", q: "In the story, what rolled across the floor?", vi: "Trong truyện, vật gì lăn trên sàn?",
         options: ["An orange", "A ball", "A bottle"], answer: "An orange" },
-      { type: "speaking", q: "Describe the supermarket in 3–5 sentences. Say what the boy is doing and what you can buy.",
-        vi: "Mô tả siêu thị 3–5 câu. Nói cậu bé đang làm gì và bạn có thể mua gì." },
+      { type: "sentence", q: "Choose the correct question:", vi: "Chọn câu hỏi đúng:",
+        options: ["How many apples do you want?", "How many apple do you want?", "How much apples do you want?"], answer: "How many apples do you want?",
+        explainVi: "Danh từ đếm được số nhiều: How many + apples." },
     ],
   },
 };
@@ -402,8 +403,8 @@ const AT_THE_BUS_STOP: Lesson = {
         explainVi: "\"might\" nói về điều có thể xảy ra sắp tới." },
       { type: "listening", q: "In the story, why was the man looking at his watch?", vi: "Trong truyện, vì sao chú ấy nhìn đồng hồ?",
         options: ["He did not want to be late", "He was hungry", "He lost his ticket"], answer: "He did not want to be late" },
-      { type: "speaking", q: "Describe the bus stop in 3–5 sentences. Talk about the weather and what might happen next.",
-        vi: "Mô tả trạm xe buýt 3–5 câu. Nói về thời tiết và điều gì có thể xảy ra tiếp theo." },
+      { type: "reading", q: "Read: “The man keeps checking his watch because the bus is late.” Why is he worried?", vi: "Đọc câu trên. Vì sao chú ấy lo lắng?",
+        options: ["He might be late", "He is hungry", "He lost a shoe"], answer: "He might be late", explainVi: "Xe trễ nên chú lo bị muộn giờ." },
     ],
   },
 };
@@ -472,8 +473,8 @@ const AT_THE_LIBRARY: Lesson = {
         explainVi: "\"You must be quiet\" là một nội quy của thư viện." },
       { type: "listening", q: "In the story, where did the girl stand to reach the shelf?", vi: "Trong truyện, bạn nữ đứng lên đâu để với kệ?",
         options: ["On a wooden stool", "On a chair", "On the table"], answer: "On a wooden stool" },
-      { type: "speaking", q: "Describe the library in 3–5 sentences. Use \"under\", \"on\" or \"next to\" to say where things are.",
-        vi: "Mô tả thư viện 3–5 câu. Dùng \"under\", \"on\" hoặc \"next to\" để nói đồ vật ở đâu." },
+      { type: "reading", q: "Read: “Please be quiet in the library.” What should you NOT do?", vi: "Đọc câu trên. Bạn KHÔNG nên làm gì?",
+        options: ["Shout and run", "Read a book", "Sit at a table"], answer: "Shout and run", explainVi: "Thư viện cần yên lặng nên không hò hét, chạy nhảy." },
     ],
   },
 };

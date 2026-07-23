@@ -8,23 +8,22 @@ import {
   type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit,
 } from "@/lib/learn";
 import { speak, shuffle } from "@/lib/fx";
-import { allLessons, thumbFor } from "@/lib/data";
 
 const GEN = "/assets/images/gen/";
 type SecView = "overview" | LearningSectionKey | "check";
 
-export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete }: {
+export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
+  entry: "map" | "lesson";
   onEcho: () => void;
   onTalk: (sceneId?: string) => void;
-  openLesson: (id: string) => void;
   onComplete: (lessonId: string, score: number, total: number) => void;
 }) {
   const lesson = learnLessonById(state.learn.currentLesson) || allLearnLessons()[0];
   const diff = state.learn.difficulty;
   const accent = state.prefs.accent;
-  const [screen, setScreen] = useState<"map" | "lesson">("map");
+  const [screen, setScreen] = useState<"map" | "lesson">(entry);
   const [view, setView] = useState<SecView>("overview");
 
   // Màn chương trình học: chọn Unit trước khi vào bài
@@ -49,7 +48,7 @@ export function Learn({ state, setState, onEcho, onTalk, openLesson, onComplete 
     if (view === "words") return <WordsView lesson={lesson} diff={diff} accent={accent} onDone={() => mark("words")} back={back} />;
     if (view === "sentences") return <SentencesView lesson={lesson} diff={diff} onDone={() => mark("sentences")} back={back} />;
     if (view === "listening") return <ListeningView lesson={lesson} diff={diff} accent={accent} onDone={() => mark("listening")} back={back} />;
-    if (view === "speaking") return <SpeakingView lesson={lesson} diff={diff} accent={accent} onEcho={onEcho} onTalk={onTalk} openLesson={openLesson} onDone={() => mark("speaking")} back={back} />;
+    if (view === "speaking") return <SpeakingView lesson={lesson} diff={diff} accent={accent} onEcho={onEcho} onTalk={onTalk} onDone={() => mark("speaking")} back={back} />;
     if (view === "check") return <MiniCheckView lesson={lesson} diff={diff} accent={accent} onFinish={(sc, t) => { onComplete(lesson.id, sc, t); setView("overview"); }} back={back} />;
   }
 
@@ -297,53 +296,33 @@ function ListeningView({ lesson, diff, accent, onDone, back }: { lesson: Lesson;
   );
 }
 
-/* ---------- SPEAKING ---------- */
-function SpeakingView({ lesson, diff, accent, onEcho, onTalk, openLesson, onDone, back }: {
-  lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onEcho: () => void; onTalk: (sceneId?: string) => void; openLesson: (id: string) => void; onDone: () => void; back: () => void;
+/* ---------- LISTEN & REPEAT (hoạt động phụ, KHÔNG chấm điểm) ---------- */
+function SpeakingView({ lesson, diff, accent, onEcho, onTalk, onDone, back }: {
+  lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onEcho: () => void; onTalk: (sceneId?: string) => void; onDone: () => void; back: () => void;
 }) {
   const S = lesson.speaking;
   const vis = showVi(diff);
   const prompts = showPrompts(diff);
-  const [said, setSaid] = useState<Record<string, boolean>>({});
-  const done = (k: string) => setSaid((s) => ({ ...s, [k]: true }));
-  const repeatDone = S.repeat.every((_, i) => said["r" + i]);
-  const allDone = repeatDone && said["guided"] && said["describe"];
   return (
-    <Page icon="🎤" title="Nói" vi="Speaking" back={back}>
-      <Bubble>Không chấm điểm đâu — cứ nói thật to cùng mình nhé! 🎶</Bubble>
+    <Page icon="🎤" title="Nghe & nói theo" vi="Listen & Repeat" back={back}>
+      <Bubble>Nghe Maple đọc rồi nói theo cho quen miệng. <b>Không chấm điểm</b> đâu — cứ thoải mái nhé! 🎶</Bubble>
 
       <div className="speak-block">
-        <div className="sb-h">1 · Nhắc lại 2 câu</div>
+        <div className="sb-h">Nghe & nói theo</div>
         {S.repeat.map((r, i) => (
-          <div key={i} className={`sb-line ${said["r" + i] ? "ok" : ""}`}>
+          <div key={i} className="sb-line">
             <div className="sb-en">{r.en}{vis && <em> — {r.vi}</em>}</div>
             <div className="sb-ctrls">
-              <button className="icbtn" onClick={() => speak(r.en, accent)}>🔊 Nghe</button>
-              <button className="icbtn learn" onClick={() => done("r" + i)}>{said["r" + i] ? "✓ Đã nói" : "🎙️ Nói xong"}</button>
+              <button className="icbtn" onClick={() => speak(r.en, accent)}>🔊 Maple đọc</button>
+              <button className="icbtn" onClick={() => speak(r.en, accent, 0.6)}>🐢 Chậm</button>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="speak-block">
-        <div className="sb-h">2 · Trả lời câu hỏi</div>
-        <div className={`sb-line ${said["guided"] ? "ok" : ""}`}>
+        <div className="sb-line">
           <div className="sb-en">{S.guided.q}{vis && <em> — {S.guided.vi}</em>}</div>
           {prompts && <div className="sb-hint">Gợi ý: {S.guided.hint}</div>}
           <div className="sb-ctrls">
-            <button className="icbtn" onClick={() => speak(S.guided.q, accent)}>🔊 Nghe</button>
-            <button className="icbtn learn" onClick={() => done("guided")}>{said["guided"] ? "✓ Đã trả lời" : "🎙️ Trả lời xong"}</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="speak-block">
-        <div className="sb-h">3 · Mô tả tranh ({S.describe.min}–{S.describe.max} câu)</div>
-        <div className={`sb-line ${said["describe"] ? "ok" : ""}`}>
-          <div className="sb-en">{S.describe.prompt}{vis && <em> — {S.describe.vi}</em>}</div>
-          <div className="sb-ctrls">
-            <button className="icbtn" onClick={() => onTalk(lesson.id)}>🖼️ Mở tranh mô tả</button>
-            <button className="icbtn learn" onClick={() => done("describe")}>{said["describe"] ? "✓ Đã mô tả" : "🎙️ Mô tả xong"}</button>
+            <button className="icbtn" onClick={() => speak(S.guided.q, accent)}>🔊 Maple đọc</button>
           </div>
         </div>
       </div>
@@ -352,84 +331,47 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, openLesson, onDone
         <div className="sb-h">Luyện thêm cùng Maple</div>
         <div className="extra-acts">
           <button className="extra-btn" onClick={onEcho}><span>🎤</span>Echo với Maple</button>
-          <button className="extra-btn" onClick={() => onTalk(lesson.id)}><span>💬</span>Mô tả hình ảnh</button>
         </div>
-        <ShadowStrip openLesson={openLesson} />
+        <p className="practice-link">Muốn luyện xây câu cho chủ đề này? <button className="linklike" onClick={() => onTalk(lesson.id)}>Sang Luyện tập →</button></p>
       </div>
 
-      <MarkDone label="Xong phần Nói" onDone={onDone} enabled={allDone} />
-      {!allDone && <p className="mark-hint">Hoàn thành 3 phần nói ở trên để đánh dấu xong.</p>}
+      <MarkDone label="Xong phần nghe & nói" onDone={onDone} />
     </Page>
   );
 }
 
-/* Shadowing video (giữ toàn bộ bài video, đặt trong Speaking) */
-function ShadowStrip({ openLesson }: { openLesson: (id: string) => void }) {
-  const shadowable = useMemo(() => allLessons().filter((l) => l.lines.length > 0), []);
-  if (!shadowable.length) return null;
-  return (
-    <>
-      <div className="sb-sub">🎬 Shadowing theo video</div>
-      <div className="filmstrip">
-        {shadowable.map((l) => (
-          <button key={l.id} className="film" onClick={() => openLesson(l.id)}>
-            <span className="film-thumb" style={{ backgroundImage: `url('${thumbFor(l)}')` }}>
-              {!l.free && <span className="film-lock">Premium</span>}
-            </span>
-            <span className="film-ttl">{l.title}</span>
-            <span className="film-meta">Level {l.level} · {l.skill}</span>
-          </button>
-        ))}
-      </div>
-    </>
-  );
-}
-
 /* ---------- MINI CHECK ---------- */
-function MiniCheckView({ lesson, accent, onFinish, back }: { lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onFinish: (score: number, total: number) => void; back: () => void }) {
+const MC_BADGE: Record<string, string> = { vocab: "Từ vựng", sentence: "Ghép câu", listening: "Nghe hiểu", reading: "Đọc hiểu" };
+function MiniCheckView({ lesson, onFinish, back }: { lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onFinish: (score: number, total: number) => void; back: () => void }) {
   const tasks = lesson.miniCheck.tasks;
   const total = tasks.length;
   const [i, setI] = useState(0);
   const [score, setScore] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
-  const [saidDone, setSaidDone] = useState(false);
   const t = tasks[i];
-  const opts = useMemo(() => (t.type !== "speaking" ? shuffle(t.options) : []), [t]);
-  const answered = t.type === "speaking" ? saidDone : picked !== null;
+  const opts = useMemo(() => shuffle(t.options), [t]);
+  const answered = picked !== null;
 
-  function pick(o: string) { if (picked !== null) return; setPicked(o); if (t.type !== "speaking" && o === t.answer) setScore((x) => x + 1); }
+  function pick(o: string) { if (picked !== null) return; setPicked(o); if (o === t.answer) setScore((x) => x + 1); }
   function next() {
-    const last = i + 1 >= total;
-    if (last) { onFinish(score, total); return; }
-    setI(i + 1); setPicked(null); setSaidDone(false);
+    if (i + 1 >= total) { onFinish(score, total); return; }
+    setI(i + 1); setPicked(null);
   }
-  const badge = t.type === "vocab" ? "Từ vựng" : t.type === "sentence" ? "Ghép câu" : t.type === "listening" ? "Nghe hiểu" : "Nói";
 
   return (
     <Page icon="🎯" title="Kiểm tra nhỏ" vi="Mini Check" back={back}>
-      <Bubble>Bốn thử thách nhỏ để xem bạn đã sẵn sàng phiêu lưu chưa!</Bubble>
+      <Bubble>Bốn thử thách có đáp án để xem bạn đã sẵn sàng phiêu lưu chưa!</Bubble>
       <div className="qcard learn-quiz">
-        <div className="q-progress"><span className="q-badge">{badge}</span> {i + 1}/{total}</div>
+        <div className="q-progress"><span className="q-badge">{MC_BADGE[t.type] || "Thử thách"}</span> {i + 1}/{total}</div>
         <div className="qtext">{t.q}{t.vi && <div className="qsub">{t.vi}</div>}</div>
-
-        {t.type !== "speaking" ? (
-          <>
-            <div className={`qopts ${picked !== null ? "answered" : ""}`}>
-              {opts.map((o) => (
-                <button key={o} disabled={picked !== null}
-                  className={`qopt ${picked !== null && o === t.answer ? "right" : ""} ${picked !== null && o === picked && o !== t.answer ? "wrong" : ""}`}
-                  onClick={() => pick(o)}>{o}</button>
-              ))}
-            </div>
-            {picked !== null && <div className="qfb">{picked === t.answer ? <span className="ok">✓ Chính xác!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{t.answer}</b></>}{t.explainVi && <div className="q-explain">💡 {t.explainVi}</div>}</div>}
-          </>
-        ) : (
-          <div className="mc-speak">
-            <button className="icbtn" onClick={() => speak(t.q, accent)}>🔊 Nghe yêu cầu</button>
-            <button className="btn green" onClick={() => { setSaidDone(true); setScore((x) => x + 1); }} disabled={saidDone}>{saidDone ? "✓ Đã mô tả xong" : "🎙️ Mình đã mô tả xong"}</button>
-          </div>
-        )}
-
+        <div className={`qopts ${answered ? "answered" : ""}`}>
+          {opts.map((o) => (
+            <button key={o} disabled={answered}
+              className={`qopt ${answered && o === t.answer ? "right" : ""} ${answered && o === picked && o !== t.answer ? "wrong" : ""}`}
+              onClick={() => pick(o)}>{o}</button>
+          ))}
+        </div>
+        {answered && <div className="qfb">{picked === t.answer ? <span className="ok">✓ Chính xác!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{t.answer}</b></>}{t.explainVi && <div className="q-explain">💡 {t.explainVi}</div>}</div>}
         {answered && <button className="btn qnext" onClick={next}>{i + 1 < total ? "Thử thách tiếp →" : "Xem kết quả →"}</button>}
       </div>
     </Page>

@@ -18,7 +18,17 @@ export type LearnState = {
 // Tiến trình riêng của khu Trò chơi (tách khỏi Adventure)
 export type GamesState = {
   seen: Record<string, string[]>; // key vd "picdet:classroom" -> id câu đã gặp (chống lặp)
-  best: Record<string, number>;   // key vd "picdet" -> điểm cao nhất
+  best: Record<string, number>;   // key vd "picdet:park" -> sao tốt nhất theo scene/topic
+};
+
+// Nhiệm vụ hôm nay tách theo module (Learn / Practice / Adventure)
+export type DailyTasks = { date: string; learn: boolean; practice: boolean; adventure: boolean };
+
+// Tiến trình khu Phiêu lưu (module nhiệm vụ riêng, KHÔNG dùng chung câu hỏi với Games)
+export type AdventureMissionState = { step: number; done: boolean; stars: number };
+export type AdventureState = {
+  currentMission?: string;
+  missions: Record<string, AdventureMissionState>;
 };
 
 export type AppState = {
@@ -40,6 +50,8 @@ export type AppState = {
   splashDate: string;
   learn: LearnState;
   games: GamesState;
+  daily: DailyTasks;
+  adventure: AdventureState;
 };
 
 export const KEY = "speakup_state_v1";
@@ -64,6 +76,8 @@ export function defaultState(): AppState {
     splashDate: "",
     learn: { currentLesson: "park", difficulty: "detective", lessons: {} },
     games: { seen: {}, best: {} },
+    daily: { date: "", learn: false, practice: false, adventure: false },
+    adventure: { missions: {} },
   };
 }
 
@@ -78,6 +92,8 @@ export function loadState(): AppState {
       prefs: { ...d.prefs, ...(s.prefs || {}) },
       learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
       games: { ...d.games, ...(s.games || {}), seen: { ...(s.games?.seen || {}) }, best: { ...(s.games?.best || {}) } },
+      daily: { ...d.daily, ...(s.daily || {}) },
+      adventure: { ...d.adventure, ...(s.adventure || {}), missions: { ...(s.adventure?.missions || {}) } },
     };
   } catch {
     return defaultState();
@@ -160,6 +176,7 @@ export function recordGame(s: AppState, id: string, stars: number, sticker?: str
   const cur = s.progress[key];
   const newly = !cur?.done;
   let ns = resetDailyIfNeeded(s);
+  ns = markDaily(ns, "practice");
   ns = {
     ...ns,
     minutes: ns.minutes + (newly ? 2 : 0),
@@ -190,7 +207,8 @@ export function markSection(s: AppState, lessonId: string, key: LearningSectionK
   const cur = learnOf(s, lessonId);
   if (cur.sections.includes(key)) return s;
   const next: LearnLessonState = { ...cur, sections: [...cur.sections, key] };
-  return { ...s, learn: { ...s.learn, currentLesson: lessonId, lessons: { ...s.learn.lessons, [lessonId]: next } } };
+  const ns = markDaily(s, "learn");
+  return { ...ns, learn: { ...ns.learn, currentLesson: lessonId, lessons: { ...ns.learn.lessons, [lessonId]: next } } };
 }
 export function setDifficulty(s: AppState, difficulty: DifficultyLevel): AppState {
   return { ...s, learn: { ...s.learn, difficulty } };
@@ -203,6 +221,7 @@ export function completeLearnLesson(s: AppState, lessonId: string, score: number
   const cur = learnOf(s, lessonId);
   const newly = !cur.done;
   let ns = resetDailyIfNeeded(s);
+  ns = markDaily(ns, "learn");
   const next: LearnLessonState = { ...cur, done: true, check: { score, total } };
   ns = {
     ...ns,
@@ -214,6 +233,51 @@ export function completeLearnLesson(s: AppState, lessonId: string, score: number
 }
 export function learnLessonsDone(s: AppState): number {
   return Object.values(s.learn.lessons).filter((l) => l.done).length;
+}
+
+/* ---------- Nhiệm vụ hôm nay (Learn / Practice / Adventure) ---------- */
+export function resetDailyTasks(s: AppState): AppState {
+  const t = todayStr();
+  if (s.daily.date === t) return s;
+  return { ...s, daily: { date: t, learn: false, practice: false, adventure: false } };
+}
+export function markDaily(s: AppState, key: "learn" | "practice" | "adventure"): AppState {
+  const ns = resetDailyTasks(s);
+  if (ns.daily[key]) return ns;
+  return { ...ns, daily: { ...ns.daily, [key]: true } };
+}
+export function dailyCount(s: AppState): number {
+  return [s.daily.learn, s.daily.practice, s.daily.adventure].filter(Boolean).length;
+}
+
+/* ---------- Phiêu lưu (module nhiệm vụ riêng) ---------- */
+const EMPTY_MISSION: AdventureMissionState = { step: 0, done: false, stars: 0 };
+export function missionOf(s: AppState, id: string): AdventureMissionState {
+  return s.adventure.missions[id] || EMPTY_MISSION;
+}
+export function setMissionStep(s: AppState, id: string, step: number): AppState {
+  const cur = missionOf(s, id);
+  const next: AdventureMissionState = { ...cur, step: Math.max(cur.step, step) };
+  return { ...s, adventure: { ...s.adventure, currentMission: id, missions: { ...s.adventure.missions, [id]: next } } };
+}
+// Hoàn thành 1 mission: giữ sao cao nhất, đánh dấu done, cộng nhiệm vụ ngày 1 lần, mở sticker
+export function completeMission(s: AppState, id: string, stars: number, sticker?: string): { state: AppState; newly: boolean } {
+  const cur = missionOf(s, id);
+  const newly = !cur.done;
+  let ns = resetDailyIfNeeded(s);
+  ns = markDaily(ns, "adventure");
+  const next: AdventureMissionState = { step: cur.step, done: true, stars: Math.max(stars, cur.stars) };
+  ns = {
+    ...ns,
+    minutes: ns.minutes + (newly ? 4 : 0),
+    dailyDone: ns.dailyDone + (newly ? 1 : 0),
+    adventure: { ...ns.adventure, currentMission: id, missions: { ...ns.adventure.missions, [id]: next } },
+  };
+  if (sticker) ns = addSticker(ns, sticker);
+  return { state: ns, newly };
+}
+export function adventuresDone(s: AppState): number {
+  return Object.values(s.adventure.missions).filter((m) => m.done).length;
 }
 
 // cộng sao 1 lần khi hoàn thành; trả {state, newly}

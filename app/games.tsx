@@ -487,8 +487,8 @@ function PictureTalk({ sceneId, seen, best, onSeen, onRound, accent, onExit }: {
   const gallery = !sceneId;
   const [chosen, setChosen] = useState<string | undefined>(sceneId);
   if (gallery && !chosen) {
-    return <GameGallery emoji="💬" title="Mô tả hình ảnh" vi="Chọn bức tranh để mô tả"
-      intro="Chọn một bức tranh — nhìn kỹ rồi chọn/xếp câu mô tả đúng. Có 6 bức khác nhau!"
+    return <GameGallery emoji="💬" title="Xây câu từ hình ảnh" vi="Chọn bức tranh để mô tả"
+      intro="Chọn một bức tranh — nhìn kỹ rồi chọn từ, điền từ và xếp câu mô tả. Có 6 bức khác nhau!"
       items={TALK_SCENES.map((s) => ({ id: s.id, name: s.vi, sub: s.title, image: s.image }))}
       seenPrefix="talk" seen={seen} best={best} onPick={setChosen} onExit={onExit} />;
   }

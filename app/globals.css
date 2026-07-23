@@ -1,21 +1,30 @@
   :root {
-    --bg: #fef6ec; --card: #ffffff; --ink: #2d3142; --muted: #7a8194;
-    --brand: #17a2a2; --brand-d: #0f6e6e; --brand-soft: #d7f5f2; --accent: #ff7a59; --sun: #ffcc33;
-    --ipa: #a05be0; --line: #eee5d7; --active: #fff2d9; --active-border: #ffb300;
-    --green: #2f9e44; --lock: #b0b6c3; --radius: 22px;
+    /* Đồng bộ palette với landing (Claude Design) */
+    --paper: #fefaf1; --mist: #eaf5f0; --navy: #27345c; --slate: #5a6480;
+    --coral: #f0654a; --coral-d: #d94f33; --teal: #3fbfaf; --teal-d: #2e9d90;
+    --sunshine: #f2b33d; --path: #e8a98f;
+    /* Alias giữ tương thích với class cũ */
+    --bg: var(--paper); --card: #ffffff; --ink: var(--navy); --muted: var(--slate);
+    --brand: var(--teal); --brand-d: var(--teal-d); --brand-soft: var(--mist);
+    --accent: var(--coral); --sun: var(--sunshine);
+    --ipa: #a05be0; --line: #eae3d5; --active: #fdf6e7; --active-border: var(--sunshine);
+    --green: var(--teal-d); --lock: #b0b6c3; --radius: 20px;
+    --font-body-stack: var(--font-body), "Segoe UI", Roboto, system-ui, sans-serif;
+    --font-head-stack: var(--font-head), var(--font-body), "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
   body { margin: 0; color: var(--ink); line-height: 1.55;
-    font-family: "Segoe UI Rounded", "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    /* Nền nhẹ bằng CSS: kem nhạt + gradient coral–teal + chấm lá phong mờ (không dùng ảnh phong cảnh) */
+    font-family: var(--font-body-stack);
+    /* Nền storybook nhẹ: giấy kem + gợn coral/teal mờ */
     background:
-      radial-gradient(circle at 10% 6%, rgba(255,171,120,.16) 0, transparent 40%),
-      radial-gradient(circle at 90% 3%, rgba(23,162,162,.14) 0, transparent 38%),
-      radial-gradient(circle at 78% 88%, rgba(255,122,89,.10) 0, transparent 42%),
-      var(--bg);
+      radial-gradient(circle at 10% 6%, rgba(240,101,74,.10) 0, transparent 42%),
+      radial-gradient(circle at 92% 4%, rgba(63,191,175,.12) 0, transparent 40%),
+      radial-gradient(circle at 80% 92%, rgba(242,179,61,.10) 0, transparent 44%),
+      var(--paper);
     background-attachment: fixed;
     padding-bottom: 82px; }
-  h2 { font-weight: 800; }
+  h1, h2, h3, .chapter, .section-title { font-family: var(--font-head-stack); letter-spacing: -.3px; }
+  h2 { font-weight: 700; }
   .wrap { max-width: 920px; margin: 0 auto; padding: 16px 16px 40px; }
   .btn { border: none; border-radius: 999px; padding: 11px 20px; font-size: .95rem; font-weight: 700;
     cursor: pointer; background: var(--brand); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.12);
@@ -778,3 +787,103 @@
     box-shadow: 0 6px 16px rgba(45,49,66,.14); font-size: .88rem; font-weight: 600; }
   .learn-link.ok { background: rgba(244,251,245,.9); color: #1b7a3a; }
   .learn-link .btn { min-height: 40px; }
+
+  /* ============================================================
+     REFACTOR: Hôm nay · Luyện tập · Phiêu lưu (đồng bộ landing)
+     ============================================================ */
+  .wtag.collect { border: none; cursor: pointer; font-family: inherit; font-weight: 800; }
+  .wtag.collect:hover { transform: translateY(-1px); }
+
+  /* ---------- HÔM NAY ---------- */
+  .today { max-width: 620px; margin: 0 auto; }
+  .today-hi { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 4px 2px 16px; }
+  .today-lead { color: var(--muted); font-weight: 700; margin: 4px 0 0; }
+  .today-flag { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: .82rem; color: var(--coral-d);
+    background: #fbe6df; border-radius: 999px; padding: 8px 12px; white-space: nowrap; }
+  .next-card { display: block; width: 100%; text-align: left; position: relative; overflow: hidden; cursor: pointer;
+    border: none; border-radius: 22px; min-height: 190px; padding: 0; font-family: inherit;
+    background-size: cover; background-position: center; box-shadow: 0 14px 32px rgba(39,52,92,.18); }
+  .next-card:hover { transform: translateY(-2px); }
+  .nc-scrim { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(39,52,92,.82) 0%, rgba(39,52,92,.5) 52%, rgba(39,52,92,.15) 100%); }
+  .nc-body { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 22px 22px 20px; color: #fff; }
+  .nc-kicker { font-weight: 800; font-size: .72rem; letter-spacing: 1px; text-transform: uppercase; color: #ffd9b0; }
+  .nc-title { font-family: var(--font-head-stack); font-weight: 700; font-size: 1.5rem; line-height: 1.15; }
+  .nc-sub { font-size: .9rem; opacity: .92; margin-bottom: 10px; }
+  .nc-cta { align-self: flex-start; background: var(--coral); color: #fff; font-family: var(--font-head-stack);
+    font-weight: 700; padding: 11px 20px; border-radius: 14px; box-shadow: 0 8px 18px rgba(240,101,74,.4); }
+  .daily-tasks { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 18px; }
+  .dtask { display: flex; align-items: center; gap: 14px; cursor: pointer; border: none; font-family: inherit;
+    background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: 0 5px 14px rgba(45,49,66,.08);
+    border-left: 6px solid var(--teal); text-align: left; }
+  .dtask:hover { transform: translateX(3px); }
+  .dtask.done { border-left-color: var(--teal-d); background: #f2fbf8; }
+  .dt-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 1.2rem;
+    background: var(--mist); color: var(--teal-d); font-weight: 900; flex: 0 0 auto; }
+  .dtask.done .dt-ic { background: #d6f3ea; }
+  .dt-label { flex: 1; font-weight: 800; color: var(--navy); }
+  .dt-go { font-weight: 800; font-size: .82rem; color: var(--muted); }
+  .today-stats { display: flex; gap: 10px; margin-bottom: 14px; }
+  .ts { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; text-align: center;
+    font-size: .74rem; font-weight: 700; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+  .ts b { font-family: var(--font-head-stack); font-size: 1.1rem; color: var(--navy); }
+  .today-recent { background: rgba(242,179,61,.14); border-radius: 14px; padding: 12px 14px; font-size: .86rem;
+    font-weight: 600; color: var(--navy); }
+
+  /* ---------- PHIÊU LƯU: bản đồ chương ---------- */
+  .adventure { max-width: 720px; margin: 0 auto; }
+  .adv-intro { display: flex; align-items: center; gap: 14px; margin: 4px 4px 16px; }
+  .adv-maple { width: 66px; height: 66px; object-fit: contain; flex: 0 0 auto; }
+  .adv-sub { color: var(--muted); font-weight: 700; font-size: .86rem; margin: 3px 0 0; }
+  .chapter-list { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .chapter-card { display: flex; background: var(--card); border: 3px solid #fff; border-radius: 18px;
+    overflow: hidden; box-shadow: 0 10px 26px rgba(39,52,92,.1); }
+  .chapter-card:nth-child(odd) { transform: rotate(-.6deg); }
+  .chapter-card:nth-child(even) { transform: rotate(.6deg); }
+  .chapter-card.locked { opacity: .72; background: #f5f4f0; }
+  .chapter-card.done { border-color: #cdeede; }
+  .cc-media { position: relative; width: 118px; flex: 0 0 auto; background-size: cover; background-position: center; }
+  .chapter-card.locked .cc-media { filter: grayscale(.7) brightness(.96); }
+  .cc-n { position: absolute; left: 8px; top: 8px; width: 26px; height: 26px; border-radius: 999px; background: rgba(0,0,0,.55);
+    color: #fff; font-weight: 900; display: grid; place-items: center; font-size: .85rem; }
+  .cc-badge { position: absolute; right: 8px; bottom: 8px; width: 26px; height: 26px; border-radius: 999px; display: grid;
+    place-items: center; font-weight: 900; font-size: .85rem; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+  .cc-badge.ok { background: var(--teal-d); color: #fff; } .cc-badge.lock { background: #fff; }
+  .cc-body { flex: 1; min-width: 0; padding: 14px 16px; }
+  .cc-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); }
+  .cc-body h3 { margin: 2px 0 6px; font-size: 1.12rem; } .cc-body h3 small { color: var(--muted); font-weight: 600; }
+  .cc-blurb { font-size: .84rem; color: var(--muted); margin: 0 0 10px; }
+  .cc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .cc-soon { font-size: .8rem; font-weight: 800; color: var(--lock); }
+  .adv-end { text-align: center; color: var(--muted); font-weight: 700; font-size: .84rem; margin: 8px 0 4px; }
+  .adv-end span { display: block; font-size: 1.4rem; margin-bottom: 4px; }
+
+  /* ---------- PHIÊU LƯU: trình chơi nhiệm vụ ---------- */
+  .mission-story { text-align: center; }
+  .ms-scene { border-radius: 18px; overflow: hidden; border: 3px solid #fff; box-shadow: 0 10px 26px rgba(45,49,66,.12); margin-bottom: 14px; }
+  .ms-scene img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .ms-beat { display: flex; align-items: flex-end; gap: 12px; text-align: left; }
+  .ms-fig { width: 66px; height: 66px; object-fit: contain; flex: 0 0 auto; }
+  .ms-fig.emoji { font-size: 3rem; display: grid; place-items: center; }
+  .ms-bubble { flex: 1; background: #fff; border: 2px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 14px 16px;
+    box-shadow: 0 6px 16px rgba(45,49,66,.08); }
+  .who-maple .ms-bubble { border-color: #cdeede; background: #f2fbf8; }
+  .who-theo .ms-bubble { border-color: #ffd9b0; background: #fdf6e7; }
+  .ms-en { font-weight: 800; font-size: 1.05rem; color: var(--navy); }
+  .ms-vi { font-size: .86rem; color: var(--muted); margin: 3px 0 6px; }
+  .ms-next { width: 100%; margin-top: 16px; justify-content: center; }
+  .mission-step { background: var(--card); border: 3px solid #fff; border-radius: var(--radius); padding: 16px;
+    box-shadow: 0 10px 26px rgba(45,49,66,.1); }
+  .ms-kind { display: inline-block; background: var(--mist); color: var(--teal-d); font-weight: 800; font-size: .72rem;
+    padding: 3px 10px; border-radius: 999px; }
+  .ms-prompt { font-weight: 800; font-size: 1.05rem; color: var(--navy); margin: 10px 0 12px; }
+  .ms-prompt-vi { font-size: .84rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .choice-list { display: flex; flex-direction: column; gap: 10px; }
+  .choice-card { text-align: left; cursor: pointer; font-family: inherit; font-weight: 700; font-size: .95rem; color: var(--navy);
+    background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .choice-card:hover { border-color: var(--teal); }
+  .choice-card.right { border-color: var(--teal-d); background: #eafaf3; }
+  .choice-card.wrong { border-color: #ff8787; background: #fff0f0; }
+
+  /* Learn: liên kết sang Practice (không tự đánh dấu xong) */
+  .practice-link { font-size: .84rem; color: var(--muted); margin: 8px 2px 0; }
+  .linklike { border: none; background: none; color: var(--teal-d); font-weight: 800; cursor: pointer; font-family: inherit; font-size: inherit; padding: 0; }

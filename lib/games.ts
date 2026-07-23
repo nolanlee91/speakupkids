@@ -22,13 +22,13 @@ export type GameInfo = {
 };
 export const GAMES: GameInfo[] = [
   { id: "picdet", name: "Picture Detective", vi: "Thám tử hình ảnh", emoji: "🔎", image: "/assets/images/gen/game-picdet.webp", tint: "#e9f6ff",
-    blurb: "Nhìn tranh, trả lời câu hỏi tiếng Anh.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "talk", name: "Picture Talk", vi: "Mô tả hình ảnh", emoji: "💬", image: "/assets/images/gen/game-talk.webp", tint: "#ffece3",
-    blurb: "Nhìn tranh rồi tự nói thành câu.", assetNote: "Thumbnail 4:3 · 800×600" },
+    blurb: "Quan sát tranh, đọc hiểu và suy luận để tìm đáp án.", assetNote: "Thumbnail 4:3 · 800×600" },
+  { id: "talk", name: "Describe the Picture", vi: "Xây câu từ hình ảnh", emoji: "💬", image: "/assets/images/gen/game-talk.webp", tint: "#ffece3",
+    blurb: "Chọn từ, điền từ và xếp câu để mô tả bức tranh.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "puzzle", name: "Sentence Puzzle", vi: "Xếp câu", emoji: "🧩", image: "/assets/images/gen/game-puzzle.webp", tint: "#f1e9ff",
-    blurb: "Kéo các từ thành câu đúng.", assetNote: "Thumbnail 4:3 · 800×600" },
+    blurb: "Xếp các từ thành câu đúng ngữ pháp.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "riddle", name: "English Riddles", vi: "Đố vui tiếng Anh", emoji: "🦉", image: "/assets/images/gen/game-riddle.webp", tint: "#e5f9ee",
-    blurb: "Giải câu đố ngắn bằng tiếng Anh.", assetNote: "Thumbnail 4:3 · 800×600" },
+    blurb: "Giải câu đố từ manh mối, luyện đọc hiểu.", assetNote: "Thumbnail 4:3 · 800×600" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
