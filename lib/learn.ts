@@ -479,25 +479,459 @@ const AT_THE_LIBRARY: Lesson = {
   },
 };
 
+/* ============ Unit 7: At the Science Fair ============ */
+const AT_THE_SCIENCE_FAIR: Lesson = {
+  id: "sciencefair", theme: "discovery-days", title: "At the Science Fair", vi: "Ở hội chợ khoa học", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-07-at-the-science-fair.webp",
+  vocab: [
+    { word: "project", ipa: "/ˈprɒdʒekt/", vi: "dự án", emoji: "📋", example: "This is my science project.", exampleVi: "Đây là dự án khoa học của mình." },
+    { word: "model", ipa: "/ˈmɒdl/", vi: "mô hình", emoji: "🗼", example: "She built a model of a wind turbine.", exampleVi: "Bạn ấy làm một mô hình tua-bin gió." },
+    { word: "volcano", ipa: "/vɒlˈkeɪnoʊ/", vi: "núi lửa", emoji: "🌋", example: "The clay volcano is red.", exampleVi: "Mô hình núi lửa màu đỏ." },
+    { word: "erupt", ipa: "/ɪˈrʌpt/", vi: "phun trào", emoji: "💥", example: "The volcano is about to erupt.", exampleVi: "Núi lửa sắp phun trào." },
+    { word: "turbine", ipa: "/ˈtɜːrbaɪn/", vi: "tua-bin (gió)", emoji: "🌬️", example: "The wind turbine spins in the wind.", exampleVi: "Tua-bin gió quay khi có gió." },
+    { word: "judge", ipa: "/dʒʌdʒ/", vi: "giám khảo", emoji: "🧑‍⚖️", example: "The judge looks at every project.", exampleVi: "Giám khảo xem từng dự án." },
+    { word: "ribbon", ipa: "/ˈrɪbən/", vi: "huy hiệu ruy-băng", emoji: "🎗️", example: "The best project wins a blue ribbon.", exampleVi: "Dự án tốt nhất được huy hiệu xanh." },
+    { word: "present", ipa: "/prɪˈzent/", vi: "trình bày", emoji: "🙋", example: "She presents her project to the judge.", exampleVi: "Bạn ấy trình bày dự án cho giám khảo." },
+  ],
+  patterns: [
+    { pattern: "This is my project about …", vi: "Đây là dự án của mình về …", examples: [
+      { en: "This is my project about wind energy.", vi: "Đây là dự án của mình về năng lượng gió." },
+      { en: "This is my project about volcanoes.", vi: "Đây là dự án của mình về núi lửa." }] },
+    { pattern: "It works by + V-ing …", vi: "Nó hoạt động bằng cách …", examples: [
+      { en: "It works by spinning in the wind.", vi: "Nó hoạt động bằng cách quay trong gió." },
+      { en: "The car works by using the sun.", vi: "Chiếc xe chạy bằng cách dùng năng lượng mặt trời." }] },
+    { pattern: "First … , then …", vi: "Đầu tiên … , sau đó …", examples: [
+      { en: "First we pour the liquid, then it erupts.", vi: "Đầu tiên đổ dung dịch, sau đó nó phun trào." },
+      { en: "First I build it, then I test it.", vi: "Đầu tiên mình dựng lên, sau đó thử nghiệm." }] },
+    { pattern: "I think … will win because …", vi: "Mình nghĩ … sẽ thắng vì …", examples: [
+      { en: "I think the turbine will win because it really spins.", vi: "Mình nghĩ tua-bin sẽ thắng vì nó quay thật." },
+      { en: "I think the volcano will win because it looks amazing.", vi: "Mình nghĩ núi lửa sẽ thắng vì trông rất ấn tượng." }] },
+  ],
+  listening: {
+    intro: "Listen to Maple's science fair story, then answer.",
+    introVi: "Nghe chuyện ở hội chợ khoa học của Maple rồi trả lời.",
+    script: "The school gym was full of science projects. A girl in a teal cardigan was presenting a white wind turbine that really spun. Next to her, a boy poured liquid into a clay volcano, and it erupted with red foam. A teacher with a clipboard was the judge. She walked around slowly and looked at every project. On another table, a boy tested a small bridge by adding heavy weights. At the end, the judge gave a blue ribbon to the best project. Maple could not wait to build her own model next year.",
+    questions: [
+      { q: "What was the girl in the teal cardigan presenting?", vi: "Bạn nữ áo teal đang trình bày gì?",
+        options: ["A wind turbine", "A volcano", "A toy car"], answer: "A wind turbine" },
+      { q: "Why did the clay volcano erupt?", vi: "Vì sao mô hình núi lửa phun trào?",
+        options: ["A boy poured liquid into it", "It was very hot", "Someone kicked it"], answer: "A boy poured liquid into it",
+        explainVi: "Cậu bé đổ dung dịch vào nên núi lửa phun trào." },
+      { q: "What did the judge give to the best project?", vi: "Giám khảo trao gì cho dự án tốt nhất?",
+        options: ["A blue ribbon", "A gold coin", "A new book"], answer: "A blue ribbon" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "This is my project about wind energy.", vi: "Đây là dự án của mình về năng lượng gió." },
+      { en: "The judge is looking at every project.", vi: "Giám khảo đang xem từng dự án." },
+    ],
+    guided: { q: "What project would you like to make?", vi: "Bạn muốn làm dự án gì?", hint: "I would like to make a ___." },
+    describe: {
+      prompt: "Look at the science fair picture. Describe it in 3–5 sentences. Use \"is + V-ing\" and one \"because\".",
+      vi: "Nhìn bức tranh hội chợ khoa học. Mô tả 3–5 câu, dùng \"is + V-ing\" và một câu \"because\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Who is the person that decides the best project?", vi: "Ai là người quyết định dự án tốt nhất?",
+        options: ["The judge", "The cook", "The driver"], answer: "The judge" },
+      { type: "sentence", q: "Which sentence does NOT match a science fair?", vi: "Câu nào KHÔNG khớp với hội chợ khoa học?",
+        options: ["A girl is presenting a model.", "The judge is looking at projects.", "A shark is swimming in the gym."], answer: "A shark is swimming in the gym.",
+        explainVi: "Không có cá mập bơi trong nhà thi đấu — câu này vô lý." },
+      { type: "listening", q: "In the story, how did the boy test the small bridge?", vi: "Trong truyện, cậu bé thử cây cầu nhỏ bằng cách nào?",
+        options: ["By adding heavy weights", "By pouring water on it", "By painting it"], answer: "By adding heavy weights" },
+      { type: "reading", q: "Read: “The wind turbine spins fast when the fan blows.” What makes it move?", vi: "Đọc câu trên. Điều gì làm tua-bin quay?",
+        options: ["The wind (air)", "The rain", "The sun"], answer: "The wind (air)", explainVi: "Quạt thổi ra gió (không khí) làm tua-bin quay." },
+    ],
+  },
+};
+
+/* ============ Unit 8: At the Science Museum ============ */
+const AT_THE_SCIENCE_MUSEUM: Lesson = {
+  id: "sciencemuseum", theme: "discovery-days", title: "At the Science Museum", vi: "Ở bảo tàng khoa học", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-08-at-the-science-museum.webp",
+  vocab: [
+    { word: "museum", ipa: "/mjuˈziːəm/", vi: "bảo tàng", emoji: "🏛️", example: "We are visiting the science museum.", exampleVi: "Chúng mình đang tham quan bảo tàng khoa học." },
+    { word: "skeleton", ipa: "/ˈskelɪtn/", vi: "bộ xương", emoji: "🦴", example: "The dinosaur skeleton is huge.", exampleVi: "Bộ xương khủng long rất to." },
+    { word: "dinosaur", ipa: "/ˈdaɪnəsɔːr/", vi: "khủng long", emoji: "🦖", example: "The dinosaur lived long ago.", exampleVi: "Khủng long sống từ rất lâu." },
+    { word: "fossil", ipa: "/ˈfɒsl/", vi: "hoá thạch", emoji: "🐚", example: "This fossil is millions of years old.", exampleVi: "Hoá thạch này hàng triệu năm tuổi." },
+    { word: "planet", ipa: "/ˈplænɪt/", vi: "hành tinh", emoji: "🪐", example: "The planets hang from the ceiling.", exampleVi: "Các hành tinh treo trên trần." },
+    { word: "telescope", ipa: "/ˈtelɪskoʊp/", vi: "kính thiên văn", emoji: "🔭", example: "He looks at the sky through a telescope.", exampleVi: "Cậu ấy nhìn bầu trời qua kính thiên văn." },
+    { word: "magnet", ipa: "/ˈmæɡnɪt/", vi: "nam châm", emoji: "🧲", example: "The magnet can pull metal.", exampleVi: "Nam châm hút được kim loại." },
+    { word: "rover", ipa: "/ˈroʊvər/", vi: "xe tự hành", emoji: "🤖", example: "The Mars rover has six wheels.", exampleVi: "Xe tự hành sao Hoả có sáu bánh." },
+  ],
+  patterns: [
+    { pattern: "Look at the …!", vi: "Nhìn kìa, …!", examples: [
+      { en: "Look at the huge dinosaur!", vi: "Nhìn con khủng long khổng lồ kìa!" },
+      { en: "Look at the floating planets!", vi: "Nhìn các hành tinh lơ lửng kìa!" }] },
+    { pattern: "How old is …?", vi: "… bao nhiêu tuổi?", examples: [
+      { en: "How old is the fossil?", vi: "Hoá thạch này bao nhiêu tuổi?" },
+      { en: "How old is the dinosaur skeleton?", vi: "Bộ xương khủng long bao nhiêu tuổi?" }] },
+    { pattern: "The … is bigger than the …", vi: "… to hơn …", examples: [
+      { en: "The dinosaur is bigger than the door.", vi: "Con khủng long to hơn cái cửa." },
+      { en: "The telescope is bigger than the magnet.", vi: "Kính thiên văn to hơn cục nam châm." }] },
+    { pattern: "You can … but you cannot …", vi: "Bạn được … nhưng không được …", examples: [
+      { en: "You can look, but you cannot touch the fossil.", vi: "Bạn được nhìn, nhưng không được chạm vào hoá thạch." },
+      { en: "You can ask, but you cannot run inside.", vi: "Bạn được hỏi, nhưng không được chạy trong bảo tàng." }] },
+  ],
+  listening: {
+    intro: "Listen to Maple's museum story, then answer.",
+    introVi: "Nghe chuyện ở bảo tàng của Maple rồi trả lời.",
+    script: "At the science museum, the first thing Maple saw was a giant dinosaur skeleton, taller than the door. She touched a plasma ball, and purple light followed her fingers. A boy showed her an ammonite fossil that was millions of years old. In the middle of the room, two children were moving a model Mars rover with six wheels. Above their heads, planets floated on thin strings like a small solar system. Near the window, another boy looked at the mountains through a big telescope.",
+    questions: [
+      { q: "What was the first thing Maple saw?", vi: "Điều đầu tiên Maple thấy là gì?",
+        options: ["A dinosaur skeleton", "A telescope", "A magnet"], answer: "A dinosaur skeleton" },
+      { q: "How old was the fossil?", vi: "Hoá thạch bao nhiêu tuổi?",
+        options: ["Millions of years old", "One week old", "Ten years old"], answer: "Millions of years old" },
+      { q: "What was floating above the children's heads?", vi: "Vật gì lơ lửng trên đầu các bạn?",
+        options: ["Planets (a solar system)", "Balloons", "Birds"], answer: "Planets (a solar system)",
+        explainVi: "Các hành tinh treo dây như một hệ mặt trời nhỏ." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Look at the huge dinosaur skeleton!", vi: "Nhìn bộ xương khủng long khổng lồ kìa!" },
+      { en: "You can look, but you cannot touch the fossil.", vi: "Bạn được nhìn, nhưng không được chạm vào hoá thạch." },
+    ],
+    guided: { q: "What would you like to see in a science museum?", vi: "Bạn muốn xem gì ở bảo tàng khoa học?", hint: "I would like to see the ___." },
+    describe: {
+      prompt: "Look at the museum picture. Describe it in 3–5 sentences. Use \"There is/are\" and one comparison with \"bigger than\".",
+      vi: "Nhìn bức tranh bảo tàng. Mô tả 3–5 câu, dùng \"There is/are\" và một câu so sánh \"bigger than\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"old bones or shells turned to stone\"?", vi: "Từ nào nghĩa là \"xương/vỏ cổ đã hoá đá\"?",
+        options: ["fossil", "planet", "magnet"], answer: "fossil" },
+      { type: "sentence", q: "Which sentence does NOT match the museum?", vi: "Câu nào KHÔNG khớp với bảo tàng?",
+        options: ["A dinosaur skeleton stands in the hall.", "Planets hang from the ceiling.", "A cook is frying eggs on the stove."], answer: "A cook is frying eggs on the stove.",
+        explainVi: "Nấu ăn là ở nhà bếp, không phải bảo tàng khoa học." },
+      { type: "listening", q: "In the story, how many wheels did the Mars rover have?", vi: "Trong truyện, xe tự hành sao Hoả có mấy bánh?",
+        options: ["Six", "Two", "Ten"], answer: "Six" },
+      { type: "reading", q: "Read: “Please look but do not touch the exhibits.” What must you NOT do?", vi: "Đọc câu trên. Bạn KHÔNG được làm gì?",
+        options: ["Touch the exhibits", "Look at them", "Ask questions"], answer: "Touch the exhibits", explainVi: "Nội quy: chỉ được nhìn, không được chạm vào hiện vật." },
+    ],
+  },
+};
+
+/* ============ Unit 9: At the Vancouver Waterfront ============ */
+const AT_THE_VANCOUVER_WATERFRONT: Lesson = {
+  id: "waterfront", theme: "discovery-days", title: "At the Vancouver Waterfront", vi: "Bờ nước Vancouver", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-09-at-the-vancouver-waterfront.webp",
+  vocab: [
+    { word: "waterfront", ipa: "/ˈwɔːtərfrʌnt/", vi: "khu bờ nước", emoji: "🌊", example: "We walk along the waterfront.", exampleVi: "Chúng mình đi dọc khu bờ nước." },
+    { word: "seawall", ipa: "/ˈsiːwɔːl/", vi: "đường kè biển", emoji: "🚶", example: "The seawall path is long and flat.", exampleVi: "Đường kè biển dài và bằng phẳng." },
+    { word: "ferry", ipa: "/ˈferi/", vi: "phà", emoji: "⛴️", example: "A blue ferry sails to the pier.", exampleVi: "Một chiếc phà xanh chạy về phía cầu tàu." },
+    { word: "skyline", ipa: "/ˈskaɪlaɪn/", vi: "đường chân trời thành phố", emoji: "🏙️", example: "The city skyline is across the water.", exampleVi: "Đường chân trời thành phố ở bên kia mặt nước." },
+    { word: "heron", ipa: "/ˈherən/", vi: "con diệc", emoji: "🐦", example: "A grey heron stands near the rocks.", exampleVi: "Một con diệc xám đứng gần mấy tảng đá." },
+    { word: "binoculars", ipa: "/bɪˈnɒkjələrz/", vi: "ống nhòm", emoji: "🔭", example: "She looks through her binoculars.", exampleVi: "Bạn ấy nhìn qua ống nhòm." },
+    { word: "pier", ipa: "/pɪr/", vi: "cầu tàu", emoji: "🛳️", example: "The boat stops at the pier.", exampleVi: "Con thuyền dừng ở cầu tàu." },
+    { word: "map", ipa: "/mæp/", vi: "bản đồ", emoji: "🗺️", example: "The girl reads a map of the park.", exampleVi: "Bạn nữ xem bản đồ công viên." },
+  ],
+  patterns: [
+    { pattern: "Across the water, I can see …", vi: "Bên kia mặt nước, mình thấy …", examples: [
+      { en: "Across the water, I can see tall buildings.", vi: "Bên kia mặt nước, mình thấy những toà nhà cao." },
+      { en: "Across the water, I can see snowy mountains.", vi: "Bên kia mặt nước, mình thấy những ngọn núi tuyết." }] },
+    { pattern: "Let's go to …", vi: "Cùng đi tới … nào", examples: [
+      { en: "Let's go to the pier.", vi: "Cùng ra cầu tàu nào." },
+      { en: "Let's go along the seawall.", vi: "Cùng đi dọc kè biển nào." }] },
+    { pattern: "Be careful, it might …", vi: "Cẩn thận, trời có thể …", examples: [
+      { en: "Be careful, it might rain.", vi: "Cẩn thận, trời có thể mưa." },
+      { en: "Be careful, the path might be wet.", vi: "Cẩn thận, lối đi có thể trơn ướt." }] },
+    { pattern: "Which way is …?", vi: "Đường nào tới …?", examples: [
+      { en: "Which way is the ferry?", vi: "Đường nào ra bến phà?" },
+      { en: "Which way is the park?", vi: "Đường nào tới công viên?" }] },
+  ],
+  listening: {
+    intro: "Listen to Maple's waterfront story, then answer.",
+    introVi: "Nghe chuyện ở bờ nước của Maple rồi trả lời.",
+    script: "Maple and her friends walked along the seawall in Vancouver. Across the water, they could see tall buildings and snowy mountains. A blue and white ferry sailed slowly toward the pier. A girl used her binoculars and spotted a grey heron standing near the rocks. One boy stopped to fix the chain on his bicycle. Maple's friend held a map and pointed the way. The sky was full of grey clouds, so Maple said, \"Let's hurry, it might rain.\"",
+    questions: [
+      { q: "Where were Maple and her friends walking?", vi: "Maple và các bạn đang đi ở đâu?",
+        options: ["Along the seawall", "In a kitchen", "Inside a library"], answer: "Along the seawall" },
+      { q: "What did the girl see with her binoculars?", vi: "Bạn nữ nhìn thấy gì qua ống nhòm?",
+        options: ["A grey heron", "A blue whale", "A red car"], answer: "A grey heron" },
+      { q: "Why did Maple want to hurry?", vi: "Vì sao Maple muốn đi nhanh?",
+        options: ["It might rain", "She was hungry", "The ferry was gone"], answer: "It might rain",
+        explainVi: "Trời nhiều mây xám nên Maple lo sắp mưa." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Across the water, I can see the city skyline.", vi: "Bên kia mặt nước, mình thấy đường chân trời thành phố." },
+      { en: "A blue ferry is sailing to the pier.", vi: "Một chiếc phà xanh đang chạy về cầu tàu." },
+    ],
+    guided: { q: "What would you like to do at the waterfront?", vi: "Bạn muốn làm gì ở khu bờ nước?", hint: "At the waterfront, I would like to ___." },
+    describe: {
+      prompt: "Look at the waterfront picture. Describe it in 3–5 sentences. Use \"I can see\" and one \"might\".",
+      vi: "Nhìn bức tranh bờ nước. Mô tả 3–5 câu, dùng \"I can see\" và một câu \"might\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a boat that carries people across water\"?", vi: "Từ nào nghĩa là \"thuyền chở người qua nước\"?",
+        options: ["ferry", "heron", "map"], answer: "ferry" },
+      { type: "sentence", q: "Which sentence does NOT match the waterfront?", vi: "Câu nào KHÔNG khớp với khu bờ nước?",
+        options: ["A ferry is sailing on the water.", "A heron stands near the rocks.", "A dinosaur is flying over the sea."], answer: "A dinosaur is flying over the sea.",
+        explainVi: "Không có khủng long bay trên biển — câu này vô lý." },
+      { type: "listening", q: "In the story, what did the boy stop to fix?", vi: "Trong truyện, cậu bé dừng lại để sửa gì?",
+        options: ["His bicycle chain", "His shoe", "His umbrella"], answer: "His bicycle chain" },
+      { type: "reading", q: "Read: “The sky is full of grey clouds.” What will probably happen?", vi: "Đọc câu trên. Điều gì có lẽ sẽ xảy ra?",
+        options: ["It might rain", "It will snow ice cream", "The sun will get hotter"], answer: "It might rain", explainVi: "Trời nhiều mây xám thường báo hiệu sắp mưa." },
+    ],
+  },
+};
+
+/* ============ Level 2 · Stories & Situations — bài kể chuyện (nhiều bước) ============ */
+/* Unit 1: The Missing Backpack */
+const THE_MISSING_BACKPACK: Lesson = {
+  id: "backpack", theme: "story-time", title: "The Missing Backpack", vi: "Chiếc ba lô thất lạc", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-01-missing-backpack.webp",
+  vocab: [
+    { word: "clue", ipa: "/kluː/", vi: "manh mối", emoji: "🔍", example: "The notebook is our first clue.", exampleVi: "Quyển vở là manh mối đầu tiên." },
+    { word: "missing", ipa: "/ˈmɪsɪŋ/", vi: "mất, thất lạc", emoji: "❓", example: "Theo's backpack is missing.", exampleVi: "Ba lô của Theo bị thất lạc." },
+    { word: "hallway", ipa: "/ˈhɔːlweɪ/", vi: "hành lang", emoji: "🚪", example: "They searched the hallway.", exampleVi: "Các bạn tìm khắp hành lang." },
+    { word: "locker", ipa: "/ˈlɒkər/", vi: "tủ khoá", emoji: "🔒", example: "The lockers are teal and tall.", exampleVi: "Những cái tủ khoá màu teal và cao." },
+    { word: "search", ipa: "/sɜːrtʃ/", vi: "tìm kiếm", emoji: "🕵️", example: "Let's search near the bench.", exampleVi: "Mình tìm gần cái ghế nhé." },
+    { word: "notice", ipa: "/ˈnoʊtɪs/", vi: "để ý, nhận ra", emoji: "👀", example: "Maple noticed a green notebook.", exampleVi: "Maple để ý thấy một quyển vở xanh." },
+    { word: "follow", ipa: "/ˈfɒloʊ/", vi: "đi theo, lần theo", emoji: "➡️", example: "They followed the clues.", exampleVi: "Các bạn lần theo các manh mối." },
+    { word: "trail", ipa: "/treɪl/", vi: "dấu vết", emoji: "🐾", example: "The dropped items made a trail.", exampleVi: "Những món rơi ra tạo thành một dấu vết." },
+  ],
+  patterns: [
+    { pattern: "Have you seen …?", vi: "Bạn có thấy … không?", examples: [
+      { en: "Have you seen my backpack?", vi: "Bạn có thấy ba lô của mình không?" },
+      { en: "Have you seen a green notebook?", vi: "Bạn có thấy quyển vở xanh không?" }] },
+    { pattern: "It must be …", vi: "Chắc hẳn nó ở/là …", examples: [
+      { en: "It must be near the library.", vi: "Chắc hẳn nó ở gần thư viện." },
+      { en: "This must be Theo's card.", vi: "Đây chắc chắn là thẻ của Theo." }] },
+    { pattern: "Let's look under / behind / near …", vi: "Cùng nhìn dưới / sau / gần …", examples: [
+      { en: "Let's look under the bench.", vi: "Cùng nhìn dưới ghế nào." },
+      { en: "Let's look near the lockers.", vi: "Cùng tìm gần dãy tủ khoá nào." }] },
+    { pattern: "Maybe … dropped it.", vi: "Có lẽ … đã đánh rơi nó.", examples: [
+      { en: "Maybe Theo dropped it here.", vi: "Có lẽ Theo đánh rơi nó ở đây." },
+      { en: "Maybe someone dropped the card.", vi: "Có lẽ ai đó đã đánh rơi cái thẻ." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. Look for the clues!",
+    introVi: "Nghe câu chuyện rồi trả lời. Hãy chú ý các manh mối!",
+    script: "\"Oh no! My backpack is missing!\" said Theo. Maple and her friends looked around the school hallway. Near the wooden bench, they noticed a green notebook on the floor. A little farther, they found a blue student ID card, and then a teal water bottle. \"These are clues!\" said Maple. \"Someone dropped them in a line.\" One boy opened a map of the school to see where the line was going. They followed the trail down the hallway. It led all the way to the library. There, on a chair, sat Theo's blue backpack. A kind student had found it and kept it safe.",
+    questions: [
+      { q: "What did the friends notice first on the floor?", vi: "Đầu tiên các bạn để ý thấy gì trên sàn?",
+        options: ["A green notebook", "A blue backpack", "A pair of shoes"], answer: "A green notebook" },
+      { q: "Why did Maple call the items \"clues\"?", vi: "Vì sao Maple gọi những món đó là \"manh mối\"?",
+        options: ["They were dropped in a line leading somewhere", "They were all red", "They were toys"], answer: "They were dropped in a line leading somewhere",
+        explainVi: "Đồ rơi thành một hàng chỉ về một hướng nên là manh mối để lần theo." },
+      { q: "Where was the backpack at the end?", vi: "Cuối truyện, chiếc ba lô ở đâu?",
+        options: ["In the library", "In the kitchen", "On the bus"], answer: "In the library" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Have you seen my missing backpack?", vi: "Bạn có thấy chiếc ba lô thất lạc của mình không?" },
+      { en: "Let's follow the clues down the hallway.", vi: "Cùng lần theo manh mối dọc hành lang nào." },
+    ],
+    guided: { q: "What would you do to find a lost bag?", vi: "Bạn sẽ làm gì để tìm một chiếc túi bị mất?", hint: "First, I would ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Use \"First\", \"Then\", and \"Finally\" to put the events in order.",
+      vi: "Kể lại câu chuyện 3–5 câu, dùng \"First\", \"Then\", \"Finally\" để sắp xếp sự việc theo thứ tự.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a hint that helps you solve a mystery\"?", vi: "Từ nào nghĩa là \"gợi ý giúp giải bí ẩn\"?",
+        options: ["clue", "locker", "hallway"], answer: "clue" },
+      { type: "reading", q: "Which item did they find FIRST?", vi: "Món nào các bạn tìm thấy ĐẦU TIÊN?",
+        options: ["The notebook", "The water bottle", "The ID card"], answer: "The notebook",
+        explainVi: "Thứ tự trong truyện: vở → thẻ → bình nước." },
+      { type: "listening", q: "Why did a boy open a map of the school?", vi: "Vì sao một cậu bé mở bản đồ trường?",
+        options: ["To see where the trail was going", "To draw a picture", "To fold a plane"], answer: "To see where the trail was going" },
+      { type: "reading", q: "Read: “The backpack was safe on a chair.” How does Theo feel now?", vi: "Đọc câu trên. Bây giờ Theo cảm thấy thế nào?",
+        options: ["Relieved and happy", "Angry", "Sleepy"], answer: "Relieved and happy", explainVi: "Tìm lại được ba lô nên Theo nhẹ nhõm và vui." },
+    ],
+  },
+};
+
+/* Unit 2: The Stormy Camping Trip */
+const THE_STORMY_CAMPING_TRIP: Lesson = {
+  id: "camping", theme: "story-time", title: "The Stormy Camping Trip", vi: "Chuyến cắm trại giông bão", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-02-stormy-camping-trip.webp",
+  vocab: [
+    { word: "storm", ipa: "/stɔːrm/", vi: "cơn bão", emoji: "⛈️", example: "A storm started at night.", exampleVi: "Một cơn bão nổi lên vào ban đêm." },
+    { word: "tent", ipa: "/tent/", vi: "lều", emoji: "⛺", example: "The tent started to shake.", exampleVi: "Cái lều bắt đầu rung lắc." },
+    { word: "peg", ipa: "/peɡ/", vi: "cọc lều", emoji: "📌", example: "She hammered the tent pegs.", exampleVi: "Bạn ấy đóng cọc lều xuống đất." },
+    { word: "flashlight", ipa: "/ˈflæʃlaɪt/", vi: "đèn pin", emoji: "🔦", example: "He grabbed the flashlight from the bag.", exampleVi: "Cậu ấy lấy đèn pin từ trong túi." },
+    { word: "shelter", ipa: "/ˈʃeltər/", vi: "chỗ trú", emoji: "🏕️", example: "The wooden shelter has a warm light.", exampleVi: "Chỗ trú bằng gỗ có ánh đèn ấm áp." },
+    { word: "soaked", ipa: "/soʊkt/", vi: "ướt sũng", emoji: "💧", example: "Their jackets were soaked.", exampleVi: "Áo khoác của các bạn ướt sũng." },
+    { word: "thunder", ipa: "/ˈθʌndər/", vi: "sấm", emoji: "🌩️", example: "The thunder was very loud.", exampleVi: "Tiếng sấm rất to." },
+    { word: "team", ipa: "/tiːm/", vi: "đội, nhóm", emoji: "🤝", example: "They worked as a team.", exampleVi: "Các bạn phối hợp như một đội." },
+  ],
+  patterns: [
+    { pattern: "We need to … quickly.", vi: "Chúng ta cần … nhanh lên.", examples: [
+      { en: "We need to move quickly.", vi: "Chúng ta cần di chuyển nhanh." },
+      { en: "We need to find shelter quickly.", vi: "Chúng ta cần tìm chỗ trú nhanh." }] },
+    { pattern: "It is …ing hard.", vi: "Trời đang … rất to.", examples: [
+      { en: "It is raining hard.", vi: "Trời đang mưa rất to." },
+      { en: "The wind is blowing hard.", vi: "Gió đang thổi rất mạnh." }] },
+    { pattern: "Let's move to …", vi: "Cùng chuyển tới … nào", examples: [
+      { en: "Let's move to the shelter.", vi: "Cùng chuyển tới chỗ trú nào." },
+      { en: "Let's move under the trees.", vi: "Cùng nấp dưới hàng cây nào." }] },
+    { pattern: "Don't worry, we can …", vi: "Đừng lo, chúng ta có thể …", examples: [
+      { en: "Don't worry, we can do this together.", vi: "Đừng lo, chúng ta cùng nhau làm được." },
+      { en: "Don't worry, we can stay dry inside.", vi: "Đừng lo, mình có thể trú khô bên trong." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. What will the team do?",
+    introVi: "Nghe câu chuyện rồi trả lời. Cả nhóm sẽ làm gì?",
+    script: "On the first night of the camping trip, dark clouds covered the sky. Suddenly, a storm began. Rain poured down and thunder rumbled loudly. The tent started to shake in the wind. But Maple's friends did not panic. Theo held the map and found a wooden shelter nearby. One girl hammered the tent pegs deeper into the ground, while a boy grabbed the flashlight from the bag. \"Let's move to the shelter until the storm stops,\" said Maple. Together, the soaked but brave friends ran to the dry shelter and waited for the rain to end.",
+    questions: [
+      { q: "What happened on the first night?", vi: "Đêm đầu tiên đã xảy ra chuyện gì?",
+        options: ["A storm began", "It snowed", "The sun came out"], answer: "A storm began" },
+      { q: "How did Maple's friends act during the storm?", vi: "Các bạn của Maple hành động thế nào trong bão?",
+        options: ["They stayed calm and worked as a team", "They cried and gave up", "They went to sleep"], answer: "They stayed calm and worked as a team",
+        explainVi: "Mỗi bạn làm một việc, không hoảng loạn — đó là tinh thần đồng đội." },
+      { q: "What did the friends decide to do?", vi: "Cuối cùng các bạn quyết định làm gì?",
+        options: ["Move to the shelter until the storm stopped", "Swim in the lake", "Climb a tree"], answer: "Move to the shelter until the storm stopped" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "It is raining hard, so we need to hurry.", vi: "Trời mưa rất to nên chúng mình cần nhanh lên." },
+      { en: "Don't worry, we can do this together.", vi: "Đừng lo, chúng ta cùng nhau làm được." },
+    ],
+    guided: { q: "What would you take on a camping trip?", vi: "Bạn sẽ mang gì khi đi cắm trại?", hint: "On a camping trip, I would take a ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Describe the weather, then say what each friend did.",
+      vi: "Kể lại câu chuyện 3–5 câu. Tả thời tiết, rồi nói mỗi bạn đã làm gì.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a place that keeps you dry and safe\"?", vi: "Từ nào nghĩa là \"nơi giúp bạn khô ráo và an toàn\"?",
+        options: ["shelter", "thunder", "peg"], answer: "shelter" },
+      { type: "reading", q: "The friends did not panic and each did a job. What does this show?", vi: "Các bạn không hoảng loạn và mỗi người làm một việc. Điều đó cho thấy gì?",
+        options: ["They worked as a brave team", "They were bored", "They were asleep"], answer: "They worked as a brave team",
+        explainVi: "Bình tĩnh + chia việc = tinh thần đồng đội, dũng cảm." },
+      { type: "reading", q: "They ran to the shelter. What will they probably do NEXT?", vi: "Các bạn chạy tới chỗ trú. Tiếp theo có lẽ sẽ làm gì?",
+        options: ["Wait for the storm to stop", "Take off their shoes and swim", "Set up a new tent in the rain"], answer: "Wait for the storm to stop",
+        explainVi: "Vào chỗ trú khô ráo thì hợp lý nhất là chờ bão tạnh." },
+      { type: "listening", q: "In the story, what did Theo use to find the shelter?", vi: "Trong truyện, Theo dùng gì để tìm chỗ trú?",
+        options: ["A map", "A phone", "A dog"], answer: "A map" },
+    ],
+  },
+};
+
+/* Unit 3: The School Talent Show */
+const THE_SCHOOL_TALENT_SHOW: Lesson = {
+  id: "talentshow", theme: "story-time", title: "The School Talent Show", vi: "Hội diễn tài năng", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-03-school-talent-show.webp",
+  vocab: [
+    { word: "stage", ipa: "/steɪdʒ/", vi: "sân khấu", emoji: "🎭", example: "He walked onto the stage.", exampleVi: "Cậu ấy bước lên sân khấu." },
+    { word: "talent", ipa: "/ˈtælənt/", vi: "tài năng", emoji: "🌟", example: "Everyone shows a talent tonight.", exampleVi: "Tối nay ai cũng khoe một tài năng." },
+    { word: "nervous", ipa: "/ˈnɜːrvəs/", vi: "hồi hộp, lo lắng", emoji: "😰", example: "Theo felt very nervous.", exampleVi: "Theo cảm thấy rất hồi hộp." },
+    { word: "audience", ipa: "/ˈɔːdiəns/", vi: "khán giả", emoji: "👏", example: "The audience is waiting.", exampleVi: "Khán giả đang chờ đợi." },
+    { word: "perform", ipa: "/pərˈfɔːrm/", vi: "biểu diễn", emoji: "🎤", example: "She will perform a guitar song.", exampleVi: "Bạn ấy sẽ biểu diễn một bài ghi-ta." },
+    { word: "encourage", ipa: "/ɪnˈkʌrɪdʒ/", vi: "động viên", emoji: "💪", example: "Maple encouraged her friend.", exampleVi: "Maple động viên bạn của mình." },
+    { word: "magic", ipa: "/ˈmædʒɪk/", vi: "ảo thuật", emoji: "🎩", example: "The boy does a magic card trick.", exampleVi: "Cậu bé làm trò ảo thuật với bài." },
+    { word: "clap", ipa: "/klæp/", vi: "vỗ tay", emoji: "👏", example: "The audience began to clap.", exampleVi: "Khán giả bắt đầu vỗ tay." },
+  ],
+  patterns: [
+    { pattern: "It's your turn.", vi: "Đến lượt bạn rồi.", examples: [
+      { en: "It's your turn to perform.", vi: "Đến lượt bạn biểu diễn." },
+      { en: "It's your turn now, Theo.", vi: "Đến lượt cậu rồi, Theo." }] },
+    { pattern: "Don't be nervous, you can do it!", vi: "Đừng lo, bạn làm được mà!", examples: [
+      { en: "Don't be nervous, you can do it!", vi: "Đừng hồi hộp, bạn làm được mà!" },
+      { en: "Don't be scared, we believe in you.", vi: "Đừng sợ, tụi mình tin bạn." }] },
+    { pattern: "I am going to …", vi: "Mình sắp …", examples: [
+      { en: "I am going to sing a song.", vi: "Mình sắp hát một bài." },
+      { en: "I am going to do a magic trick.", vi: "Mình sắp làm một trò ảo thuật." }] },
+    { pattern: "Take a deep breath and …", vi: "Hít một hơi thật sâu rồi …", examples: [
+      { en: "Take a deep breath and smile.", vi: "Hít một hơi thật sâu rồi mỉm cười." },
+      { en: "Take a deep breath and begin.", vi: "Hít một hơi thật sâu rồi bắt đầu." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. How does Theo feel?",
+    introVi: "Nghe câu chuyện rồi trả lời. Theo cảm thấy thế nào?",
+    script: "It was the night of the school talent show. Backstage, everyone was getting ready. A girl was tuning her guitar, and a boy was practicing a magic trick with playing cards. But Theo was very nervous. His hands were shaking. \"I can't do it,\" he whispered. Maple smiled and said, \"Don't be nervous. Take a deep breath. You can do it!\" When the host called Theo's name, he walked onto the stage and stood by the microphone. He sang his song, and the audience clapped loudly. Theo was so happy that he had not given up.",
+    questions: [
+      { q: "Why were Theo's hands shaking?", vi: "Vì sao tay Theo run?",
+        options: ["He was nervous", "He was cold", "He was hungry"], answer: "He was nervous" },
+      { q: "What did Maple tell Theo?", vi: "Maple đã nói gì với Theo?",
+        options: ["Take a deep breath, you can do it", "Go home now", "Be quiet"], answer: "Take a deep breath, you can do it",
+        explainVi: "Maple động viên Theo hít thở sâu và tin vào bản thân." },
+      { q: "How did the audience react after Theo sang?", vi: "Sau khi Theo hát, khán giả phản ứng thế nào?",
+        options: ["They clapped loudly", "They left the room", "They fell asleep"], answer: "They clapped loudly" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Don't be nervous, you can do it!", vi: "Đừng hồi hộp, bạn làm được mà!" },
+      { en: "Take a deep breath and walk onto the stage.", vi: "Hít một hơi thật sâu rồi bước lên sân khấu." },
+    ],
+    guided: { q: "What talent would you show on stage?", vi: "Bạn sẽ trổ tài gì trên sân khấu?", hint: "On stage, I would ___." },
+    describe: {
+      prompt: "Tell the story in 3–5 sentences. Say how Theo felt at first, what Maple did, and what happened at the end.",
+      vi: "Kể lại câu chuyện 3–5 câu. Nói lúc đầu Theo thấy thế nào, Maple đã làm gì, và kết thúc ra sao.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"feeling worried before doing something\"?", vi: "Từ nào nghĩa là \"lo lắng trước khi làm gì đó\"?",
+        options: ["nervous", "magic", "audience"], answer: "nervous" },
+      { type: "reading", q: "Theo whispered \"I can't do it\" and his hands were shaking. How did he feel?", vi: "Theo thì thầm \"Mình không làm được\" và tay run. Cậu cảm thấy thế nào?",
+        options: ["Nervous and scared", "Proud and calm", "Angry"], answer: "Nervous and scared",
+        explainVi: "Tay run + nói không làm được = đang hồi hộp, sợ hãi." },
+      { type: "reading", q: "Read: “Don't be nervous. You can do it!” What is Maple doing?", vi: "Đọc câu trên. Maple đang làm gì?",
+        options: ["Encouraging her friend", "Making fun of him", "Saying goodbye"], answer: "Encouraging her friend",
+        explainVi: "Những lời đó là để động viên, tiếp thêm can đảm." },
+      { type: "listening", q: "In the story, what did Theo do after the host called his name?", vi: "Trong truyện, sau khi được gọi tên, Theo đã làm gì?",
+        options: ["He walked onto the stage and sang", "He ran away", "He hid backstage"], answer: "He walked onto the stage and sang" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
+  { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
+    lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
+  { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
+    lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW] },
 ];
 
-/* ============ Chương trình học: Level 1 · Everyday English (6 Unit) ============ */
-// Dùng chung 6 ảnh cảnh; cả 6 Unit đã có nội dung đầy đủ.
+/* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
+// 6 chặng "Phố Ngày Thường" + 3 chặng "Ngày Khám Phá" (hội chợ, bảo tàng, bờ nước Vancouver).
 const SIMG = "/assets/images/gen/";
+const L1IMG = "/assets/images/learn/level-1/";
+const L2IMG = "/assets/images/learn/level-2/";
 export type CourseUnit = {
   id: string; n: number; title: string; vi: string; image: string; focus: string;
   lessonId?: string; ready: boolean;
 };
 export const LEVEL1_UNITS: CourseUnit[] = [
-  { id: "park",        n: 1, title: "At the Park",        vi: "Ở công viên",      image: SIMG + "scene-park.webp",          focus: "Hành động · thời tiết · vị trí",   lessonId: "park",        ready: true },
-  { id: "kitchen",     n: 2, title: "In the Kitchen",     vi: "Trong bếp",         image: SIMG + "scene-kitchen.webp",       focus: "Đồ ăn · hiện tại tiếp diễn",       lessonId: "kitchen",     ready: true },
-  { id: "classroom",   n: 3, title: "In the Classroom",   vi: "Trong lớp học",     image: SIMG + "scene-classroom.webp",     focus: "Đồ vật · hỏi–đáp",                 lessonId: "classroom",   ready: true },
-  { id: "supermarket", n: 4, title: "At the Supermarket", vi: "Ở siêu thị",        image: SIMG + "scene-supermarket.webp",   focus: "Số lượng · lựa chọn · mua sắm",    lessonId: "supermarket", ready: true },
-  { id: "busstop",     n: 5, title: "At the Bus Stop",    vi: "Trạm xe buýt",      image: SIMG + "scene-bus-stop-rain.webp", focus: "Thời tiết · thời gian · dự đoán",  lessonId: "busstop",     ready: true },
-  { id: "library",     n: 6, title: "At the Library",     vi: "Ở thư viện",        image: SIMG + "scene-library.webp",       focus: "Sách · vị trí · suy luận",         lessonId: "library",     ready: true },
+  { id: "park",         n: 1, title: "At the Park",             vi: "Ở công viên",          image: SIMG + "scene-park.webp",          focus: "Hành động · thời tiết · vị trí",   lessonId: "park",         ready: true },
+  { id: "kitchen",      n: 2, title: "In the Kitchen",          vi: "Trong bếp",             image: SIMG + "scene-kitchen.webp",       focus: "Đồ ăn · hiện tại tiếp diễn",       lessonId: "kitchen",      ready: true },
+  { id: "classroom",    n: 3, title: "In the Classroom",        vi: "Trong lớp học",         image: SIMG + "scene-classroom.webp",     focus: "Đồ vật · hỏi–đáp",                 lessonId: "classroom",    ready: true },
+  { id: "supermarket",  n: 4, title: "At the Supermarket",      vi: "Ở siêu thị",            image: SIMG + "scene-supermarket.webp",   focus: "Số lượng · lựa chọn · mua sắm",    lessonId: "supermarket",  ready: true },
+  { id: "busstop",      n: 5, title: "At the Bus Stop",         vi: "Trạm xe buýt",          image: SIMG + "scene-bus-stop-rain.webp", focus: "Thời tiết · thời gian · dự đoán",  lessonId: "busstop",      ready: true },
+  { id: "library",      n: 6, title: "At the Library",          vi: "Ở thư viện",            image: SIMG + "scene-library.webp",       focus: "Sách · vị trí · suy luận",         lessonId: "library",      ready: true },
+  { id: "sciencefair",  n: 7, title: "At the Science Fair",     vi: "Ở hội chợ khoa học",    image: L1IMG + "level-1-unit-07-at-the-science-fair.webp",         focus: "Dự án · trình bày · trình tự",     lessonId: "sciencefair",  ready: true },
+  { id: "sciencemuseum",n: 8, title: "At the Science Museum",   vi: "Ở bảo tàng khoa học",   image: L1IMG + "level-1-unit-08-at-the-science-museum.webp",       focus: "Khám phá · so sánh · nội quy",     lessonId: "sciencemuseum",ready: true },
+  { id: "waterfront",   n: 9, title: "At the Vancouver Waterfront", vi: "Bờ nước Vancouver", image: L1IMG + "level-1-unit-09-at-the-vancouver-waterfront.webp", focus: "Cảnh vật · phương hướng · dự đoán", lessonId: "waterfront",   ready: true },
+];
+
+/* ============ Level 2 · Stories & Situations (3 Unit) ============ */
+// Bài kể chuyện nhiều bước: mở đầu → vấn đề → manh mối/sự việc → kết quả.
+export const LEVEL2_UNITS: CourseUnit[] = [
+  { id: "backpack",   n: 1, title: "The Missing Backpack",   vi: "Chiếc ba lô thất lạc",   image: L2IMG + "level-2-unit-01-missing-backpack.webp",    focus: "Manh mối · vị trí · suy luận",       lessonId: "backpack",   ready: true },
+  { id: "camping",    n: 2, title: "The Stormy Camping Trip", vi: "Chuyến cắm trại giông bão", image: L2IMG + "level-2-unit-02-stormy-camping-trip.webp", focus: "Thời tiết · đồng đội · dự đoán",     lessonId: "camping",    ready: true },
+  { id: "talentshow", n: 3, title: "The School Talent Show",  vi: "Hội diễn tài năng",       image: L2IMG + "level-2-unit-03-school-talent-show.webp",  focus: "Cảm xúc · động viên · trình tự",     lessonId: "talentshow", ready: true },
 ];
 
 /* ============ helpers ============ */

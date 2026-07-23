@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
-  SECTIONS, DIFFICULTY, LEVEL1_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
+  SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
   type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit,
 } from "@/lib/learn";
 import { speak, shuffle } from "@/lib/fx";
@@ -113,48 +113,51 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 
 /* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
 function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
+  const renderUnit = (u: CourseUnit) => {
+    const done = u.lessonId ? learnLessonDone(state, u.lessonId) : false;
+    const pct = u.lessonId ? lessonPct(state, u.lessonId, SECTIONS.length) : 0;
+    const check = u.lessonId ? state.learn.lessons[u.lessonId]?.check : undefined;
+    return (
+      <li key={u.id} className={`unit ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
+        <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
+          <span className="unit-thumb" style={{ backgroundImage: `url('${u.image}')` }}>
+            <span className="unit-n">{u.n}</span>
+            {!u.ready && <span className="unit-badge lock">🔒</span>}
+            {done && <span className="unit-badge ok">✓</span>}
+          </span>
+          <span className="unit-body">
+            <span className="unit-title">{u.vi} <small>· {u.title}</small></span>
+            <span className="unit-focus">{u.focus}</span>
+            {u.ready
+              ? <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
+                  <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
+                </span>
+              : <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>}
+          </span>
+          <span className="unit-go">{u.ready ? (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸") : "🔒"}</span>
+        </button>
+      </li>
+    );
+  };
+
   return (
     <section className="learn course">
       <div className="course-head">
         <img className="course-maple" src={`${GEN}mascot-book.webp`} alt="" />
         <div>
           <h2 className="chapter">Chương trình học</h2>
-          <p className="course-sub">Level 1 · Everyday English — học từng chặng cùng Maple</p>
+          <p className="course-sub">3 cấp độ · học từng chặng cùng Maple</p>
         </div>
       </div>
 
-      <ol className="unit-list">
-        {LEVEL1_UNITS.map((u) => {
-          const done = u.lessonId ? learnLessonDone(state, u.lessonId) : false;
-          const pct = u.lessonId ? lessonPct(state, u.lessonId, SECTIONS.length) : 0;
-          const check = u.lessonId ? state.learn.lessons[u.lessonId]?.check : undefined;
-          return (
-            <li key={u.id} className={`unit ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
-              <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
-                <span className="unit-thumb" style={{ backgroundImage: `url('${u.image}')` }}>
-                  <span className="unit-n">{u.n}</span>
-                  {!u.ready && <span className="unit-badge lock">🔒</span>}
-                  {done && <span className="unit-badge ok">✓</span>}
-                </span>
-                <span className="unit-body">
-                  <span className="unit-title">{u.vi} <small>· {u.title}</small></span>
-                  <span className="unit-focus">{u.focus}</span>
-                  {u.ready
-                    ? <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
-                        <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
-                      </span>
-                    : <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>}
-                </span>
-                <span className="unit-go">{u.ready ? (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸") : "🔒"}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
+      <div className="course-lvl-head">📘 Level 1 · Everyday English <small>Phố ngày thường & ngày khám phá</small></div>
+      <ol className="unit-list">{LEVEL1_UNITS.map(renderUnit)}</ol>
+
+      <div className="course-lvl-head">📗 Level 2 · Stories &amp; Situations <small>Bài kể chuyện nhiều bước</small></div>
+      <ol className="unit-list">{LEVEL2_UNITS.map(renderUnit)}</ol>
 
       <div className="course-more">
-        <div className="course-lvl">📗 Level 2 · Stories & Situations <small>Sắp mở</small></div>
-        <div className="course-lvl">📕 Level 3 · Opinions & Conversations <small>Sắp mở</small></div>
+        <div className="course-lvl">📕 Level 3 · Opinions &amp; Conversations <small>Sắp mở</small></div>
       </div>
     </section>
   );

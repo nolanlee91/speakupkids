@@ -674,6 +674,10 @@
   .course-lvl { background: #f5f4f0; border: 2px dashed var(--line); border-radius: 14px; padding: 12px 14px;
     font-weight: 800; color: var(--muted); }
   .course-lvl small { float: right; font-weight: 800; color: var(--lock); }
+  .course-lvl-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    font-family: var(--font-head-stack); font-weight: 800; color: var(--ink); font-size: 1rem;
+    margin: 6px 2px 10px; padding-bottom: 6px; border-bottom: 2px solid var(--line); }
+  .course-lvl-head small { font-family: var(--font-body-stack); font-weight: 700; color: var(--muted); font-size: .78rem; }
 
   /* Hero + Continue learning */
   .learn-hero { position: relative; min-height: clamp(210px, 34vh, 300px); display: flex; align-items: flex-end;
