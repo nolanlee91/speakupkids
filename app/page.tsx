@@ -14,6 +14,7 @@ import {
   type StopKind, type GameKind,
 } from "@/lib/games";
 import { SECTIONS, learnLessonById } from "@/lib/learn";
+import { missionById } from "@/lib/adventures";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
@@ -22,7 +23,6 @@ import { celebrate } from "@/lib/fx";
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
 const STK = "/assets/images/stickers/";
-const PARK_MISSION = "park-find-theo";
 
 // Ảnh sticker thật; nếu thiếu file thì fallback về emoji
 function StickerArt({ id, emoji }: { id: string; emoji: string }) {
@@ -123,7 +123,7 @@ export default function App() {
     const st = score >= total ? 3 : score >= total - 1 ? 2 : 1;
     setReward({
       title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
-      html: `Bạn hoàn thành bài <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Sang Phiêu lưu để dùng thử nhé!`,
+      html: `Bạn hoàn thành Unit <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Học tiếp Unit sau hoặc luyện tập cho nhớ lâu nhé!`,
       stars: st,
       sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
     });
@@ -177,7 +177,7 @@ export default function App() {
           onComplete={completeLearn} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, refId: undefined, recId: "quick-" + kind, title: "Luyện tập" })} />}
         {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent}
-          onComplete={completeAdventure} onLearn={() => goView("learn")} />}
+          onComplete={completeAdventure} />}
       </div>
 
       <nav className="nav">
@@ -242,10 +242,15 @@ function Today({ state, go, openLesson }: {
   const doneCount = SECTIONS.filter((sc) => sectionDone(state, lesson.id, sc.key)).length;
   const nextSection = SECTIONS.find((sc) => !sectionDone(state, lesson.id, sc.key));
   const lessonDone = learnLessonDone(state, lesson.id);
-  const advDone = missionOf(state, PARK_MISSION).done;
 
-  // Xác định một hành động nên tiếp tục
-  let cta: { kicker: string; title: string; sub: string; label: string; run: () => void };
+  // Chiến dịch Phiêu lưu đang chơi dở (tiến độ RIÊNG của Adventure, không liên quan Learn)
+  const advCur = state.adventure.currentMission;
+  const advState = advCur ? missionOf(state, advCur) : null;
+  const advStarted = !!advCur && !!advState && advState.step > 0 && !advState.done;
+  const advMission = advCur ? missionById(advCur) : undefined;
+
+  // CTA lớn: tiếp tục hoạt động gần nhất — KHÔNG ép ba module thành một chuỗi bắt buộc.
+  let cta: { kicker: string; title: string; sub: string; label: string; run: () => void; bg?: string };
   if (!lessonDone && nextSection) {
     cta = {
       kicker: doneCount > 0 ? "Tiếp tục học" : "Bắt đầu Unit",
@@ -256,8 +261,8 @@ function Today({ state, go, openLesson }: {
     };
   } else if (!lessonDone) {
     cta = { kicker: "Sắp xong Unit", title: `${lesson.title} · Kiểm tra nhỏ`, sub: "Làm bài kiểm tra để hoàn thành", label: "Làm Kiểm tra nhỏ", run: () => openLesson(lesson.id) };
-  } else if (lesson.id === "park" && !advDone) {
-    cta = { kicker: "Dùng bài vừa học", title: "Phiêu lưu · Tìm Theo trong công viên", sub: "Vận dụng tiếng Anh vào nhiệm vụ", label: "Vào phiêu lưu", run: () => go("adventure") };
+  } else if (advStarted && advMission) {
+    cta = { kicker: "Tiếp tục chiến dịch", title: `Phiêu lưu · ${advMission.vi}`, sub: "Chương bạn đang chơi dở", label: "Chơi tiếp", run: () => go("adventure"), bg: advMission.sceneImage };
   } else {
     cta = { kicker: "Luyện cho nhớ lâu", title: "Luyện tập cùng Maple", sub: "Chơi một lượt có chấm điểm", label: "Luyện tập", run: () => go("games") };
   }
@@ -281,7 +286,7 @@ function Today({ state, go, openLesson }: {
       </div>
 
       {/* CTA chính duy nhất */}
-      <button className="next-card" style={{ backgroundImage: lesson.sceneImage ? `url('${lesson.sceneImage}')` : undefined }} onClick={cta.run}>
+      <button className="next-card" style={{ backgroundImage: (cta.bg || lesson.sceneImage) ? `url('${cta.bg || lesson.sceneImage}')` : undefined }} onClick={cta.run}>
         <span className="nc-scrim" />
         <span className="nc-body">
           <span className="nc-kicker">{cta.kicker}</span>

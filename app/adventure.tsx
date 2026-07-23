@@ -2,22 +2,21 @@
 
 import { useState } from "react";
 import type { AppState } from "@/lib/state";
-import { missionOf, setMissionStep, learnLessonDone } from "@/lib/state";
+import { missionOf, setMissionStep } from "@/lib/state";
 import {
-  CHAPTERS, missionById,
-  type AdventureMission, type MissionStep, type StoryBeat, type AdventureChapter,
+  SEASONS, missionById, chapterStatuses,
+  type AdventureMission, type MissionStep, type StoryBeat, type AdventureChapter, type AdventureSeason,
 } from "@/lib/adventures";
 import { speak, shuffle } from "@/lib/fx";
 
 const GEN = "/assets/images/gen/";
 
-/* ==================== Adventure tab: bản đồ chương + trình chơi nhiệm vụ ==================== */
-export function Adventure({ state, setState, accent, onComplete, onLearn }: {
+/* ==================== Adventure tab: chiến dịch theo mùa + trình chơi nhiệm vụ ==================== */
+export function Adventure({ state, setState, accent, onComplete }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   accent: "US" | "CA";
   onComplete: (missionId: string, stars: number, sticker?: string, badge?: string) => void;
-  onLearn: () => void;
 }) {
   const [playing, setPlaying] = useState<string | null>(null);
 
@@ -31,56 +30,84 @@ export function Adventure({ state, setState, accent, onComplete, onLearn }: {
         onFinish={(stars) => { onComplete(m.id, stars, m.reward.sticker, m.reward.badge); setPlaying(null); }} />
     );
   }
-  return <ChapterMap state={state} onLearn={onLearn}
+  return <SeasonMap state={state}
     onPlay={(ch) => { setState((s) => setMissionStep(s, ch.missionId!, missionOf(s, ch.missionId!).step)); setPlaying(ch.missionId!); }} />;
 }
 
-/* ---------- Bản đồ 6 chương ---------- */
-function ChapterMap({ state, onPlay, onLearn }: {
-  state: AppState; onPlay: (ch: AdventureChapter) => void; onLearn: () => void;
+/* ---------- Bản đồ chiến dịch: các chương nối tiếp, mở khoá theo tiến độ Adventure ---------- */
+function SeasonMap({ state, onPlay }: {
+  state: AppState; onPlay: (ch: AdventureChapter) => void;
 }) {
+  const done = adventuresProgress(state);
   return (
     <section className="adventure">
       <div className="adv-intro">
         <img className="adv-maple" src={`${GEN}maple-pose-cheer.webp`} alt="" />
         <div>
           <h2 className="chapter">Phiêu lưu cùng Maple</h2>
-          <p className="adv-sub">Dùng tiếng Anh đã học để hoàn thành nhiệm vụ theo câu chuyện — mỗi chương một Unit.</p>
+          <p className="adv-sub">Chiến dịch riêng theo câu chuyện — hoàn thành chương trước để mở chương sau. Không cần học Unit nào trước.</p>
         </div>
       </div>
 
+      {SEASONS.map((season) => (
+        <SeasonBlock key={season.id} state={state} season={season} onPlay={onPlay} progress={done} />
+      ))}
+    </section>
+  );
+}
+
+function adventuresProgress(state: AppState) {
+  return {
+    isDone: (id: string) => !!missionOf(state, id).done,
+    isStarted: (id: string) => { const m = missionOf(state, id); return m.step > 0 && !m.done; },
+  };
+}
+
+function SeasonBlock({ state, season, onPlay, progress }: {
+  state: AppState; season: AdventureSeason; onPlay: (ch: AdventureChapter) => void;
+  progress: { isDone: (id: string) => boolean; isStarted: (id: string) => boolean };
+}) {
+  const statuses = chapterStatuses(season, progress.isDone, progress.isStarted);
+  const doneCount = statuses.filter((s) => s === "done").length;
+  return (
+    <>
+      <div className="season-head">
+        <div className="season-kicker">🗺️ Chiến dịch · {season.vi}</div>
+        <h3 className="season-title">{season.title}</h3>
+        <p className="season-blurb">{season.blurb}</p>
+        <div className="season-meta">Đã phá {doneCount}/{season.chapters.length} chương</div>
+      </div>
       <ol className="chapter-list">
-        {CHAPTERS.map((ch) => {
-          const m = ch.missionId ? missionOf(state, ch.missionId) : null;
-          const done = !!m?.done;
-          const started = !!m && m.step > 0 && !done;
-          const learnReady = learnLessonDone(state, ch.unitId);
+        {season.chapters.map((ch, i) => {
+          const st = statuses[i];
+          const playable = st === "play" || st === "started" || st === "done";
           return (
-            <li key={ch.id} className={`chapter-card ${ch.ready ? "" : "locked"} ${done ? "done" : ""}`}>
+            <li key={ch.id} className={`chapter-card ${playable ? "" : "locked"} ${st === "done" ? "done" : ""}`}>
               <div className="cc-media" style={{ backgroundImage: `url('${ch.sceneImage}')` }} aria-hidden="true">
                 <span className="cc-n">{ch.n}</span>
-                {done && <span className="cc-badge ok">✓</span>}
-                {!ch.ready && <span className="cc-badge lock">🔒</span>}
+                {st === "done" && <span className="cc-badge ok">✓</span>}
+                {(st === "locked" || st === "soon") && <span className="cc-badge lock">🔒</span>}
               </div>
               <div className="cc-body">
                 <div className="cc-kicker">Chương {ch.n}</div>
                 <h3>{ch.vi} <small>· {ch.title}</small></h3>
-                <p className="cc-blurb">{ch.ready ? ch.blurb : "Đang biên soạn · sắp mở"}</p>
-                {ch.ready ? (
+                <p className="cc-blurb">{st === "soon" ? "Đang biên soạn · sắp mở" : ch.blurb}</p>
+                {playable ? (
                   <div className="cc-actions">
-                    {!learnReady && <button className="btn ghost sm" onClick={onLearn}>Học Unit này trước</button>}
                     <button className="btn accent sm" onClick={() => onPlay(ch)}>
-                      {done ? "Chơi lại ▸" : started ? "Tiếp tục ▸" : "Bắt đầu nhiệm vụ ▸"}
+                      {st === "done" ? "Chơi lại ▸" : st === "started" ? "Tiếp tục ▸" : "Bắt đầu nhiệm vụ ▸"}
                     </button>
                   </div>
+                ) : st === "locked" ? (
+                  <div className="cc-soon">🔒 Hoàn thành chương trước để mở</div>
                 ) : <div className="cc-soon">🔒 Sắp mở</div>}
               </div>
             </li>
           );
         })}
       </ol>
-      <div className="adv-end"><span>🏁</span>Còn nhiều chương mới đang được viết…</div>
-    </section>
+      <div className="adv-end"><span>🏁</span>Các chương mới sẽ ra theo season…</div>
+    </>
   );
 }
 

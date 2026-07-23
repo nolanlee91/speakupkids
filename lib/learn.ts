@@ -43,7 +43,6 @@ export const SECTIONS: LearningSection[] = [
 export type Lesson = {
   id: string; theme: string; title: string; vi: string; ageRange: string;
   sceneImage?: string;
-  adventureWorldId?: string;   // vùng Adventure luyện tập bài này
   shadowIds?: string[];        // id bài video (data.ts) dùng cho Shadowing
   vocab: VocabularyItem[];
   patterns: SentencePattern[];
@@ -57,7 +56,6 @@ export type CourseTheme = { id: string; name: string; vi: string; emoji: string;
 const AT_THE_PARK: Lesson = {
   id: "park", theme: "everyday-town", title: "At the Park", vi: "Ở công viên", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-park.webp",
-  adventureWorldId: "everyday-town",
   shadowIds: ["zoo", "like"],
   vocab: [
     { word: "bench", ipa: "/bentʃ/", vi: "ghế dài", emoji: "🪑", example: "Let's sit on the bench.", exampleVi: "Mình ngồi ghế dài nhé." },
@@ -130,7 +128,6 @@ const AT_THE_PARK: Lesson = {
 const IN_THE_KITCHEN: Lesson = {
   id: "kitchen", theme: "everyday-town", title: "In the Kitchen", vi: "Trong bếp", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-kitchen.webp",
-  adventureWorldId: "everyday-town",
   vocab: [
     { word: "stove", ipa: "/stoʊv/", vi: "bếp lò", emoji: "🔥", example: "The pan is on the stove.", exampleVi: "Cái chảo ở trên bếp lò." },
     { word: "pan", ipa: "/pæn/", vi: "cái chảo", emoji: "🍳", example: "She cooks an egg in a pan.", exampleVi: "Cô ấy nấu trứng trong chảo." },
@@ -202,7 +199,6 @@ const IN_THE_KITCHEN: Lesson = {
 const IN_THE_CLASSROOM: Lesson = {
   id: "classroom", theme: "everyday-town", title: "In the Classroom", vi: "Trong lớp học", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-classroom.webp",
-  adventureWorldId: "everyday-town",
   vocab: [
     { word: "map", ipa: "/mæp/", vi: "bản đồ", emoji: "🗺️", example: "The teacher points at the map.", exampleVi: "Cô giáo chỉ vào bản đồ." },
     { word: "experiment", ipa: "/ɪkˈsperɪmənt/", vi: "thí nghiệm", emoji: "🧪", example: "We do a science experiment.", exampleVi: "Chúng mình làm thí nghiệm khoa học." },
@@ -272,7 +268,6 @@ const IN_THE_CLASSROOM: Lesson = {
 const AT_THE_SUPERMARKET: Lesson = {
   id: "supermarket", theme: "everyday-town", title: "At the Supermarket", vi: "Ở siêu thị", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-supermarket.webp",
-  adventureWorldId: "everyday-town",
   vocab: [
     { word: "cart", ipa: "/kɑːrt/", vi: "xe đẩy", emoji: "🛒", example: "The boy pushes a shopping cart.", exampleVi: "Cậu bé đẩy xe hàng." },
     { word: "list", ipa: "/lɪst/", vi: "danh sách", emoji: "📝", example: "Check the shopping list.", exampleVi: "Xem lại danh sách mua sắm." },
@@ -343,7 +338,6 @@ const AT_THE_SUPERMARKET: Lesson = {
 const AT_THE_BUS_STOP: Lesson = {
   id: "busstop", theme: "everyday-town", title: "At the Bus Stop", vi: "Ở trạm xe buýt", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-bus-stop-rain.webp",
-  adventureWorldId: "everyday-town",
   vocab: [
     { word: "rain", ipa: "/reɪn/", vi: "mưa", emoji: "🌧️", example: "It is raining at the bus stop.", exampleVi: "Trời đang mưa ở trạm xe buýt." },
     { word: "umbrella", ipa: "/ʌmˈbrelə/", vi: "cái ô, dù", emoji: "☂️", example: "She opens a yellow umbrella.", exampleVi: "Bà ấy mở chiếc ô vàng." },
@@ -413,7 +407,6 @@ const AT_THE_BUS_STOP: Lesson = {
 const AT_THE_LIBRARY: Lesson = {
   id: "library", theme: "everyday-town", title: "At the Library", vi: "Ở thư viện", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-library.webp",
-  adventureWorldId: "everyday-town",
   vocab: [
     { word: "library", ipa: "/ˈlaɪbrəri/", vi: "thư viện", emoji: "📚", example: "We read books in the library.", exampleVi: "Chúng mình đọc sách ở thư viện." },
     { word: "shelf", ipa: "/ʃelf/", vi: "kệ sách", emoji: "🗄️", example: "The books are on the shelf.", exampleVi: "Sách ở trên kệ." },

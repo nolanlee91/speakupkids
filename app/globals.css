@@ -858,6 +858,13 @@
   .adv-intro { display: flex; align-items: center; gap: 14px; margin: 4px 4px 16px; }
   .adv-maple { width: 66px; height: 66px; object-fit: contain; flex: 0 0 auto; }
   .adv-sub { color: var(--muted); font-weight: 700; font-size: .86rem; margin: 3px 0 0; }
+  .season-head { background: linear-gradient(135deg, var(--navy), var(--teal-d)); color: #fff;
+    border-radius: 18px; padding: 14px 16px; margin: 0 0 14px; box-shadow: 0 10px 24px rgba(39,52,92,.16); }
+  .season-kicker { font-weight: 800; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; opacity: .85; }
+  .season-title { font-family: var(--font-head-stack); font-weight: 800; font-size: 1.15rem; margin: 3px 0 4px; color: #fff; }
+  .season-blurb { font-weight: 600; font-size: .84rem; margin: 0; opacity: .92; }
+  .season-meta { display: inline-block; margin-top: 10px; font-weight: 800; font-size: .76rem;
+    background: rgba(255,255,255,.18); border-radius: 999px; padding: 3px 12px; }
   .chapter-list { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
   .chapter-card { display: flex; background: var(--card); border: 3px solid #fff; border-radius: 18px;
     overflow: hidden; box-shadow: 0 10px 26px rgba(39,52,92,.1); }

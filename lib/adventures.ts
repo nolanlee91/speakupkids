@@ -1,6 +1,8 @@
-// Module PHIÊU LƯU — nhiệm vụ theo câu chuyện.
-// Nguyên tắc: dùng chung BỐI CẢNH/ảnh với Learn & Practice, nhưng KHÔNG đọc câu hỏi từ
-// DETECTIVE_SCENES / TALK_SCENES / PUZZLE_SETS / RIDDLE_SETS. Data & progress riêng.
+// Module PHIÊU LƯU — chiến dịch theo mùa (Season → Chapter), ĐỘC LẬP với Learn.
+// Nguyên tắc: CÓ THỂ dùng chung ẢNH / từ vựng / dạng câu hỏi với Learn & Practice,
+// nhưng KHÔNG dùng chung tiến độ và KHÔNG đọc câu hỏi từ ngân hàng Learn/Practice.
+// Adventure tự mở khoá Chapter theo tiến độ của CHÍNH NÓ (xong chương trước → mở chương sau).
+// KHÔNG ánh xạ 1 Unit Learn = 1 Adventure; không phụ thuộc lessonId/unitId.
 
 export type StoryBeat = { who?: "maple" | "theo" | "narrator"; text: string; vi?: string };
 
@@ -13,7 +15,6 @@ export type MissionReward = { sticker?: string; badge?: string; stars: number };
 
 export type AdventureMission = {
   id: string;
-  unitId: string;
   title: string;
   vi: string;
   sceneImage: string;
@@ -24,20 +25,23 @@ export type AdventureMission = {
   reward: MissionReward;
 };
 
-// Một "chương" phiêu lưu gắn với một Unit; chỉ chương có mission mới chơi được.
+// Một "chương" của chiến dịch. Chỉ chương có missionId mới chơi được;
+// mở khoá tuần tự theo tiến độ Adventure (không liên quan Learn).
 export type AdventureChapter = {
-  id: string; n: number; unitId: string; title: string; vi: string;
-  sceneImage: string; blurb: string; ready: boolean; missionId?: string;
+  id: string; n: number; title: string; vi: string;
+  sceneImage: string; blurb: string; missionId?: string;
+};
+export type AdventureSeason = {
+  id: string; title: string; vi: string; blurb: string; chapters: AdventureChapter[];
 };
 
 const IMG = "/assets/images/gen/";
 
-/* ============ Nhiệm vụ mẫu hoàn chỉnh: At the Park ============ */
+/* ============ Nhiệm vụ mẫu hoàn chỉnh: Chapter 1 ============ */
 export const PARK_FIND_THEO: AdventureMission = {
   id: "park-find-theo",
-  unitId: "park",
-  title: "Find Theo before dark",
-  vi: "Tìm Theo trước khi trời tối",
+  title: "The Sunset Search",
+  vi: "Cuộc tìm kiếm lúc hoàng hôn",
   sceneImage: IMG + "scene-park.webp",
   goal: "Giúp Maple tìm bạn Theo trong công viên trước khi mặt trời lặn.",
   intro: [
@@ -89,19 +93,45 @@ export const PARK_FIND_THEO: AdventureMission = {
 export const MISSIONS: AdventureMission[] = [PARK_FIND_THEO];
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id);
 
-/* ============ Bản đồ 6 chương (mỗi Unit một chương) ============ */
-export const CHAPTERS: AdventureChapter[] = [
-  { id: "ch-park", n: 1, unitId: "park", title: "At the Park", vi: "Ở công viên", sceneImage: IMG + "scene-park.webp",
-    blurb: "Giúp Maple tìm bạn Theo trước khi trời tối.", ready: true, missionId: "park-find-theo" },
-  { id: "ch-kitchen", n: 2, unitId: "kitchen", title: "In the Kitchen", vi: "Trong bếp", sceneImage: IMG + "scene-kitchen.webp",
-    blurb: "Cùng bà chuẩn bị bữa sáng bất ngờ.", ready: false },
-  { id: "ch-classroom", n: 3, unitId: "classroom", title: "In the Classroom", vi: "Trong lớp học", sceneImage: IMG + "scene-classroom.webp",
-    blurb: "Tìm đồ vật thất lạc trong lớp.", ready: false },
-  { id: "ch-supermarket", n: 4, unitId: "supermarket", title: "At the Supermarket", vi: "Ở siêu thị", sceneImage: IMG + "scene-supermarket.webp",
-    blurb: "Hoàn thành danh sách mua sắm giúp bà cụ.", ready: false },
-  { id: "ch-busstop", n: 5, unitId: "busstop", title: "At the Bus Stop", vi: "Ở trạm xe buýt", sceneImage: IMG + "scene-bus-stop-rain.webp",
-    blurb: "Bắt đúng chuyến xe trong ngày mưa.", ready: false },
-  { id: "ch-library", n: 6, unitId: "library", title: "At the Library", vi: "Ở thư viện", sceneImage: IMG + "scene-library.webp",
-    blurb: "Lần theo dấu bookmark để tìm cuốn sách bí ẩn.", ready: false },
-];
-export const chapterByMission = (missionId: string) => CHAPTERS.find((c) => c.missionId === missionId);
+/* ============ Chiến dịch theo mùa — Season 1 ============ */
+// Một chiến dịch gồm nhiều chương nối tiếp thành câu chuyện. Dùng chung ảnh phố nhỏ,
+// nhưng nội dung/nhiệm vụ là của riêng Adventure. Mở khoá tuần tự (xong chương trước → mở sau).
+export const SEASON_TOWN: AdventureSeason = {
+  id: "town-mystery",
+  title: "Everyday Town Mystery",
+  vi: "Bí ẩn Phố Ngày Thường",
+  blurb: "Cùng Maple và Theo phá từng chương bí ẩn quanh phố nhỏ — mỗi chương một câu chuyện.",
+  chapters: [
+    { id: "ch-park", n: 1, title: "The Sunset Search", vi: "Cuộc tìm kiếm lúc hoàng hôn", sceneImage: IMG + "scene-park.webp",
+      blurb: "Giúp Maple tìm bạn Theo trước khi trời tối.", missionId: "park-find-theo" },
+    { id: "ch-kitchen", n: 2, title: "The Kitchen Clue", vi: "Manh mối trong bếp", sceneImage: IMG + "scene-kitchen.webp",
+      blurb: "Lần theo mùi thơm để tìm công thức bí mật của bà." },
+    { id: "ch-classroom", n: 3, title: "The Classroom Mystery", vi: "Bí ẩn lớp học", sceneImage: IMG + "scene-classroom.webp",
+      blurb: "Ai làm bay chiếc máy bay giấy? Cùng điều tra." },
+    { id: "ch-market", n: 4, title: "The Missing List", vi: "Danh sách thất lạc", sceneImage: IMG + "scene-supermarket.webp",
+      blurb: "Giúp bà cụ mua đủ đồ khi tờ giấy nhớ bị gió cuốn." },
+    { id: "ch-busstop", n: 5, title: "The Last Bus", vi: "Chuyến xe cuối", sceneImage: IMG + "scene-bus-stop-rain.webp",
+      blurb: "Bắt đúng chuyến xe buýt trong cơn mưa chiều." },
+    { id: "ch-library", n: 6, title: "The Library Secret", vi: "Bí mật thư viện", sceneImage: IMG + "scene-library.webp",
+      blurb: "Lần theo dấu bookmark để mở cuốn sách bí ẩn." },
+  ],
+};
+export const SEASONS: AdventureSeason[] = [SEASON_TOWN];
+
+// Trạng thái mở khoá của từng chương theo tiến độ Adventure (không liên quan Learn).
+export type ChapterStatus = "play" | "started" | "done" | "locked" | "soon";
+export function chapterStatuses(
+  season: AdventureSeason,
+  isDone: (missionId: string) => boolean,
+  isStarted: (missionId: string) => boolean,
+): ChapterStatus[] {
+  let prevMissionDone = true; // chương có mission đầu tiên luôn mở
+  return season.chapters.map((ch) => {
+    if (!ch.missionId) return "soon";
+    const done = isDone(ch.missionId);
+    const unlocked = prevMissionDone;
+    const status: ChapterStatus = done ? "done" : unlocked ? (isStarted(ch.missionId) ? "started" : "play") : "locked";
+    prevMissionDone = done; // chương có mission kế tiếp chỉ mở khi chương này xong
+    return status;
+  });
+}
