@@ -1525,6 +1525,219 @@ const CHOOSING_A_TEAM_PROJECT: Lesson = {
   },
 };
 
+/* ============ Level 3 · Bộ 2: Giving Reasons — củng cố ý kiến bằng ví dụ & hệ quả ============ */
+const L3C2 = "/assets/images/learn/level-3/collection-02-giving-reasons/";
+
+/* Unit 1: Should Homework Be Shorter? */
+const SHOULD_HOMEWORK_BE_SHORTER: Lesson = {
+  id: "homework", theme: "giving-reasons", title: "Should Homework Be Shorter?", vi: "Bài tập về nhà có nên ngắn hơn?", ageRange: "9–12",
+  sceneImage: L3C2 + "level-3-c02-unit-01-shorter-homework.webp",
+  vocab: [
+    { word: "homework", ipa: "/ˈhoʊmwɜːrk/", vi: "bài tập về nhà", emoji: "📓", example: "We have homework every day.", exampleVi: "Ngày nào tụi mình cũng có bài tập về nhà." },
+    { word: "shorter", ipa: "/ˈʃɔːrtər/", vi: "ngắn hơn", emoji: "✂️", example: "Should homework be shorter?", exampleVi: "Bài tập về nhà có nên ngắn hơn không?" },
+    { word: "opinion", ipa: "/əˈpɪnjən/", vi: "ý kiến", emoji: "💬", example: "In my opinion, yes.", exampleVi: "Theo mình thì có." },
+    { word: "example", ipa: "/ɪɡˈzæmpl/", vi: "ví dụ", emoji: "📌", example: "Give an example to support your idea.", exampleVi: "Nêu một ví dụ để củng cố ý của bạn." },
+    { word: "disagree", ipa: "/ˌdɪsəˈɡriː/", vi: "không đồng ý", emoji: "🙅", example: "I politely disagree.", exampleVi: "Mình lịch sự không đồng ý." },
+    { word: "practise", ipa: "/ˈpræktɪs/", vi: "luyện tập", emoji: "✏️", example: "Homework helps us practise.", exampleVi: "Bài tập giúp mình luyện tập." },
+    { word: "tired", ipa: "/ˈtaɪərd/", vi: "mệt", emoji: "😴", example: "Long homework makes us tired.", exampleVi: "Bài tập dài khiến mình mệt." },
+    { word: "enough", ipa: "/ɪˈnʌf/", vi: "đủ", emoji: "👌", example: "We need enough sleep.", exampleVi: "Mình cần ngủ đủ giấc." },
+  ],
+  patterns: [
+    { pattern: "In my opinion, …", vi: "Theo mình, …", examples: [
+      { en: "In my opinion, homework should be shorter.", vi: "Theo mình, bài tập nên ngắn hơn." },
+      { en: "In my opinion, both ideas are fair.", vi: "Theo mình, cả hai ý đều hợp lý." }] },
+    { pattern: "For example, …", vi: "Ví dụ, …", examples: [
+      { en: "For example, we need time for sports.", vi: "Ví dụ, mình cần thời gian chơi thể thao." },
+      { en: "For example, maths gets easier with practice.", vi: "Ví dụ, toán dễ hơn khi luyện tập." }] },
+    { pattern: "Maybe a little … , not too …", vi: "Có lẽ … một chút thôi, đừng quá …", examples: [
+      { en: "Maybe a little shorter, not too short.", vi: "Có lẽ ngắn hơn một chút, đừng quá ngắn." },
+      { en: "Maybe a little homework, not too much.", vi: "Có lẽ một chút bài tập, đừng quá nhiều." }] },
+    { pattern: "I see your point, but …", vi: "Mình hiểu ý bạn, nhưng …", examples: [
+      { en: "I see your point, but I don't fully agree.", vi: "Mình hiểu ý bạn, nhưng chưa hẳn đồng ý." },
+      { en: "I see your point, but homework helps us practise.", vi: "Mình hiểu ý bạn, nhưng bài tập giúp luyện tập." }] },
+  ],
+  listening: {
+    intro: "Listen to the discussion, then answer. Notice the reasons!",
+    introVi: "Nghe cuộc thảo luận rồi trả lời. Chú ý các lý do!",
+    script: "The class was talking about a big question: \"Should homework be shorter?\" \"In my opinion, yes,\" said Maple. \"For example, we need time for sports, reading and enough sleep. When homework is too long, we feel tired.\" \"I see your point,\" said Theo, \"but I don't fully agree. Homework helps us practise. For example, maths gets easier when you do a few problems at home.\" The teacher smiled. \"So maybe homework could be a little shorter, but not gone completely?\" Everyone thought that was a fair idea, because both reasons made sense.",
+    questions: [
+      { q: "What was the class's big question?", vi: "Câu hỏi lớn của lớp là gì?",
+        options: ["Should homework be shorter?", "What is for lunch?", "Where is the park?"], answer: "Should homework be shorter?" },
+      { q: "What example did Maple give to support her opinion?", vi: "Maple nêu ví dụ nào để củng cố ý kiến?",
+        options: ["We need time for sports, reading and sleep", "Homework is fun", "Maths is boring"], answer: "We need time for sports, reading and sleep" },
+      { q: "What was Theo's reason for keeping homework?", vi: "Lý do Theo muốn giữ bài tập là gì?",
+        options: ["It helps us practise, like maths", "It looks nice", "It is short"], answer: "It helps us practise, like maths",
+        explainVi: "Theo cho rằng làm bài giúp luyện tập, ví dụ môn toán." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "In my opinion, homework should be a little shorter.", vi: "Theo mình, bài tập nên ngắn hơn một chút." },
+      { en: "I see your point, but I don't fully agree.", vi: "Mình hiểu ý bạn, nhưng chưa hẳn đồng ý." },
+    ],
+    guided: { q: "Do you think homework should be shorter? Give one example.", vi: "Bạn nghĩ bài tập nên ngắn hơn không? Nêu một ví dụ.", hint: "In my opinion, ___. For example, ___." },
+    describe: {
+      prompt: "Give your opinion in 3–5 sentences. State it, add one example, and disagree politely with another idea.",
+      vi: "Nêu ý kiến 3–5 câu: nói ý mình, thêm một ví dụ, và phản đối lịch sự một ý khác.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"a fact or case that supports your idea\"?", vi: "Từ nào nghĩa là \"dẫn chứng củng cố ý của bạn\"?",
+        options: ["example", "opinion", "homework"], answer: "example" },
+      { type: "reading", q: "Maple thinks homework should be shorter. Which example SUPPORTS her opinion?", vi: "Maple nghĩ bài tập nên ngắn hơn. Ví dụ nào CỦNG CỐ ý đó?",
+        options: ["We need time for sports and sleep.", "Homework helps us practise maths.", "The sky is blue."], answer: "We need time for sports and sleep.",
+        explainVi: "Cần thời gian chơi và ngủ là lý do ủng hộ việc rút ngắn bài tập." },
+      { type: "sentence", q: "You don't agree with a friend. Which is a POLITE way to disagree?", vi: "Bạn không đồng ý với bạn. Câu nào là cách phản đối LỊCH SỰ?",
+        options: ["I see your point, but I don't fully agree.", "You are wrong and silly.", "That's the worst idea ever."], answer: "I see your point, but I don't fully agree.",
+        explainVi: "Ghi nhận ý người kia rồi nêu điểm khác là cách nói lịch sự." },
+      { type: "reading", q: "Which reason is NOT related to the homework question?", vi: "Lý do nào KHÔNG liên quan tới câu hỏi về bài tập?",
+        options: ["My cat is orange.", "Homework helps us practise.", "Long homework makes us tired."], answer: "My cat is orange.",
+        explainVi: "Màu con mèo chẳng liên quan gì tới chuyện bài tập dài hay ngắn." },
+    ],
+  },
+};
+
+/* Unit 2: Save It or Spend It? */
+const SAVE_IT_OR_SPEND_IT: Lesson = {
+  id: "savespend", theme: "giving-reasons", title: "Save It or Spend It?", vi: "Tiết kiệm hay tiêu?", ageRange: "9–12",
+  sceneImage: L3C2 + "level-3-c02-unit-02-save-or-spend.webp",
+  vocab: [
+    { word: "save", ipa: "/seɪv/", vi: "tiết kiệm", emoji: "🐷", example: "Let's save some money.", exampleVi: "Cùng để dành một ít tiền nào." },
+    { word: "spend", ipa: "/spend/", vi: "tiêu, chi", emoji: "🛍️", example: "Should we spend it now?", exampleVi: "Mình có nên tiêu ngay không?" },
+    { word: "money", ipa: "/ˈmʌni/", vi: "tiền", emoji: "💰", example: "We earned some money.", exampleVi: "Tụi mình kiếm được một ít tiền." },
+    { word: "goal", ipa: "/ɡoʊl/", vi: "mục tiêu", emoji: "🎯", example: "Our goal is a new soccer ball.", exampleVi: "Mục tiêu của tụi mình là quả bóng mới." },
+    { word: "afford", ipa: "/əˈfɔːrd/", vi: "đủ tiền mua", emoji: "🧮", example: "We can't afford it yet.", exampleVi: "Tụi mình chưa đủ tiền mua nó." },
+    { word: "wait", ipa: "/weɪt/", vi: "chờ, đợi", emoji: "⏳", example: "If we wait, we can buy more.", exampleVi: "Nếu chờ, mình mua được nhiều hơn." },
+    { word: "important", ipa: "/ɪmˈpɔːrtənt/", vi: "quan trọng", emoji: "❗", example: "What is most important to you?", exampleVi: "Điều gì quan trọng nhất với bạn?" },
+    { word: "later", ipa: "/ˈleɪtər/", vi: "sau này", emoji: "🔜", example: "We can spend it later.", exampleVi: "Mình có thể tiêu nó sau này." },
+  ],
+  patterns: [
+    { pattern: "If we save, we can …", vi: "Nếu tiết kiệm, mình có thể …", examples: [
+      { en: "If we save, we can buy a soccer ball for the team.", vi: "Nếu tiết kiệm, mình có thể mua bóng cho cả đội." },
+      { en: "If we save, we can afford it later.", vi: "Nếu tiết kiệm, sau này mình đủ tiền mua." }] },
+    { pattern: "If we spend it now, we will …", vi: "Nếu tiêu ngay, mình sẽ …", examples: [
+      { en: "If we spend it now, we will have nothing left.", vi: "Nếu tiêu ngay, mình sẽ chẳng còn gì." },
+      { en: "If we spend it now, we will enjoy it today.", vi: "Nếu tiêu ngay, mình sẽ vui hôm nay." }] },
+    { pattern: "What matters most is …", vi: "Điều quan trọng nhất là …", examples: [
+      { en: "What matters most is our team goal.", vi: "Điều quan trọng nhất là mục tiêu của đội." },
+      { en: "What matters most to me is helping others.", vi: "Điều quan trọng nhất với mình là giúp đỡ người khác." }] },
+    { pattern: "Let's save some and spend some.", vi: "Cùng tiết kiệm một phần, tiêu một phần.", examples: [
+      { en: "Let's save some and spend some — that's fair.", vi: "Cùng để dành một phần, tiêu một phần — vậy là công bằng." },
+      { en: "Let's save most and give a little.", vi: "Cùng để dành phần lớn và cho đi một chút." }] },
+  ],
+  listening: {
+    intro: "Listen to the money discussion, then answer.",
+    introVi: "Nghe cuộc bàn về tiền rồi trả lời.",
+    script: "The friends earned some money at a craft sale. \"Let's spend it all now and buy snacks!\" said one boy. \"Wait,\" said Maple. \"If we spend it all now, we will have nothing left. If we save, we can buy a new soccer ball for the whole team later.\" Theo added, \"What matters most to me is helping. We could give a little to the animal shelter, too.\" They talked about what was important and about what would happen soon and later. In the end, they made a plan: save some, spend a little today, and give a little. Everyone felt good about the balanced plan.",
+    questions: [
+      { q: "Where did the friends get the money?", vi: "Các bạn kiếm được tiền ở đâu?",
+        options: ["From a craft sale", "From a race", "They found it on the bus"], answer: "From a craft sale" },
+      { q: "What did Maple say would happen if they spent it all now?", vi: "Maple nói nếu tiêu hết ngay thì sao?",
+        options: ["They would have nothing left", "They would get richer", "The money would grow"], answer: "They would have nothing left",
+        explainVi: "Tiêu hết ngay thì chẳng còn gì cho sau này." },
+      { q: "What plan did they finally make?", vi: "Cuối cùng các bạn lập kế hoạch gì?",
+        options: ["Save some, spend a little, and give a little", "Spend it all on snacks", "Throw the money away"], answer: "Save some, spend a little, and give a little" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "If we save, we can buy a soccer ball later.", vi: "Nếu tiết kiệm, sau này mình mua được quả bóng." },
+      { en: "Let's save some and spend some.", vi: "Cùng để dành một phần, tiêu một phần nào." },
+    ],
+    guided: { q: "Would you save or spend your money? Give a reason.", vi: "Bạn sẽ tiết kiệm hay tiêu tiền? Nêu một lý do.", hint: "I would ___ because ___." },
+    describe: {
+      prompt: "Share your plan in 3–5 sentences. Say what you would do now, what would happen later, and one compromise.",
+      vi: "Chia sẻ kế hoạch 3–5 câu: bạn làm gì bây giờ, điều gì xảy ra sau này, và một cách thoả hiệp.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"to keep money for later instead of spending it\"?", vi: "Từ nào nghĩa là \"giữ tiền để sau, không tiêu\"?",
+        options: ["save", "spend", "afford"], answer: "save" },
+      { type: "reading", q: "If you SAVE your money, what can you do later?", vi: "Nếu bạn TIẾT KIỆM tiền, sau này bạn có thể làm gì?",
+        options: ["Buy something bigger later", "Have nothing left", "Lose it right away"], answer: "Buy something bigger later" },
+      { type: "reading", q: "What happens if you SPEND all your money right away?", vi: "Nếu bạn TIÊU hết tiền ngay thì điều gì xảy ra?",
+        options: ["You have nothing left for later", "It grows by itself", "You save more"], answer: "You have nothing left for later",
+        explainVi: "Tiêu hết ngay là hệ quả trước mắt: không còn tiền cho sau này." },
+      { type: "listening", q: "What balanced plan did the friends choose?", vi: "Các bạn chọn kế hoạch cân bằng nào?",
+        options: ["Save some, spend a little, give a little", "Spend everything on snacks", "Never spend anything"], answer: "Save some, spend a little, give a little" },
+    ],
+  },
+};
+
+/* Unit 3: What Makes a Good Friend? */
+const WHAT_MAKES_A_GOOD_FRIEND: Lesson = {
+  id: "goodfriend", theme: "giving-reasons", title: "What Makes a Good Friend?", vi: "Điều gì tạo nên người bạn tốt?", ageRange: "9–12",
+  sceneImage: L3C2 + "level-3-c02-unit-03-good-friend.webp",
+  vocab: [
+    { word: "friendship", ipa: "/ˈfrendʃɪp/", vi: "tình bạn", emoji: "🫂", example: "Friendship is important.", exampleVi: "Tình bạn rất quan trọng." },
+    { word: "quality", ipa: "/ˈkwɒləti/", vi: "phẩm chất", emoji: "🌟", example: "Kindness is a good quality.", exampleVi: "Tử tế là một phẩm chất tốt." },
+    { word: "kind", ipa: "/kaɪnd/", vi: "tử tế", emoji: "💗", example: "A good friend is kind.", exampleVi: "Một người bạn tốt thì tử tế." },
+    { word: "honest", ipa: "/ˈɒnɪst/", vi: "trung thực", emoji: "🤝", example: "An honest friend tells the truth.", exampleVi: "Một người bạn trung thực nói sự thật." },
+    { word: "helpful", ipa: "/ˈhelpfl/", vi: "hay giúp đỡ", emoji: "🙌", example: "She is always helpful.", exampleVi: "Bạn ấy luôn sẵn lòng giúp đỡ." },
+    { word: "listen", ipa: "/ˈlɪsn/", vi: "lắng nghe", emoji: "👂", example: "A good friend listens to you.", exampleVi: "Người bạn tốt lắng nghe bạn." },
+    { word: "share", ipa: "/ʃer/", vi: "chia sẻ", emoji: "🤲", example: "Good friends share things.", exampleVi: "Bạn tốt biết chia sẻ." },
+    { word: "trust", ipa: "/trʌst/", vi: "tin tưởng", emoji: "🔒", example: "We trust our best friends.", exampleVi: "Mình tin tưởng những người bạn thân." },
+  ],
+  patterns: [
+    { pattern: "A good friend is …", vi: "Một người bạn tốt thì …", examples: [
+      { en: "A good friend is kind and honest.", vi: "Một người bạn tốt thì tử tế và trung thực." },
+      { en: "A good friend is a good listener.", vi: "Một người bạn tốt biết lắng nghe." }] },
+    { pattern: "I know because …", vi: "Mình biết điều đó vì …", examples: [
+      { en: "I know because she helped me when I fell.", vi: "Mình biết vì bạn ấy đã đỡ mình dậy khi mình ngã." },
+      { en: "I know because he listens when I am sad.", vi: "Mình biết vì cậu ấy lắng nghe khi mình buồn." }] },
+    { pattern: "I'd like to add that …", vi: "Mình muốn nói thêm rằng …", examples: [
+      { en: "I'd like to add that a good friend is honest.", vi: "Mình muốn nói thêm rằng bạn tốt thì trung thực." },
+      { en: "I'd like to add that sharing matters too.", vi: "Mình muốn nói thêm rằng biết chia sẻ cũng quan trọng." }] },
+    { pattern: "There isn't just one …", vi: "Không chỉ có một …", examples: [
+      { en: "There isn't just one quality that matters.", vi: "Không chỉ có một phẩm chất là quan trọng." },
+      { en: "There isn't just one right answer.", vi: "Không chỉ có một đáp án đúng duy nhất." }] },
+  ],
+  listening: {
+    intro: "Listen to the friendship talk, then answer.",
+    introVi: "Nghe cuộc trò chuyện về tình bạn rồi trả lời.",
+    script: "The friends were talking about what makes a good friend. \"A good friend is kind,\" said Maple. \"I know because when I fell, my friend helped me up.\" \"I'd like to add that a good friend is a good listener,\" said Theo. \"For example, they listen when you are sad.\" Another friend said honesty matters too — a good friend tells the truth in a gentle way. The teacher nodded. \"So there isn't just one quality. A good friend can be kind, honest, and a good listener all at once.\" Everyone agreed that many qualities matter together.",
+    questions: [
+      { q: "What quality did Maple name first?", vi: "Maple nêu phẩm chất nào đầu tiên?",
+        options: ["Kind", "Fast", "Tall"], answer: "Kind" },
+      { q: "What evidence did Maple give for that quality?", vi: "Maple đưa dẫn chứng nào cho phẩm chất đó?",
+        options: ["Her friend helped her up when she fell", "Her friend runs fast", "Her friend has a big house"], answer: "Her friend helped her up when she fell",
+        explainVi: "Việc đỡ bạn dậy là bằng chứng cho sự tử tế." },
+      { q: "What was the group's final conclusion?", vi: "Kết luận cuối cùng của cả nhóm là gì?",
+        options: ["Many qualities matter together, not just one", "Only being funny matters", "A friend must be perfect"], answer: "Many qualities matter together, not just one" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "A good friend is kind and a good listener.", vi: "Một người bạn tốt thì tử tế và biết lắng nghe." },
+      { en: "I'd like to add that a good friend is honest.", vi: "Mình muốn nói thêm rằng bạn tốt thì trung thực." },
+    ],
+    guided: { q: "What makes a good friend to you? Give one example.", vi: "Với bạn, điều gì tạo nên người bạn tốt? Nêu một ví dụ.", hint: "A good friend is ___. I know because ___." },
+    describe: {
+      prompt: "Share your view in 3–5 sentences. Name one quality, give evidence, and add one more idea.",
+      vi: "Chia sẻ 3–5 câu: nêu một phẩm chất, đưa dẫn chứng, và bổ sung thêm một ý.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"always telling the truth\"?", vi: "Từ nào nghĩa là \"luôn nói sự thật\"?",
+        options: ["honest", "helpful", "quality"], answer: "honest" },
+      { type: "reading", q: "Your friend listens when you are sad. Which quality does this show?", vi: "Bạn của bạn lắng nghe khi bạn buồn. Điều đó thể hiện phẩm chất nào?",
+        options: ["A good listener", "A fast runner", "A messy eater"], answer: "A good listener",
+        explainVi: "Lắng nghe lúc bạn buồn là dẫn chứng của việc biết lắng nghe." },
+      { type: "sentence", q: "You want to add another idea to the talk. Which is a kind way to do it?", vi: "Bạn muốn bổ sung một ý. Câu nào là cách nói tử tế?",
+        options: ["I'd like to add that a good friend is honest.", "You forgot the obvious one.", "Nobody asked for your idea."], answer: "I'd like to add that a good friend is honest.",
+        explainVi: "\"I'd like to add…\" là cách thêm ý một cách lịch sự." },
+      { type: "reading", q: "What is the best conclusion about a good friend?", vi: "Kết luận hợp lý nhất về một người bạn tốt là gì?",
+        options: ["Many qualities matter together, not just one", "Only being funny matters", "A good friend must be perfect"], answer: "Many qualities matter together, not just one" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
@@ -1536,6 +1749,8 @@ export const THEMES: CourseTheme[] = [
       THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
     lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
+  { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
+    lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -1573,13 +1788,22 @@ export const LEVEL2_UNITS: CourseUnit[] = [
   { id: "aquarium",   n: 9, title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung",   image: L2IMG + "level-2-unit-09-aquarium-night-mystery.webp",   focus: "Trình tự · loại trừ · kết luận",     lessonId: "aquarium",   ready: true },
 ];
 
-/* ============ Level 3 · Opinions & Conversations — Bộ 1: Making Choices (3 Unit) ============ */
+/* ============ Level 3 · Opinions & Conversations — chia theo Bộ (Collection) ============ */
 // Bài hội thoại/ý kiến: nêu ≥2 quan điểm, ghép lý do, so lợi–hại, chọn phương án có lý.
-const L3IMG = "/assets/images/learn/level-3/collection-01-making-choices/";
-export const LEVEL3_UNITS: CourseUnit[] = [
-  { id: "classtrip",   n: 1, title: "Planning a Class Trip",       vi: "Lên kế hoạch đi dã ngoại",     image: L3IMG + "level-3-c01-unit-01-planning-class-trip.webp",   focus: "So lựa chọn · lý do · thống nhất",   lessonId: "classtrip",   ready: true },
-  { id: "screentime",  n: 2, title: "Screen Time or Outdoor Time?", vi: "Màn hình hay ngoài trời?",     image: L3IMG + "level-3-c01-unit-02-screen-or-outdoor-time.webp", focus: "Lợi ích · điểm dở · thoả hiệp",     lessonId: "screentime",  ready: true },
-  { id: "teamproject", n: 3, title: "Choosing a Team Project",     vi: "Chọn dự án nhóm",              image: L3IMG + "level-3-c01-unit-03-choosing-team-project.webp", focus: "Đề xuất · vai trò · quyết định nhóm", lessonId: "teamproject", ready: true },
+export type CourseCollection = { id: string; name: string; vi: string; units: CourseUnit[] };
+const L3C1IMG = "/assets/images/learn/level-3/collection-01-making-choices/";
+const L3C2IMG = "/assets/images/learn/level-3/collection-02-giving-reasons/";
+export const LEVEL3_COLLECTIONS: CourseCollection[] = [
+  { id: "c1", name: "Making Choices", vi: "Bộ 1 · Đưa ra lựa chọn", units: [
+    { id: "classtrip",   n: 1, title: "Planning a Class Trip",       vi: "Lên kế hoạch đi dã ngoại",  image: L3C1IMG + "level-3-c01-unit-01-planning-class-trip.webp",   focus: "So lựa chọn · lý do · thống nhất",   lessonId: "classtrip",   ready: true },
+    { id: "screentime",  n: 2, title: "Screen Time or Outdoor Time?", vi: "Màn hình hay ngoài trời?", image: L3C1IMG + "level-3-c01-unit-02-screen-or-outdoor-time.webp", focus: "Lợi ích · điểm dở · thoả hiệp",     lessonId: "screentime",  ready: true },
+    { id: "teamproject", n: 3, title: "Choosing a Team Project",     vi: "Chọn dự án nhóm",           image: L3C1IMG + "level-3-c01-unit-03-choosing-team-project.webp", focus: "Đề xuất · vai trò · quyết định nhóm", lessonId: "teamproject", ready: true },
+  ] },
+  { id: "c2", name: "Giving Reasons", vi: "Bộ 2 · Đưa ra lý do", units: [
+    { id: "homework",   n: 1, title: "Should Homework Be Shorter?", vi: "Bài tập có nên ngắn hơn?",   image: L3C2IMG + "level-3-c02-unit-01-shorter-homework.webp", focus: "Nêu ý kiến · ví dụ · phản đối lịch sự", lessonId: "homework",   ready: true },
+    { id: "savespend",  n: 2, title: "Save It or Spend It?",       vi: "Tiết kiệm hay tiêu?",        image: L3C2IMG + "level-3-c02-unit-02-save-or-spend.webp",    focus: "Ưu tiên · hệ quả · thoả hiệp",         lessonId: "savespend",  ready: true },
+    { id: "goodfriend", n: 3, title: "What Makes a Good Friend?",  vi: "Điều gì tạo nên bạn tốt?",   image: L3C2IMG + "level-3-c02-unit-03-good-friend.webp",      focus: "Phẩm chất · dẫn chứng · kết luận",     lessonId: "goodfriend", ready: true },
+  ] },
 ];
 
 /* ============ helpers ============ */

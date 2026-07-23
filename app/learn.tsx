@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
-  SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_UNITS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
-  type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit,
+  SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
+  type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit, type CourseCollection,
 } from "@/lib/learn";
 import { speak, shuffle } from "@/lib/fx";
 
@@ -144,18 +144,27 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
   const levelDone = (units: CourseUnit[]) =>
     units.filter((u) => u.lessonId && learnLessonDone(state, u.lessonId)).length;
 
-  const Level = ({ id, icon, title, sub, units }: { id: string; icon: string; title: string; sub: string; units: CourseUnit[] }) => {
+  const Level = ({ id, icon, title, sub, units, groups }: { id: string; icon: string; title: string; sub: string; units?: CourseUnit[]; groups?: CourseCollection[] }) => {
     const isOpen = openLevel === id;
-    const done = levelDone(units);
+    const allUnits = groups ? groups.flatMap((g) => g.units) : (units || []);
+    const done = levelDone(allUnits);
     return (
       <div className={`course-level ${isOpen ? "open" : ""}`}>
         <button className="course-lvl-head" onClick={() => setOpenLevel(isOpen ? "" : id)} aria-expanded={isOpen}>
           <span className="clh-ic">{icon}</span>
           <span className="clh-txt"><b>{title}</b><small>{sub}</small></span>
-          <span className={`clh-meta ${done === units.length ? "all" : ""}`}>{done}/{units.length}</span>
+          <span className={`clh-meta ${allUnits.length > 0 && done === allUnits.length ? "all" : ""}`}>{done}/{allUnits.length}</span>
           <span className="clh-chev">{isOpen ? "▾" : "▸"}</span>
         </button>
-        {isOpen && <ol className="unit-list">{units.map(renderUnit)}</ol>}
+        {isOpen && (groups
+          ? groups.map((g) => (
+              <div key={g.id} className="course-collection">
+                <div className="clh-collection">{g.vi} <small>· {g.name}</small></div>
+                <ol className="unit-list">{g.units.map(renderUnit)}</ol>
+              </div>
+            ))
+          : <ol className="unit-list">{(units || []).map(renderUnit)}</ol>
+        )}
       </div>
     );
   };
@@ -172,7 +181,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
 
       <Level id="1" icon="📘" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
       <Level id="2" icon="📗" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
-      <Level id="3" icon="📕" title="Level 3 · Opinions & Conversations" sub="Bộ 1 · Making Choices — nêu ý kiến & lựa chọn" units={LEVEL3_UNITS} />
+      <Level id="3" icon="📕" title="Level 3 · Opinions & Conversations" sub="Nêu ý kiến, lý do & trò chuyện" groups={LEVEL3_COLLECTIONS} />
     </section>
   );
 }

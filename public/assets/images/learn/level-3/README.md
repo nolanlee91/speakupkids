@@ -18,7 +18,8 @@ A collection is a themed release group, not the whole level. More collections an
 
 | Collection | Folder | Focus |
 | --- | --- | --- |
-| 01 — Making Choices | `collection-01-making-choices/` | Compare options, give reasons, respond politely and reach agreement |
+| 01 — Making Choices | `collection-01-making-choices/` | Compare options, state preferences, respond politely and reach agreement |
+| 02 — Giving Reasons | `collection-02-giving-reasons/` | Support opinions with examples, examine consequences and respond to other reasons |
 
 ## Level 3 curriculum rule
 
