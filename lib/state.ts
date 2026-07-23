@@ -25,11 +25,15 @@ export type GamesState = {
 // Nhiệm vụ hôm nay tách theo module (Learn / Practice / Adventure)
 export type DailyTasks = { date: string; learn: boolean; practice: boolean; adventure: boolean };
 
-// Tiến trình khu Phiêu lưu (module nhiệm vụ riêng, KHÔNG dùng chung câu hỏi với Games)
-export type AdventureMissionState = { step: number; done: boolean; stars: number };
+// Tiến trình khu Phiêu lưu (module kể chuyện riêng, KHÔNG dùng chung câu hỏi/tiến độ với Games/Learn).
+// Lưu theo ID ổn định của Season & Chapter (KHÔNG dùng array index).
+export type AdventureSeasonProgress = {
+  completedChapterIds: string[];
+  currentChapterId?: string;     // chương mở gần nhất (để gợi ý "chơi tiếp")
+  collectedItemIds: string[];    // vật phẩm câu chuyện đã nhận (một lần)
+};
 export type AdventureState = {
-  currentMission?: string;
-  missions: Record<string, AdventureMissionState>;
+  seasons: Record<string, AdventureSeasonProgress>; // key = seasonId
 };
 
 export type AppState = {
@@ -78,7 +82,7 @@ export function defaultState(): AppState {
     learn: { currentLesson: "park", difficulty: "detective", lessons: {} },
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
-    adventure: { missions: {} },
+    adventure: { seasons: {} },
   };
 }
 
@@ -94,7 +98,7 @@ export function loadState(): AppState {
       learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
       games: migrateGames(s.games),
       daily: { ...d.daily, ...(s.daily || {}) },
-      adventure: { ...d.adventure, ...(s.adventure || {}), missions: { ...(s.adventure?.missions || {}) } },
+      adventure: migrateAdventure(s.adventure),
     };
   } catch {
     return defaultState();
@@ -125,6 +129,23 @@ function migrateGames(g: unknown): GamesState {
     topics[k] = { ...EMPTY_TOPIC, seen: Array.isArray(seen[k]) ? seen[k] : [], bestStars: best[k] || 0 };
   }
   return { topics };
+}
+
+// Chuyển AdventureState về schema mới ({seasons}). Bản cũ ({missions}) thuộc chiến dịch
+// nội dung khác hẳn (không map được sang Season mới) → khởi tạo rỗng; các phần state khác GIỮ NGUYÊN.
+function migrateAdventure(a: unknown): AdventureState {
+  const src = (a || {}) as { seasons?: Record<string, Partial<AdventureSeasonProgress>> };
+  const seasons: Record<string, AdventureSeasonProgress> = {};
+  if (src.seasons && typeof src.seasons === "object") {
+    for (const [k, v] of Object.entries(src.seasons)) {
+      seasons[k] = {
+        completedChapterIds: Array.isArray(v?.completedChapterIds) ? v!.completedChapterIds! : [],
+        currentChapterId: v?.currentChapterId,
+        collectedItemIds: Array.isArray(v?.collectedItemIds) ? v!.collectedItemIds! : [],
+      };
+    }
+  }
+  return { seasons };
 }
 
 export function saveState(s: AppState) {
@@ -299,34 +320,59 @@ export function dailyCount(s: AppState): number {
   return [s.daily.learn, s.daily.practice, s.daily.adventure].filter(Boolean).length;
 }
 
-/* ---------- Phiêu lưu (module nhiệm vụ riêng) ---------- */
-const EMPTY_MISSION: AdventureMissionState = { step: 0, done: false, stars: 0 };
-export function missionOf(s: AppState, id: string): AdventureMissionState {
-  return s.adventure.missions[id] || EMPTY_MISSION;
+/* ---------- Phiêu lưu (module kể chuyện riêng, độc lập Learn/Games) ---------- */
+const EMPTY_SEASON: AdventureSeasonProgress = { completedChapterIds: [], collectedItemIds: [] };
+export function adventureOf(s: AppState, seasonId: string): AdventureSeasonProgress {
+  return s.adventure.seasons[seasonId] || EMPTY_SEASON;
 }
-export function setMissionStep(s: AppState, id: string, step: number): AppState {
-  const cur = missionOf(s, id);
-  const next: AdventureMissionState = { ...cur, step: Math.max(cur.step, step) };
-  return { ...s, adventure: { ...s.adventure, currentMission: id, missions: { ...s.adventure.missions, [id]: next } } };
+export function isChapterCompleted(s: AppState, seasonId: string, chapterId: string): boolean {
+  return adventureOf(s, seasonId).completedChapterIds.includes(chapterId);
 }
-// Hoàn thành 1 mission: giữ sao cao nhất, đánh dấu done, cộng nhiệm vụ ngày 1 lần, mở sticker
-export function completeMission(s: AppState, id: string, stars: number, sticker?: string): { state: AppState; newly: boolean } {
-  const cur = missionOf(s, id);
-  const newly = !cur.done;
+export function hasAdventureItem(s: AppState, seasonId: string, itemId: string): boolean {
+  return adventureOf(s, seasonId).collectedItemIds.includes(itemId);
+}
+// Ghi nhớ chương đang mở (để Today gợi ý "chơi tiếp") — không đổi tiến độ hoàn thành.
+export function setCurrentChapter(s: AppState, seasonId: string, chapterId: string): AppState {
+  const cur = adventureOf(s, seasonId);
+  if (cur.currentChapterId === chapterId) return s;
+  return { ...s, adventure: { seasons: { ...s.adventure.seasons, [seasonId]: { ...cur, currentChapterId: chapterId } } } };
+}
+// Hoàn thành một chương: đánh dấu done, nhận item (một lần), đặt con trỏ sang chương kế,
+// đánh dấu nhiệm vụ Phiêu lưu hôm nay + cộng phút/nhiệm vụ ngày CHỈ lần đầu.
+// Chơi lại KHÔNG cấp lại item và KHÔNG cộng lại nhiệm vụ ngày. Trả {state, newly, gotItem}.
+export function completeChapter(
+  s: AppState, seasonId: string, chapterId: string,
+  opts?: { itemId?: string; nextChapterId?: string },
+): { state: AppState; newly: boolean; gotItem: boolean } {
+  const cur = adventureOf(s, seasonId);
+  const newly = !cur.completedChapterIds.includes(chapterId);
+  const gotItem = !!opts?.itemId && !cur.collectedItemIds.includes(opts.itemId);
+
   let ns = resetDailyIfNeeded(s);
   ns = markDaily(ns, "adventure");
-  const next: AdventureMissionState = { step: cur.step, done: true, stars: Math.max(stars, cur.stars) };
+
+  const completedChapterIds = newly ? [...cur.completedChapterIds, chapterId] : cur.completedChapterIds;
+  const collectedItemIds = gotItem ? [...cur.collectedItemIds, opts!.itemId!] : cur.collectedItemIds;
+  const next: AdventureSeasonProgress = {
+    completedChapterIds,
+    collectedItemIds,
+    currentChapterId: opts?.nextChapterId || cur.currentChapterId,
+  };
   ns = {
     ...ns,
     minutes: ns.minutes + (newly ? 4 : 0),
     dailyDone: ns.dailyDone + (newly ? 1 : 0),
-    adventure: { ...ns.adventure, currentMission: id, missions: { ...ns.adventure.missions, [id]: next } },
+    adventure: { seasons: { ...ns.adventure.seasons, [seasonId]: next } },
   };
-  if (sticker) ns = addSticker(ns, sticker);
-  return { state: ns, newly };
+  return { state: ns, newly, gotItem };
 }
+// Tổng số chương đã hoàn thành (mọi mùa) — dùng cho huy hiệu "Nhà phiêu lưu".
 export function adventuresDone(s: AppState): number {
-  return Object.values(s.adventure.missions).filter((m) => m.done).length;
+  return Object.values(s.adventure.seasons).reduce((a, p) => a + p.completedChapterIds.length, 0);
+}
+// Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
+export function resetAdventure(s: AppState): AppState {
+  return { ...s, adventure: { seasons: {} } };
 }
 
 // cộng sao 1 lần khi hoàn thành; trả {state, newly}

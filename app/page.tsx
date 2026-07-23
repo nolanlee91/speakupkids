@@ -7,14 +7,14 @@ import {
   hasSticker, gamesDone, addSticker,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
   recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
-  completeMission, missionOf, adventuresDone,
+  adventuresDone, isChapterCompleted, adventureOf,
 } from "@/lib/state";
 import {
   GAMES, STICKERS, stickerById, STICKER_FOR_GAME,
   type StopKind, type GameKind,
 } from "@/lib/games";
 import { SECTIONS, learnLessonById } from "@/lib/learn";
-import { missionById } from "@/lib/adventures";
+import { SEASON_LOST_COMPASS, resumeChapter } from "@/lib/adventures";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
@@ -72,10 +72,9 @@ export default function App() {
     s = touchStreak(s);
     s = resetDailyIfNeeded(s);
     s = resetDailyTasks(s);
-    if (s.splashDate !== todayStr()) {
-      s = { ...s, splashDate: todayStr() };
-      setShowSplash(true);
-    }
+    // TEST MODE: luôn hiện màn chào sau mỗi lần tải app.
+    // Khi production, đổi lại điều kiện `s.splashDate !== todayStr()`.
+    setShowSplash(true);
     setState(s);
     setReady(true);
   }, []);
@@ -137,21 +136,6 @@ export default function App() {
     });
   }
 
-  // Hoàn thành 1 nhiệm vụ Phiêu lưu
-  function completeAdventure(missionId: string, starsWon: number, sticker?: string, badge?: string) {
-    const firstSticker = !!sticker && !hasSticker(state, sticker);
-    const { state: ns } = completeMission(state, missionId, starsWon, sticker);
-    setState(ns);
-    celebrate(state.prefs.motion !== false);
-    const sk = firstSticker && sticker ? stickerById(sticker) : null;
-    setReward({
-      title: "Hoàn thành nhiệm vụ! 🏅",
-      html: `Bạn đạt <b>${starsWon} ⭐</b>${badge ? ` và huy hiệu <b>${badge}</b>` : ""}!`,
-      stars: starsWon,
-      sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
-    });
-  }
-
   if (!ready) return <div style={{ padding: 40, color: "#7a8194" }}>Đang tải…</div>;
 
   const got = state.stickers || [];
@@ -184,8 +168,7 @@ export default function App() {
           onTalk={(sceneId) => launch({ kind: "talk", refId: sceneId, title: "Build the Description" })}
           onComplete={completeLearn} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, title: "Luyện tập" })} />}
-        {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent}
-          onComplete={completeAdventure} />}
+        {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent} />}
       </div>
 
       <nav className="nav">
@@ -197,15 +180,16 @@ export default function App() {
       </nav>
 
       {showSplash && (
-        <div id="splash">
-          {state.prefs.motion !== false && Array.from({ length: 7 }, (_, i) => (
-            <span key={i} className="leaf" style={{ left: `${6 + i * 14}%`, animationDuration: `${2 + (i % 3) * 0.7}s`, animationDelay: `${i * 0.22}s` }}>🍁</span>
+        <div id="splash" role="dialog" aria-modal="true" aria-label="Chào mừng đến Speak Up Kids" onClick={() => setShowSplash(false)}>
+          {state.prefs.motion !== false && Array.from({ length: 10 }, (_, i) => (
+            <span key={i} className={`leaf leaf-${(i % 3) + 1}`} style={{ left: `${3 + i * 10.5}%`, animationDuration: `${4.8 + (i % 4) * 1.25}s`, animationDelay: `${i * -0.63}s` }}>🍁</span>
           ))}
           <div className="sp-banner">
             <div className="sp-card">
-              <div className="sp-title">Chào {state.nickname || "bạn nhỏ"}! 👋</div>
-              <div className="sp-goal">🎯 Nhiệm vụ hôm nay đang chờ bạn!</div>
-              <button className="btn" onClick={() => setShowSplash(false)}>▶ Bắt đầu</button>
+              <div className="sp-kicker">SPEAK UP KIDS</div>
+              <div className="sp-title">Ready for today’s adventure?</div>
+              <div className="sp-goal">Chào {state.nickname || "bạn nhỏ"}! Một thử thách tiếng Anh mới đang chờ bạn.</div>
+              <button className="sp-cta" onClick={() => setShowSplash(false)}>Let’s go <span aria-hidden="true">→</span></button>
             </div>
           </div>
         </div>
@@ -249,11 +233,12 @@ function Today({ state, go, openLesson }: {
   const nextSection = SECTIONS.find((sc) => !sectionDone(state, lesson.id, sc.key));
   const lessonDone = learnLessonDone(state, lesson.id);
 
-  // Chiến dịch Phiêu lưu đang chơi dở (tiến độ RIÊNG của Adventure, không liên quan Learn)
-  const advCur = state.adventure.currentMission;
-  const advState = advCur ? missionOf(state, advCur) : null;
-  const advStarted = !!advCur && !!advState && advState.step > 0 && !advState.done;
-  const advMission = advCur ? missionById(advCur) : undefined;
+  // Chiến dịch Phiêu lưu (tiến độ RIÊNG của Adventure, không liên quan Learn):
+  // chương nên chơi tiếp = chương đang mở/chơi dở đầu tiên của Season 1.
+  const advSeason = SEASON_LOST_COMPASS;
+  const advProg = adventureOf(state, advSeason.id);
+  const advResume = resumeChapter(advSeason, (id) => isChapterCompleted(state, advSeason.id, id), advProg.currentChapterId);
+  const advStarted = advProg.completedChapterIds.length > 0 || !!advProg.currentChapterId;
 
   // CTA lớn: tiếp tục hoạt động gần nhất — KHÔNG ép ba module thành một chuỗi bắt buộc.
   let cta: { kicker: string; title: string; sub: string; label: string; run: () => void; bg?: string };
@@ -267,8 +252,8 @@ function Today({ state, go, openLesson }: {
     };
   } else if (!lessonDone) {
     cta = { kicker: "Sắp xong Unit", title: `${lesson.title} · Kiểm tra nhỏ`, sub: "Làm bài kiểm tra để hoàn thành", label: "Làm Kiểm tra nhỏ", run: () => openLesson(lesson.id) };
-  } else if (advStarted && advMission) {
-    cta = { kicker: "Tiếp tục chiến dịch", title: `Phiêu lưu · ${advMission.vi}`, sub: "Chương bạn đang chơi dở", label: "Chơi tiếp", run: () => go("adventure"), bg: advMission.sceneImage };
+  } else if (advStarted && advResume) {
+    cta = { kicker: "Tiếp tục chiến dịch", title: `Phiêu lưu · ${advResume.vi}`, sub: "Chương tiếp theo trên bản đồ", label: "Chơi tiếp", run: () => go("adventure"), bg: advResume.sceneImage };
   } else {
     cta = { kicker: "Luyện cho nhớ lâu", title: "Luyện tập cùng Maple", sub: "Chơi một lượt có chấm điểm", label: "Luyện tập", run: () => go("games") };
   }
