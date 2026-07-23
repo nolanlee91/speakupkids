@@ -89,10 +89,11 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, onPick, o
           return (
             <button key={it.id} className={`scene-card ${discovered > 0 ? "explored" : ""}`} onClick={() => onPick(it.id)}>
               <span className="sc-thumb">
-                {it.image ? <img src={it.image} alt={it.name} /> : <span className="sc-emoji">{it.emoji}</span>}
+                {it.image ? <img src={it.image} alt="" /> : <span className="sc-emoji" aria-hidden="true">{it.emoji}</span>}
                 {complete && <span className="sc-check">✓</span>}
               </span>
               <span className="sc-name">{it.name}</span>
+              <span className="sc-sub">{it.sub}</span>
               <span className="sc-sub">{discovered}/{it.total} thử thách{prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}</span>
               {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
             </button>

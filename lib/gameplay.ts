@@ -80,6 +80,17 @@ export function selectRound<T extends { id: string }>(
   const dist = distFor(n);
   const buckets: Record<Difficulty, T[]> = { easy: [], medium: [], hard: [] };
   for (const it of ranked) buckets[difficultyOf(it)].push(it); // giữ thứ tự ưu tiên trong từng độ khó
+  // Khi đã khám phá hết topic, xoay điểm bắt đầu theo số lượt hoàn thành.
+  // Nếu không làm bước này, mỗi lần replay sẽ luôn lấy lại cùng nhóm câu cũ nhất.
+  if (prog.seen.length >= items.length && prog.playCount > 0) {
+    for (const d of ["easy", "medium", "hard"] as Difficulty[]) {
+      const bucket = buckets[d];
+      if (bucket.length > 1) {
+        const offset = prog.playCount % bucket.length;
+        buckets[d] = [...bucket.slice(offset), ...bucket.slice(0, offset)];
+      }
+    }
+  }
   const picked: T[] = [];
   const chosen = new Set<string>();
   const take = (d: Difficulty, count: number) => {
