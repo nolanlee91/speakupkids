@@ -910,13 +910,18 @@
   .dtask.done { border-left-color: var(--teal-d); background: #f2fbf8; }
   .dt-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 1.2rem;
     background: var(--mist); color: var(--teal-d); font-weight: 900; flex: 0 0 auto; }
+  .dt-ic .app-icon { width: 22px; height: 22px; }
   .dtask.done .dt-ic { background: #d6f3ea; }
   .dt-label { flex: 1; font-weight: 800; color: var(--navy); }
   .dt-go { font-weight: 800; font-size: .82rem; color: var(--muted); }
   .today-stats { display: flex; gap: 10px; margin-bottom: 14px; }
   .ts { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; text-align: center;
     font-size: .74rem; font-weight: 700; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
-  .ts b { font-family: var(--font-head-stack); font-size: 1.1rem; color: var(--navy); }
+  .ts b { display: flex; justify-content: center; align-items: center; gap: 6px;
+    font-family: var(--font-head-stack); font-size: 1.1rem; color: var(--navy); }
+  .ts b .app-icon { width: 18px; height: 18px; color: var(--teal-d); }
+  .ts:nth-child(2) b .app-icon { color: #d99516; }
+  .ts:nth-child(3) b .app-icon { color: #cc5c49; }
   .today-recent { background: rgba(242,179,61,.14); border-radius: 14px; padding: 12px 14px; font-size: .86rem;
     font-weight: 600; color: var(--navy); }
 
@@ -1219,6 +1224,11 @@
     .tp-card:hover { transform: translateY(-2px); }
     .tp-ic { font-size: 1.4rem; width: 42px; height: 42px; display: grid; place-items: center;
       background: var(--mist); border-radius: 12px; flex: 0 0 auto; }
+    .tp-ic .app-icon { width: 24px; height: 24px; color: var(--teal-d); }
+    .tp-games .tp-ic { background: #fff1ce; }
+    .tp-games .tp-ic .app-icon { color: #b77a13; }
+    .tp-adv .tp-ic { background: #ffebe7; }
+    .tp-adv .tp-ic .app-icon { color: #cb563f; }
     .tp-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     .tp-t { font-weight: 800; color: var(--navy); }
     .tp-s { font-size: .76rem; color: var(--muted); font-weight: 700; }

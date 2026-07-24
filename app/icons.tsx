@@ -4,7 +4,7 @@ export type AppIconName =
   | "home" | "learn" | "practice" | "adventure"
   | "phonics" | "everyday" | "story" | "opinion"
   | "words" | "sentence" | "listen" | "speak" | "check"
-  | "lock" | "play" | "volume";
+  | "lock" | "play" | "volume" | "streak" | "star" | "reward";
 
 type IconProps = SVGProps<SVGSVGElement> & { name: AppIconName };
 
@@ -54,5 +54,11 @@ export function AppIcon({ name, className, ...props }: IconProps) {
       return <svg {...common}><path d="m9 6 9 6-9 6z" /></svg>;
     case "volume":
       return <svg {...common}><path d="M4 10h4l5-4v12l-5-4H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" /></svg>;
+    case "streak":
+      return <svg {...common}><path d="M13.5 3.5c.5 3-1.8 4.3-1.8 6.4 0 1.2.8 2 1.8 2.5-.1-1.8 1-3 2.2-4.1 2.2 2 3.3 4.1 3.3 6.4a7 7 0 0 1-14 0c0-3.6 2.1-6.1 5.2-8.5-.2 2.3.5 3.6 1.5 4.2.7-2.2.6-4.7 1.8-6.9Z" /><path d="M9.4 16.3c0 1.6 1.1 2.7 2.6 2.7s2.6-1.1 2.6-2.7c0-1.2-.7-2.2-2.1-3.2.1 1.1-.2 1.8-.7 2.2-.3-.8-.7-1.3-1.3-1.8-.8.9-1.1 1.8-1.1 2.8Z" /></svg>;
+    case "star":
+      return <svg {...common}><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" /></svg>;
+    case "reward":
+      return <svg {...common}><path d="M4 10h16v10H4zM3 7h18v4H3zM12 7v13" /><path d="M12 7H8.5C6 7 5.2 3.7 7.6 3.2 9.2 2.8 10.8 4.6 12 7ZM12 7h3.5c2.5 0 3.3-3.3.9-3.8C14.8 2.8 13.2 4.6 12 7Z" /></svg>;
   }
 }

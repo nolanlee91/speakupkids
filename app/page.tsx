@@ -263,10 +263,10 @@ function Today({ state, go, openLesson }: {
   }
 
   const daily = state.daily;
-  const tasks: { ic: string; label: string; done: boolean; run: () => void }[] = [
-    { ic: "📖", label: "Học một chặng", done: daily.learn, run: () => openLesson(lesson.id) },
-    { ic: "🎮", label: "Luyện tập một lượt", done: daily.practice, run: () => go("games") },
-    { ic: "🗺️", label: "Vượt một bước phiêu lưu", done: daily.adventure, run: () => go("adventure") },
+  const tasks: { ic: AppIconName; label: string; done: boolean; run: () => void }[] = [
+    { ic: "learn", label: "Học một chặng", done: daily.learn, run: () => openLesson(lesson.id) },
+    { ic: "practice", label: "Luyện tập một lượt", done: daily.practice, run: () => go("games") },
+    { ic: "adventure", label: "Vượt một bước phiêu lưu", done: daily.adventure, run: () => go("adventure") },
   ];
   const doneToday = tasks.filter((t) => t.done).length;
 
@@ -300,7 +300,7 @@ function Today({ state, go, openLesson }: {
       <div className="daily-tasks">
         {tasks.map((t) => (
           <button key={t.label} className={`dtask ${t.done ? "done" : ""}`} onClick={t.run}>
-            <span className="dt-ic">{t.done ? "✓" : t.ic}</span>
+            <span className="dt-ic">{t.done ? <AppIcon name="check" /> : <AppIcon name={t.ic} />}</span>
             <span className="dt-label">{t.label}</span>
             <span className="dt-go">{t.done ? "Đã xong" : "▸"}</span>
           </button>
@@ -309,9 +309,9 @@ function Today({ state, go, openLesson }: {
 
       {/* Tiến độ ngắn gọn */}
       <div className="today-stats">
-        <span className="ts"><b>🔥 {state.streak}</b>chuỗi ngày</span>
-        <span className="ts"><b>⭐ {totalStars(state)}</b>tổng sao</span>
-        <span className="ts"><b>🎁 {(state.stickers || []).length}</b>sticker</span>
+        <span className="ts"><b><AppIcon name="streak" />{state.streak}</b>chuỗi ngày</span>
+        <span className="ts"><b><AppIcon name="star" />{totalStars(state)}</b>tổng sao</span>
+        <span className="ts"><b><AppIcon name="reward" />{(state.stickers || []).length}</b>sticker</span>
       </div>
 
       {/* Thành quả gần nhất */}
@@ -326,17 +326,17 @@ function Today({ state, go, openLesson }: {
       {/* Ba module: mở rộng điều hướng (không dựng hệ thống cổng phức tạp) */}
       <nav className="today-portals" aria-label="Khu học tập">
         <button className="tp-card tp-learn" onClick={() => go("learn")}>
-          <span className="tp-ic" aria-hidden="true">📖</span>
+          <span className="tp-ic" aria-hidden="true"><AppIcon name="learn" /></span>
           <span className="tp-txt"><span className="tp-t">Học</span><span className="tp-s">{learnedUnits}/{TOTAL_UNITS} Unit</span></span>
           <span className="tp-go">▸</span>
         </button>
         <button className="tp-card tp-games" onClick={() => go("games")}>
-          <span className="tp-ic" aria-hidden="true">🎮</span>
+          <span className="tp-ic" aria-hidden="true"><AppIcon name="practice" /></span>
           <span className="tp-txt"><span className="tp-t">Luyện tập</span><span className="tp-s">{gamesDone(state)} lượt chơi</span></span>
           <span className="tp-go">▸</span>
         </button>
         <button className="tp-card tp-adv" onClick={() => go("adventure")}>
-          <span className="tp-ic" aria-hidden="true">🗺️</span>
+          <span className="tp-ic" aria-hidden="true"><AppIcon name="adventure" /></span>
           <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone}/{advSeason.chapters.length} chương</span></span>
           <span className="tp-go">▸</span>
         </button>
