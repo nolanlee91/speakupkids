@@ -13,6 +13,8 @@ Canonical image folder for Level 1 lessons.
 | 07 | At the Science Fair | `level-1-unit-07-at-the-science-fair.webp` |
 | 08 | At the Science Museum | `level-1-unit-08-at-the-science-museum.webp` |
 | 09 | At the Vancouver Waterfront | `level-1-unit-09-at-the-vancouver-waterfront.webp` |
+| 10 | At the Community Sports Centre | `level-1-unit-10-at-the-community-sports-centre.webp` |
 
 These are familiar-place lessons. Build vocabulary, sentence patterns, listening and a machine-graded Mini Check around each scene.
 
+Unit 10 visual focus: sports-centre actions and objects, present continuous, `can / can't`, asking where facilities are, and following simple pictogram directions.

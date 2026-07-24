@@ -13,12 +13,15 @@ Canonical image folder for Level 2 lessons.
 | 07 | The Time Capsule Discovery | `level-2-unit-07-time-capsule-discovery.webp` | Past tense, comparing past and present, evidence and inference |
 | 08 | The Beach Cleanup Change of Plan | `level-2-unit-08-beach-cleanup-change-of-plan.webp` | Weather, future plans, alternatives, choices and reasons |
 | 09 | The Aquarium Night Mystery | `level-2-unit-09-aquarium-night-mystery.webp` | Event sequence, reported observations, competing explanations and conclusion |
+| 10 | The Power Outage at the Community Centre | `level-2-unit-10-community-centre-power-outage.webp` | Safety advice, competing causes, evidence sequence, cause and effect, and choosing a solution |
 
 ## Difficulty progression
 
 - Units 01–03: identify the situation, follow a short event sequence and make one inference.
 - Units 04–06: connect several clues, explain cause and effect, and choose a solution.
-- Units 07–09: compare evidence, reject misleading clues, retell events and justify a conclusion.
+- Units 07–10: compare evidence, reject misleading clues, retell events and justify a conclusion.
+
+Unit 10 story guardrail: the students observe and discuss evidence while the adult coordinator controls the breaker panel. Do not write tasks that encourage children to touch electrical equipment. The final solution should combine safe isolation of the overloaded power strip with adult inspection before power is restored.
 
 ## Curriculum rule
 
@@ -31,4 +34,3 @@ Each unit must be a multi-step story lesson with:
 5. A final inference, prediction or outcome.
 
 These are not simple picture-description lessons and should not automatically be reused as Games content. Do not place answer text inside the image; all language content belongs in structured lesson data.
-

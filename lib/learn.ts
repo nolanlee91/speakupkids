@@ -679,6 +679,75 @@ const AT_THE_VANCOUVER_WATERFRONT: Lesson = {
   },
 };
 
+/* ============ Level 1 · Unit 10: At the Community Sports Centre ============ */
+const AT_THE_COMMUNITY_SPORTS_CENTRE: Lesson = {
+  id: "sportscentre", theme: "everyday-town", title: "At the Community Sports Centre", vi: "Ở trung tâm thể thao", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-10-at-the-community-sports-centre.webp",
+  vocab: [
+    { word: "court", ipa: "/kɔːrt/", vi: "sân (bóng rổ)", emoji: "🏀", example: "The boys are playing on the court.", exampleVi: "Các bạn đang chơi trên sân." },
+    { word: "coach", ipa: "/koʊtʃ/", vi: "huấn luyện viên", emoji: "🧑‍🏫", example: "The coach has a whistle.", exampleVi: "Huấn luyện viên có một chiếc còi." },
+    { word: "locker", ipa: "/ˈlɒkər/", vi: "tủ để đồ", emoji: "🔒", example: "Put your bag in the locker.", exampleVi: "Để túi vào tủ nhé." },
+    { word: "water fountain", ipa: "/ˈwɔːtər ˈfaʊntən/", vi: "vòi nước uống", emoji: "🚰", example: "Fill your bottle at the water fountain.", exampleVi: "Bơm nước vào bình ở vòi nước." },
+    { word: "sneakers", ipa: "/ˈsniːkərz/", vi: "giày thể thao", emoji: "👟", example: "She is tying her sneakers.", exampleVi: "Bạn ấy đang buộc giày thể thao." },
+    { word: "stretch", ipa: "/stretʃ/", vi: "giãn cơ", emoji: "🤸", example: "We stretch before we run.", exampleVi: "Mình giãn cơ trước khi chạy." },
+    { word: "bounce", ipa: "/baʊns/", vi: "nảy/rê bóng", emoji: "⛹️", example: "You bounce the ball with one hand.", exampleVi: "Bạn nảy bóng bằng một tay." },
+    { word: "sign", ipa: "/saɪn/", vi: "biển chỉ dẫn", emoji: "🪧", example: "The sign shows where to go.", exampleVi: "Biển chỉ dẫn cho biết đi lối nào." },
+  ],
+  patterns: [
+    { pattern: "… is / are + -ing", vi: "… đang làm gì (hiện tại tiếp diễn)", examples: [
+      { en: "The boys are playing basketball.", vi: "Các bạn nam đang chơi bóng rổ." },
+      { en: "She is tying her sneakers.", vi: "Bạn ấy đang buộc giày." }] },
+    { pattern: "I can / I can't …", vi: "Mình có thể / không thể …", examples: [
+      { en: "I can dribble the ball.", vi: "Mình có thể rê bóng." },
+      { en: "I can't swim very well yet.", vi: "Mình chưa bơi giỏi lắm." }] },
+    { pattern: "Where is / are the …?", vi: "… ở đâu?", examples: [
+      { en: "Where is the pool?", vi: "Bể bơi ở đâu?" },
+      { en: "Where are the lockers?", vi: "Các tủ để đồ ở đâu?" }] },
+    { pattern: "For … , go / turn …", vi: "Muốn tới … thì đi / rẽ …", examples: [
+      { en: "For basketball, go this way.", vi: "Muốn chơi bóng rổ thì đi lối này." },
+      { en: "For swimming, turn left.", vi: "Muốn bơi thì rẽ trái." }] },
+  ],
+  listening: {
+    intro: "Listen to Maple at the sports centre, then answer.",
+    introVi: "Nghe Maple ở trung tâm thể thao rồi trả lời.",
+    script: "Maple and her friends arrived at the community sports centre after school. Some children were already playing basketball on the court, and a girl was tying her sneakers on the bench. \"Where is the pool?\" Maple asked. The coach smiled and pointed at a big sign on the wall. The sign had pictures and arrows: a basketball with an arrow to the right, and a swimmer with an arrow to the left. \"For swimming, turn left,\" said the coach. \"For basketball, go right.\" First, the friends filled their bottles at the water fountain. Then they stretched their arms and legs. \"I can't swim very well yet,\" said Maple, \"but I can learn today!\"",
+    questions: [
+      { q: "What were some children doing on the court?", vi: "Vài bạn nhỏ đang làm gì trên sân?",
+        options: ["Playing basketball", "Sleeping", "Reading books"], answer: "Playing basketball" },
+      { q: "On the sign, which way is the pool?", vi: "Trên biển chỉ dẫn, bể bơi ở hướng nào?",
+        options: ["Left", "Right", "Up"], answer: "Left",
+        explainVi: "Biển có mũi tên chỉ sang trái cho bơi lội (swimming)." },
+      { q: "What did the friends do before they started?", vi: "Các bạn làm gì trước khi bắt đầu?",
+        options: ["Filled bottles and stretched", "Went home", "Turned off the lights"], answer: "Filled bottles and stretched" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The boys are playing basketball on the court.", vi: "Các bạn nam đang chơi bóng rổ trên sân." },
+      { en: "I can dribble, but I can't swim very well yet.", vi: "Mình rê bóng được, nhưng chưa bơi giỏi lắm." },
+    ],
+    guided: { q: "What can you do at a sports centre?", vi: "Bạn có thể làm gì ở trung tâm thể thao?", hint: "I can ___ at the sports centre." },
+    describe: {
+      prompt: "Look at the sports centre picture. Describe it in 3–5 sentences. Use one \"…is/are …-ing\", one \"I can/can't\", and one \"Where is…?\".",
+      vi: "Nhìn tranh trung tâm thể thao. Mô tả 3–5 câu, dùng một câu \"…đang…\", một câu \"I can/can't\", và một câu \"Where is…?\".",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"the place where you play basketball\"?", vi: "Từ nào nghĩa là \"nơi bạn chơi bóng rổ\"?",
+        options: ["court", "locker", "sign"], answer: "court" },
+      { type: "sentence", q: "Which sentence is present continuous (happening now)?", vi: "Câu nào ở hiện tại tiếp diễn (đang xảy ra)?",
+        options: ["She is tying her sneakers.", "She ties her sneakers every day.", "She tied her sneakers yesterday."], answer: "She is tying her sneakers.",
+        explainVi: "\"is + V-ing\" diễn tả việc đang xảy ra ngay lúc này." },
+      { type: "reading", q: "The sign shows a swimmer with an arrow pointing left. Which way do you go for the pool?", vi: "Biển có hình người bơi và mũi tên chỉ sang trái. Đi lối nào tới bể bơi?",
+        options: ["Turn left", "Turn right", "Go straight up"], answer: "Turn left" },
+      { type: "listening", q: "What did Maple say she could NOT do well yet?", vi: "Maple nói mình CHƯA làm giỏi việc gì?",
+        options: ["Swim", "Walk", "Talk"], answer: "Swim" },
+    ],
+  },
+};
+
 /* ============ Level 2 · Stories & Situations — bài kể chuyện (nhiều bước) ============ */
 /* Unit 1: The Missing Backpack */
 const THE_MISSING_BACKPACK: Lesson = {
@@ -1302,6 +1371,78 @@ const THE_AQUARIUM_NIGHT_MYSTERY: Lesson = {
         explainVi: "Thứ tự: kiểm tra kính → thấy vệt nước → thấy bạch tuộc." },
       { type: "reading", q: "The wet trail came from the top and the octopus was at the edge. What is the best conclusion?", vi: "Vệt nước chảy từ trên xuống và bạch tuộc ở sát mép. Kết luận hợp lý nhất?",
         options: ["The octopus splashed the water out", "The floor made its own water", "The lights melted"], answer: "The octopus splashed the water out" },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 10: The Power Outage at the Community Centre ============ */
+// Rào an toàn: NGƯỜI LỚN xử lý bảng điện; trẻ chỉ quan sát & bàn luận, KHÔNG chạm thiết bị điện.
+const THE_POWER_OUTAGE: Lesson = {
+  id: "outage", theme: "story-time", title: "The Power Outage at the Community Centre", vi: "Mất điện ở trung tâm cộng đồng", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-10-community-centre-power-outage.webp",
+  vocab: [
+    { word: "outage", ipa: "/ˈaʊtɪdʒ/", vi: "sự mất điện", emoji: "🔌", example: "There was a power outage during the storm.", exampleVi: "Có một đợt mất điện khi trời bão." },
+    { word: "flashlight", ipa: "/ˈflæʃlaɪt/", vi: "đèn pin", emoji: "🔦", example: "Maple turned on her flashlight.", exampleVi: "Maple bật đèn pin." },
+    { word: "lantern", ipa: "/ˈlæntərn/", vi: "đèn lồng/đèn bão", emoji: "🏮", example: "The coordinator brought two lanterns.", exampleVi: "Người phụ trách mang ra hai chiếc đèn lồng." },
+    { word: "breaker", ipa: "/ˈbreɪkər/", vi: "cầu dao điện", emoji: "⚡", example: "Only an adult should touch the breaker.", exampleVi: "Chỉ người lớn mới nên chạm vào cầu dao." },
+    { word: "overloaded", ipa: "/ˌoʊvərˈloʊdɪd/", vi: "quá tải", emoji: "⚠️", example: "The power strip was overloaded.", exampleVi: "Ổ cắm điện bị quá tải." },
+    { word: "floor plan", ipa: "/flɔːr plæn/", vi: "sơ đồ mặt bằng", emoji: "🗺️", example: "They read the floor plan to find the exit.", exampleVi: "Các bạn xem sơ đồ để tìm lối ra." },
+    { word: "exit", ipa: "/ˈeksɪt/", vi: "lối thoát", emoji: "🚪", example: "The green sign shows the exit.", exampleVi: "Biển xanh chỉ lối thoát." },
+    { word: "calm", ipa: "/kɑːm/", vi: "bình tĩnh", emoji: "😌", example: "Stay calm during a power outage.", exampleVi: "Hãy bình tĩnh khi mất điện." },
+  ],
+  patterns: [
+    { pattern: "Maybe it's … , or maybe …", vi: "Có thể do … , hoặc do …", examples: [
+      { en: "Maybe it's the storm, or maybe a breaker tripped.", vi: "Có thể do bão, hoặc do một cầu dao bị ngắt." },
+      { en: "Maybe it's the wires, or maybe too many plugs.", vi: "Có thể do dây điện, hoặc do cắm quá nhiều phích." }] },
+    { pattern: "It can't be … because …", vi: "Không thể do … vì …", examples: [
+      { en: "It can't be the whole street, because the streetlights still work.", vi: "Không thể do cả khu phố, vì đèn đường vẫn sáng." },
+      { en: "It can't be a storm outside, because the sky is clear.", vi: "Không thể do bão, vì trời quang." }] },
+    { pattern: "We should / shouldn't …", vi: "Mình nên / không nên …", examples: [
+      { en: "We should stay calm and use a flashlight.", vi: "Mình nên bình tĩnh và dùng đèn pin." },
+      { en: "We shouldn't touch the breaker box ourselves.", vi: "Mình không nên tự chạm vào hộp cầu dao." }] },
+    { pattern: "… was overloaded, so …", vi: "… bị quá tải, nên …", examples: [
+      { en: "The power strip was overloaded, so the breaker tripped.", vi: "Ổ cắm bị quá tải nên cầu dao ngắt." },
+      { en: "The plug was too hot, so we unplugged it.", vi: "Phích cắm quá nóng nên rút ra." }] },
+  ],
+  listening: {
+    intro: "Listen to the story, then answer. What caused the outage?",
+    introVi: "Nghe câu chuyện rồi trả lời. Điều gì gây ra mất điện?",
+    script: "One rainy evening at the community centre, the lights suddenly went out. It was dark, so Maple turned on her flashlight and the coordinator, Ms. Lee, brought lanterns. \"Maybe it's the storm,\" said Theo, \"or maybe a breaker tripped.\" The friends looked out the window. The streetlights across the road were still on. \"It can't be the whole street,\" said Maple, \"because the streetlights still work.\" Then they looked at the craft table. The power strip there had too many plugs — a glue gun, two tablets and a lamp — and it felt warm. \"The strip is overloaded,\" said Ms. Lee. She told the children to stand back, because only an adult should touch the breaker box. Ms. Lee unplugged the extra devices and reset one breaker, and the lights came back on. To keep everyone safe, she said an electrician would check the wiring the next day.",
+    questions: [
+      { q: "Why couldn't the outage be the whole street?", vi: "Vì sao không phải cả khu phố mất điện?",
+        options: ["The streetlights still worked", "It was sunny", "The doors were open"], answer: "The streetlights still worked",
+        explainVi: "Đèn đường vẫn sáng nên không phải cả khu phố mất điện." },
+      { q: "What was overloaded?", vi: "Thứ gì bị quá tải?",
+        options: ["The power strip with too many plugs", "The water fountain", "The front door"], answer: "The power strip with too many plugs" },
+      { q: "Who was allowed to touch the breaker box?", vi: "Ai được phép chạm vào hộp cầu dao?",
+        options: ["Only an adult (Ms. Lee)", "Any child", "Nobody at all"], answer: "Only an adult (Ms. Lee)",
+        explainVi: "Trẻ em chỉ quan sát; chỉ người lớn mới xử lý thiết bị điện cho an toàn." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "We should stay calm and use a flashlight.", vi: "Mình nên bình tĩnh và dùng đèn pin." },
+      { en: "The power strip was overloaded, so the breaker tripped.", vi: "Ổ cắm bị quá tải nên cầu dao ngắt." },
+    ],
+    guided: { q: "What should you do in a power outage?", vi: "Bạn nên làm gì khi mất điện?", hint: "We should ___." },
+    describe: {
+      prompt: "Retell the story in 3–5 sentences. Give the clues in order, name the cause, and say the safe solution.",
+      vi: "Kể lại 3–5 câu: nêu các manh mối theo thứ tự, chỉ ra nguyên nhân, và nói cách xử lý an toàn.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"having too many things plugged in at once\"?", vi: "Từ nào nghĩa là \"cắm quá nhiều thứ cùng lúc\"?",
+        options: ["overloaded", "calm", "exit"], answer: "overloaded" },
+      { type: "reading", q: "Some thought a storm cut the whole street's power. Why was that wrong?", vi: "Vài người nghĩ bão làm cả phố mất điện. Vì sao sai?",
+        options: ["The streetlights across the road still worked", "It never rains", "The clock stopped"], answer: "The streetlights across the road still worked",
+        explainVi: "Đèn đường còn sáng → không phải cả khu phố mất điện." },
+      { type: "reading", q: "The power strip felt warm and had many plugs. What is the best conclusion?", vi: "Ổ cắm ấm và cắm nhiều phích. Kết luận hợp lý nhất?",
+        options: ["It was overloaded and tripped the breaker", "It needed more plugs", "It was too cold"], answer: "It was overloaded and tripped the breaker" },
+      { type: "listening", q: "What is the SAFE thing for children to do here?", vi: "Điều AN TOÀN mà trẻ nên làm ở đây là gì?",
+        options: ["Stand back and let an adult handle the breaker", "Open the breaker box themselves", "Pull all the wires out"], answer: "Stand back and let an adult handle the breaker",
+        explainVi: "Trẻ không chạm thiết bị điện; để người lớn xử lý cầu dao." },
     ],
   },
 };
@@ -1941,21 +2082,93 @@ const A_GREENER_SCHOOL_FESTIVAL: Lesson = {
   },
 };
 
+/* ============ Level 3 · Bộ 3 · Unit 4: Making the School More Accessible ============ */
+// Rào: bạn ngồi xe lăn là người giải quyết BÌNH ĐẲNG, có tiếng nói. So sánh nhiều giải pháp;
+// không coi accessibility là "làm từ thiện", không cho rằng một giải pháp hợp với TẤT CẢ.
+const MAKING_SCHOOL_ACCESSIBLE: Lesson = {
+  id: "accessible", theme: "solving-problems", title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-3/collection-03-solving-problems/level-3-c03-unit-04-making-school-more-accessible.webp",
+  vocab: [
+    { word: "accessible", ipa: "/əkˈsesəbl/", vi: "dễ tiếp cận", emoji: "♿", example: "We want the school to be accessible to everyone.", exampleVi: "Mình muốn trường ai cũng vào được dễ dàng." },
+    { word: "ramp", ipa: "/ræmp/", vi: "đường dốc", emoji: "🛗", example: "A wheelchair can roll up the ramp.", exampleVi: "Xe lăn có thể lên bằng đường dốc." },
+    { word: "slope", ipa: "/sloʊp/", vi: "độ dốc", emoji: "📐", example: "They checked the slope with a level.", exampleVi: "Các bạn dùng thước nivô kiểm độ dốc." },
+    { word: "doorway", ipa: "/ˈdɔːrweɪ/", vi: "khung cửa", emoji: "🚪", example: "The doorway was too narrow to turn through.", exampleVi: "Khung cửa quá hẹp để quay xe qua." },
+    { word: "tactile paving", ipa: "/ˈtæktaɪl ˈpeɪvɪŋ/", vi: "gạch lát xúc giác", emoji: "🟨", example: "Tactile paving helps people who are blind.", exampleVi: "Gạch lát xúc giác giúp người khiếm thị." },
+    { word: "alert", ipa: "/əˈlɜːrt/", vi: "tín hiệu báo", emoji: "🔔", example: "A flashing alert helps people who can't hear well.", exampleVi: "Đèn báo nhấp nháy giúp người nghe kém." },
+    { word: "barrier", ipa: "/ˈbæriər/", vi: "vật cản", emoji: "🚧", example: "A cart was a barrier on the path.", exampleVi: "Chiếc xe đẩy là vật cản trên lối đi." },
+    { word: "inclusive", ipa: "/ɪnˈkluːsɪv/", vi: "bao trùm mọi người", emoji: "🤝", example: "An inclusive design works for many people.", exampleVi: "Thiết kế bao trùm phù hợp với nhiều người." },
+  ],
+  patterns: [
+    { pattern: "For someone who … , … is important", vi: "Với người mà … , … là quan trọng", examples: [
+      { en: "For someone in a wheelchair, a gentle slope is important.", vi: "Với người ngồi xe lăn, độ dốc thoải là quan trọng." },
+      { en: "For someone who can't hear well, a flashing alert is important.", vi: "Với người nghe kém, đèn báo nhấp nháy là quan trọng." }] },
+    { pattern: "One benefit of … is … , but one drawback is …", vi: "Một lợi ích của … là … , nhưng một điểm dở là …", examples: [
+      { en: "One benefit of a temporary ramp is that it's quick, but one drawback is that it can be slippery.", vi: "Lợi ích của dốc tạm là nhanh, nhưng điểm dở là dễ trơn." },
+      { en: "One benefit of a wide door is easy turning, but one drawback is the cost.", vi: "Cửa rộng thì dễ quay xe, nhưng điểm dở là tốn kém." }] },
+    { pattern: "Instead of one fix, we could combine …", vi: "Thay vì một cách sửa, mình có thể kết hợp …", examples: [
+      { en: "Instead of one fix, we could combine a gentler ramp and a wider doorway.", vi: "Thay vì một cách, mình có thể kết hợp dốc thoải hơn và cửa rộng hơn." },
+      { en: "Instead of one fix, we could add tactile paving and a clear path.", vi: "Thay vì một cách, mình có thể thêm gạch xúc giác và lối đi thông thoáng." }] },
+    { pattern: "The most inclusive choice is … because …", vi: "Lựa chọn bao trùm nhất là … vì …", examples: [
+      { en: "The most inclusive choice is to combine changes, because different people need different things.", vi: "Lựa chọn bao trùm nhất là kết hợp nhiều thay đổi, vì mỗi người có nhu cầu khác nhau." },
+      { en: "The most inclusive choice helps more people, not just one.", vi: "Lựa chọn bao trùm nhất giúp được nhiều người, không chỉ một người." }] },
+  ],
+  listening: {
+    intro: "Listen to the team test the school entrance, then answer.",
+    introVi: "Nghe cả nhóm kiểm tra lối vào trường rồi trả lời.",
+    script: "The class tested how easy it was to enter the school. Minh, who uses a wheelchair, rolled up the new temporary ramp first. \"It works, but it feels a little too steep,\" he said. Lan checked it with a level, and the slope really was steep. At the door, the automatic button helped a lot, but the doorway was narrow and hard to turn through. Near the wall, a cart full of bins blocked part of the path. \"One benefit of the temporary ramp is that it's quick,\" said Maple, \"but one drawback is that it's steep and slippery in the rain.\" Another student pointed at the tactile paving and the water fountain with two heights, which helped people who were blind or shorter. \"Instead of one fix,\" said Minh, \"we could combine a gentler ramp, a wider doorway, and a clear path.\" The team agreed the most inclusive choice was to combine several changes, because different people need different things.",
+    questions: [
+      { q: "Who tested the ramp first?", vi: "Ai thử đường dốc đầu tiên?",
+        options: ["Minh, who uses a wheelchair", "The school principal", "Nobody"], answer: "Minh, who uses a wheelchair",
+        explainVi: "Minh — bạn ngồi xe lăn — chủ động thử dốc đầu tiên." },
+      { q: "What was one drawback of the temporary ramp?", vi: "Một điểm dở của dốc tạm là gì?",
+        options: ["It was too steep and slippery", "It was invisible", "It was too flat"], answer: "It was too steep and slippery" },
+      { q: "Why is combining several changes the most inclusive choice?", vi: "Vì sao kết hợp nhiều thay đổi là lựa chọn bao trùm nhất?",
+        options: ["Different people need different things", "It is the cheapest", "It looks the nicest"], answer: "Different people need different things" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "For someone in a wheelchair, a gentle slope is important.", vi: "Với người ngồi xe lăn, độ dốc thoải là quan trọng." },
+      { en: "Instead of one fix, we could combine several changes.", vi: "Thay vì một cách, mình có thể kết hợp nhiều thay đổi." },
+    ],
+    guided: { q: "How would you make a place more accessible for everyone?", vi: "Bạn sẽ làm một nơi dễ tiếp cận hơn cho mọi người thế nào?", hint: "For someone who ___, ___ is important." },
+    describe: {
+      prompt: "Suggest how to make a place more accessible in 3–5 sentences. Name a need, compare one benefit and one drawback, and give an inclusive recommendation.",
+      vi: "Đề xuất cách làm một nơi dễ tiếp cận hơn 3–5 câu: nêu một nhu cầu, so một lợi ích và một điểm dở, rồi đưa khuyến nghị bao trùm.",
+      min: 3, max: 5,
+    },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means \"working well for many different people\"?", vi: "Từ nào nghĩa là \"phù hợp với nhiều người khác nhau\"?",
+        options: ["inclusive", "barrier", "slope"], answer: "inclusive" },
+      { type: "reading", q: "The temporary ramp is quick to add. What is one drawback the team found?", vi: "Dốc tạm thì lắp nhanh. Nhóm thấy một điểm dở nào?",
+        options: ["It was too steep and slippery", "It was too colourful", "It was too quiet"], answer: "It was too steep and slippery",
+        explainVi: "Nhanh là lợi ích, nhưng dốc và trơn khi mưa là điểm dở." },
+      { type: "reading", q: "Tactile paving and a two-height water fountain help which people?", vi: "Gạch xúc giác và vòi nước hai tầng giúp ai?",
+        options: ["People who are blind or shorter", "Only tall adults", "Only the coach"], answer: "People who are blind or shorter",
+        explainVi: "Mỗi thay đổi phục vụ một nhu cầu khác nhau." },
+      { type: "reading", q: "Why did the team choose to combine several changes?", vi: "Vì sao nhóm chọn kết hợp nhiều thay đổi?",
+        options: ["Different people need different things", "One change is always enough", "To spend more money"], answer: "Different people need different things" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
-    lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY] },
+    lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE] },
   { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
     lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
   { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
     lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW,
       THE_FERRY_TRIP_MIX_UP, THE_ROBOT_THAT_WOULDNT_START, THE_COMMUNITY_GARDEN_MYSTERY,
-      THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY] },
+      THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY, THE_POWER_OUTAGE] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
     lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
     lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND] },
   { id: "solving-problems", name: "Solving Problems", vi: "Giải Quyết Vấn Đề", emoji: "🛠️",
-    lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL] },
+    lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL, MAKING_SCHOOL_ACCESSIBLE] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -1977,6 +2190,7 @@ export const LEVEL1_UNITS: CourseUnit[] = [
   { id: "sciencefair",  n: 7, title: "At the Science Fair",     vi: "Ở hội chợ khoa học",    image: L1IMG + "level-1-unit-07-at-the-science-fair.webp",         focus: "Dự án · trình bày · trình tự",     lessonId: "sciencefair",  ready: true },
   { id: "sciencemuseum",n: 8, title: "At the Science Museum",   vi: "Ở bảo tàng khoa học",   image: L1IMG + "level-1-unit-08-at-the-science-museum.webp",       focus: "Khám phá · so sánh · nội quy",     lessonId: "sciencemuseum",ready: true },
   { id: "waterfront",   n: 9, title: "At the Vancouver Waterfront", vi: "Bờ nước Vancouver", image: L1IMG + "level-1-unit-09-at-the-vancouver-waterfront.webp", focus: "Cảnh vật · phương hướng · dự đoán", lessonId: "waterfront",   ready: true },
+  { id: "sportscentre", n: 10, title: "At the Community Sports Centre", vi: "Ở trung tâm thể thao", image: L1IMG + "level-1-unit-10-at-the-community-sports-centre.webp", focus: "Hành động · can/can't · phương hướng", lessonId: "sportscentre", ready: true },
 ];
 
 /* ============ Level 2 · Stories & Situations (3 Unit) ============ */
@@ -1991,6 +2205,7 @@ export const LEVEL2_UNITS: CourseUnit[] = [
   { id: "capsule",    n: 7, title: "The Time Capsule Discovery", vi: "Khám phá hộp thời gian",  image: L2IMG + "level-2-unit-07-time-capsule-discovery.webp",   focus: "Quá khứ · so xưa–nay · bằng chứng",  lessonId: "capsule",    ready: true },
   { id: "beach",      n: 8, title: "The Beach Cleanup Change of Plan", vi: "Đổi kế hoạch dọn biển", image: L2IMG + "level-2-unit-08-beach-cleanup-change-of-plan.webp", focus: "Thời tiết · kế hoạch · lựa chọn", lessonId: "beach",  ready: true },
   { id: "aquarium",   n: 9, title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung",   image: L2IMG + "level-2-unit-09-aquarium-night-mystery.webp",   focus: "Trình tự · loại trừ · kết luận",     lessonId: "aquarium",   ready: true },
+  { id: "outage",     n: 10, title: "The Power Outage at the Community Centre", vi: "Mất điện ở trung tâm cộng đồng", image: L2IMG + "level-2-unit-10-community-centre-power-outage.webp", focus: "An toàn · nguyên nhân · nhân–quả · chọn giải pháp", lessonId: "outage", ready: true },
 ];
 
 /* ============ Level 3 · Opinions & Conversations — chia theo Bộ (Collection) ============ */
@@ -2014,6 +2229,7 @@ export const LEVEL3_COLLECTIONS: CourseCollection[] = [
     { id: "lunchroom", n: 1, title: "A Quieter Lunchroom",      vi: "Nhà ăn bớt ồn hơn",       image: L3C3IMG + "level-3-c03-unit-01-quieter-lunchroom.webp",       focus: "Nêu nhu cầu · thử nghiệm · chỉnh sửa",  lessonId: "lunchroom", ready: true },
     { id: "bikeroute", n: 2, title: "A Safer Bike Route",       vi: "Tuyến xe đạp an toàn hơn", image: L3C3IMG + "level-3-c03-unit-02-safer-bike-route.webp",        focus: "Ràng buộc · đánh đổi · khuyến nghị",    lessonId: "bikeroute", ready: true },
     { id: "festival",  n: 3, title: "A Greener School Festival", vi: "Lễ hội trường xanh hơn",  image: L3C3IMG + "level-3-c03-unit-03-greener-school-festival.webp", focus: "Ưu tiên · nguồn lực · thương lượng",    lessonId: "festival",  ready: true },
+    { id: "accessible", n: 4, title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", image: L3C3IMG + "level-3-c03-unit-04-making-school-more-accessible.webp", focus: "Nhu cầu tiếp cận · lợi–hại · kết hợp giải pháp", lessonId: "accessible", ready: true },
   ] },
 ];
 
