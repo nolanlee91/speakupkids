@@ -11,7 +11,7 @@ import { useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, lessonPct } from "@/lib/state";
 import type { LearningSectionKey } from "@/lib/learn";
-import type { PhonicsUnit, PhonMCQ } from "@/lib/phonics";
+import { phonicsKeywordImage, type PhonicsSound, type PhonicsUnit, type PhonMCQ } from "@/lib/phonics";
 import { speak, shuffle } from "@/lib/fx";
 
 type PhView = "overview" | LearningSectionKey | "check";
@@ -115,7 +115,7 @@ function SoundsView({ unit, onDone, back }: { unit: PhonicsUnit; onDone: () => v
         {unit.sounds.map((s) => (
           <button key={s.letter} className="ph-sound-card" onClick={() => speak(s.keyword, "US")}>
             <span className="ph-letter">{s.letter}</span>
-            <span className="ph-emoji" aria-hidden="true">{s.emoji}</span>
+            <KeywordArt sound={s} />
             <span className="ph-kw">{s.sound} · {s.keyword}</span>
             <span className="ph-play">🔊</span>
           </button>
@@ -123,6 +123,16 @@ function SoundsView({ unit, onDone, back }: { unit: PhonicsUnit; onDone: () => v
       </div>
       <button className="btn accent ph-next-btn" onClick={onDone}>Xong · Học tiếp →</button>
     </Page>
+  );
+}
+
+function KeywordArt({ sound }: { sound: PhonicsSound }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return <span className="ph-emoji" aria-hidden="true">{sound.emoji}</span>;
+  return (
+    <span className="ph-keyword-art">
+      <img src={phonicsKeywordImage(sound.keyword)} alt={sound.keyword} onError={() => setFailed(true)} />
+    </span>
   );
 }
 

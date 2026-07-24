@@ -1,7 +1,7 @@
 // ============================================================================
 // LEVEL 0 — PHONICS & FIRST WORDS (Bảng chữ & Ghép vần)
 // Dạy ÂM của chữ (không phải tên chữ) rồi ghép thành từ (synthetic phonics).
-// Không dùng ảnh cảnh: chữ (typography) + emoji từ khoá + TTS `speak()` sẵn có.
+// Không dùng ảnh cảnh: chữ (typography) + tranh từ khoá riêng + audio/TTS dự phòng.
 // Tiến độ tái dùng state.learn.lessons[unit.id] với 4 section keys chuẩn.
 // ============================================================================
 
@@ -321,7 +321,11 @@ export const PHONICS_UNITS: PhonicsUnit[] = [
 /* ---------- helpers ---------- */
 export const phonicsUnitById = (id: string): PhonicsUnit | undefined => PHONICS_UNITS.find((u) => u.id === id);
 
-// Danh sách unit cho Course Map (Level 0). Không có ảnh cảnh → dùng `thumb` (chữ) + emoji.
+const PHONICS_KEYWORD_IMG = "/assets/images/phonics/keywords/";
+export const phonicsKeywordImage = (keyword: string): string =>
+  `${PHONICS_KEYWORD_IMG}${keyword.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}.webp`;
+
+// Danh sách unit cho Course Map (Level 0). Không có ảnh cảnh → dùng `thumb` (chữ).
 export const LEVEL0_UNITS: CourseUnit[] = PHONICS_UNITS.map((u) => ({
   id: u.id, n: u.n, title: u.title, vi: u.vi, focus: u.introVi, thumb: u.letters, phonicsId: u.id, ready: true,
 }));
