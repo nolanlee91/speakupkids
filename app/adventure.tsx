@@ -112,8 +112,8 @@ function AdventureHome({ season, state, onStart }: {
         <p className="adv-hero-sub">Dùng vốn tiếng Anh để giải bí ẩn và khám phá những vùng đất mới.</p>
       </header>
 
-      <button className="season-card" onClick={onStart} style={cover ? { backgroundImage: `url('${cover}')` } : undefined}>
-        <span className="sc-scrim" />
+      <button className="season-card" onClick={onStart}>
+        {cover && <img className="sc-img" src={cover} alt="" />}
         <span className="sc-body">
           <span className="sc-kicker">Season 1 · Chiến dịch</span>
           <span className="sc-title">{season.title}</span>

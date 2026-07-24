@@ -283,8 +283,8 @@ function Today({ state, go, openLesson }: {
       </div>
 
       {/* CTA chính duy nhất */}
-      <button className="next-card" style={{ backgroundImage: (cta.bg || lesson.sceneImage) ? `url('${cta.bg || lesson.sceneImage}')` : undefined }} onClick={cta.run}>
-        <span className="nc-scrim" />
+      <button className="next-card" onClick={cta.run}>
+        {(cta.bg || lesson.sceneImage) && <img className="nc-img" src={cta.bg || lesson.sceneImage} alt="" />}
         <span className="nc-body">
           <span className="nc-kicker">{cta.kicker}</span>
           <span className="nc-title">{cta.title}</span>

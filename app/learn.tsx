@@ -57,8 +57,8 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
     <section className="learn">
       <button className="bk course-back" onClick={() => setScreen("map")}>← Chương trình học</button>
       {/* Hero + Continue learning */}
-      <div className="learn-hero fullbleed" style={{ backgroundImage: lesson.sceneImage ? `url('${lesson.sceneImage}')` : undefined }}>
-        <div className="lh-overlay" />
+      <div className="learn-hero fullbleed">
+        {lesson.sceneImage && <img className="lh-img" src={lesson.sceneImage} alt="" />}
         <div className="lh-panel">
           <div className="lh-eyebrow">📚 Đang học · {theme?.name}</div>
           <div className="lh-title">{lesson.title} <small>· {lesson.vi}</small></div>
