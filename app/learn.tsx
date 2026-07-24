@@ -7,6 +7,8 @@ import {
   SECTIONS, DIFFICULTY, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS, showVi, showPrompts, learnLessonById, allLearnLessons, themeOfLesson,
   type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit, type CourseCollection,
 } from "@/lib/learn";
+import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
+import { PhonicsLesson } from "./phonics";
 import { speak, shuffle } from "@/lib/fx";
 
 const GEN = "/assets/images/gen/";
@@ -25,16 +27,34 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
   const accent = state.prefs.accent;
   const [screen, setScreen] = useState<"map" | "lesson">(entry);
   const [view, setView] = useState<SecView>("overview");
+  const [phonicsId, setPhonicsId] = useState<string | null>(null);
 
   // Màn chương trình học: chọn Unit trước khi vào bài
   if (screen === "map") {
     return <CourseMap state={state} onPick={(u) => {
-      if (!u.ready || !u.lessonId) return;
+      if (!u.ready) return;
+      if (u.phonicsId) { setPhonicsId(u.phonicsId); setScreen("lesson"); return; }
+      if (!u.lessonId) return;
       const id = u.lessonId;
       setState((s) => setCurrentLesson(s, id));
+      setPhonicsId(null);
       setView("overview");
       setScreen("lesson");
     }} />;
+  }
+
+  // Level 0 · Phonics — player riêng
+  if (phonicsId) {
+    const punit = phonicsUnitById(phonicsId);
+    if (punit) {
+      return (
+        <PhonicsLesson
+          state={state} setState={setState} unit={punit} accent={accent}
+          onExit={() => { setPhonicsId(null); setScreen("map"); }}
+          onComplete={(id, sc, t) => onComplete(id, sc, t)}
+        />
+      );
+    }
   }
 
   const doneCount = SECTIONS.filter((sc) => sectionDone(state, lesson.id, sc.key)).length;
@@ -115,13 +135,15 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
   const [openLevel, setOpenLevel] = useState<string>("1");
   const renderUnit = (u: CourseUnit) => {
-    const done = u.lessonId ? learnLessonDone(state, u.lessonId) : false;
-    const pct = u.lessonId ? lessonPct(state, u.lessonId, SECTIONS.length) : 0;
-    const check = u.lessonId ? state.learn.lessons[u.lessonId]?.check : undefined;
+    const pid = u.lessonId || u.phonicsId;
+    const done = pid ? learnLessonDone(state, pid) : false;
+    const pct = pid ? lessonPct(state, pid, SECTIONS.length) : 0;
+    const check = pid ? state.learn.lessons[pid]?.check : undefined;
     return (
       <li key={u.id} className={`unit ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
         <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
-          <span className="unit-thumb" style={{ backgroundImage: `url('${u.image}')` }}>
+          <span className={`unit-thumb ${u.image ? "" : "ph"}`} style={u.image ? { backgroundImage: `url('${u.image}')` } : undefined}>
+            {!u.image && <span className="unit-thumb-txt" aria-hidden="true">{u.thumb}</span>}
             <span className="unit-n">{u.n}</span>
             {!u.ready && <span className="unit-badge lock">🔒</span>}
             {done && <span className="unit-badge ok">✓</span>}
@@ -142,7 +164,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
   };
 
   const levelDone = (units: CourseUnit[]) =>
-    units.filter((u) => u.lessonId && learnLessonDone(state, u.lessonId)).length;
+    units.filter((u) => { const id = u.lessonId || u.phonicsId; return id && learnLessonDone(state, id); }).length;
 
   const Level = ({ id, icon, title, sub, units, groups }: { id: string; icon: string; title: string; sub: string; units?: CourseUnit[]; groups?: CourseCollection[] }) => {
     const isOpen = openLevel === id;
@@ -175,10 +197,11 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
         <img className="course-maple" src={`${GEN}mascot-book.webp`} alt="" />
         <div>
           <h2 className="chapter">Chương trình học</h2>
-          <p className="course-sub">3 cấp độ · chạm vào từng cấp để mở các bài</p>
+          <p className="course-sub">4 cấp độ · chạm vào từng cấp để mở các bài</p>
         </div>
       </div>
 
+      <Level id="0" icon="🔤" title="Level 0 · Phonics & First Words" sub="Bảng chữ, âm & ghép vần cho người mới bắt đầu" units={LEVEL0_UNITS} />
       <Level id="1" icon="📘" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
       <Level id="2" icon="📗" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
       <Level id="3" icon="📕" title="Level 3 · Opinions & Conversations" sub="Nêu ý kiến, lý do & trò chuyện" groups={LEVEL3_COLLECTIONS} />

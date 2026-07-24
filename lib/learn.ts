@@ -3004,8 +3004,11 @@ const SIMG = "/assets/images/gen/";
 const L1IMG = "/assets/images/learn/level-1/";
 const L2IMG = "/assets/images/learn/level-2/";
 export type CourseUnit = {
-  id: string; n: number; title: string; vi: string; image: string; focus: string;
-  lessonId?: string; ready: boolean;
+  id: string; n: number; title: string; vi: string; focus: string; ready: boolean;
+  image?: string;        // ảnh cảnh (Level 1–3); Level 0 phonics không có
+  thumb?: string;        // chữ hiển thị trên thumbnail khi không có ảnh (Level 0)
+  lessonId?: string;     // trỏ tới Lesson chuẩn (Level 1–3)
+  phonicsId?: string;    // trỏ tới PhonicsUnit (Level 0)
 };
 export const LEVEL1_UNITS: CourseUnit[] = [
   { id: "park",         n: 1, title: "At the Park",             vi: "Ở công viên",          image: SIMG + "scene-park.webp",          focus: "Hành động · thời tiết · vị trí",   lessonId: "park",         ready: true },

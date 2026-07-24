@@ -14,6 +14,7 @@ import {
   type StopKind, type GameKind,
 } from "@/lib/games";
 import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS } from "@/lib/learn";
+import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { SEASON_LOST_COMPASS, resumeChapter } from "@/lib/adventures";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
@@ -44,7 +45,7 @@ const BADGES: { img: string; nm: string; has: (s: AppState) => boolean }[] = [
 
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
 // Tổng số Unit của cả 3 Level (dùng cho thanh tiến độ ở dashboard Home desktop).
-const TOTAL_UNITS = LEVEL1_UNITS.length + LEVEL2_UNITS.length + LEVEL3_COLLECTIONS.reduce((a, c) => a + c.units.length, 0);
+const TOTAL_UNITS = LEVEL0_UNITS.length + LEVEL1_UNITS.length + LEVEL2_UNITS.length + LEVEL3_COLLECTIONS.reduce((a, c) => a + c.units.length, 0);
 
 type View = "home" | "learn" | "adventure" | "games";
 type Launch = { kind: StopKind; refId?: string; title: string };
@@ -127,7 +128,7 @@ export default function App() {
     if (firstMap) ns = addSticker(ns, "st-map");
     setState(ns);
     celebrate(state.prefs.motion !== false);
-    const les = learnLessonById(lessonId);
+    const les = learnLessonById(lessonId) || phonicsUnitById(lessonId);
     const sk = firstMap ? stickerById("st-map") : null;
     const st = score >= total ? 3 : score >= total - 1 ? 2 : 1;
     setReward({
