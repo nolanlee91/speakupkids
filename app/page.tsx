@@ -274,12 +274,12 @@ function Today({ state, go, openLesson }: {
 
   return (
     <section className="today">
+      {/* Streak đã hiển thị ở HUD (🔥) — không lặp cờ streak ở đây để tránh trùng banner. */}
       <div className="today-hi">
         <div>
           <div className="hello-sign">Chào {name}! <span className="hs-wave">👋</span></div>
           <p className="today-lead">Hôm nay bé nên làm gì tiếp theo?</p>
         </div>
-        <div className="today-flag" aria-hidden="true"><span>🔥</span>{state.streak} ngày</div>
       </div>
 
       {/* CTA chính duy nhất */}

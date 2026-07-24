@@ -865,7 +865,8 @@
   .wtag.collect:hover { transform: translateY(-1px); }
 
   /* ---------- HÔM NAY ---------- */
-  .today { max-width: 620px; margin: 0 auto; }
+  /* padding-top chừa chỗ cho HUD (position:absolute, cao ~70px) — giống .adv-home, tránh HUD đè lời chào */
+  .today { max-width: 620px; margin: 0 auto; padding-top: 58px; }
   .today-hi { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 4px 2px 16px; }
   .today-lead { color: var(--muted); font-weight: 700; margin: 4px 0 0; }
   .today-flag { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: .82rem; color: var(--coral-d);
