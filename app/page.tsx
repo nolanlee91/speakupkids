@@ -13,7 +13,7 @@ import {
   GAMES, STICKERS, stickerById, STICKER_FOR_GAME,
   type StopKind, type GameKind,
 } from "@/lib/games";
-import { SECTIONS, learnLessonById } from "@/lib/learn";
+import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS } from "@/lib/learn";
 import { SEASON_LOST_COMPASS, resumeChapter } from "@/lib/adventures";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
@@ -43,6 +43,8 @@ const BADGES: { img: string; nm: string; has: (s: AppState) => boolean }[] = [
 ];
 
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
+// Tổng số Unit của cả 3 Level (dùng cho thanh tiến độ ở dashboard Home desktop).
+const TOTAL_UNITS = LEVEL1_UNITS.length + LEVEL2_UNITS.length + LEVEL3_COLLECTIONS.reduce((a, c) => a + c.units.length, 0);
 
 type View = "home" | "learn" | "adventure" | "games";
 type Launch = { kind: StopKind; refId?: string; title: string };
@@ -266,6 +268,11 @@ function Today({ state, go, openLesson }: {
   ];
   const doneToday = tasks.filter((t) => t.done).length;
 
+  // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
+  const learnedUnits = learnLessonsDone(state);
+  const advDone = adventuresDone(state);
+  const badgesEarned = BADGES.filter((b) => b.has(state)).length;
+
   return (
     <section className="today">
       <div className="today-hi">
@@ -307,12 +314,49 @@ function Today({ state, go, openLesson }: {
       </div>
 
       {/* Thành quả gần nhất */}
-      {(learnLessonsDone(state) > 0 || adventuresDone(state) > 0) && (
+      {(learnedUnits > 0 || advDone > 0) && (
         <div className="today-recent">
-          🎉 Gần đây: đã học xong <b>{learnLessonsDone(state)}</b> Unit
-          {adventuresDone(state) > 0 && <> · vượt <b>{adventuresDone(state)}</b> nhiệm vụ</>}.
+          🎉 Gần đây: đã học xong <b>{learnedUnits}</b> Unit
+          {advDone > 0 && <> · vượt <b>{advDone}</b> nhiệm vụ</>}.
         </div>
       )}
+
+      {/* ===== Chỉ hiện ở desktop (dashboard) — ẩn trên mobile qua CSS ===== */}
+      {/* Cột giữa: ba cổng module (điều hướng như hiện tại) */}
+      <nav className="today-portals" aria-label="Khu học tập">
+        <button className="tp-card tp-learn" onClick={() => go("learn")}>
+          <span className="tp-ic" aria-hidden="true">📖</span>
+          <span className="tp-t">Học</span>
+          <span className="tp-s">{learnedUnits}/{TOTAL_UNITS} Unit</span>
+        </button>
+        <button className="tp-card tp-games" onClick={() => go("games")}>
+          <span className="tp-ic" aria-hidden="true">🎮</span>
+          <span className="tp-t">Luyện tập</span>
+          <span className="tp-s">{gamesDone(state)} lượt chơi</span>
+        </button>
+        <button className="tp-card tp-adv" onClick={() => go("adventure")}>
+          <span className="tp-ic" aria-hidden="true">🗺️</span>
+          <span className="tp-t">Phiêu lưu</span>
+          <span className="tp-s">{advDone}/{advSeason.chapters.length} chương</span>
+        </button>
+      </nav>
+
+      {/* Cột phải: tiến độ Level + huy hiệu (dữ liệu thật) */}
+      <div className="td-panel td-progress">
+        <div className="tdp-h">Tiến độ học</div>
+        <div className="tdp-bar"><i style={{ width: `${TOTAL_UNITS ? Math.round((learnedUnits / TOTAL_UNITS) * 100) : 0}%` }} /></div>
+        <div className="tdp-meta">{learnedUnits}/{TOTAL_UNITS} Unit đã hoàn thành</div>
+      </div>
+      <div className="td-panel td-badges">
+        <div className="tdp-h">Huy hiệu · {badgesEarned}/{BADGES.length}</div>
+        <div className="tdb-row">
+          {BADGES.map((b) => (
+            <span key={b.img} className={`tdb ${b.has(state) ? "on" : ""}`} title={b.nm}>
+              <img src={`${BDG}${b.img}`} alt="" />
+            </span>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
