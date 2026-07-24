@@ -118,7 +118,6 @@ function AdventureHome({ season, state, onStart }: {
           <span className="sc-kicker">Season 1 · Chiến dịch</span>
           <span className="sc-title">{season.title}</span>
           <span className="sc-vi">{season.vi}</span>
-          <span className="sc-sub">{season.subtitle}</span>
           <span className="sc-meta">
             <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
             <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>

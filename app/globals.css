@@ -746,15 +746,15 @@
   .clh-collection small { font-family: var(--font-body-stack); font-weight: 700; color: var(--muted); font-size: .74rem; }
 
   /* Hero + Continue learning */
-  .learn-hero { position: relative; min-height: clamp(210px, 34vh, 300px); display: flex; align-items: flex-end;
-    background-position: center 32%; background-size: cover; background-repeat: no-repeat; background-color: #cfe3f2; }
-  .lh-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,40,60,.06) 40%, rgba(30,40,55,.42) 100%); }
-  .lh-panel { position: relative; z-index: 2; margin: 0 16px 16px; max-width: min(92%, 460px);
-    background: rgba(255,255,255,.86); backdrop-filter: blur(6px); border: 2px solid rgba(255,255,255,.9);
-    border-radius: 18px; padding: 12px 16px; box-shadow: 0 10px 26px rgba(31,58,77,.2); }
+  /* Hero tách đôi: ảnh ở trên (lộ rõ), panel kem đặc bên dưới — đồng bộ với CTA & Adventure */
+  .learn-hero { position: relative; min-height: clamp(230px, 36vh, 320px); display: flex; flex-direction: column; justify-content: flex-end;
+    background-position: center 38%; background-size: cover; background-repeat: no-repeat; background-color: #cfe3f2; overflow: hidden; }
+  .lh-overlay { position: absolute; left: 0; right: 0; bottom: 0; height: 50%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(250,243,231,0) 0%, rgba(250,243,231,.55) 60%, var(--paper) 100%); }
+  .lh-panel { position: relative; z-index: 2; margin: 0; background: var(--paper); padding: 12px 16px 16px; }
   .lh-eyebrow { font-size: .74rem; font-weight: 800; color: var(--brand-d); }
-  .lh-title { font-size: clamp(1.2rem, 3.5vw, 1.6rem); font-weight: 800; color: #163445; }
-  .lh-title small { font-weight: 700; color: #5a6172; font-size: .8em; }
+  .lh-title { font-size: clamp(1.2rem, 3.5vw, 1.6rem); font-weight: 800; color: var(--navy); }
+  .lh-title small { font-weight: 700; color: var(--muted); font-size: .8em; }
   .lh-bar { position: relative; height: 12px; background: #eadfce; border-radius: 999px; overflow: hidden; margin: 8px 0 12px; }
   .lh-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--green)); }
   .lh-bar > span { position: absolute; right: 8px; top: -1px; font-size: .66rem; font-weight: 800; color: #4a5568; }
@@ -871,15 +871,19 @@
   .today-lead { color: var(--muted); font-weight: 700; margin: 4px 0 0; }
   .today-flag { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: .82rem; color: var(--coral-d);
     background: #fbe6df; border-radius: 999px; padding: 8px 12px; white-space: nowrap; }
-  .next-card { display: block; width: 100%; text-align: left; position: relative; overflow: hidden; cursor: pointer;
-    border: none; border-radius: 22px; min-height: 190px; padding: 0; font-family: inherit;
-    background-size: cover; background-position: center; box-shadow: 0 14px 32px rgba(39,52,92,.18); }
+  /* Card tách đôi: ảnh ở trên (lộ rõ), chữ + nút trong panel kem đặc bên dưới — không scrim phủ kín ảnh */
+  .next-card { display: flex; flex-direction: column; justify-content: flex-end; width: 100%; text-align: left;
+    position: relative; overflow: hidden; cursor: pointer; border: none; border-radius: 22px; min-height: 260px;
+    padding: 0; font-family: inherit; background-size: cover; background-position: center 44%;
+    box-shadow: 0 14px 32px rgba(39,52,92,.18); }
   .next-card:hover { transform: translateY(-2px); }
-  .nc-scrim { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(39,52,92,.82) 0%, rgba(39,52,92,.5) 52%, rgba(39,52,92,.15) 100%); }
-  .nc-body { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 22px 22px 20px; color: #fff; }
-  .nc-kicker { font-weight: 800; font-size: .72rem; letter-spacing: 1px; text-transform: uppercase; color: #ffd9b0; }
-  .nc-title { font-family: var(--font-head-stack); font-weight: 700; font-size: 1.5rem; line-height: 1.15; }
-  .nc-sub { font-size: .9rem; opacity: .92; margin-bottom: 10px; }
+  .nc-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 52%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(250,243,231,0) 0%, rgba(250,243,231,.55) 58%, var(--paper) 100%); }
+  .nc-body { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 12px 20px 18px;
+    background: var(--paper); color: var(--navy); }
+  .nc-kicker { font-weight: 800; font-size: .72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-d); }
+  .nc-title { font-family: var(--font-head-stack); font-weight: 700; font-size: 1.5rem; line-height: 1.15; color: var(--navy); }
+  .nc-sub { font-size: .9rem; color: var(--muted); margin-bottom: 10px; }
   .nc-cta { align-self: flex-start; background: var(--coral); color: #fff; font-family: var(--font-head-stack);
     font-weight: 700; padding: 11px 20px; border-radius: 14px; box-shadow: 0 8px 18px rgba(240,101,74,.4); }
   .daily-tasks { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 18px; }
@@ -906,19 +910,20 @@
   .adv-hero { text-align: center; margin: 2px 4px 18px; }
   .adv-hero-title { font-size: 1.5rem; margin: 0; color: var(--navy); }
   .adv-hero-sub { color: var(--muted); font-weight: 700; font-size: .9rem; margin: 6px 0 0; }
-  .season-card { position: relative; display: block; width: 100%; text-align: left; cursor: pointer;
-    border: 4px solid #fff; border-radius: 22px; overflow: hidden; padding: 0; min-height: 220px;
-    background-size: cover; background-position: center; box-shadow: 0 14px 34px rgba(39,52,92,.2);
+  /* Card tách đôi: ảnh trên (lộ rõ), panel kem đặc bên dưới — bỏ scrim tối phủ ảnh */
+  .season-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; width: 100%;
+    text-align: left; cursor: pointer; border: 4px solid #fff; border-radius: 22px; overflow: hidden; padding: 0; min-height: 320px;
+    background-size: cover; background-position: center 42%; box-shadow: 0 14px 34px rgba(39,52,92,.2);
     transition: transform .14s, box-shadow .14s; font-family: inherit; }
   .season-card:hover { transform: translateY(-4px); box-shadow: 0 20px 42px rgba(39,52,92,.26); }
-  .sc-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,28,52,.05) 0%, rgba(20,28,52,.35) 46%, rgba(20,28,52,.86) 100%); }
-  .sc-body { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 120px 20px 20px; color: #fff; }
-  .sc-kicker { font-weight: 800; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; opacity: .9; }
-  .sc-title { font-family: var(--font-head-stack); font-weight: 800; font-size: 1.4rem; }
-  .sc-vi { font-weight: 700; font-size: .92rem; opacity: .95; }
-  .sc-sub { font-weight: 600; font-size: .84rem; opacity: .9; margin-top: 4px; max-width: 40ch; }
+  .sc-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 46%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(250,243,231,0) 0%, rgba(250,243,231,.55) 60%, var(--paper) 100%); }
+  .sc-body { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 12px 20px 18px; background: var(--paper); color: var(--navy); }
+  .sc-kicker { font-weight: 800; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-d); }
+  .sc-title { font-family: var(--font-head-stack); font-weight: 800; font-size: 1.4rem; color: var(--navy); }
+  .sc-vi { font-weight: 700; font-size: .92rem; color: var(--muted); }
   .sc-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
-  .sc-progress { background: rgba(255,255,255,.2); border-radius: 999px; padding: 5px 14px; font-weight: 800; font-size: .82rem; }
+  .sc-progress { background: rgba(45,49,66,.08); color: var(--navy); border-radius: 999px; padding: 5px 14px; font-weight: 800; font-size: .82rem; }
   .sc-cta { background: var(--coral); color: #fff; border-radius: 999px; padding: 8px 16px; font-weight: 800; font-size: .86rem;
     box-shadow: 0 4px 0 rgba(0,0,0,.18); }
 
@@ -1053,7 +1058,7 @@
   .cr-go { min-width: 200px; margin-top: 6px; }
 
   @media (max-width: 560px) {
-    .sc-body { padding: 100px 16px 16px; }
+    .sc-body { padding: 12px 16px 16px; }
     .sc-title { font-size: 1.2rem; }
     .map-node { width: 44px; height: 44px; font-size: .95rem; }
     .map-maple { width: 52px; height: 52px; }
