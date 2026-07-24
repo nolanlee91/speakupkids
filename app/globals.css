@@ -941,7 +941,7 @@
   .season-list { display: flex; flex-direction: column; gap: 16px; }
 
   /* ============ PHIÊU LƯU: Season Map ============ */
-  .adv-map-wrap { max-width: 900px; margin: 0 auto; padding: 58px 14px 8px; }
+  .adv-map-wrap { max-width: 900px; margin: 0 auto; padding: 58px 14px 8px; overflow-x: clip; }
   .adv-map-bar { display: flex; align-items: center; gap: 12px; margin: 2px 2px 12px; }
   .adv-map-bar .bk { background: #fff; border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px;
     cursor: pointer; font-weight: 800; color: var(--navy); font-family: inherit; }
@@ -950,8 +950,10 @@
   .amb-prog { font-size: .8rem; color: var(--muted); font-weight: 700; }
 
   /* Khung bản đồ giữ nguyên tỉ lệ 16:9 — KHÔNG crop (contain), toạ độ node theo %. */
-  .adv-map-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden;
+  /* Frame KHÔNG clip để tooltip node không bị cắt; chỉ clip riêng ảnh + đường đi trong .adv-map-clip. */
+  .adv-map-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 20px;
     border: 4px solid #fff; box-shadow: 0 14px 34px rgba(39,52,92,.18); background: #cfe6ea; }
+  .adv-map-clip { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; }
   .adv-map-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; }
   .adv-map-routes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .adv-map-routes .route { stroke: rgba(255,255,255,.45); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 2 5; }
@@ -971,8 +973,13 @@
   @keyframes nodePulse { 0%,100% { box-shadow: 0 4px 12px rgba(240,101,74,.5), 0 0 0 0 rgba(240,101,74,.45); }
     50% { box-shadow: 0 4px 14px rgba(240,101,74,.6), 0 0 0 8px rgba(240,101,74,0); } }
   .mn-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) scale(.9);
-    background: var(--navy); color: #fff; font-size: .72rem; font-weight: 800; white-space: nowrap;
-    padding: 4px 9px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .12s, transform .12s; }
+    background: var(--navy); color: #fff; font-size: .72rem; font-weight: 800; line-height: 1.25; text-align: center;
+    white-space: normal; width: max-content; max-width: 130px; z-index: 6;
+    padding: 4px 9px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .12s, transform .12s;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+  /* Node hàng trên: tooltip lật xuống dưới để không tràn ra mép trên khung. */
+  .map-node.tip-below .mn-tip { bottom: auto; top: calc(100% + 8px); }
+  .map-node:hover, .map-node:focus-visible { z-index: 6; }
   .map-node:hover .mn-tip, .map-node:focus-visible .mn-tip { opacity: 1; transform: translateX(-50%) scale(1); }
 
   .map-maple { position: absolute; width: 64px; height: 64px; object-fit: contain; pointer-events: none;

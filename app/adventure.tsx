@@ -232,29 +232,34 @@ function SeasonMap({ season, state, animate, travelFrom, onTravelDone, onBack, o
         </div>
       </div>
 
-      {/* Khung 16:9 — KHÔNG crop bằng cover để toạ độ node không lệch. */}
+      {/* Khung 16:9 — KHÔNG crop bằng cover để toạ độ node không lệch.
+          Ảnh + đường đi được clip bo góc riêng; node/tooltip KHÔNG bị khung cắt. */}
       <div className="adv-map-frame">
-        <img className="adv-map-img" src={season.mapImage} alt="" aria-hidden="true" />
+        <div className="adv-map-clip">
+          <img className="adv-map-img" src={season.mapImage} alt="" aria-hidden="true" />
 
-        {/* Đường đi giữa các node (SVG overlay, toạ độ theo %). */}
-        <svg className="adv-map-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          {season.chapters.slice(0, -1).map((ch, i) => {
-            const next = season.chapters[i + 1];
-            const revealed = isDone(ch.id); // đoạn đường "sáng" khi chương trước đã xong
-            return (
-              <line key={ch.id} x1={ch.node.x} y1={ch.node.y} x2={next.node.x} y2={next.node.y}
-                className={`route ${revealed ? "on" : ""}`} vectorEffect="non-scaling-stroke" />
-            );
-          })}
-        </svg>
+          {/* Đường đi giữa các node (SVG overlay, toạ độ theo %). */}
+          <svg className="adv-map-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {season.chapters.slice(0, -1).map((ch, i) => {
+              const next = season.chapters[i + 1];
+              const revealed = isDone(ch.id); // đoạn đường "sáng" khi chương trước đã xong
+              return (
+                <line key={ch.id} x1={ch.node.x} y1={ch.node.y} x2={next.node.x} y2={next.node.y}
+                  className={`route ${revealed ? "on" : ""}`} vectorEffect="non-scaling-stroke" />
+              );
+            })}
+          </svg>
+        </div>
 
         {/* Các node chương. */}
         {season.chapters.map((ch, i) => {
           const st = states[i];
           const label = `Chương ${ch.chapterNumber}: ${ch.vi} — ${
             st === "completed" ? "đã hoàn thành" : st === "locked" ? "đã khoá" : "đang mở"}`;
+          // Node ở hàng trên → tooltip lật xuống dưới cho khỏi tràn ra mép trên.
+          const tipBelow = ch.node.y < 30;
           return (
-            <button key={ch.id} className={`map-node ${st}`} style={{ left: `${ch.node.x}%`, top: `${ch.node.y}%` }}
+            <button key={ch.id} className={`map-node ${st} ${tipBelow ? "tip-below" : ""}`} style={{ left: `${ch.node.x}%`, top: `${ch.node.y}%` }}
               aria-label={label} title={`${ch.chapterNumber}. ${ch.title}`}
               onClick={() => clickNode(ch, st)}>
               <span className="mn-badge">
