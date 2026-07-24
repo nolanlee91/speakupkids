@@ -2979,10 +2979,286 @@ const REDUCING_FOOD_WASTE: Lesson = {
   },
 };
 
+/* ============ Level 1 · Unit 16: At the Post Office ============ */
+const AT_THE_POST_OFFICE: Lesson = {
+  id: "postoffice", theme: "everyday-town", title: "At the Post Office", vi: "Ở bưu điện", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-16-at-the-post-office.webp",
+  vocab: [
+    { word: "post office", ipa: "/poʊst ˈɒfɪs/", vi: "bưu điện", emoji: "🏤", example: "We send letters at the post office.", exampleVi: "Chúng mình gửi thư ở bưu điện." },
+    { word: "parcel", ipa: "/ˈpɑːrsl/", vi: "bưu kiện", emoji: "📦", example: "The girl holds a big parcel.", exampleVi: "Bạn gái cầm một bưu kiện lớn." },
+    { word: "envelope", ipa: "/ˈenvəloʊp/", vi: "phong bì", emoji: "✉️", example: "Put the letter in an envelope.", exampleVi: "Bỏ lá thư vào phong bì." },
+    { word: "stamp", ipa: "/stæmp/", vi: "con tem", emoji: "🏷️", example: "You need a stamp to send a letter.", exampleVi: "Cần một con tem để gửi thư." },
+    { word: "scale", ipa: "/skeɪl/", vi: "cái cân", emoji: "⚖️", example: "The scale weighs the parcel.", exampleVi: "Cái cân cân bưu kiện." },
+    { word: "weigh", ipa: "/weɪ/", vi: "cân (đo nặng)", emoji: "🏋️", example: "Let's weigh the box.", exampleVi: "Mình cân chiếc hộp nào." },
+    { word: "send", ipa: "/send/", vi: "gửi", emoji: "📤", example: "I'd like to send this parcel.", exampleVi: "Mình muốn gửi bưu kiện này." },
+    { word: "letter", ipa: "/ˈletər/", vi: "lá thư", emoji: "💌", example: "She wrote a letter to Grandma.", exampleVi: "Bạn ấy viết một lá thư cho bà." },
+  ],
+  patterns: [
+    { pattern: "I'd like to send …", vi: "Mình muốn gửi …", examples: [
+      { en: "I'd like to send this parcel.", vi: "Mình muốn gửi bưu kiện này." },
+      { en: "I'd like to send a letter.", vi: "Mình muốn gửi một lá thư." }] },
+    { pattern: "How much is …?", vi: "… giá bao nhiêu?", examples: [
+      { en: "How much is a stamp?", vi: "Một con tem giá bao nhiêu?" },
+      { en: "How much is it to send this box?", vi: "Gửi chiếc hộp này hết bao nhiêu?" }] },
+    { pattern: "It weighs …", vi: "Nó nặng …", examples: [
+      { en: "It weighs two kilograms.", vi: "Nó nặng hai ki-lô-gam." },
+      { en: "The letter weighs very little.", vi: "Lá thư rất nhẹ." }] },
+    { pattern: "First …, then …", vi: "Đầu tiên …, rồi …", examples: [
+      { en: "First we weigh it, then we add a stamp.", vi: "Đầu tiên mình cân, rồi dán tem." },
+      { en: "First write the address, then send it.", vi: "Đầu tiên viết địa chỉ, rồi gửi đi." }] },
+  ],
+  listening: {
+    intro: "Listen to the post-office story, then answer.", introVi: "Nghe chuyện ở bưu điện rồi trả lời.",
+    script: "Mia went to the post office to send a birthday present to her cousin. \"I'd like to send this parcel, please,\" she said. The clerk put the box on the scale. \"It weighs two kilograms,\" he said. Mia also had a small letter. \"How much is a stamp?\" she asked. First, the clerk weighed the parcel, then he added the right stamps. The present would arrive by Friday.",
+    questions: [
+      { q: "Why did Mia go to the post office?", vi: "Vì sao Mia đến bưu điện?", options: ["To send a birthday present", "To buy shoes", "To read a book"], answer: "To send a birthday present", explainVi: "Mia đi gửi quà sinh nhật cho anh/chị họ." },
+      { q: "How heavy was the parcel?", vi: "Bưu kiện nặng bao nhiêu?", options: ["Two kilograms", "Ten kilograms", "Nothing"], answer: "Two kilograms", explainVi: "Cái cân báo hai ki-lô-gam." },
+      { q: "What did the clerk do first?", vi: "Nhân viên làm gì trước tiên?", options: ["He weighed the parcel", "He ate lunch", "He closed the shop"], answer: "He weighed the parcel", explainVi: "Đầu tiên cân bưu kiện, rồi mới dán tem." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "I'd like to send this parcel, please.", vi: "Mình muốn gửi bưu kiện này ạ." },
+      { en: "How much is a stamp?", vi: "Một con tem giá bao nhiêu?" },
+    ],
+    guided: { q: "What would you like to send by post?", vi: "Bạn muốn gửi gì qua bưu điện?", hint: "I'd like to send ___." },
+    describe: { prompt: "Look at the post-office picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"I'd like to send\".", vi: "Nhìn tranh bưu điện. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"I'd like to send\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you put on a letter so it can be sent?", vi: "Bạn dán gì lên thư để gửi được?", options: ["A stamp", "A scale", "A parcel"], answer: "A stamp" },
+      { type: "sentence", q: "Which sentence politely sends a parcel?", vi: "Câu nào gửi bưu kiện một cách lịch sự?", options: ["I'd like to send this parcel, please.", "Take my box now.", "The box is brown."], answer: "I'd like to send this parcel, please." },
+      { type: "listening", q: "How heavy was Mia's parcel?", vi: "Bưu kiện của Mia nặng bao nhiêu?", options: ["Two kilograms", "Half a kilogram", "Twenty kilograms"], answer: "Two kilograms" },
+      { type: "reading", q: "Read: \"First weigh the box, then add a stamp.\" What do you do first?", vi: "Đọc câu trên. Bạn làm gì trước?", options: ["Weigh the box", "Add a stamp", "Open the box"], answer: "Weigh the box", explainVi: "\"First … then …\": cân hộp trước, rồi mới dán tem." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 17: At the Pet Shelter ============ */
+const AT_THE_PET_SHELTER: Lesson = {
+  id: "petshelter", theme: "everyday-town", title: "At the Pet Shelter", vi: "Ở trại cứu hộ thú", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-17-at-the-pet-shelter.webp",
+  vocab: [
+    { word: "shelter", ipa: "/ˈʃeltər/", vi: "trại cứu hộ", emoji: "🏠", example: "The animals live at the shelter.", exampleVi: "Các con vật sống ở trại cứu hộ." },
+    { word: "pet", ipa: "/pet/", vi: "thú cưng", emoji: "🐾", example: "A dog is a friendly pet.", exampleVi: "Chó là một thú cưng thân thiện." },
+    { word: "leash", ipa: "/liːʃ/", vi: "dây dắt", emoji: "🦮", example: "Put the dog on a leash.", exampleVi: "Buộc dây dắt cho chú chó." },
+    { word: "bowl", ipa: "/boʊl/", vi: "cái bát", emoji: "🥣", example: "Fill the bowl with water.", exampleVi: "Đổ đầy nước vào bát." },
+    { word: "brush", ipa: "/brʌʃ/", vi: "bàn chải (chải lông)", emoji: "🪥", example: "Brush the cat's soft fur.", exampleVi: "Chải bộ lông mềm của chú mèo." },
+    { word: "blanket", ipa: "/ˈblæŋkɪt/", vi: "cái chăn", emoji: "🛏️", example: "The kitten sleeps on a warm blanket.", exampleVi: "Chú mèo con ngủ trên tấm chăn ấm." },
+    { word: "feed", ipa: "/fiːd/", vi: "cho ăn", emoji: "🍖", example: "We feed the animals every day.", exampleVi: "Chúng mình cho các con vật ăn mỗi ngày." },
+    { word: "gentle", ipa: "/ˈdʒentl/", vi: "nhẹ nhàng", emoji: "🤲", example: "Be gentle with the puppy.", exampleVi: "Hãy nhẹ nhàng với chú cún." },
+  ],
+  patterns: [
+    { pattern: "The … needs …", vi: "… cần …", examples: [
+      { en: "The dog needs a walk.", vi: "Chú chó cần được đi dạo." },
+      { en: "The cat needs fresh water.", vi: "Chú mèo cần nước sạch." }] },
+    { pattern: "Can I help …?", vi: "Mình giúp … được không?", examples: [
+      { en: "Can I help feed the cats?", vi: "Mình giúp cho mèo ăn được không?" },
+      { en: "Can I help you?", vi: "Mình giúp cô/bạn được không?" }] },
+    { pattern: "You should …", vi: "Bạn nên …", examples: [
+      { en: "You should be gentle.", vi: "Bạn nên nhẹ nhàng." },
+      { en: "You should give it fresh water.", vi: "Bạn nên cho nó nước sạch." }] },
+    { pattern: "There is / There are …", vi: "Có … (số ít / số nhiều)", examples: [
+      { en: "There is a cat on the cushion.", vi: "Có một chú mèo trên tấm nệm." },
+      { en: "There are two bowls on the table.", vi: "Có hai cái bát trên bàn." }] },
+  ],
+  listening: {
+    intro: "Listen to the shelter story, then answer.", introVi: "Nghe chuyện ở trại cứu hộ rồi trả lời.",
+    script: "On Saturday, the friends visited the animal shelter to help. A worker showed them a friendly brown dog. \"The dog needs a walk,\" she said. \"Can I help?\" asked Leo, and he clipped on the leash. Mia filled the bowls with fresh water, because the cats were thirsty. \"You should be gentle,\" the worker said, as a small kitten curled up on a warm blanket.",
+    questions: [
+      { q: "Why did the friends visit the shelter?", vi: "Vì sao nhóm bạn tới trại cứu hộ?", options: ["To help the animals", "To buy a car", "To watch a film"], answer: "To help the animals", explainVi: "Các bạn tới để giúp chăm sóc các con vật." },
+      { q: "What did the dog need?", vi: "Chú chó cần gì?", options: ["A walk", "New shoes", "A phone"], answer: "A walk", explainVi: "Cô nhân viên nói chú chó cần được đi dạo." },
+      { q: "What advice did the worker give?", vi: "Cô nhân viên khuyên gì?", options: ["Be gentle", "Run fast", "Shout loudly"], answer: "Be gentle", explainVi: "Cô nhắc phải nhẹ nhàng với con vật." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The dog needs a walk.", vi: "Chú chó cần được đi dạo." },
+      { en: "Can I help feed the cats?", vi: "Mình giúp cho mèo ăn được không?" },
+    ],
+    guided: { q: "How would you help at an animal shelter?", vi: "Bạn sẽ giúp gì ở trại cứu hộ thú?", hint: "I would ___ at the shelter." },
+    describe: { prompt: "Look at the shelter picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"The … needs …\".", vi: "Nhìn tranh trại cứu hộ. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"The … needs …\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you use to walk a dog safely?", vi: "Bạn dùng gì để dắt chó an toàn?", options: ["A leash", "A bowl", "A stamp"], answer: "A leash" },
+      { type: "sentence", q: "Which sentence offers help?", vi: "Câu nào là lời đề nghị giúp đỡ?", options: ["Can I help feed the cats?", "The cat is grey.", "I have a cat."], answer: "Can I help feed the cats?" },
+      { type: "listening", q: "What did the dog need?", vi: "Chú chó cần gì?", options: ["A walk", "A hat", "A bike"], answer: "A walk" },
+      { type: "reading", q: "Read: \"Be gentle with the kitten.\" This is …", vi: "Đọc câu trên. Đây là …", options: ["advice", "a question", "a price"], answer: "advice", explainVi: "Đây là lời khuyên (advice)." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 18: At the SkyTrain Station ============ */
+const AT_THE_SKYTRAIN_STATION: Lesson = {
+  id: "skytrain", theme: "everyday-town", title: "At the SkyTrain Station", vi: "Ở ga tàu điện", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-18-at-the-skytrain-station.webp",
+  vocab: [
+    { word: "station", ipa: "/ˈsteɪʃn/", vi: "nhà ga", emoji: "🚉", example: "We wait at the station.", exampleVi: "Chúng mình đợi ở nhà ga." },
+    { word: "platform", ipa: "/ˈplætfɔːrm/", vi: "sân ga", emoji: "🚏", example: "The train stops at the platform.", exampleVi: "Tàu dừng ở sân ga." },
+    { word: "train", ipa: "/treɪn/", vi: "tàu điện", emoji: "🚆", example: "The SkyTrain is fast.", exampleVi: "Tàu SkyTrain chạy nhanh." },
+    { word: "ticket", ipa: "/ˈtɪkɪt/", vi: "vé", emoji: "🎫", example: "Buy a ticket from the machine.", exampleVi: "Mua vé ở máy bán vé." },
+    { word: "tap", ipa: "/tæp/", vi: "chạm (thẻ)", emoji: "💳", example: "Tap your card at the gate.", exampleVi: "Chạm thẻ ở cổng." },
+    { word: "map", ipa: "/mæp/", vi: "bản đồ", emoji: "🗺️", example: "The map shows the train lines.", exampleVi: "Bản đồ hiện các tuyến tàu." },
+    { word: "arrive", ipa: "/əˈraɪv/", vi: "đến (nơi)", emoji: "🕒", example: "The train arrives at ten.", exampleVi: "Tàu đến lúc mười giờ." },
+    { word: "escalator", ipa: "/ˈeskəleɪtər/", vi: "thang cuốn", emoji: "🛗", example: "Go up the escalator to the platform.", exampleVi: "Đi thang cuốn lên sân ga." },
+  ],
+  patterns: [
+    { pattern: "Which train goes to …?", vi: "Tàu nào đi …?", examples: [
+      { en: "Which train goes downtown?", vi: "Tàu nào đi trung tâm?" },
+      { en: "Which train goes to the beach?", vi: "Tàu nào đi bãi biển?" }] },
+    { pattern: "Where does this train go?", vi: "Tàu này đi đâu?", examples: [
+      { en: "Where does this train go?", vi: "Tàu này đi đâu?" },
+      { en: "Where does the blue line go?", vi: "Tuyến xanh đi đâu?" }] },
+    { pattern: "What time does … arrive?", vi: "Mấy giờ … đến?", examples: [
+      { en: "What time does the train arrive?", vi: "Mấy giờ tàu đến?" },
+      { en: "It arrives at ten o'clock.", vi: "Tàu đến lúc mười giờ." }] },
+    { pattern: "Go up / down the …", vi: "Đi lên / xuống …", examples: [
+      { en: "Go up the escalator.", vi: "Đi lên thang cuốn." },
+      { en: "The platform is down the stairs.", vi: "Sân ga ở dưới cầu thang." }] },
+  ],
+  listening: {
+    intro: "Listen to the station story, then answer.", introVi: "Nghe chuyện ở nhà ga rồi trả lời.",
+    script: "The class took the SkyTrain to the museum. At the station, Leo tapped his card at the gate. \"Which train goes downtown?\" Mia asked the attendant. \"The blue line,\" she said, pointing to the map. Just then, a train arrived at the platform. \"What time does it leave?\" asked Leo. \"In two minutes — hurry up the escalator!\" Everyone got on the train together.",
+    questions: [
+      { q: "Where was the class going?", vi: "Cả lớp đang đi đâu?", options: ["To the museum", "To the beach", "To school"], answer: "To the museum", explainVi: "Cả lớp đi tàu tới bảo tàng." },
+      { q: "Which train goes downtown?", vi: "Tàu nào đi trung tâm?", options: ["The blue line", "The red line", "No train"], answer: "The blue line", explainVi: "Nhân viên chỉ vào bản đồ: tuyến xanh." },
+      { q: "How did Leo get through the gate?", vi: "Leo qua cổng bằng cách nào?", options: ["He tapped his card", "He jumped over", "He asked a friend"], answer: "He tapped his card", explainVi: "Leo chạm thẻ ở cổng." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Which train goes downtown?", vi: "Tàu nào đi trung tâm?" },
+      { en: "What time does the train arrive?", vi: "Mấy giờ tàu đến?" },
+    ],
+    guided: { q: "Where would you like to go by train?", vi: "Bạn muốn đi tàu tới đâu?", hint: "I would like to go to ___." },
+    describe: { prompt: "Look at the station picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"Which train goes to …\".", vi: "Nhìn tranh nhà ga. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"Which train goes to …\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Where does the train stop for people to get on?", vi: "Tàu dừng ở đâu để mọi người lên?", options: ["The platform", "The kitchen", "The garden"], answer: "The platform" },
+      { type: "sentence", q: "Which sentence asks where a train goes?", vi: "Câu nào hỏi tàu đi đâu?", options: ["Where does this train go?", "The train is silver.", "I like trains."], answer: "Where does this train go?" },
+      { type: "listening", q: "Which line goes downtown?", vi: "Tuyến nào đi trung tâm?", options: ["The blue line", "The green line", "The pink line"], answer: "The blue line" },
+      { type: "reading", q: "Read: \"The train arrives at ten o'clock.\" When does it arrive?", vi: "Đọc câu trên. Tàu đến khi nào?", options: ["At ten o'clock", "At noon", "Never"], answer: "At ten o'clock" },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 19: At the Music Store ============ */
+const AT_THE_MUSIC_STORE: Lesson = {
+  id: "musicstore", theme: "everyday-town", title: "At the Music Store", vi: "Ở cửa hàng nhạc cụ", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-19-at-the-music-store.webp",
+  vocab: [
+    { word: "instrument", ipa: "/ˈɪnstrəmənt/", vi: "nhạc cụ", emoji: "🎶", example: "A guitar is a musical instrument.", exampleVi: "Đàn ghi-ta là một nhạc cụ." },
+    { word: "guitar", ipa: "/ɡɪˈtɑːr/", vi: "đàn ghi-ta", emoji: "🎸", example: "The guitars hang on the wall.", exampleVi: "Những cây ghi-ta treo trên tường." },
+    { word: "piano", ipa: "/piˈænoʊ/", vi: "đàn piano", emoji: "🎹", example: "She plays the piano.", exampleVi: "Bạn ấy chơi piano." },
+    { word: "drums", ipa: "/drʌmz/", vi: "trống", emoji: "🥁", example: "He plays the drums with sticks.", exampleVi: "Cậu ấy chơi trống bằng dùi." },
+    { word: "ukulele", ipa: "/ˌjuːkəˈleɪli/", vi: "đàn ukulele", emoji: "🪕", example: "The girl holds a small ukulele.", exampleVi: "Bạn gái cầm một cây ukulele nhỏ." },
+    { word: "play", ipa: "/pleɪ/", vi: "chơi (nhạc)", emoji: "🎵", example: "Can you play the guitar?", exampleVi: "Bạn chơi ghi-ta được không?" },
+    { word: "loud", ipa: "/laʊd/", vi: "to, ồn", emoji: "🔊", example: "The drums are very loud.", exampleVi: "Tiếng trống rất to." },
+    { word: "quiet", ipa: "/ˈkwaɪət/", vi: "nhỏ, êm", emoji: "🔉", example: "The ukulele is soft and quiet.", exampleVi: "Tiếng ukulele nhẹ và êm." },
+  ],
+  patterns: [
+    { pattern: "Can you play …?", vi: "Bạn chơi … được không?", examples: [
+      { en: "Can you play the drums?", vi: "Bạn chơi trống được không?" },
+      { en: "I can play the piano.", vi: "Mình chơi được piano." }] },
+    { pattern: "Can I try the …?", vi: "Mình thử … được không?", examples: [
+      { en: "Can I try the ukulele?", vi: "Mình thử cây ukulele được không?" },
+      { en: "Can I try the drums, please?", vi: "Mình thử bộ trống được không ạ?" }] },
+    { pattern: "The … sounds …", vi: "Tiếng … nghe …", examples: [
+      { en: "The drums sound loud.", vi: "Tiếng trống nghe to." },
+      { en: "The ukulele sounds soft.", vi: "Tiếng ukulele nghe êm." }] },
+    { pattern: "I like the … because …", vi: "Mình thích … vì …", examples: [
+      { en: "I like the piano because it sounds gentle.", vi: "Mình thích piano vì tiếng của nó êm dịu." },
+      { en: "I like the drums because they are fun.", vi: "Mình thích trống vì chơi vui." }] },
+  ],
+  listening: {
+    intro: "Listen to the music-store story, then answer.", introVi: "Nghe chuyện ở cửa hàng nhạc cụ rồi trả lời.",
+    script: "At the music store, the friends tried different instruments. Mia held a small ukulele. \"Can I try it?\" she asked. The helper smiled and passed it to her. Leo sat at the drums and played — they were very loud! \"I can't play well yet,\" he laughed, \"but it's fun.\" Ava put on headphones and played the piano. \"I like the piano,\" she said, \"because it sounds gentle and quiet.\"",
+    questions: [
+      { q: "What did Mia want to try?", vi: "Mia muốn thử nhạc cụ gì?", options: ["The ukulele", "The drums", "The guitar"], answer: "The ukulele", explainVi: "Mia cầm cây ukulele nhỏ và xin thử." },
+      { q: "How did the drums sound?", vi: "Tiếng trống nghe thế nào?", options: ["Very loud", "Very quiet", "No sound"], answer: "Very loud", explainVi: "Leo chơi trống và nó rất to." },
+      { q: "Why did Ava like the piano?", vi: "Vì sao Ava thích piano?", options: ["It sounds gentle and quiet", "It is red", "It is very loud"], answer: "It sounds gentle and quiet", explainVi: "Ava nói piano nghe êm dịu và nhẹ." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I try the ukulele?", vi: "Mình thử cây ukulele được không?" },
+      { en: "I like the piano because it sounds gentle.", vi: "Mình thích piano vì tiếng của nó êm dịu." },
+    ],
+    guided: { q: "Which instrument would you like to play?", vi: "Bạn muốn chơi nhạc cụ nào?", hint: "I would like to play the ___." },
+    describe: { prompt: "Look at the music-store picture. Describe it in 3–5 sentences. Use \"I can see\", \"can/can't play\", and \"sounds loud/quiet\".", vi: "Nhìn tranh cửa hàng nhạc cụ. Mô tả 3–5 câu, dùng \"I can see\", \"can/can't play\" và \"sounds loud/quiet\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which instrument do you hit with sticks?", vi: "Nhạc cụ nào gõ bằng dùi?", options: ["The drums", "The piano", "The guitar"], answer: "The drums" },
+      { type: "sentence", q: "Which sentence politely asks to try an instrument?", vi: "Câu nào xin thử nhạc cụ một cách lịch sự?", options: ["Can I try the ukulele, please?", "Give me that guitar.", "The drums are red."], answer: "Can I try the ukulele, please?" },
+      { type: "listening", q: "How did the drums sound?", vi: "Tiếng trống nghe thế nào?", options: ["Very loud", "Very soft", "Like a bird"], answer: "Very loud" },
+      { type: "reading", q: "Read: \"The ukulele sounds soft and quiet.\" How does it sound?", vi: "Đọc câu trên. Nó nghe thế nào?", options: ["Soft and quiet", "Loud and scary", "Fast and busy"], answer: "Soft and quiet" },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 20: At the Recycling Depot ============ */
+const AT_THE_RECYCLING_DEPOT: Lesson = {
+  id: "recycling", theme: "everyday-town", title: "At the Recycling Depot", vi: "Ở điểm tái chế", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-20-at-the-recycling-depot.webp",
+  vocab: [
+    { word: "recycle", ipa: "/ˌriːˈsaɪkl/", vi: "tái chế", emoji: "♻️", example: "We recycle to help the Earth.", exampleVi: "Chúng mình tái chế để giúp Trái Đất." },
+    { word: "bin", ipa: "/bɪn/", vi: "thùng (đựng rác)", emoji: "🗑️", example: "Put it in the right bin.", exampleVi: "Bỏ vào đúng thùng." },
+    { word: "sort", ipa: "/sɔːrt/", vi: "phân loại", emoji: "🔀", example: "We sort the rubbish into bins.", exampleVi: "Chúng mình phân loại rác vào các thùng." },
+    { word: "paper", ipa: "/ˈpeɪpər/", vi: "giấy", emoji: "📄", example: "Newspaper goes in the paper bin.", exampleVi: "Báo cũ bỏ vào thùng giấy." },
+    { word: "glass", ipa: "/ɡlɑːs/", vi: "thuỷ tinh", emoji: "🫙", example: "The green bin is for glass.", exampleVi: "Thùng xanh lá dành cho thuỷ tinh." },
+    { word: "plastic", ipa: "/ˈplæstɪk/", vi: "nhựa", emoji: "🧴", example: "Plastic bottles go in the purple bin.", exampleVi: "Chai nhựa bỏ vào thùng tím." },
+    { word: "metal", ipa: "/ˈmetl/", vi: "kim loại", emoji: "🥫", example: "Cans are made of metal.", exampleVi: "Lon làm bằng kim loại." },
+    { word: "bottle", ipa: "/ˈbɒtl/", vi: "cái chai", emoji: "🍾", example: "Put the bottle in the bin.", exampleVi: "Bỏ cái chai vào thùng." },
+  ],
+  patterns: [
+    { pattern: "It is made of …", vi: "Nó làm bằng …", examples: [
+      { en: "The can is made of metal.", vi: "Cái lon làm bằng kim loại." },
+      { en: "The jar is made of glass.", vi: "Cái lọ làm bằng thuỷ tinh." }] },
+    { pattern: "The … goes in the … bin.", vi: "… bỏ vào thùng …", examples: [
+      { en: "Paper goes in the blue bin.", vi: "Giấy bỏ vào thùng xanh dương." },
+      { en: "The bottle goes in the purple bin.", vi: "Cái chai bỏ vào thùng tím." }] },
+    { pattern: "You should / shouldn't …", vi: "Bạn nên / không nên …", examples: [
+      { en: "You should sort your rubbish.", vi: "Bạn nên phân loại rác." },
+      { en: "You shouldn't mix glass and paper.", vi: "Bạn không nên trộn thuỷ tinh với giấy." }] },
+    { pattern: "How many …?", vi: "Có bao nhiêu …?", examples: [
+      { en: "How many bins are there?", vi: "Có bao nhiêu cái thùng?" },
+      { en: "There are four bins.", vi: "Có bốn cái thùng." }] },
+  ],
+  listening: {
+    intro: "Listen to the recycling story, then answer.", introVi: "Nghe chuyện ở điểm tái chế rồi trả lời.",
+    script: "The class visited the recycling depot to learn how to sort. A worker showed them four bins. \"Paper goes in the blue bin, and glass goes in the green one,\" she said. Leo held a can. \"What is this made of?\" he asked. \"It's made of metal, so it goes in the yellow bin.\" Mia put a plastic bottle in the purple bin. \"You should rinse the bottles first,\" the worker said, \"and you shouldn't mix the materials.\"",
+    questions: [
+      { q: "Why did the class visit the depot?", vi: "Vì sao cả lớp tới điểm tái chế?", options: ["To learn how to sort", "To buy sweets", "To play games"], answer: "To learn how to sort", explainVi: "Cả lớp tới học cách phân loại rác." },
+      { q: "What is the can made of?", vi: "Cái lon làm bằng gì?", options: ["Metal", "Glass", "Paper"], answer: "Metal", explainVi: "Lon làm bằng kim loại nên bỏ vào thùng vàng." },
+      { q: "What should you do before recycling bottles?", vi: "Nên làm gì trước khi tái chế chai?", options: ["Rinse them first", "Break them", "Hide them"], answer: "Rinse them first", explainVi: "Cô nhân viên nói nên rửa chai trước." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The can is made of metal.", vi: "Cái lon làm bằng kim loại." },
+      { en: "Paper goes in the blue bin.", vi: "Giấy bỏ vào thùng xanh dương." },
+    ],
+    guided: { q: "What do you recycle at home?", vi: "Ở nhà bạn tái chế những gì?", hint: "At home, I recycle ___." },
+    describe: { prompt: "Look at the recycling picture. Describe it in 3–5 sentences. Use \"I can see\", \"made of\", and \"goes in the … bin\".", vi: "Nhìn tranh điểm tái chế. Mô tả 3–5 câu, dùng \"I can see\", \"made of\" và \"goes in the … bin\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Cans are made of …", vi: "Lon làm bằng …", options: ["metal", "glass", "paper"], answer: "metal" },
+      { type: "sentence", q: "Which sentence tells where something goes?", vi: "Câu nào cho biết vật bỏ vào đâu?", options: ["The bottle goes in the purple bin.", "The bottle is empty.", "I like bottles."], answer: "The bottle goes in the purple bin." },
+      { type: "listening", q: "What is the can made of?", vi: "Cái lon làm bằng gì?", options: ["Metal", "Wood", "Water"], answer: "Metal" },
+      { type: "reading", q: "Read: \"You shouldn't mix glass and paper.\" What shouldn't you do?", vi: "Đọc câu trên. Bạn không nên làm gì?", options: ["Mix glass and paper", "Sort the rubbish", "Recycle cans"], answer: "Mix glass and paper", explainVi: "\"shouldn't\" = không nên — không trộn thuỷ tinh với giấy." },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE,
-      AT_THE_CAFE, AT_THE_DOCTORS_CLINIC, AT_THE_CLOTHING_STORE, AT_THE_COMMUNITY_GARDEN, AT_THE_BIKE_REPAIR_SHOP] },
+      AT_THE_CAFE, AT_THE_DOCTORS_CLINIC, AT_THE_CLOTHING_STORE, AT_THE_COMMUNITY_GARDEN, AT_THE_BIKE_REPAIR_SHOP,
+      AT_THE_POST_OFFICE, AT_THE_PET_SHELTER, AT_THE_SKYTRAIN_STATION, AT_THE_MUSIC_STORE, AT_THE_RECYCLING_DEPOT] },
   { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
     lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
   { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
@@ -3026,6 +3302,11 @@ export const LEVEL1_UNITS: CourseUnit[] = [
   { id: "clothingstore",   n: 13, title: "At the Clothing Store",   vi: "Ở cửa hàng quần áo",    image: L1IMG + "level-1-unit-13-at-the-clothing-store.webp",    focus: "Quần áo · cỡ · mặc thử · sở thích",   lessonId: "clothingstore",   ready: true },
   { id: "communitygarden", n: 14, title: "At the Community Garden", vi: "Ở vườn cộng đồng",      image: L1IMG + "level-1-unit-14-at-the-community-garden.webp",  focus: "Làm vườn · hiện tại tiếp diễn · chỉ dẫn", lessonId: "communitygarden", ready: true },
   { id: "bikeshop",        n: 15, title: "At the Bike Repair Shop", vi: "Ở tiệm sửa xe đạp",     image: L1IMG + "level-1-unit-15-at-the-bike-repair-shop.webp",  focus: "Xe đạp · need to/have to · mô tả hỏng", lessonId: "bikeshop",        ready: true },
+  { id: "postoffice", n: 16, title: "At the Post Office",       vi: "Ở bưu điện",            image: L1IMG + "level-1-unit-16-at-the-post-office.webp",       focus: "Bưu kiện · cân nặng · gửi · trình tự",    lessonId: "postoffice", ready: true },
+  { id: "petshelter", n: 17, title: "At the Pet Shelter",       vi: "Ở trại cứu hộ thú",     image: L1IMG + "level-1-unit-17-at-the-pet-shelter.webp",       focus: "Thú cưng · nhu cầu · giúp đỡ · lời khuyên", lessonId: "petshelter", ready: true },
+  { id: "skytrain",   n: 18, title: "At the SkyTrain Station",  vi: "Ở ga tàu điện",         image: L1IMG + "level-1-unit-18-at-the-skytrain-station.webp",  focus: "Tàu điện · phương hướng · giờ giấc",      lessonId: "skytrain",   ready: true },
+  { id: "musicstore", n: 19, title: "At the Music Store",       vi: "Ở cửa hàng nhạc cụ",    image: L1IMG + "level-1-unit-19-at-the-music-store.webp",       focus: "Nhạc cụ · can/can't · âm thanh · xin thử", lessonId: "musicstore", ready: true },
+  { id: "recycling",  n: 20, title: "At the Recycling Depot",   vi: "Ở điểm tái chế",        image: L1IMG + "level-1-unit-20-at-the-recycling-depot.webp",   focus: "Vật liệu · phân loại · made of · should", lessonId: "recycling",  ready: true },
 ];
 
 /* ============ Level 2 · Stories & Situations (3 Unit) ============ */

@@ -19,6 +19,11 @@ Canonical image folder for Level 1 lessons.
 | 13 | At the Clothing Store | `level-1-unit-13-at-the-clothing-store.webp` |
 | 14 | At the Community Garden | `level-1-unit-14-at-the-community-garden.webp` |
 | 15 | At the Bike Repair Shop | `level-1-unit-15-at-the-bike-repair-shop.webp` |
+| 16 | At the Post Office | `level-1-unit-16-at-the-post-office.webp` |
+| 17 | At the Pet Shelter | `level-1-unit-17-at-the-pet-shelter.webp` |
+| 18 | At the SkyTrain Station | `level-1-unit-18-at-the-skytrain-station.webp` |
+| 19 | At the Music Store | `level-1-unit-19-at-the-music-store.webp` |
+| 20 | At the Recycling Depot | `level-1-unit-20-at-the-recycling-depot.webp` |
 
 These are familiar-place lessons. Build vocabulary, sentence patterns, listening and a machine-graded Mini Check around each scene.
 
@@ -31,3 +36,11 @@ Unit 10 visual focus: sports-centre actions and objects, present continuous, `ca
 - Unit 13: clothes, colours and sizes, `This is too big / small`, preferences and asking where an item is.
 - Unit 14: garden tools, vegetables and present-continuous actions, `There is / are`, giving simple instructions.
 - Unit 15: bicycle parts, repair actions, `need to / have to`, describing what is wrong and asking for help.
+
+## Units 16–20 visual and language focus
+
+- Unit 16: postal objects, parcel sizes and weights, polite sending requests, prices, quantities and sequencing.
+- Unit 17: animal features and care objects, describing needs, offering help and giving simple advice.
+- Unit 18: public transport and platform vocabulary, directions, time, asking which train to take and where it goes.
+- Unit 19: musical instruments, preferences, ability with `can / can't`, describing sounds and politely asking to try an instrument.
+- Unit 20: materials and sorting, `made of`, `goes in`, `should / shouldn't`, quantities and simple recycling instructions.
