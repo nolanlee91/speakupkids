@@ -19,6 +19,11 @@ Canonical image folder for Level 2 lessons.
 | 13 | The Community News Mix-Up | `level-2-unit-13-community-news-mix-up.webp` | Comparing sources, reported information, reliability and correcting an announcement |
 | 14 | The Wildlife Camera Surprise | `level-2-unit-14-wildlife-camera-surprise.webp` | Sequencing visual evidence, track direction, rejecting a misleading clue and inference |
 | 15 | The Festival Schedule Problem | `level-2-unit-15-festival-schedule-problem.webp` | Future plans, conditionals, scheduling, cause and effect and collaborative decision-making |
+| 16 | The Cooking Workshop Mix-Up | `level-2-unit-16-cooking-workshop-mix-up.webp` | Quantities, comparing instructions, sequencing, cause and effect and recovering from a mistake |
+| 17 | The Rainy Sports Day Plan | `level-2-unit-17-rainy-sports-day-plan.webp` | Weather, constraints, future plans, conditionals, comparing alternatives and justifying a revised schedule |
+| 18 | The Museum Audio Guide Mix-Up | `level-2-unit-18-museum-audio-guide-mix-up.webp` | Comparing sources, reported observations, identifying mismatches, route sequencing and explaining a correction |
+| 19 | The Neighbourhood Delivery Puzzle | `level-2-unit-19-neighbourhood-delivery-puzzle.webp` | Relative location, route alternatives, matching evidence, conditionals and choosing an efficient sequence |
+| 20 | The School Podcast Deadline | `level-2-unit-20-school-podcast-deadline.webp` | Prioritising tasks, modal language, sequencing, cause and effect, revising a plan and defending a solution |
 
 ## Difficulty progression
 
@@ -26,6 +31,7 @@ Canonical image folder for Level 2 lessons.
 - Units 04–06: connect several clues, explain cause and effect, and choose a solution.
 - Units 07–10: compare evidence, reject misleading clues, retell events and justify a conclusion.
 - Units 11–15: reconcile conflicting information, compare alternatives, revise a plan and defend a multi-step conclusion.
+- Units 16–20: coordinate several constraints, prioritise actions and explain a complete multi-step solution.
 
 Unit 10 story guardrail: the students observe and discuss evidence while the adult coordinator controls the breaker panel. Do not write tasks that encourage children to touch electrical equipment. The final solution should combine safe isolation of the overloaded power strip with adult inspection before power is restored.
 

@@ -9,6 +9,11 @@ This collection moves from discussing opinions to testing and improving practica
 | 03 | A Greener School Festival | `level-3-c03-unit-03-greener-school-festival.webp` | Priorities, limited resources, practical alternatives, negotiation and shared decisions |
 | 04 | Making the School More Accessible | `level-3-c03-unit-04-making-school-more-accessible.webp` | Accessibility needs, testing constraints, comparing benefits and drawbacks, combining solutions and inclusive recommendations |
 | 05 | Reducing Food Waste at School | `level-3-c03-unit-05-reducing-food-waste.webp` | Waste-audit evidence, hygiene and traffic constraints, testing alternatives and revising a combined solution |
+| 06 | Cooling a Hot Classroom | `level-3-c03-unit-06-cooling-a-hot-classroom.webp` | Collecting environmental evidence, cause and effect, comparing comfort and energy trade-offs, testing and combining solutions |
+| 07 | Improving the School Pickup Zone | `level-3-c03-unit-07-improving-school-pickup-zone.webp` | Observing user flows, safety and space constraints, conditionals, negotiating route and schedule changes |
+| 08 | Saving Water in the School Garden | `level-3-c03-unit-08-saving-water-in-school-garden.webp` | Measuring evidence, resource limits, comparing conservation methods, predicting effects and revising a plan |
+| 09 | Improving the Lost-and-Found System | `level-3-c03-unit-09-improving-lost-and-found.webp` | Categorising evidence, visibility and privacy trade-offs, testing usability and recommending a workable system |
+| 10 | Designing a Better Recess Space | `level-3-c03-unit-10-designing-a-better-recess-space.webp` | Balancing different user needs, space and noise constraints, inclusive testing, negotiation and combined design |
 
 ## Suggested lesson flow
 
@@ -28,3 +33,9 @@ Collection 03 images show students actively surveying, testing or implementing s
 The artwork provides context only. Store prompts, dialogue, evidence and answers in structured lesson data.
 
 Unit 04 content guardrail: treat the wheelchair user as an equal problem solver with agency. Compare the temporary ramp, doorway width, turning space, automatic-door control, visual alert, tactile paving, water-fountain heights and blocked path. Avoid framing accessibility as charity or assuming one solution works for every user.
+
+Unit 07 safety guardrail: students observe from a protected pedestrian area and use models or maps to test changes. Do not write activities that place children in moving traffic.
+
+Unit 09 privacy guardrail: item photos must not include faces, names or personal information. Treat privacy as a real design constraint rather than making photography the automatic best answer.
+
+Unit 10 inclusion guardrail: the student using forearm crutches is an equal designer and tester with agency. Do not frame access as charity or make a single user's needs represent everyone.
