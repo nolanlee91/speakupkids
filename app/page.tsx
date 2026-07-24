@@ -271,7 +271,6 @@ function Today({ state, go, openLesson }: {
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
-  const badgesEarned = BADGES.filter((b) => b.has(state)).length;
 
   return (
     <section className="today">
@@ -321,41 +320,31 @@ function Today({ state, go, openLesson }: {
         </div>
       )}
 
-      {/* ===== Chỉ hiện ở desktop (dashboard) — ẩn trên mobile qua CSS ===== */}
-      {/* Cột giữa: ba cổng module (điều hướng như hiện tại) */}
+      {/* ===== Chỉ hiện ở desktop — ẩn trên mobile qua CSS. Cùng dữ liệu, cùng ngôn ngữ card như mobile. ===== */}
+      {/* Ba module: mở rộng điều hướng (không dựng hệ thống cổng phức tạp) */}
       <nav className="today-portals" aria-label="Khu học tập">
         <button className="tp-card tp-learn" onClick={() => go("learn")}>
           <span className="tp-ic" aria-hidden="true">📖</span>
-          <span className="tp-t">Học</span>
-          <span className="tp-s">{learnedUnits}/{TOTAL_UNITS} Unit</span>
+          <span className="tp-txt"><span className="tp-t">Học</span><span className="tp-s">{learnedUnits}/{TOTAL_UNITS} Unit</span></span>
+          <span className="tp-go">▸</span>
         </button>
         <button className="tp-card tp-games" onClick={() => go("games")}>
           <span className="tp-ic" aria-hidden="true">🎮</span>
-          <span className="tp-t">Luyện tập</span>
-          <span className="tp-s">{gamesDone(state)} lượt chơi</span>
+          <span className="tp-txt"><span className="tp-t">Luyện tập</span><span className="tp-s">{gamesDone(state)} lượt chơi</span></span>
+          <span className="tp-go">▸</span>
         </button>
         <button className="tp-card tp-adv" onClick={() => go("adventure")}>
           <span className="tp-ic" aria-hidden="true">🗺️</span>
-          <span className="tp-t">Phiêu lưu</span>
-          <span className="tp-s">{advDone}/{advSeason.chapters.length} chương</span>
+          <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone}/{advSeason.chapters.length} chương</span></span>
+          <span className="tp-go">▸</span>
         </button>
       </nav>
 
-      {/* Cột phải: tiến độ Level + huy hiệu (dữ liệu thật) */}
+      {/* Panel tiến độ ngắn cạnh CTA (dữ liệu đã có, không phải widget mới) */}
       <div className="td-panel td-progress">
         <div className="tdp-h">Tiến độ học</div>
         <div className="tdp-bar"><i style={{ width: `${TOTAL_UNITS ? Math.round((learnedUnits / TOTAL_UNITS) * 100) : 0}%` }} /></div>
         <div className="tdp-meta">{learnedUnits}/{TOTAL_UNITS} Unit đã hoàn thành</div>
-      </div>
-      <div className="td-panel td-badges">
-        <div className="tdp-h">Huy hiệu · {badgesEarned}/{BADGES.length}</div>
-        <div className="tdb-row">
-          {BADGES.map((b) => (
-            <span key={b.img} className={`tdb ${b.has(state) ? "on" : ""}`} title={b.nm}>
-              <img src={`${BDG}${b.img}`} alt="" />
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   );

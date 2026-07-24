@@ -1075,100 +1075,94 @@
   .linklike { border: none; background: none; color: var(--teal-d); font-weight: 800; cursor: pointer; font-family: inherit; font-size: inherit; padding: 0; }
 
   /* ============================================================
-     DESKTOP WORLD SHELL (≥1100px) — "learning adventure workspace"
-     Mobile/tablet <1100px GIỮ NGUYÊN. Thuần CSS media query, không JS.
-     Các phần tử dưới đây chỉ hiện ở desktop → mặc định ẩn để không đổi mobile.
+     DESKTOP (≥1100px) — "SpeakUp Kids trên màn hình lớn"
+     Nguyên tắc: GIỮ NGUYÊN ngôn ngữ & cấu trúc của mobile, chỉ sắp xếp rộng hơn.
+     Nội dung nằm trong 1 "content shell" nền kem gần như đặc ở giữa;
+     scenery CHỈ là viền không khí mờ ở hai dải ngoài (không phủ sau chữ/card).
+     Mobile/tablet <1100px GIỮ NGUYÊN — các phần tử chỉ-desktop mặc định ẩn.
      ============================================================ */
   .today-portals, .td-panel { display: none; }
 
   @media (min-width: 1100px) {
-    /* --- Nền thế giới SpeakUp Kids: scenery cố định + lớp phủ sáng để dễ đọc --- */
-    /* Gộp overlay + ảnh trong 1 nền cố định (không parallax, không animation). */
+    /* --- Viền scenery MỜ ở hai bên + dải nền kem gần như đặc ở giữa (không glass phủ toàn màn) --- */
     body { background:
-      linear-gradient(180deg, rgba(252,249,244,.60) 0%, rgba(252,249,244,.34) 26%, rgba(252,249,244,.26) 68%, rgba(252,249,244,.48) 100%),
-      #dfe9ec url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
+      linear-gradient(rgba(250,243,231,.55), rgba(250,243,231,.55)),
+      #cdd8db url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
+    /* Content shell: dải kem đặc canh giữa, phủ vùng nội dung; scenery chỉ lộ ở hai mép ngoài. */
+    #app::before { content: ""; position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: min(100%, 1240px); z-index: -1; background: var(--paper);
+      box-shadow: 0 0 0 1px rgba(120,100,80,.06), 0 0 60px rgba(60,50,40,.12); }
 
-    /* --- Khung nội dung rộng hơn, canh giữa; scenery lộ ra hai bên --- */
-    .wrap { max-width: 1240px; padding-left: 24px; padding-right: 24px; }
-    .hud { max-width: 1240px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
-    /* Bottom nav thành viên thuốc nổi canh giữa */
-    .nav { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: 680px;
-      border-radius: 22px; margin-bottom: 12px; box-shadow: 0 10px 30px rgba(45,49,66,.2); }
+    /* Khung nội dung khớp content shell */
+    .wrap { max-width: 1200px; padding-left: 28px; padding-right: 28px; }
+    .hud { max-width: 1200px; margin: 0 auto; padding-left: 28px; padding-right: 28px; }
+    /* Bottom nav: thanh nằm TRONG content shell (không phải pill nổi giữa scenery) */
+    .nav { left: 50%; right: auto; transform: translateX(-50%); width: min(100%, 1200px);
+      border-radius: 18px 18px 0 0; box-shadow: 0 -6px 22px rgba(45,49,66,.12); }
 
-    /* ===== HOME · dashboard 3 vùng ===== */
-    .today { max-width: 1180px; margin: 0 auto; padding: 80px 24px 12px;
-      display: grid; grid-template-columns: 250px minmax(0, 1fr) 276px; gap: 22px; align-items: start;
+    /* ===== HOME · KHÔNG dashboard 3 cột. Hàng 1: CTA + tiến độ ngắn · Hàng 2: 3 module · Hàng 3: nhiệm vụ ===== */
+    .today { max-width: 1120px; margin: 0 auto; padding: 78px 24px 16px;
+      display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px 18px; align-items: start;
       grid-template-areas:
-        "greet  cta      stats"
-        "tashd  cta      prog"
-        "tasks  portals  badges"
-        "tasks  portals  recent"; }
-    .today > .today-hi    { grid-area: greet;  margin: 0; flex-direction: column; align-items: flex-start; gap: 10px; }
-    .today > .next-card   { grid-area: cta;    height: 100%; min-height: 280px; }
-    .today > .chapter     { grid-area: tashd;  margin: 6px 2px 8px; font-size: 1.1rem; }
-    .today > .daily-tasks { grid-area: tasks;  margin: 0; }
-    .today > .today-stats { grid-area: stats;  margin: 0; }
-    .today > .today-portals { grid-area: portals; }
+        "greet   greet"
+        "cta     stats"
+        "cta     prog"
+        "modules modules"
+        "tashd   tashd"
+        "tasks   tasks"
+        "recent  recent"; }
+    .today > .today-hi      { grid-area: greet; margin: 0 0 2px; }
+    .today > .next-card     { grid-area: cta; height: 100%; min-height: 220px; }
+    .today > .today-stats   { grid-area: stats; margin: 0; }
     .today > .td-progress   { grid-area: prog; }
-    .today > .td-badges     { grid-area: badges; }
-    .today > .today-recent  { grid-area: recent; }
+    .today > .today-portals { grid-area: modules; }
+    .today > .chapter       { grid-area: tashd; margin: 8px 2px 6px; font-size: 1.1rem; }
+    .today > .daily-tasks   { grid-area: tasks; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .today > .today-recent  { grid-area: recent; margin-top: 4px; }
+
+    /* Ba module — cùng ngôn ngữ card như mobile (đặc, viền trái màu, không glass) */
     .today-portals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .tp-card { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; cursor: pointer;
-      font-family: inherit; text-align: left; border: 1px solid rgba(255,255,255,.85); border-radius: 16px;
-      padding: 14px 14px 16px; background: rgba(255,255,255,.82); backdrop-filter: blur(6px);
-      box-shadow: 0 6px 16px rgba(45,49,66,.1); transition: transform .12s, box-shadow .12s; border-top-width: 3px; }
-    .tp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(45,49,66,.16); }
-    .tp-ic { font-size: 1.55rem; line-height: 1; }
-    .tp-t { font-weight: 800; color: var(--navy); font-size: 1rem; }
-    .tp-s { font-size: .74rem; color: var(--muted); font-weight: 700; }
-    .tp-learn { border-top-color: #6aa2ff; } .tp-games { border-top-color: #a06be0; } .tp-adv { border-top-color: var(--coral); }
-    .td-panel { display: block; background: rgba(255,255,255,.82); backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,.85); border-radius: 16px; padding: 14px; box-shadow: 0 6px 16px rgba(45,49,66,.1); }
-    .tdp-h { font-weight: 800; color: var(--navy); font-size: .9rem; margin-bottom: 8px; }
+    .tp-card { display: flex; align-items: center; gap: 12px; cursor: pointer; font-family: inherit; text-align: left;
+      background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--teal); border-radius: 14px;
+      padding: 14px 16px; box-shadow: 0 4px 12px rgba(45,49,66,.08); transition: transform .1s; }
+    .tp-card:hover { transform: translateY(-2px); }
+    .tp-ic { font-size: 1.4rem; width: 42px; height: 42px; display: grid; place-items: center;
+      background: var(--mist); border-radius: 12px; flex: 0 0 auto; }
+    .tp-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .tp-t { font-weight: 800; color: var(--navy); }
+    .tp-s { font-size: .76rem; color: var(--muted); font-weight: 700; }
+    .tp-go { font-weight: 800; color: var(--muted); flex: 0 0 auto; }
+    .tp-learn { border-left-color: #6aa2ff; } .tp-games { border-left-color: #a06be0; } .tp-adv { border-left-color: var(--coral); }
+
+    /* Panel phụ — nền đặc, KHÔNG glass (chữ không bị scenery xuyên qua) */
+    .td-panel { display: block; background: #fff; border: 1px solid var(--line);
+      border-radius: 14px; padding: 14px; box-shadow: 0 4px 12px rgba(45,49,66,.08); }
+    .tdp-h { font-weight: 800; color: var(--navy); font-size: .88rem; margin-bottom: 8px; }
     .tdp-bar { height: 10px; background: #eadfce; border-radius: 999px; overflow: hidden; }
     .tdp-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--green)); }
     .tdp-meta { font-size: .74rem; font-weight: 800; color: var(--muted); margin-top: 6px; }
-    .tdb-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .tdb { display: grid; place-items: center; aspect-ratio: 1; background: rgba(255,255,255,.5); border-radius: 12px; }
-    .tdb img { width: 66%; height: 66%; object-fit: contain; filter: grayscale(1); opacity: .35; }
-    .tdb.on { background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,.08); } .tdb.on img { filter: none; opacity: 1; }
-    /* CTA nổi bật hơn các panel phụ */
-    .today > .next-card { box-shadow: 0 18px 40px rgba(39,52,92,.24); }
+    /* CTA vẫn là điểm nhấn chính */
+    .today > .next-card { box-shadow: 0 14px 32px rgba(39,52,92,.2); }
 
-    /* ===== PRACTICE · thư viện game rộng hơn (giữ phân cấp featured + 3) ===== */
-    .playground { max-width: 1060px; padding-top: 6px; }
-    .portal.featured { min-height: 210px; }
+    /* ===== PRACTICE · hub rộng hơn (giữ phân cấp featured + 3) ===== */
+    .playground { max-width: 1000px; padding-top: 6px; }
+    .portal.featured { min-height: 200px; }
 
-    /* ===== LEARN · chọn bài: khung rộng, thẻ Unit 2 cột ===== */
-    .learn.course { max-width: 1160px; }
+    /* ===== LEARN · chọn bài: thẻ Unit 2 cột ===== */
+    .learn.course { max-width: 1120px; }
     .course-level .unit-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .course-level .unit-list .unit { margin: 0; }
 
-    /* ===== LEARN · màn đang học + trang chặng: giữ cột đọc hẹp (scenery hai bên) ===== */
-    .learn:not(.course) { max-width: 860px; }
+    /* ===== LEARN · màn đang học + trang chặng: cột đọc hẹp, hero gọn, vocab 2 cột ===== */
+    .learn:not(.course) { max-width: 840px; }
     .learn-hero.fullbleed { width: auto; margin-left: 0; border-radius: 22px; overflow: hidden; }
     .voca-list { grid-template-columns: 1fr 1fr; }
 
     /* ===== ADVENTURE · bản đồ rộng để tận dụng laptop ===== */
-    .adv-map-wrap { max-width: 1140px; }
-    .adv-home { max-width: 1040px; padding-top: 80px; }
+    .adv-map-wrap { max-width: 1120px; }
+    .adv-home { max-width: 1000px; padding-top: 78px; }
 
-    /* ===== OVERLAYS (game round · chapter · collection · account): focus-mode trên scenery ===== */
-    .game-overlay { background:
-      linear-gradient(180deg, rgba(252,249,244,.62), rgba(252,249,244,.44)),
-      #dfe9ec url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
-    .game-top, .game-body, .quiz-body { max-width: 720px; }
-
-    /* Chữ "trần" nằm trực tiếp trên scenery → quầng sáng nhẹ cho dễ đọc (không làm mờ ảnh). */
-    .today-lead, .today > .chapter,
-    .playground > .chapter, .playground > .pg-sub,
-    .course-head .chapter, .course-sub,
-    .adv-hero-title, .adv-hero-sub {
-      text-shadow: 0 1px 7px rgba(255,255,255,.75), 0 0 2px rgba(255,255,255,.6);
-    }
-  }
-
-  /* Màn hình rất rộng: vẫn cân đối, không kéo nội dung vô hạn (đã cap bằng max-width ở trên). */
-  @media (min-width: 1600px) {
-    .wrap, .hud { max-width: 1320px; }
+    /* ===== FOCUS MODE (game round · chapter · collection · account): nền kem đặc, gần như không scenery ===== */
+    .game-overlay { background: var(--paper); }
+    .game-top, .game-body, .quiz-body { max-width: 760px; }
   }
