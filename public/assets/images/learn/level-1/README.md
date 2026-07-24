@@ -14,7 +14,20 @@ Canonical image folder for Level 1 lessons.
 | 08 | At the Science Museum | `level-1-unit-08-at-the-science-museum.webp` |
 | 09 | At the Vancouver Waterfront | `level-1-unit-09-at-the-vancouver-waterfront.webp` |
 | 10 | At the Community Sports Centre | `level-1-unit-10-at-the-community-sports-centre.webp` |
+| 11 | At the Café | `level-1-unit-11-at-the-cafe.webp` |
+| 12 | At the Doctor's Clinic | `level-1-unit-12-at-the-doctors-clinic.webp` |
+| 13 | At the Clothing Store | `level-1-unit-13-at-the-clothing-store.webp` |
+| 14 | At the Community Garden | `level-1-unit-14-at-the-community-garden.webp` |
+| 15 | At the Bike Repair Shop | `level-1-unit-15-at-the-bike-repair-shop.webp` |
 
 These are familiar-place lessons. Build vocabulary, sentence patterns, listening and a machine-graded Mini Check around each scene.
 
 Unit 10 visual focus: sports-centre actions and objects, present continuous, `can / can't`, asking where facilities are, and following simple pictogram directions.
+
+## Units 11–15 visual and language focus
+
+- Unit 11: café food and objects, polite ordering with `I'd like...`, `Can I have...?`, prices and quantities.
+- Unit 12: common body parts and mild symptoms, `I have...`, `My ... hurts`, simple health advice and clinic objects.
+- Unit 13: clothes, colours and sizes, `This is too big / small`, preferences and asking where an item is.
+- Unit 14: garden tools, vegetables and present-continuous actions, `There is / are`, giving simple instructions.
+- Unit 15: bicycle parts, repair actions, `need to / have to`, describing what is wrong and asking for help.

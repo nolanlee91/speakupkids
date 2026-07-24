@@ -2154,15 +2154,567 @@ const MAKING_SCHOOL_ACCESSIBLE: Lesson = {
   },
 };
 
+/* ============ Level 1 · Unit 11: At the Café ============ */
+const AT_THE_CAFE: Lesson = {
+  id: "cafe", theme: "everyday-town", title: "At the Café", vi: "Ở quán cà phê", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-11-at-the-cafe.webp",
+  vocab: [
+    { word: "café", ipa: "/kæˈfeɪ/", vi: "quán cà phê", emoji: "☕", example: "We meet at the café after school.", exampleVi: "Bọn mình gặp nhau ở quán cà phê sau giờ học." },
+    { word: "counter", ipa: "/ˈkaʊntər/", vi: "quầy", emoji: "🧾", example: "You order at the counter.", exampleVi: "Bạn gọi món ở quầy." },
+    { word: "barista", ipa: "/bəˈriːstə/", vi: "nhân viên pha chế", emoji: "🧑‍🍳", example: "The barista makes the drinks.", exampleVi: "Nhân viên pha chế làm đồ uống." },
+    { word: "menu", ipa: "/ˈmenjuː/", vi: "thực đơn", emoji: "📋", example: "The menu shows muffins and sandwiches.", exampleVi: "Thực đơn có bánh muffin và sandwich." },
+    { word: "muffin", ipa: "/ˈmʌfɪn/", vi: "bánh nướng xốp", emoji: "🧁", example: "I'd like a chocolate muffin.", exampleVi: "Mình muốn một cái bánh muffin sô-cô-la." },
+    { word: "sandwich", ipa: "/ˈsænwɪtʃ/", vi: "bánh mì kẹp", emoji: "🥪", example: "He is carrying a sandwich on a tray.", exampleVi: "Cậu ấy bưng một cái sandwich trên khay." },
+    { word: "order", ipa: "/ˈɔːrdər/", vi: "gọi món", emoji: "🗣️", example: "Let's order two drinks.", exampleVi: "Mình gọi hai đồ uống nhé." },
+    { word: "pay", ipa: "/peɪ/", vi: "trả tiền", emoji: "💳", example: "You can pay with a card.", exampleVi: "Bạn có thể trả bằng thẻ." },
+  ],
+  patterns: [
+    { pattern: "I'd like …", vi: "Mình muốn …", examples: [
+      { en: "I'd like a chocolate muffin.", vi: "Mình muốn một cái bánh muffin sô-cô-la." },
+      { en: "I'd like a glass of water.", vi: "Mình muốn một cốc nước." }] },
+    { pattern: "Can I have …?", vi: "Cho mình … được không?", examples: [
+      { en: "Can I have a sandwich, please?", vi: "Cho mình một cái sandwich nhé?" },
+      { en: "Can I have two cups?", vi: "Cho mình hai cái cốc nhé?" }] },
+    { pattern: "How much is …?", vi: "… giá bao nhiêu?", examples: [
+      { en: "How much is the muffin?", vi: "Cái bánh muffin giá bao nhiêu?" },
+      { en: "How much are the sandwiches?", vi: "Mấy cái sandwich giá bao nhiêu?" }] },
+    { pattern: "There is / There are …", vi: "Có … (số ít / số nhiều)", examples: [
+      { en: "There is a menu on the table.", vi: "Có một tờ thực đơn trên bàn." },
+      { en: "There are pastries in the display case.", vi: "Có bánh ngọt trong tủ kính." }] },
+  ],
+  listening: {
+    intro: "Listen to the café story, then answer.", introVi: "Nghe chuyện ở quán cà phê rồi trả lời.",
+    script: "Maya and her friends went to a café after school. Maya read the menu on the table. \"I'd like a muffin and a glass of water,\" she said. Her friend Leo went to the counter to order a sandwich. The barista smiled and made the drinks. When Leo tapped his card to pay, the barista gave him a warm cup. They sat by the window and enjoyed their snacks.",
+    questions: [
+      { q: "Where did Maya read the menu?", vi: "Maya đọc thực đơn ở đâu?", options: ["On the table", "At the counter", "On the wall"], answer: "On the table", explainVi: "Maya đọc thực đơn đặt trên bàn." },
+      { q: "What did Leo order?", vi: "Leo gọi món gì?", options: ["A sandwich", "A muffin", "A salad"], answer: "A sandwich", explainVi: "Leo ra quầy gọi một cái sandwich." },
+      { q: "How did Leo pay?", vi: "Leo trả tiền bằng cách nào?", options: ["He tapped his card", "He gave coins", "He paid tomorrow"], answer: "He tapped his card", explainVi: "Leo chạm thẻ để trả tiền." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "I'd like a muffin and a glass of water.", vi: "Mình muốn một cái muffin và một cốc nước." },
+      { en: "Can I have a sandwich, please?", vi: "Cho mình một cái sandwich nhé?" },
+    ],
+    guided: { q: "What would you like to order at a café?", vi: "Bạn muốn gọi món gì ở quán cà phê?", hint: "I'd like ___, please." },
+    describe: { prompt: "Look at the café picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"I'd like\".", vi: "Nhìn tranh quán cà phê. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"I'd like\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Who makes the drinks at a café?", vi: "Ai pha đồ uống ở quán cà phê?", options: ["The barista", "The menu", "The counter"], answer: "The barista" },
+      { type: "sentence", q: "Which sentence politely orders food?", vi: "Câu nào gọi món một cách lịch sự?", options: ["Give me food now.", "I'd like a muffin, please.", "The muffin is big."], answer: "I'd like a muffin, please." },
+      { type: "listening", q: "In the story, what did Maya want to drink?", vi: "Trong truyện, Maya muốn uống gì?", options: ["A glass of water", "A cup of tea", "Orange juice"], answer: "A glass of water" },
+      { type: "reading", q: "Read: \"The café is warm and the muffins smell fresh.\" How is the café?", vi: "Đọc câu trên. Quán cà phê thế nào?", options: ["Nice and cosy", "Cold and empty", "Dark and scary"], answer: "Nice and cosy", explainVi: "Ấm áp và thơm mùi bánh mới → dễ chịu." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 12: At the Doctor's Clinic ============ */
+const AT_THE_DOCTORS_CLINIC: Lesson = {
+  id: "clinic", theme: "everyday-town", title: "At the Doctor's Clinic", vi: "Ở phòng khám", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-12-at-the-doctors-clinic.webp",
+  vocab: [
+    { word: "doctor", ipa: "/ˈdɒktər/", vi: "bác sĩ", emoji: "🩺", example: "The doctor listens to his chest.", exampleVi: "Bác sĩ nghe ngực cậu bé." },
+    { word: "nurse", ipa: "/nɜːrs/", vi: "y tá", emoji: "🧑‍⚕️", example: "The nurse measures her height.", exampleVi: "Y tá đo chiều cao cho bạn ấy." },
+    { word: "stethoscope", ipa: "/ˈsteθəskoʊp/", vi: "ống nghe", emoji: "🩺", example: "The doctor uses a stethoscope.", exampleVi: "Bác sĩ dùng ống nghe." },
+    { word: "thermometer", ipa: "/θərˈmɒmɪtər/", vi: "nhiệt kế", emoji: "🌡️", example: "A thermometer checks your temperature.", exampleVi: "Nhiệt kế đo nhiệt độ cơ thể." },
+    { word: "cough", ipa: "/kɒf/", vi: "ho", emoji: "😷", example: "The boy has a cough.", exampleVi: "Cậu bé bị ho." },
+    { word: "bandage", ipa: "/ˈbændɪdʒ/", vi: "băng dán", emoji: "🩹", example: "She has a bandage on her knee.", exampleVi: "Bạn ấy dán băng ở đầu gối." },
+    { word: "hurt", ipa: "/hɜːrt/", vi: "đau", emoji: "🤕", example: "My throat hurts.", exampleVi: "Họng mình đau." },
+    { word: "rest", ipa: "/rest/", vi: "nghỉ ngơi", emoji: "😴", example: "You should rest and drink water.", exampleVi: "Bạn nên nghỉ ngơi và uống nước." },
+  ],
+  patterns: [
+    { pattern: "I have a …", vi: "Mình bị …", examples: [
+      { en: "I have a cough.", vi: "Mình bị ho." },
+      { en: "I have a cold.", vi: "Mình bị cảm." }] },
+    { pattern: "My … hurts.", vi: "… của mình đau.", examples: [
+      { en: "My throat hurts.", vi: "Họng mình đau." },
+      { en: "My knee hurts.", vi: "Đầu gối mình đau." }] },
+    { pattern: "You should …", vi: "Bạn nên …", examples: [
+      { en: "You should rest.", vi: "Bạn nên nghỉ ngơi." },
+      { en: "You should drink warm water.", vi: "Bạn nên uống nước ấm." }] },
+    { pattern: "I feel …", vi: "Mình cảm thấy …", examples: [
+      { en: "I feel tired.", vi: "Mình thấy mệt." },
+      { en: "I feel better now.", vi: "Giờ mình thấy đỡ hơn rồi." }] },
+  ],
+  listening: {
+    intro: "Listen to the clinic story, then answer.", introVi: "Nghe chuyện ở phòng khám rồi trả lời.",
+    script: "Sam did not feel well, so he went to the doctor's clinic. In the waiting room, another boy had a cough. A nurse measured a girl's height on the wall. When it was Sam's turn, the doctor listened to his chest with a stethoscope. \"My throat hurts,\" Sam said. The doctor smiled. \"You have a small cold. You should rest and drink warm water.\" Sam felt better already.",
+    questions: [
+      { q: "Why did Sam go to the clinic?", vi: "Vì sao Sam đến phòng khám?", options: ["He did not feel well", "He wanted a toy", "He was hungry"], answer: "He did not feel well", explainVi: "Sam thấy không khoẻ nên đi khám." },
+      { q: "What did the doctor use to listen to his chest?", vi: "Bác sĩ dùng gì để nghe ngực?", options: ["A stethoscope", "A thermometer", "A bandage"], answer: "A stethoscope", explainVi: "Bác sĩ dùng ống nghe (stethoscope)." },
+      { q: "What advice did the doctor give?", vi: "Bác sĩ khuyên gì?", options: ["Rest and drink warm water", "Run outside", "Eat lots of candy"], answer: "Rest and drink warm water", explainVi: "Bác sĩ khuyên nghỉ ngơi và uống nước ấm." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "I have a cough and my throat hurts.", vi: "Mình bị ho và họng mình đau." },
+      { en: "You should rest and drink water.", vi: "Bạn nên nghỉ ngơi và uống nước." },
+    ],
+    guided: { q: "What do you do when you feel sick?", vi: "Khi thấy ốm, bạn làm gì?", hint: "When I feel sick, I ___." },
+    describe: { prompt: "Look at the clinic picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"My … hurts\" or \"I have a …\".", vi: "Nhìn tranh phòng khám. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"My … hurts\" / \"I have a …\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What does a doctor use to listen to your chest?", vi: "Bác sĩ dùng gì để nghe ngực bạn?", options: ["A stethoscope", "A pencil", "A cup"], answer: "A stethoscope" },
+      { type: "sentence", q: "Which sentence tells a symptom (a health problem)?", vi: "Câu nào nói về triệu chứng?", options: ["My throat hurts.", "The room is big.", "I like blue."], answer: "My throat hurts." },
+      { type: "listening", q: "What was wrong with Sam?", vi: "Sam bị làm sao?", options: ["He had a small cold", "He broke his leg", "He was fine"], answer: "He had a small cold" },
+      { type: "reading", q: "Read: \"Please rest and drink water.\" This is …", vi: "Đọc câu trên. Đây là …", options: ["advice", "a question", "a joke"], answer: "advice", explainVi: "Đây là lời khuyên (advice)." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 13: At the Clothing Store ============ */
+const AT_THE_CLOTHING_STORE: Lesson = {
+  id: "clothingstore", theme: "everyday-town", title: "At the Clothing Store", vi: "Ở cửa hàng quần áo", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-13-at-the-clothing-store.webp",
+  vocab: [
+    { word: "jacket", ipa: "/ˈdʒækɪt/", vi: "áo khoác", emoji: "🧥", example: "He is trying on a jacket.", exampleVi: "Cậu ấy đang mặc thử áo khoác." },
+    { word: "sweater", ipa: "/ˈswetər/", vi: "áo len", emoji: "🧶", example: "The blue sweater is warm.", exampleVi: "Chiếc áo len xanh rất ấm." },
+    { word: "jeans", ipa: "/dʒiːnz/", vi: "quần bò", emoji: "👖", example: "These jeans are on the table.", exampleVi: "Mấy chiếc quần bò này ở trên bàn." },
+    { word: "t-shirt", ipa: "/ˈtiːʃɜːrt/", vi: "áo phông", emoji: "👕", example: "The striped t-shirt looks nice.", exampleVi: "Chiếc áo phông kẻ sọc trông đẹp." },
+    { word: "hat", ipa: "/hæt/", vi: "mũ", emoji: "🧢", example: "There is a hat on the table.", exampleVi: "Có một chiếc mũ trên bàn." },
+    { word: "shoes", ipa: "/ʃuːz/", vi: "giày", emoji: "👟", example: "The red shoes are on the shelf.", exampleVi: "Đôi giày đỏ ở trên kệ." },
+    { word: "size", ipa: "/saɪz/", vi: "cỡ", emoji: "📏", example: "What size do you need?", exampleVi: "Bạn cần cỡ nào?" },
+    { word: "try on", ipa: "/traɪ ɒn/", vi: "mặc thử", emoji: "🪞", example: "Can I try on this jacket?", exampleVi: "Mình mặc thử áo khoác này được không?" },
+  ],
+  patterns: [
+    { pattern: "This is too big / small.", vi: "Cái này quá to / nhỏ.", examples: [
+      { en: "This jacket is too big.", vi: "Áo khoác này quá to." },
+      { en: "These shoes are too small.", vi: "Đôi giày này quá nhỏ." }] },
+    { pattern: "Can I try on …?", vi: "Mình mặc thử … được không?", examples: [
+      { en: "Can I try on the sweater?", vi: "Mình mặc thử áo len được không?" },
+      { en: "Can I try these shoes on?", vi: "Mình đi thử đôi giày này được không?" }] },
+    { pattern: "I like the … one.", vi: "Mình thích cái … hơn.", examples: [
+      { en: "I like the blue one.", vi: "Mình thích cái màu xanh." },
+      { en: "I like the red shoes.", vi: "Mình thích đôi giày đỏ." }] },
+    { pattern: "Where are the …?", vi: "… ở đâu?", examples: [
+      { en: "Where are the hats?", vi: "Mấy chiếc mũ ở đâu?" },
+      { en: "Where are the shoes?", vi: "Giày ở đâu?" }] },
+  ],
+  listening: {
+    intro: "Listen to the clothing-store story, then answer.", introVi: "Nghe chuyện ở cửa hàng quần áo rồi trả lời.",
+    script: "Kim wanted a new sweater. At the clothing store, her friend showed her a blue one and an orange one. Kim tried on the blue sweater in front of the mirror. \"This is too big,\" she said. She asked the helper, \"Do you have a smaller size?\" The helper found the right size. Kim also liked the red shoes on the shelf, but they were size six. \"I need size five,\" she said.",
+    questions: [
+      { q: "What did Kim want to buy?", vi: "Kim muốn mua gì?", options: ["A new sweater", "A new bag", "A new hat"], answer: "A new sweater", explainVi: "Kim muốn mua một chiếc áo len mới." },
+      { q: "What was wrong with the first blue sweater?", vi: "Chiếc áo len xanh đầu tiên bị sao?", options: ["It was too big", "It was too small", "It was dirty"], answer: "It was too big", explainVi: "Chiếc áo quá to nên Kim xin cỡ nhỏ hơn." },
+      { q: "Why couldn't Kim take the red shoes?", vi: "Vì sao Kim không lấy đôi giày đỏ?", options: ["They were the wrong size", "They were too cheap", "They were green"], answer: "They were the wrong size", explainVi: "Giày cỡ sáu, còn Kim cần cỡ năm." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I try on the blue sweater?", vi: "Mình mặc thử áo len xanh được không?" },
+      { en: "This one is too big. Do you have a smaller size?", vi: "Cái này quá to. Bạn có cỡ nhỏ hơn không?" },
+    ],
+    guided: { q: "What clothes do you like to wear?", vi: "Bạn thích mặc quần áo gì?", hint: "I like to wear ___." },
+    describe: { prompt: "Look at the store picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"too big/small\".", vi: "Nhìn tranh cửa hàng. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"too big/small\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Which word means how big or small clothes are?", vi: "Từ nào chỉ độ to/nhỏ của quần áo?", options: ["size", "menu", "path"], answer: "size" },
+      { type: "sentence", q: "Which sentence asks to wear something to check it?", vi: "Câu nào xin mặc thử để kiểm tra?", options: ["Can I try on this jacket?", "The jacket is red.", "I have a jacket."], answer: "Can I try on this jacket?" },
+      { type: "listening", q: "Why did Kim ask for another sweater?", vi: "Vì sao Kim xin đổi áo len?", options: ["The first one was too big", "She lost it", "It was too small"], answer: "The first one was too big" },
+      { type: "reading", q: "Read: \"These shoes are too small for me.\" What should you ask for?", vi: "Đọc câu trên. Bạn nên xin gì?", options: ["A bigger size", "A smaller size", "A different colour"], answer: "A bigger size", explainVi: "Giày quá nhỏ thì xin cỡ to hơn." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 14: At the Community Garden ============ */
+const AT_THE_COMMUNITY_GARDEN: Lesson = {
+  id: "communitygarden", theme: "everyday-town", title: "At the Community Garden", vi: "Ở vườn cộng đồng", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-14-at-the-community-garden.webp",
+  vocab: [
+    { word: "garden", ipa: "/ˈɡɑːrdən/", vi: "khu vườn", emoji: "🌱", example: "The community garden is full of plants.", exampleVi: "Vườn cộng đồng đầy cây cối." },
+    { word: "soil", ipa: "/sɔɪl/", vi: "đất", emoji: "🟤", example: "She digs in the soil with a trowel.", exampleVi: "Bạn ấy xới đất bằng cái bay." },
+    { word: "plant", ipa: "/plɑːnt/", vi: "trồng", emoji: "🪴", example: "The boy is planting a seedling.", exampleVi: "Cậu bé đang trồng một cây con." },
+    { word: "seedling", ipa: "/ˈsiːdlɪŋ/", vi: "cây con", emoji: "🌱", example: "A small seedling grows in the bed.", exampleVi: "Một cây con nhỏ mọc trong luống." },
+    { word: "watering can", ipa: "/ˈwɔːtərɪŋ kæn/", vi: "bình tưới", emoji: "🚿", example: "He waters the plants with a watering can.", exampleVi: "Cậu ấy tưới cây bằng bình tưới." },
+    { word: "gloves", ipa: "/ɡlʌvz/", vi: "găng tay", emoji: "🧤", example: "They wear gloves to work in the soil.", exampleVi: "Các bạn đeo găng tay để làm đất." },
+    { word: "weed", ipa: "/wiːd/", vi: "cỏ dại", emoji: "🌿", example: "The girl pulls a weed from the bed.", exampleVi: "Bạn gái nhổ cỏ dại khỏi luống." },
+    { word: "vegetable", ipa: "/ˈvedʒtəbəl/", vi: "rau củ", emoji: "🥕", example: "The basket is full of vegetables.", exampleVi: "Cái giỏ đầy rau củ." },
+  ],
+  patterns: [
+    { pattern: "There is / There are …", vi: "Có … (số ít / số nhiều)", examples: [
+      { en: "There is a sunflower in the garden.", vi: "Có một bông hướng dương trong vườn." },
+      { en: "There are tomatoes in the basket.", vi: "Có cà chua trong giỏ." }] },
+    { pattern: "… is + V-ing …", vi: "… đang …", examples: [
+      { en: "The boy is watering the plants.", vi: "Cậu bé đang tưới cây." },
+      { en: "The girl is pulling a weed.", vi: "Bạn gái đang nhổ cỏ." }] },
+    { pattern: "Water / Pull … (instructions)", vi: "Hãy tưới / nhổ … (câu chỉ dẫn)", examples: [
+      { en: "Water the plants every day.", vi: "Tưới cây mỗi ngày." },
+      { en: "Pull the weeds carefully.", vi: "Nhổ cỏ dại thật cẩn thận." }] },
+    { pattern: "We need … to …", vi: "Chúng mình cần … để …", examples: [
+      { en: "We need gloves to work in the soil.", vi: "Cần găng tay để làm đất." },
+      { en: "We need a watering can to water the seedlings.", vi: "Cần bình tưới để tưới cây con." }] },
+  ],
+  listening: {
+    intro: "Listen to the garden story, then answer.", introVi: "Nghe chuyện ở khu vườn rồi trả lời.",
+    script: "On Saturday, the friends worked in the community garden. Ben watered the young plants with a green watering can. Mia knelt down and planted a small seedling in the soft soil. Another girl pulled the weeds so the vegetables could grow. Soon, a basket was full of red tomatoes and orange carrots. \"Wear your gloves,\" the helper said, \"so your hands stay clean.\"",
+    questions: [
+      { q: "What did Ben do in the garden?", vi: "Ben làm gì trong vườn?", options: ["He watered the young plants", "He pulled the weeds", "He picked flowers"], answer: "He watered the young plants", explainVi: "Ben tưới cây con bằng bình tưới." },
+      { q: "Why did the girl pull the weeds?", vi: "Vì sao bạn gái nhổ cỏ dại?", options: ["So the vegetables could grow", "To make a hat", "For fun only"], answer: "So the vegetables could grow", explainVi: "Nhổ cỏ để rau củ có chỗ mọc." },
+      { q: "What was in the basket?", vi: "Trong giỏ có gì?", options: ["Tomatoes and carrots", "Books and pens", "Shoes and hats"], answer: "Tomatoes and carrots", explainVi: "Giỏ đầy cà chua đỏ và cà rốt cam." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The boy is watering the plants.", vi: "Cậu bé đang tưới cây." },
+      { en: "There are many vegetables in the basket.", vi: "Có nhiều rau củ trong giỏ." },
+    ],
+    guided: { q: "What would you like to grow in a garden?", vi: "Bạn muốn trồng gì trong vườn?", hint: "I would like to grow ___." },
+    describe: { prompt: "Look at the garden picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and one \"… is + V-ing\".", vi: "Nhìn tranh khu vườn. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và một câu \"… is + V-ing\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you use to give water to plants?", vi: "Bạn dùng gì để tưới nước cho cây?", options: ["A watering can", "A menu", "A helmet"], answer: "A watering can" },
+      { type: "sentence", q: "Which sentence describes an action happening now?", vi: "Câu nào tả hành động đang diễn ra?", options: ["The girl is planting a seedling.", "The garden is green.", "I like carrots."], answer: "The girl is planting a seedling." },
+      { type: "listening", q: "Why did they pull the weeds?", vi: "Vì sao họ nhổ cỏ dại?", options: ["So the vegetables could grow", "To eat them", "To water them"], answer: "So the vegetables could grow" },
+      { type: "reading", q: "Read: \"Wear gloves to keep your hands clean.\" This is …", vi: "Đọc câu trên. Đây là …", options: ["an instruction", "a question", "a joke"], answer: "an instruction", explainVi: "Đây là một câu chỉ dẫn (instruction)." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 15: At the Bike Repair Shop ============ */
+const AT_THE_BIKE_REPAIR_SHOP: Lesson = {
+  id: "bikeshop", theme: "everyday-town", title: "At the Bike Repair Shop", vi: "Ở tiệm sửa xe đạp", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-15-at-the-bike-repair-shop.webp",
+  vocab: [
+    { word: "bicycle", ipa: "/ˈbaɪsɪkəl/", vi: "xe đạp", emoji: "🚲", example: "The teal bicycle is on the stand.", exampleVi: "Chiếc xe đạp xanh ở trên giá." },
+    { word: "wheel", ipa: "/wiːl/", vi: "bánh xe", emoji: "🛞", example: "The mechanic checks the front wheel.", exampleVi: "Người thợ kiểm tra bánh trước." },
+    { word: "tire", ipa: "/ˈtaɪər/", vi: "lốp xe", emoji: "⭕", example: "The tire is flat.", exampleVi: "Lốp xe bị xẹp." },
+    { word: "chain", ipa: "/tʃeɪn/", vi: "xích", emoji: "🔗", example: "The chain came off the bike.", exampleVi: "Xích bị tuột khỏi xe." },
+    { word: "pump", ipa: "/pʌmp/", vi: "cái bơm", emoji: "🔧", example: "He uses a pump to fill the tire.", exampleVi: "Cậu ấy dùng bơm để bơm lốp." },
+    { word: "helmet", ipa: "/ˈhelmɪt/", vi: "mũ bảo hiểm", emoji: "⛑️", example: "Always wear a helmet when you ride.", exampleVi: "Luôn đội mũ bảo hiểm khi đi xe." },
+    { word: "tool", ipa: "/tuːl/", vi: "dụng cụ", emoji: "🛠️", example: "The tools hang on the wall.", exampleVi: "Dụng cụ treo trên tường." },
+    { word: "fix", ipa: "/fɪks/", vi: "sửa", emoji: "🔩", example: "Can you help me fix my bike?", exampleVi: "Bạn giúp mình sửa xe được không?" },
+  ],
+  patterns: [
+    { pattern: "I need to …", vi: "Mình cần …", examples: [
+      { en: "I need to pump the tire.", vi: "Mình cần bơm lốp." },
+      { en: "I need to fix the chain.", vi: "Mình cần sửa xích." }] },
+    { pattern: "You have to …", vi: "Bạn phải …", examples: [
+      { en: "You have to wear a helmet.", vi: "Bạn phải đội mũ bảo hiểm." },
+      { en: "You have to check the brakes.", vi: "Bạn phải kiểm tra phanh." }] },
+    { pattern: "The … is … (problem)", vi: "… bị … (mô tả trục trặc)", examples: [
+      { en: "The tire is flat.", vi: "Lốp bị xẹp." },
+      { en: "The chain is loose.", vi: "Xích bị lỏng." }] },
+    { pattern: "Can you help me …?", vi: "Bạn giúp mình … được không?", examples: [
+      { en: "Can you help me fix the wheel?", vi: "Bạn giúp mình sửa bánh xe được không?" },
+      { en: "Can you help me pump the tire?", vi: "Bạn giúp mình bơm lốp được không?" }] },
+  ],
+  listening: {
+    intro: "Listen to the bike-shop story, then answer.", introVi: "Nghe chuyện ở tiệm sửa xe rồi trả lời.",
+    script: "Theo's bicycle would not go. He took it to the repair shop. The mechanic put the bike on a stand and looked at the wheel. \"The chain is loose,\" he said, \"and the tire is flat.\" Theo's friend used a pump to fill the tire with air. Theo helped fix the chain with a tool. Before they rode away, the mechanic said, \"You have to wear your helmet.\" Theo put on his blue helmet and smiled.",
+    questions: [
+      { q: "What were the two problems with Theo's bike?", vi: "Xe của Theo có hai vấn đề gì?", options: ["A loose chain and a flat tire", "No seat and no wheel", "A broken light and a bell"], answer: "A loose chain and a flat tire", explainVi: "Xích lỏng và lốp xẹp." },
+      { q: "What did Theo's friend use the pump for?", vi: "Bạn của Theo dùng bơm để làm gì?", options: ["To fill the tire with air", "To clean the seat", "To ring the bell"], answer: "To fill the tire with air", explainVi: "Dùng bơm để bơm hơi vào lốp." },
+      { q: "What did the mechanic tell Theo to wear?", vi: "Người thợ bảo Theo đội gì?", options: ["His helmet", "A jacket", "Gloves"], answer: "His helmet", explainVi: "Người thợ nhắc Theo phải đội mũ bảo hiểm." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The tire is flat. I need to pump it.", vi: "Lốp bị xẹp. Mình cần bơm nó." },
+      { en: "Can you help me fix the chain?", vi: "Bạn giúp mình sửa xích được không?" },
+    ],
+    guided: { q: "What do you check before you ride a bike?", vi: "Trước khi đi xe đạp, bạn kiểm tra gì?", hint: "Before I ride, I check ___." },
+    describe: { prompt: "Look at the bike-shop picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and \"I need to / have to\".", vi: "Nhìn tranh tiệm sửa xe. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và \"I need to / have to\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you wear to keep your head safe on a bike?", vi: "Bạn đội gì để bảo vệ đầu khi đi xe?", options: ["A helmet", "A hat", "A cup"], answer: "A helmet" },
+      { type: "sentence", q: "Which sentence describes a problem?", vi: "Câu nào mô tả một trục trặc?", options: ["The tire is flat.", "The bike is teal.", "I like bikes."], answer: "The tire is flat." },
+      { type: "listening", q: "What did Theo's friend do?", vi: "Bạn của Theo đã làm gì?", options: ["He pumped air into the tire", "He painted the bike", "He rang the bell"], answer: "He pumped air into the tire" },
+      { type: "reading", q: "Read: \"You have to wear a helmet.\" This is …", vi: "Đọc câu trên. Đây là …", options: ["a rule you must follow", "a joke", "a question"], answer: "a rule you must follow", explainVi: "\"have to\" nghĩa là điều bắt buộc — một quy tắc." },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 11: The Science Fair Mix-Up ============ */
+const THE_SCIENCE_FAIR_MIX_UP: Lesson = {
+  id: "sfmixup", theme: "story-time", title: "The Science Fair Mix-Up", vi: "Hội chợ khoa học lộn xộn", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-11-science-fair-mix-up.webp",
+  vocab: [
+    { word: "experiment", ipa: "/ɪkˈsperɪmənt/", vi: "thí nghiệm", emoji: "🧪", example: "Each experiment has its own materials.", exampleVi: "Mỗi thí nghiệm có vật liệu riêng." },
+    { word: "material", ipa: "/məˈtɪəriəl/", vi: "vật liệu", emoji: "🧰", example: "The materials got mixed up.", exampleVi: "Các vật liệu bị lẫn lộn." },
+    { word: "evidence", ipa: "/ˈevɪdəns/", vi: "bằng chứng", emoji: "🔍", example: "We compare the evidence carefully.", exampleVi: "Bọn mình so bằng chứng thật kỹ." },
+    { word: "match", ipa: "/mætʃ/", vi: "ghép đúng", emoji: "🔗", example: "Match each material to its project.", exampleVi: "Ghép mỗi vật liệu với dự án của nó." },
+    { word: "purpose", ipa: "/ˈpɜːrpəs/", vi: "mục đích", emoji: "🎯", example: "What is the purpose of the sand and gravel?", exampleVi: "Cát và sỏi dùng để làm gì?" },
+    { word: "hypothesis", ipa: "/haɪˈpɒθəsɪs/", vi: "giả thuyết", emoji: "💭", example: "My hypothesis is that it cleans water.", exampleVi: "Giả thuyết của mình là nó lọc sạch nước." },
+    { word: "mix up", ipa: "/mɪks ʌp/", vi: "lẫn lộn", emoji: "🔀", example: "The projects were mixed up.", exampleVi: "Các dự án bị lẫn lộn." },
+    { word: "correct", ipa: "/kəˈrekt/", vi: "sửa cho đúng", emoji: "✅", example: "Let's correct the mistake.", exampleVi: "Mình sửa lại cho đúng nhé." },
+  ],
+  patterns: [
+    { pattern: "This belongs to …", vi: "Cái này thuộc về …", examples: [
+      { en: "The wind turbine belongs to the energy project.", vi: "Tua-bin gió thuộc dự án năng lượng." },
+      { en: "The sand belongs to the water filter.", vi: "Cát thuộc bộ lọc nước." }] },
+    { pattern: "It is used to …", vi: "Nó dùng để …", examples: [
+      { en: "The filter is used to clean water.", vi: "Bộ lọc dùng để làm sạch nước." },
+      { en: "The turbine is used to make energy from wind.", vi: "Tua-bin dùng để tạo năng lượng từ gió." }] },
+    { pattern: "My hypothesis is that …", vi: "Giả thuyết của mình là …", examples: [
+      { en: "My hypothesis is that the sand cleans the water.", vi: "Giả thuyết của mình là cát làm sạch nước." },
+      { en: "My hypothesis is that wind turns the turbine.", vi: "Giả thuyết của mình là gió làm quay tua-bin." }] },
+    { pattern: "I think … because …", vi: "Mình nghĩ … vì …", examples: [
+      { en: "I think this is the filter because it has sand and gravel.", vi: "Mình nghĩ đây là bộ lọc vì nó có cát và sỏi." },
+      { en: "I think this makes electricity because it has a motor.", vi: "Mình nghĩ cái này tạo điện vì nó có mô-tơ." }] },
+  ],
+  listening: {
+    intro: "Listen to the science-fair story, then answer.", introVi: "Nghe chuyện ở hội chợ khoa học rồi trả lời.",
+    script: "At the science fair, four projects sat on one table — and the materials were all mixed up! There was a wind turbine, a water filter with sand and gravel, a water-cycle model, and a motor with wires. Aisha picked up a photo of a waterfall. \"This belongs to the water-cycle project,\" she said. Leo held the small motor. \"This is used to make electricity, not to clean water.\" One by one, the friends matched each material to the right project. \"My first hypothesis was wrong,\" Aisha laughed, \"but the evidence helped us correct it.\"",
+    questions: [
+      { q: "What was the problem at the science fair?", vi: "Vấn đề ở hội chợ là gì?", options: ["The materials were mixed up", "There was no table", "The lights went out"], answer: "The materials were mixed up", explainVi: "Vật liệu của bốn dự án bị lẫn lộn." },
+      { q: "What did Leo say the motor is used for?", vi: "Leo nói mô-tơ dùng để làm gì?", options: ["To make electricity", "To clean water", "To grow plants"], answer: "To make electricity", explainVi: "Mô-tơ dùng để tạo điện, không phải lọc nước." },
+      { q: "How did the friends fix the mix-up?", vi: "Các bạn sửa sự lộn xộn bằng cách nào?", options: ["They matched each material to the right project", "They threw everything away", "They guessed randomly"], answer: "They matched each material to the right project", explainVi: "Dựa vào bằng chứng, ghép đúng vật liệu với dự án." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The filter is used to clean water.", vi: "Bộ lọc dùng để làm sạch nước." },
+      { en: "I think this belongs to the wind project because it has a turbine.", vi: "Mình nghĩ cái này thuộc dự án gió vì nó có tua-bin." },
+    ],
+    guided: { q: "Which science project would you like to make?", vi: "Bạn muốn làm dự án khoa học nào?", hint: "I would like to make ___ because ___." },
+    describe: { prompt: "Look at the science-fair picture. Describe it in 3–5 sentences. Use \"I can see\", \"It is used to …\", and one \"because\".", vi: "Nhìn tranh hội chợ khoa học. Mô tả 3–5 câu, dùng \"I can see\", \"It is used to …\" và một câu \"because\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What is a first idea you want to test called?", vi: "Ý tưởng ban đầu bạn muốn kiểm chứng gọi là gì?", options: ["a hypothesis", "a menu", "a helmet"], answer: "a hypothesis" },
+      { type: "sentence", q: "Which sentence explains a purpose?", vi: "Câu nào giải thích mục đích?", options: ["The filter is used to clean water.", "The filter is blue.", "I like the filter."], answer: "The filter is used to clean water." },
+      { type: "listening", q: "What did the friends do to solve the problem?", vi: "Các bạn làm gì để giải quyết?", options: ["Matched each material to the right project", "Went home", "Made new photos"], answer: "Matched each material to the right project" },
+      { type: "reading", q: "Read: \"The sand and gravel clean the dirty water.\" Which project is this?", vi: "Đọc câu trên. Đây là dự án nào?", options: ["The water filter", "The wind turbine", "The motor"], answer: "The water filter", explainVi: "Cát và sỏi để lọc nước → bộ lọc nước." },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 12: The Detour Before the Field Trip ============ */
+const THE_FIELD_TRIP_DETOUR: Lesson = {
+  id: "detour", theme: "story-time", title: "The Detour Before the Field Trip", vi: "Đường vòng trước buổi dã ngoại", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-12-field-trip-detour.webp",
+  vocab: [
+    { word: "detour", ipa: "/ˈdiːtʊər/", vi: "đường vòng", emoji: "🚧", example: "The road is closed, so we need a detour.", exampleVi: "Đường bị chặn nên phải đi vòng." },
+    { word: "route", ipa: "/ruːt/", vi: "tuyến đường", emoji: "🗺️", example: "We looked for another route on the map.", exampleVi: "Bọn mình tìm tuyến khác trên bản đồ." },
+    { word: "ferry", ipa: "/ˈferi/", vi: "phà", emoji: "⛴️", example: "The ferry can take us across the water.", exampleVi: "Phà có thể chở bọn mình qua sông." },
+    { word: "closed", ipa: "/kloʊzd/", vi: "bị đóng/chặn", emoji: "🚫", example: "The street is closed for repairs.", exampleVi: "Con đường bị chặn để sửa chữa." },
+    { word: "map", ipa: "/mæp/", vi: "bản đồ", emoji: "🗺️", example: "The map shows three coloured routes.", exampleVi: "Bản đồ có ba tuyến đường màu." },
+    { word: "on time", ipa: "/ɒn taɪm/", vi: "đúng giờ", emoji: "⏰", example: "We want to arrive on time.", exampleVi: "Bọn mình muốn tới đúng giờ." },
+    { word: "arrive", ipa: "/əˈraɪv/", vi: "đến (nơi)", emoji: "📍", example: "The bus arrives at nine o'clock.", exampleVi: "Xe buýt đến lúc chín giờ." },
+    { word: "delay", ipa: "/dɪˈleɪ/", vi: "trễ, chậm trễ", emoji: "⏳", example: "The rain caused a delay.", exampleVi: "Cơn mưa làm trễ giờ." },
+  ],
+  patterns: [
+    { pattern: "If we …, we will …", vi: "Nếu … thì sẽ …", examples: [
+      { en: "If we take the ferry, we will arrive faster.", vi: "Nếu đi phà, mình sẽ tới nhanh hơn." },
+      { en: "If we wait, we will be late.", vi: "Nếu chờ, mình sẽ bị trễ." }] },
+    { pattern: "It is faster to …", vi: "Đi … thì nhanh hơn", examples: [
+      { en: "It is faster to take the ferry.", vi: "Đi phà thì nhanh hơn." },
+      { en: "It is faster to walk to the next stop.", vi: "Đi bộ tới trạm sau thì nhanh hơn." }] },
+    { pattern: "We should … because …", vi: "Mình nên … vì …", examples: [
+      { en: "We should take the bus because it is dry.", vi: "Mình nên đi xe buýt vì nó khô ráo." },
+      { en: "We should hurry because we have little time.", vi: "Mình nên nhanh lên vì còn ít thời gian." }] },
+    { pattern: "How long does it take to …?", vi: "Mất bao lâu để …?", examples: [
+      { en: "How long does it take to get there by ferry?", vi: "Đi phà tới đó mất bao lâu?" },
+      { en: "How long does it take to walk?", vi: "Đi bộ mất bao lâu?" }] },
+  ],
+  listening: {
+    intro: "Listen to the field-trip story, then answer.", introVi: "Nghe chuyện buổi dã ngoại rồi trả lời.",
+    script: "On the way to the museum, the class reached a closed road. Orange cones and a detour sign blocked the path. It was raining, and the clock showed they had thirty minutes left. Ms. Lee spread a map on the bench. \"The bus route is long today,\" she said. \"But the ferry goes straight across the water.\" Ben pointed to the map. \"If we take the ferry, we will arrive on time.\" The class agreed and hurried to the ferry dock.",
+    questions: [
+      { q: "Why couldn't the class use the road?", vi: "Vì sao lớp không đi được con đường đó?", options: ["It was closed", "It was too sunny", "It was too short"], answer: "It was closed", explainVi: "Đường bị chặn bằng cọc tiêu và biển báo đi vòng." },
+      { q: "What did Ben suggest?", vi: "Ben đề xuất gì?", options: ["Taking the ferry", "Going home", "Waiting an hour"], answer: "Taking the ferry", explainVi: "Ben đề xuất đi phà băng qua sông." },
+      { q: "Why was the ferry a good idea?", vi: "Vì sao đi phà là ý hay?", options: ["It goes straight across, so they arrive on time", "It is a boat ride for fun", "It is free today"], answer: "It goes straight across, so they arrive on time", explainVi: "Phà đi thẳng qua sông nên tới đúng giờ." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "If we take the ferry, we will arrive on time.", vi: "Nếu đi phà, bọn mình sẽ tới đúng giờ." },
+      { en: "It is faster to go across the water.", vi: "Đi băng qua sông thì nhanh hơn." },
+    ],
+    guided: { q: "How do you get to school?", vi: "Bạn tới trường bằng cách nào?", hint: "I get to school by ___." },
+    describe: { prompt: "Look at the bus-stop picture. Describe it in 3–5 sentences. Use \"I can see\", \"There is/are\", and one \"If we …\".", vi: "Nhìn tranh trạm xe buýt. Mô tả 3–5 câu, dùng \"I can see\", \"There is/are\" và một câu \"If we …\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do we call a different way around a closed road?", vi: "Cách đi vòng qua đường bị chặn gọi là gì?", options: ["a detour", "a menu", "a helmet"], answer: "a detour" },
+      { type: "sentence", q: "Which sentence predicts a result?", vi: "Câu nào dự đoán kết quả?", options: ["If we take the ferry, we will arrive on time.", "The ferry is white.", "I like ferries."], answer: "If we take the ferry, we will arrive on time." },
+      { type: "listening", q: "How much time did the class have left?", vi: "Lớp còn lại bao nhiêu thời gian?", options: ["Thirty minutes", "Two hours", "Five minutes"], answer: "Thirty minutes" },
+      { type: "reading", q: "Read: \"The road is closed, so we must find another route.\" Why do they need a new route?", vi: "Đọc câu trên. Vì sao cần tuyến mới?", options: ["Because the road is closed", "Because it is sunny", "Because they are tired"], answer: "Because the road is closed" },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 13: The Community News Mix-Up ============ */
+const THE_COMMUNITY_NEWS_MIX_UP: Lesson = {
+  id: "newsmix", theme: "story-time", title: "The Community News Mix-Up", vi: "Bản tin cộng đồng nhầm lẫn", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-13-community-news-mix-up.webp",
+  vocab: [
+    { word: "news", ipa: "/njuːz/", vi: "tin tức", emoji: "📰", example: "They are making the school news.", exampleVi: "Các bạn đang làm bản tin của trường." },
+    { word: "report", ipa: "/rɪˈpɔːrt/", vi: "đưa tin, bản tin", emoji: "🎙️", example: "She will report the festival news.", exampleVi: "Bạn ấy sẽ đưa tin về lễ hội." },
+    { word: "announcement", ipa: "/əˈnaʊnsmənt/", vi: "thông báo", emoji: "📢", example: "The announcement had a mistake.", exampleVi: "Thông báo có một chỗ sai." },
+    { word: "source", ipa: "/sɔːrs/", vi: "nguồn tin", emoji: "🔎", example: "We check every source.", exampleVi: "Bọn mình kiểm tra mọi nguồn tin." },
+    { word: "photo", ipa: "/ˈfoʊtoʊ/", vi: "tấm ảnh", emoji: "🖼️", example: "The photo shows a sunny day.", exampleVi: "Tấm ảnh chụp một ngày nắng." },
+    { word: "weather", ipa: "/ˈweðər/", vi: "thời tiết", emoji: "🌦️", example: "The weather app shows rain.", exampleVi: "Ứng dụng thời tiết báo mưa." },
+    { word: "reliable", ipa: "/rɪˈlaɪəbəl/", vi: "đáng tin", emoji: "👍", example: "A weather app is more reliable than an old photo.", exampleVi: "Ứng dụng thời tiết đáng tin hơn ảnh cũ." },
+    { word: "update", ipa: "/ˈʌpdeɪt/", vi: "cập nhật", emoji: "🔄", example: "Let's update the announcement.", exampleVi: "Mình cập nhật lại thông báo nhé." },
+  ],
+  patterns: [
+    { pattern: "… says that …", vi: "… nói rằng …", examples: [
+      { en: "The app says that it will rain.", vi: "Ứng dụng nói rằng trời sẽ mưa." },
+      { en: "The poster says that the fair is today.", vi: "Tấm áp phích nói hội chợ diễn ra hôm nay." }] },
+    { pattern: "This source is more reliable because …", vi: "Nguồn này đáng tin hơn vì …", examples: [
+      { en: "The weather app is more reliable because it is today's forecast.", vi: "Ứng dụng thời tiết đáng tin hơn vì đó là dự báo hôm nay." },
+      { en: "The office is more reliable because it has the real time.", vi: "Văn phòng đáng tin hơn vì có giờ chính xác." }] },
+    { pattern: "We should check …", vi: "Mình nên kiểm tra …", examples: [
+      { en: "We should check the time again.", vi: "Mình nên kiểm tra lại giờ." },
+      { en: "We should check the weather first.", vi: "Mình nên kiểm tra thời tiết trước." }] },
+    { pattern: "Let's change … to …", vi: "Mình đổi … thành …", examples: [
+      { en: "Let's change the time to three o'clock.", vi: "Mình đổi giờ thành ba giờ." },
+      { en: "Let's change the announcement to say \"bring an umbrella\".", vi: "Mình sửa thông báo thành \"mang theo ô\"." }] },
+  ],
+  listening: {
+    intro: "Listen to the school-news story, then answer.", introVi: "Nghe chuyện làm bản tin trường rồi trả lời.",
+    script: "The school news team had a problem. Their photo showed a sunny festival, but outside the window it was raining. One card said the fair started at two o'clock; another said three o'clock. The weather app showed rain all afternoon. \"The photo is old,\" said Nadia. \"The weather app is more reliable because it is today's forecast.\" The team checked the real start time with the office. Then they updated the announcement: \"The fair starts at three. Please bring an umbrella!\"",
+    questions: [
+      { q: "Why couldn't the team trust the sunny photo?", vi: "Vì sao không tin được tấm ảnh nắng?", options: ["It was old and it was raining now", "It was too small", "It was upside down"], answer: "It was old and it was raining now", explainVi: "Ảnh cũ, còn hiện tại ngoài trời đang mưa." },
+      { q: "Which source was most reliable for the weather?", vi: "Nguồn nào đáng tin nhất về thời tiết?", options: ["The weather app", "The old photo", "A guess"], answer: "The weather app", explainVi: "Ứng dụng thời tiết là dự báo hôm nay nên đáng tin." },
+      { q: "What did the team do at the end?", vi: "Cuối cùng nhóm làm gì?", options: ["Updated the announcement", "Went home", "Deleted everything"], answer: "Updated the announcement", explainVi: "Nhóm sửa lại thông báo với giờ đúng và lời khuyên mang ô." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The weather app is more reliable because it is today's forecast.", vi: "Ứng dụng thời tiết đáng tin hơn vì đó là dự báo hôm nay." },
+      { en: "Let's update the announcement.", vi: "Mình cập nhật lại thông báo nhé." },
+    ],
+    guided: { q: "Where do you get news or information?", vi: "Bạn lấy tin tức, thông tin từ đâu?", hint: "I get information from ___." },
+    describe: { prompt: "Look at the news-room picture. Describe it in 3–5 sentences. Use \"I can see\", \"… says that …\", and one \"because\".", vi: "Nhìn tranh phòng tin. Mô tả 3–5 câu, dùng \"I can see\", \"… says that …\" và một câu \"because\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "A source you can trust is …", vi: "Một nguồn tin có thể tin tưởng là …", options: ["reliable", "closed", "flat"], answer: "reliable" },
+      { type: "sentence", q: "Which sentence corrects the news?", vi: "Câu nào sửa lại bản tin?", options: ["Let's change the time to three o'clock.", "The room is dark.", "I like news."], answer: "Let's change the time to three o'clock." },
+      { type: "listening", q: "Why was the photo not useful?", vi: "Vì sao tấm ảnh không dùng được?", options: ["It was old and it was raining now", "It was too bright", "It had no colour"], answer: "It was old and it was raining now" },
+      { type: "reading", q: "Read: \"Two cards show different times.\" What should the team do?", vi: "Đọc câu trên. Nhóm nên làm gì?", options: ["Check the real time", "Pick any time", "Cancel the fair"], answer: "Check the real time", explainVi: "Hai giờ khác nhau → phải kiểm tra giờ thật." },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 14: The Wildlife Camera Surprise ============ */
+const THE_WILDLIFE_CAMERA_SURPRISE: Lesson = {
+  id: "wildlifecam", theme: "story-time", title: "The Wildlife Camera Surprise", vi: "Bất ngờ từ máy quay động vật", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-14-wildlife-camera-surprise.webp",
+  vocab: [
+    { word: "wildlife", ipa: "/ˈwaɪldlaɪf/", vi: "động vật hoang dã", emoji: "🦝", example: "A wildlife camera watches the forest.", exampleVi: "Một máy quay động vật theo dõi khu rừng." },
+    { word: "track", ipa: "/træk/", vi: "dấu vết", emoji: "👣", example: "The tracks lead toward the water.", exampleVi: "Dấu vết dẫn về phía mặt nước." },
+    { word: "paw print", ipa: "/pɔː prɪnt/", vi: "dấu chân thú", emoji: "🐾", example: "These paw prints are small.", exampleVi: "Mấy dấu chân thú này nhỏ." },
+    { word: "tail", ipa: "/teɪl/", vi: "cái đuôi", emoji: "〰️", example: "The photo shows a striped tail.", exampleVi: "Tấm ảnh có một cái đuôi kẻ sọc." },
+    { word: "berries", ipa: "/ˈberiz/", vi: "quả mọng", emoji: "🍒", example: "Something ate the red berries.", exampleVi: "Có con gì đó đã ăn quả mọng đỏ." },
+    { word: "silhouette", ipa: "/ˌsɪluˈet/", vi: "bóng đen", emoji: "🌑", example: "The night photo shows a dark silhouette.", exampleVi: "Ảnh ban đêm chỉ thấy một bóng đen." },
+    { word: "direction", ipa: "/dəˈrekʃən/", vi: "hướng", emoji: "🧭", example: "The tracks show the direction it walked.", exampleVi: "Dấu vết cho biết nó đi về hướng nào." },
+    { word: "nocturnal", ipa: "/nɒkˈtɜːrnəl/", vi: "sống về đêm", emoji: "🌙", example: "A raccoon is nocturnal; it comes at night.", exampleVi: "Gấu mèo sống về đêm; nó ra vào ban đêm." },
+  ],
+  patterns: [
+    { pattern: "First …, then …, finally …", vi: "Đầu tiên …, rồi …, cuối cùng …", examples: [
+      { en: "First we see paw prints, then a striped tail, finally a dark shape.", vi: "Đầu tiên thấy dấu chân, rồi cái đuôi kẻ sọc, cuối cùng là một bóng đen." },
+      { en: "First it walked, then it ate, finally it left.", vi: "Đầu tiên nó đi, rồi ăn, cuối cùng bỏ đi." }] },
+    { pattern: "The tracks lead …", vi: "Dấu vết dẫn về …", examples: [
+      { en: "The tracks lead toward the berries.", vi: "Dấu vết dẫn về phía bụi quả mọng." },
+      { en: "The tracks lead away from the cabin.", vi: "Dấu vết dẫn ra xa căn nhà gỗ." }] },
+    { pattern: "It cannot be … because …", vi: "Không thể là … vì …", examples: [
+      { en: "It cannot be a bear because the paw prints are too small.", vi: "Không thể là gấu vì dấu chân quá nhỏ." },
+      { en: "It cannot be a bird because it has fur.", vi: "Không thể là chim vì nó có lông thú." }] },
+    { pattern: "I think it was … because …", vi: "Mình nghĩ đó là … vì …", examples: [
+      { en: "I think it was a raccoon because of the striped tail.", vi: "Mình nghĩ đó là gấu mèo vì cái đuôi kẻ sọc." },
+      { en: "I think it came at night because raccoons are nocturnal.", vi: "Mình nghĩ nó tới ban đêm vì gấu mèo sống về đêm." }] },
+  ],
+  listening: {
+    intro: "Listen to the wildlife-camera story, then answer.", introVi: "Nghe chuyện máy quay động vật rồi trả lời.",
+    script: "The wildlife camera on the tree took four photos overnight. First, there were small paw prints in the mud. Then a photo showed a long, striped tail. Another showed red berries that had been eaten. The last photo was dark, with only a shadow. \"Maybe it was a bear,\" said Ravi. Ms. Ortega shook her head. \"It cannot be a bear — the paw prints are too small.\" The friends put the photos in order. \"I think it was a raccoon,\" said Mia, \"because raccoons have striped tails and come out at night.\"",
+    questions: [
+      { q: "What did the first photo show?", vi: "Tấm ảnh đầu tiên cho thấy gì?", options: ["Small paw prints", "A big shadow", "Red berries"], answer: "Small paw prints", explainVi: "Ảnh đầu là những dấu chân thú nhỏ." },
+      { q: "Why was \"a bear\" the wrong guess?", vi: "Vì sao đoán \"gấu\" là sai?", options: ["The paw prints were too small", "Bears are blue", "There was no forest"], answer: "The paw prints were too small", explainVi: "Dấu chân quá nhỏ nên không thể là gấu." },
+      { q: "What animal did they decide it was, and why?", vi: "Họ kết luận là con gì, và vì sao?", options: ["A raccoon — striped tail and nocturnal", "A fish — it swims", "A horse — it is big"], answer: "A raccoon — striped tail and nocturnal", explainVi: "Đuôi kẻ sọc + sống về đêm → gấu mèo (raccoon)." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "First we see paw prints, then a striped tail.", vi: "Đầu tiên thấy dấu chân, rồi cái đuôi kẻ sọc." },
+      { en: "It cannot be a bear because the prints are too small.", vi: "Không thể là gấu vì dấu chân quá nhỏ." },
+    ],
+    guided: { q: "What wild animal would you like to see on a camera?", vi: "Bạn muốn thấy con vật hoang dã nào trên máy quay?", hint: "I would like to see a ___." },
+    describe: { prompt: "Look at the forest picture. Describe it in 3–5 sentences. Use \"I can see\", \"First … then …\", and one \"because\".", vi: "Nhìn tranh khu rừng. Mô tả 3–5 câu, dùng \"I can see\", \"First … then …\" và một câu \"because\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "An animal that is active at night is …", vi: "Con vật hoạt động về đêm gọi là …", options: ["nocturnal", "reliable", "flat"], answer: "nocturnal" },
+      { type: "sentence", q: "Which sentence rejects a wrong idea?", vi: "Câu nào bác bỏ một suy đoán sai?", options: ["It cannot be a bear because the prints are too small.", "The forest is green.", "I like raccoons."], answer: "It cannot be a bear because the prints are too small." },
+      { type: "listening", q: "How did they decide the order of events?", vi: "Họ xác định thứ tự sự việc bằng cách nào?", options: ["They put the photos in order", "They asked a bear", "They guessed"], answer: "They put the photos in order" },
+      { type: "reading", q: "Read: \"The tracks lead toward the berries.\" Which way did the animal go?", vi: "Đọc câu trên. Con vật đi về hướng nào?", options: ["Toward the berries", "Into the water", "Up the tree"], answer: "Toward the berries" },
+    ],
+  },
+};
+
+/* ============ Level 2 · Unit 15: The Festival Schedule Problem ============ */
+const THE_FESTIVAL_SCHEDULE_PROBLEM: Lesson = {
+  id: "festschedule", theme: "story-time", title: "The Festival Schedule Problem", vi: "Rắc rối lịch lễ hội", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-15-festival-schedule-problem.webp",
+  vocab: [
+    { word: "festival", ipa: "/ˈfestɪvəl/", vi: "lễ hội", emoji: "🎪", example: "The autumn festival is tonight.", exampleVi: "Lễ hội mùa thu diễn ra tối nay." },
+    { word: "schedule", ipa: "/ˈʃedjuːl/", vi: "lịch trình", emoji: "🗓️", example: "The schedule shows when each act plays.", exampleVi: "Lịch trình cho biết mỗi tiết mục diễn khi nào." },
+    { word: "stage", ipa: "/steɪdʒ/", vi: "sân khấu", emoji: "🎤", example: "The band is on the stage.", exampleVi: "Ban nhạc đang trên sân khấu." },
+    { word: "band", ipa: "/bænd/", vi: "ban nhạc", emoji: "🎸", example: "The band will play at six.", exampleVi: "Ban nhạc sẽ chơi lúc sáu giờ." },
+    { word: "tent", ipa: "/tent/", vi: "lều, mái che", emoji: "⛺", example: "Workers put up a big tent.", exampleVi: "Các cô chú dựng một mái che lớn." },
+    { word: "storm", ipa: "/stɔːrm/", vi: "cơn bão", emoji: "⛈️", example: "A storm is coming tonight.", exampleVi: "Tối nay sẽ có bão." },
+    { word: "rearrange", ipa: "/ˌriːəˈreɪndʒ/", vi: "sắp xếp lại", emoji: "🔀", example: "We must rearrange the schedule.", exampleVi: "Mình phải sắp xếp lại lịch." },
+    { word: "decide", ipa: "/dɪˈsaɪd/", vi: "quyết định", emoji: "✅", example: "Let's decide together.", exampleVi: "Mình cùng quyết định nhé." },
+  ],
+  patterns: [
+    { pattern: "If it …, we will …", vi: "Nếu trời … thì mình sẽ …", examples: [
+      { en: "If it rains, we will move the band under the tent.", vi: "Nếu mưa, mình sẽ chuyển ban nhạc vào mái che." },
+      { en: "If the storm comes early, we will start sooner.", vi: "Nếu bão tới sớm, mình sẽ bắt đầu sớm hơn." }] },
+    { pattern: "… will … at …", vi: "… sẽ … vào lúc …", examples: [
+      { en: "The band will play at six o'clock.", vi: "Ban nhạc sẽ chơi lúc sáu giờ." },
+      { en: "The food stalls will open at five.", vi: "Các gian hàng đồ ăn sẽ mở lúc năm giờ." }] },
+    { pattern: "Let's move … to …", vi: "Mình chuyển … sang …", examples: [
+      { en: "Let's move the singers to the tent.", vi: "Mình chuyển ca sĩ vào mái che." },
+      { en: "Let's move the show earlier.", vi: "Mình chuyển buổi diễn lên sớm hơn." }] },
+    { pattern: "Because …, we should …", vi: "Vì … nên mình nên …", examples: [
+      { en: "Because a storm is coming, we should start early.", vi: "Vì bão sắp tới nên mình nên bắt đầu sớm." },
+      { en: "Because the stage is wet, we should use the tent.", vi: "Vì sân khấu ướt nên mình nên dùng mái che." }] },
+  ],
+  listening: {
+    intro: "Listen to the festival story, then answer.", introVi: "Nghe chuyện chuẩn bị lễ hội rồi trả lời.",
+    script: "The autumn festival was almost ready, but dark storm clouds were coming. On the table, coloured cards showed the schedule, and three clocks showed different times. \"The band plays outside at seven,\" said Omar, \"but the rain will start at six.\" Ms. Reyes nodded. \"If it rains, the stage will be wet.\" The friends moved the cards around. \"Let's move the band under the big tent,\" said Lily, \"and start the show at five, before the storm.\" Everyone agreed, and the festival was saved.",
+    questions: [
+      { q: "What problem was coming to the festival?", vi: "Lễ hội sắp gặp vấn đề gì?", options: ["A storm was coming", "The band was late", "There was no food"], answer: "A storm was coming", explainVi: "Mây bão kéo tới, trời sắp mưa." },
+      { q: "Why did they want to move the band under the tent?", vi: "Vì sao muốn chuyển ban nhạc vào mái che?", options: ["So the stage would not get wet", "To hide the band", "Because the tent was empty"], answer: "So the stage would not get wet", explainVi: "Nếu mưa, sân khấu ngoài trời sẽ ướt." },
+      { q: "What did they decide about the start time?", vi: "Họ quyết định gì về giờ bắt đầu?", options: ["Start earlier, before the storm", "Start much later", "Cancel the show"], answer: "Start earlier, before the storm", explainVi: "Bắt đầu lúc năm giờ, trước khi bão tới." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "If it rains, we will move the band under the tent.", vi: "Nếu mưa, mình sẽ chuyển ban nhạc vào mái che." },
+      { en: "Because a storm is coming, we should start early.", vi: "Vì bão sắp tới nên mình nên bắt đầu sớm." },
+    ],
+    guided: { q: "What would you plan for a school festival?", vi: "Bạn sẽ lên kế hoạch gì cho lễ hội trường?", hint: "At the festival, we will ___." },
+    describe: { prompt: "Look at the festival picture. Describe it in 3–5 sentences. Use \"I can see\", \"If it …, we will …\", and one \"because\".", vi: "Nhìn tranh lễ hội. Mô tả 3–5 câu, dùng \"I can see\", \"If it …, we will …\" và một câu \"because\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "A plan of times for events is a …", vi: "Bảng ghi giờ giấc các hoạt động gọi là …", options: ["schedule", "helmet", "detour"], answer: "schedule" },
+      { type: "sentence", q: "Which sentence is a plan for the future?", vi: "Câu nào là kế hoạch cho tương lai?", options: ["The band will play at six o'clock.", "The band is loud.", "I like the band."], answer: "The band will play at six o'clock." },
+      { type: "listening", q: "Why did they change the plan?", vi: "Vì sao họ đổi kế hoạch?", options: ["Because a storm was coming", "Because the band was tired", "Because it was too sunny"], answer: "Because a storm was coming" },
+      { type: "reading", q: "Read: \"If it rains, we will move inside.\" When will they move inside?", vi: "Đọc câu trên. Khi nào họ chuyển vào trong?", options: ["If it rains", "Every day", "Never"], answer: "If it rains", explainVi: "Điều kiện \"if it rains\" — chỉ khi trời mưa." },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
-    lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE] },
+    lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE,
+      AT_THE_CAFE, AT_THE_DOCTORS_CLINIC, AT_THE_CLOTHING_STORE, AT_THE_COMMUNITY_GARDEN, AT_THE_BIKE_REPAIR_SHOP] },
   { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
     lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
   { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
     lessons: [THE_MISSING_BACKPACK, THE_STORMY_CAMPING_TRIP, THE_SCHOOL_TALENT_SHOW,
       THE_FERRY_TRIP_MIX_UP, THE_ROBOT_THAT_WOULDNT_START, THE_COMMUNITY_GARDEN_MYSTERY,
-      THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY, THE_POWER_OUTAGE] },
+      THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY, THE_POWER_OUTAGE,
+      THE_SCIENCE_FAIR_MIX_UP, THE_FIELD_TRIP_DETOUR, THE_COMMUNITY_NEWS_MIX_UP, THE_WILDLIFE_CAMERA_SURPRISE, THE_FESTIVAL_SCHEDULE_PROBLEM] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
     lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
@@ -2191,6 +2743,11 @@ export const LEVEL1_UNITS: CourseUnit[] = [
   { id: "sciencemuseum",n: 8, title: "At the Science Museum",   vi: "Ở bảo tàng khoa học",   image: L1IMG + "level-1-unit-08-at-the-science-museum.webp",       focus: "Khám phá · so sánh · nội quy",     lessonId: "sciencemuseum",ready: true },
   { id: "waterfront",   n: 9, title: "At the Vancouver Waterfront", vi: "Bờ nước Vancouver", image: L1IMG + "level-1-unit-09-at-the-vancouver-waterfront.webp", focus: "Cảnh vật · phương hướng · dự đoán", lessonId: "waterfront",   ready: true },
   { id: "sportscentre", n: 10, title: "At the Community Sports Centre", vi: "Ở trung tâm thể thao", image: L1IMG + "level-1-unit-10-at-the-community-sports-centre.webp", focus: "Hành động · can/can't · phương hướng", lessonId: "sportscentre", ready: true },
+  { id: "cafe",            n: 11, title: "At the Café",              vi: "Ở quán cà phê",         image: L1IMG + "level-1-unit-11-at-the-cafe.webp",              focus: "Gọi món · I'd like · giá tiền",       lessonId: "cafe",            ready: true },
+  { id: "clinic",          n: 12, title: "At the Doctor's Clinic",  vi: "Ở phòng khám",          image: L1IMG + "level-1-unit-12-at-the-doctors-clinic.webp",    focus: "Cơ thể · triệu chứng · lời khuyên",   lessonId: "clinic",          ready: true },
+  { id: "clothingstore",   n: 13, title: "At the Clothing Store",   vi: "Ở cửa hàng quần áo",    image: L1IMG + "level-1-unit-13-at-the-clothing-store.webp",    focus: "Quần áo · cỡ · mặc thử · sở thích",   lessonId: "clothingstore",   ready: true },
+  { id: "communitygarden", n: 14, title: "At the Community Garden", vi: "Ở vườn cộng đồng",      image: L1IMG + "level-1-unit-14-at-the-community-garden.webp",  focus: "Làm vườn · hiện tại tiếp diễn · chỉ dẫn", lessonId: "communitygarden", ready: true },
+  { id: "bikeshop",        n: 15, title: "At the Bike Repair Shop", vi: "Ở tiệm sửa xe đạp",     image: L1IMG + "level-1-unit-15-at-the-bike-repair-shop.webp",  focus: "Xe đạp · need to/have to · mô tả hỏng", lessonId: "bikeshop",        ready: true },
 ];
 
 /* ============ Level 2 · Stories & Situations (3 Unit) ============ */
@@ -2206,6 +2763,11 @@ export const LEVEL2_UNITS: CourseUnit[] = [
   { id: "beach",      n: 8, title: "The Beach Cleanup Change of Plan", vi: "Đổi kế hoạch dọn biển", image: L2IMG + "level-2-unit-08-beach-cleanup-change-of-plan.webp", focus: "Thời tiết · kế hoạch · lựa chọn", lessonId: "beach",  ready: true },
   { id: "aquarium",   n: 9, title: "The Aquarium Night Mystery", vi: "Bí ẩn đêm ở thuỷ cung",   image: L2IMG + "level-2-unit-09-aquarium-night-mystery.webp",   focus: "Trình tự · loại trừ · kết luận",     lessonId: "aquarium",   ready: true },
   { id: "outage",     n: 10, title: "The Power Outage at the Community Centre", vi: "Mất điện ở trung tâm cộng đồng", image: L2IMG + "level-2-unit-10-community-centre-power-outage.webp", focus: "An toàn · nguyên nhân · nhân–quả · chọn giải pháp", lessonId: "outage", ready: true },
+  { id: "sfmixup",       n: 11, title: "The Science Fair Mix-Up",          vi: "Hội chợ khoa học lộn xộn",     image: L2IMG + "level-2-unit-11-science-fair-mix-up.webp",   focus: "So bằng chứng · ghép vật liệu · giả thuyết", lessonId: "sfmixup",       ready: true },
+  { id: "detour",        n: 12, title: "The Detour Before the Field Trip", vi: "Đường vòng trước buổi dã ngoại", image: L2IMG + "level-2-unit-12-field-trip-detour.webp",     focus: "Đi lại · giờ giấc · so tuyến · dự đoán",     lessonId: "detour",        ready: true },
+  { id: "newsmix",       n: 13, title: "The Community News Mix-Up",        vi: "Bản tin cộng đồng nhầm lẫn",   image: L2IMG + "level-2-unit-13-community-news-mix-up.webp", focus: "So nguồn tin · độ tin cậy · sửa thông báo",  lessonId: "newsmix",       ready: true },
+  { id: "wildlifecam",   n: 14, title: "The Wildlife Camera Surprise",     vi: "Bất ngờ từ máy quay động vật", image: L2IMG + "level-2-unit-14-wildlife-camera-surprise.webp", focus: "Sắp xếp bằng chứng · hướng · loại trừ",   lessonId: "wildlifecam",   ready: true },
+  { id: "festschedule",  n: 15, title: "The Festival Schedule Problem",    vi: "Rắc rối lịch lễ hội",          image: L2IMG + "level-2-unit-15-festival-schedule-problem.webp", focus: "Kế hoạch · câu điều kiện · nhân–quả",   lessonId: "festschedule",  ready: true },
 ];
 
 /* ============ Level 3 · Opinions & Conversations — chia theo Bộ (Collection) ============ */
