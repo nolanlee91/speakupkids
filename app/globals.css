@@ -1094,10 +1094,14 @@
     body { background:
       linear-gradient(rgba(250,243,231,.55), rgba(250,243,231,.55)),
       #cdd8db url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
-    /* Content shell: dải kem đặc canh giữa, phủ vùng nội dung; scenery chỉ lộ ở hai mép ngoài. */
+    /* Content shell: dải kem đặc canh giữa; HAI MÉP mờ dần (feather) sang scenery cho liền mạch, không cắt màu cứng. */
     #app::before { content: ""; position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: min(100%, 1240px); z-index: -1; background: var(--paper);
-      box-shadow: 0 0 0 1px rgba(120,100,80,.06), 0 0 60px rgba(60,50,40,.12); }
+      width: min(100%, 1280px); z-index: -1;
+      background: linear-gradient(90deg,
+        rgba(250,243,231,0) 0,
+        rgba(250,243,231,1) 130px,
+        rgba(250,243,231,1) calc(100% - 130px),
+        rgba(250,243,231,0) 100%); }
 
     /* Khung nội dung khớp content shell */
     .wrap { max-width: 1200px; padding-left: 28px; padding-right: 28px; }
