@@ -136,8 +136,16 @@
     box-shadow: 0 -3px 14px rgba(45,49,66,.06); z-index: 50; }
   .nav button { border: none; background: none; cursor: pointer; color: var(--muted); font-size: .68rem;
     font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 8px; flex: 1; }
-  .nav button .i { font-size: 20px; } .nav button.on { color: var(--brand-d); }
-  .nav button.on .i { transform: translateY(-2px); }
+  .app-icon { display: block; width: 1em; height: 1em; }
+  .nav button .i {
+    display: grid; place-items: center; width: 34px; height: 30px; border-radius: 11px;
+    color: #76809a; transition: transform .18s ease, color .18s ease, background-color .18s ease;
+  }
+  .nav button .i .app-icon { width: 22px; height: 22px; }
+  .nav button.on { color: var(--brand-d); }
+  .nav button.on .i {
+    transform: translateY(-2px); color: var(--brand-d); background: var(--brand-soft);
+  }
 
   /* ---------- Shadowing Studio (overlay) ---------- */
   #studio { position: fixed; inset: 0; z-index: 100; overflow-y: auto;
@@ -729,7 +737,16 @@
   .course-lvl-head:active { transform: scale(.99); }
   .course-lvl-head.static { cursor: default; background: #f5f4f0; border-color: #f5f4f0; box-shadow: none; }
   .course-level.open .course-lvl-head { border-color: var(--teal); }
-  .clh-ic { font-size: 1.5rem; line-height: 1; flex: 0 0 auto; }
+  .clh-ic {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px;
+    color: var(--teal-d); background: #e5f5f1; flex: 0 0 auto;
+  }
+  .clh-ic .app-icon { width: 25px; height: 25px; }
+  .clh-ic.level-0 { color: #6f59ad; background: #eee9fb; }
+  .clh-ic.level-1 { color: #208e83; background: #e1f5f1; }
+  .clh-ic.level-2 { color: #b77a13; background: #fff1ce; }
+  .clh-ic.level-3 { color: #cb563f; background: #ffebe7; }
+  .course-level.open .clh-ic { box-shadow: 0 0 0 2px rgba(63,191,175,.18); }
   .clh-txt { flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
   .clh-txt b { font-family: var(--font-head-stack); font-weight: 800; color: var(--ink); font-size: .98rem; }
   .clh-txt small { font-family: var(--font-body-stack); font-weight: 700; color: var(--muted); font-size: .76rem; }
@@ -776,10 +793,11 @@
   .track:hover { transform: translateX(3px); }
   .track.done { border-left-color: var(--green); background: #f4fbf5; }
   .track.check { border-left-color: var(--sun); background: #fff9ea; }
-  .track-ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 1.5rem;
-    background: var(--brand-soft); flex: 0 0 auto; }
+  .track-ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
+    color: var(--brand-d); background: var(--brand-soft); flex: 0 0 auto; }
+  .track-ic .app-icon { width: 25px; height: 25px; }
   .track.done .track-ic { background: #d6f3de; color: #1b7a3a; }
-  .track.check .track-ic { background: #ffeec2; }
+  .track.check .track-ic { color: #a76b00; background: #ffeec2; }
   .track-txt { flex: 1; min-width: 0; }
   .track-nm { display: block; font-weight: 800; } .track-nm small { color: var(--muted); font-weight: 600; }
   .track-desc { display: block; font-size: .78rem; color: var(--muted); }
@@ -789,7 +807,9 @@
   .wb-top { display: flex; align-items: center; gap: 10px; padding: 6px 0 10px; flex-wrap: wrap; }
   .wb-top .bk { background: #fff; border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; cursor: pointer;
     font-weight: 800; color: var(--muted); font-family: inherit; min-height: 40px; }
-  .wb-tab { font-weight: 800; background: var(--active); border-radius: 12px; padding: 8px 14px; }
+  .wb-tab { display: flex; align-items: center; gap: 7px; font-weight: 800; background: var(--active); border-radius: 12px; padding: 8px 14px; }
+  .wb-tab > span { display: grid; place-items: center; color: var(--brand-d); }
+  .wb-tab .app-icon { width: 20px; height: 20px; }
   .wb-tab small { color: var(--muted); font-weight: 600; }
   .wbpage { background: linear-gradient(160deg, #fffdf7, #fbf3e4); border-radius: 20px; padding: 16px;
     box-shadow: 0 8px 22px rgba(45,49,66,.1), inset 0 0 0 2px rgba(255,255,255,.6); }

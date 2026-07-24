@@ -10,6 +10,7 @@ import {
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { PhonicsLesson } from "./phonics";
 import { speak, shuffle } from "@/lib/fx";
+import { AppIcon, type AppIconName } from "./icons";
 
 const GEN = "/assets/images/gen/";
 type SecView = "overview" | LearningSectionKey | "check";
@@ -109,7 +110,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
           const done = sectionDone(state, lesson.id, sc.key);
           return (
             <li key={sc.key} className={`track ${done ? "done" : ""}`} onClick={() => setView(sc.key)}>
-              <span className="track-ic">{done ? "✓" : sc.icon}</span>
+              <span className="track-ic">{done ? <AppIcon name="check" /> : <AppIcon name={sc.key === "words" ? "words" : sc.key === "sentences" ? "sentence" : sc.key === "listening" ? "listen" : "speak"} />}</span>
               <span className="track-txt">
                 <span className="track-nm">{sc.vi} <small>· {sc.name}</small></span>
                 <span className="track-desc">{sc.desc}</span>
@@ -119,7 +120,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
           );
         })}
         <li className="track check" onClick={() => setView("check")}>
-          <span className="track-ic">🎯</span>
+          <span className="track-ic"><AppIcon name="check" /></span>
           <span className="track-txt">
             <span className="track-nm">Kiểm tra nhỏ <small>· Mini Check</small></span>
             <span className="track-desc">{learnState?.check ? `Lần trước: ${learnState.check.score}/${learnState.check.total}` : "Từ vựng · câu · nghe · nói"}</span>
@@ -133,7 +134,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 
 /* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
 function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
-  const [openLevel, setOpenLevel] = useState<string>("1");
+  const [openLevel, setOpenLevel] = useState<string>("");
   const renderUnit = (u: CourseUnit) => {
     const pid = u.lessonId || u.phonicsId;
     const done = pid ? learnLessonDone(state, pid) : false;
@@ -166,14 +167,14 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
   const levelDone = (units: CourseUnit[]) =>
     units.filter((u) => { const id = u.lessonId || u.phonicsId; return id && learnLessonDone(state, id); }).length;
 
-  const Level = ({ id, icon, title, sub, units, groups }: { id: string; icon: string; title: string; sub: string; units?: CourseUnit[]; groups?: CourseCollection[] }) => {
+  const Level = ({ id, icon, title, sub, units, groups }: { id: string; icon: AppIconName; title: string; sub: string; units?: CourseUnit[]; groups?: CourseCollection[] }) => {
     const isOpen = openLevel === id;
     const allUnits = groups ? groups.flatMap((g) => g.units) : (units || []);
     const done = levelDone(allUnits);
     return (
       <div className={`course-level ${isOpen ? "open" : ""}`}>
         <button className="course-lvl-head" onClick={() => setOpenLevel(isOpen ? "" : id)} aria-expanded={isOpen}>
-          <span className="clh-ic">{icon}</span>
+          <span className={`clh-ic level-${id}`}><AppIcon name={icon} /></span>
           <span className="clh-txt"><b>{title}</b><small>{sub}</small></span>
           <span className={`clh-meta ${allUnits.length > 0 && done === allUnits.length ? "all" : ""}`}>{done}/{allUnits.length}</span>
           <span className="clh-chev">{isOpen ? "▾" : "▸"}</span>
@@ -201,21 +202,21 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
         </div>
       </div>
 
-      <Level id="0" icon="🔤" title="Level 0 · Phonics & First Words" sub="Bảng chữ, âm & ghép vần cho người mới bắt đầu" units={LEVEL0_UNITS} />
-      <Level id="1" icon="📘" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
-      <Level id="2" icon="📗" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
-      <Level id="3" icon="📕" title="Level 3 · Opinions & Conversations" sub="Nêu ý kiến, lý do & trò chuyện" groups={LEVEL3_COLLECTIONS} />
+      <Level id="0" icon="phonics" title="Level 0 · Phonics & First Words" sub="Bảng chữ, âm & ghép vần cho người mới bắt đầu" units={LEVEL0_UNITS} />
+      <Level id="1" icon="everyday" title="Level 1 · Everyday English" sub="Phố ngày thường & ngày khám phá" units={LEVEL1_UNITS} />
+      <Level id="2" icon="story" title="Level 2 · Stories & Situations" sub="Bài kể chuyện nhiều bước" units={LEVEL2_UNITS} />
+      <Level id="3" icon="opinion" title="Level 3 · Opinions & Conversations" sub="Nêu ý kiến, lý do & trò chuyện" groups={LEVEL3_COLLECTIONS} />
     </section>
   );
 }
 
 /* ---------- Khung một trang sổ tay ---------- */
-function Page({ icon, title, vi, back, children }: { icon: string; title: string; vi: string; back: () => void; children: React.ReactNode }) {
+function Page({ icon, title, vi, back, children }: { icon: AppIconName; title: string; vi: string; back: () => void; children: React.ReactNode }) {
   return (
     <section className="learn">
       <div className="wb-top">
         <button className="bk" onClick={back}>← Bốn chặng</button>
-        <div className="wb-tab"><span>{icon}</span>{title} <small>· {vi}</small></div>
+        <div className="wb-tab"><span><AppIcon name={icon} /></span>{title} <small>· {vi}</small></div>
       </div>
       <div className="wbpage">{children}</div>
     </section>
@@ -237,7 +238,7 @@ function MarkDone({ label, onDone, enabled = true }: { label: string; onDone: ()
 function WordsView({ lesson, diff, accent, onDone, back }: { lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onDone: () => void; back: () => void }) {
   const vis = showVi(diff);
   return (
-    <Page icon="📖" title="Từ vựng" vi="Words" back={back}>
+    <Page icon="words" title="Từ vựng" vi="Words" back={back}>
       <Bubble>Nghe và đọc {lesson.vocab.length} từ mới ({lesson.vi}). Chạm 🔊 để nghe nhé!</Bubble>
       <div className="voca-list">
         {lesson.vocab.map((v) => (
@@ -265,7 +266,7 @@ function WordsView({ lesson, diff, accent, onDone, back }: { lesson: Lesson; dif
 function SentencesView({ lesson, diff, onDone, back }: { lesson: Lesson; diff: DifficultyLevel; onDone: () => void; back: () => void }) {
   const vis = showVi(diff);
   return (
-    <Page icon="✏️" title="Mẫu câu" vi="Sentences" back={back}>
+    <Page icon="sentence" title="Mẫu câu" vi="Sentences" back={back}>
       <Bubble>Bốn mẫu câu giúp bạn nói về bức tranh. Thử thay từ mới vào chỗ trống nhé!</Bubble>
       <div className="pat-list">
         {lesson.patterns.map((p) => (
@@ -325,7 +326,7 @@ function ListeningView({ lesson, diff, accent, onDone, back }: { lesson: Lesson;
   const [showScript, setShowScript] = useState(false);
   const [scored, setScored] = useState<number | null>(null);
   return (
-    <Page icon="🎧" title="Nghe hiểu" vi="Listening" back={back}>
+    <Page icon="listen" title="Nghe hiểu" vi="Listening" back={back}>
       <Bubble>{L.intro}{vis && <span className="say-vi"> — {L.introVi}</span>}</Bubble>
       <div className="listen-box">
         <button className="btn listen-play" onClick={() => speak(L.script, accent, 0.85)}>🔊 Nghe Maple kể</button>
@@ -353,7 +354,7 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, onDone, back }: {
   const vis = showVi(diff);
   const prompts = showPrompts(diff);
   return (
-    <Page icon="🎤" title="Nghe & nói theo" vi="Listen & Repeat" back={back}>
+    <Page icon="speak" title="Nghe & nói theo" vi="Listen & Repeat" back={back}>
       <Bubble>Nghe Maple đọc rồi nói theo cho quen miệng. <b>Không chấm điểm</b> đâu — cứ thoải mái nhé! 🎶</Bubble>
 
       <div className="speak-block">
@@ -408,7 +409,7 @@ function MiniCheckView({ lesson, onFinish, back }: { lesson: Lesson; diff: Diffi
   }
 
   return (
-    <Page icon="🎯" title="Kiểm tra nhỏ" vi="Mini Check" back={back}>
+    <Page icon="check" title="Kiểm tra nhỏ" vi="Mini Check" back={back}>
       <Bubble>Bốn thử thách có đáp án để xem bạn đã sẵn sàng phiêu lưu chưa!</Bubble>
       <div className="qcard learn-quiz">
         <div className="q-progress"><span className="q-badge">{MC_BADGE[t.type] || "Thử thách"}</span> {i + 1}/{total}</div>

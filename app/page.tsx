@@ -20,6 +20,7 @@ import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
 import { celebrate } from "@/lib/fx";
+import { AppIcon, type AppIconName } from "./icons";
 
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
@@ -51,11 +52,11 @@ type View = "home" | "learn" | "adventure" | "games";
 type Launch = { kind: StopKind; refId?: string; title: string };
 type Reward = { title: string; html: string; stars?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
-const NAV: [View, string, string][] = [
-  ["home", "☀️", "Today"],
-  ["learn", "📖", "Learn"],
-  ["games", "🎮", "Practice"],
-  ["adventure", "🗺️", "Adventure"],
+const NAV: [View, AppIconName, string][] = [
+  ["home", "home", "Today"],
+  ["learn", "learn", "Learn"],
+  ["games", "practice", "Practice"],
+  ["adventure", "adventure", "Adventure"],
 ];
 
 export default function App() {
@@ -177,7 +178,7 @@ export default function App() {
       <nav className="nav">
         {NAV.map(([v, i, label]) => (
           <button key={v} className={view === v ? "on" : ""} onClick={() => goView(v)}>
-            <span className="i">{i}</span>{label}
+            <span className="i"><AppIcon name={i} /></span>{label}
           </button>
         ))}
       </nav>
