@@ -342,7 +342,7 @@ export function setCurrentChapter(s: AppState, seasonId: string, chapterId: stri
 // Chơi lại KHÔNG cấp lại item và KHÔNG cộng lại nhiệm vụ ngày. Trả {state, newly, gotItem}.
 export function completeChapter(
   s: AppState, seasonId: string, chapterId: string,
-  opts?: { itemId?: string; nextChapterId?: string },
+  opts?: { itemId?: string; extraItemIds?: string[]; nextChapterId?: string },
 ): { state: AppState; newly: boolean; gotItem: boolean } {
   const cur = adventureOf(s, seasonId);
   const newly = !cur.completedChapterIds.includes(chapterId);
@@ -352,7 +352,10 @@ export function completeChapter(
   ns = markDaily(ns, "adventure");
 
   const completedChapterIds = newly ? [...cur.completedChapterIds, chapterId] : cur.completedChapterIds;
-  const collectedItemIds = gotItem ? [...cur.collectedItemIds, opts!.itemId!] : cur.collectedItemIds;
+  // Thu thập vật phẩm chính + phụ (mỗi thứ một lần).
+  const wanted = [opts?.itemId, ...(opts?.extraItemIds || [])].filter((x): x is string => !!x);
+  const collectedItemIds = cur.collectedItemIds.slice();
+  for (const id of wanted) if (!collectedItemIds.includes(id)) collectedItemIds.push(id);
   const next: AdventureSeasonProgress = {
     completedChapterIds,
     collectedItemIds,

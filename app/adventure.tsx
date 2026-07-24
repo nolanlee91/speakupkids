@@ -59,7 +59,7 @@ export function Adventure({ state, setState, accent }: {
 
   function finishChapter(ch: AdventureChapter, stars: number) {
     const wasNew = !isChapterCompleted(state, season.id, ch.id);
-    setState((s) => completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, nextChapterId: ch.nextChapterId }).state);
+    setState((s) => completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId }).state);
     if (wasNew) celebrate(animate);
     setPlaying(null);
     // Chỉ diễn hoạt cảnh Maple đi sang node mới khi vừa hoàn thành lần đầu và còn chương kế.
