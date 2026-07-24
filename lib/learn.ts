@@ -2087,7 +2087,7 @@ const A_GREENER_SCHOOL_FESTIVAL: Lesson = {
 // không coi accessibility là "làm từ thiện", không cho rằng một giải pháp hợp với TẤT CẢ.
 const MAKING_SCHOOL_ACCESSIBLE: Lesson = {
   id: "accessible", theme: "solving-problems", title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", ageRange: "9–12",
-  sceneImage: "/assets/images/learn/level-3/collection-03-solving-problems/level-3-c03-unit-04-making-school-more-accessible.webp",
+  sceneImage: "/assets/images/learn/level-3/collection-03-solving-problems/level-3-c03-unit-04-making-school-more-accessible-updated.webp",
   vocab: [
     { word: "accessible", ipa: "/əkˈsesəbl/", vi: "dễ tiếp cận", emoji: "♿", example: "We want the school to be accessible to everyone.", exampleVi: "Mình muốn trường ai cũng vào được dễ dàng." },
     { word: "ramp", ipa: "/ræmp/", vi: "đường dốc", emoji: "🛗", example: "A wheelchair can roll up the ramp.", exampleVi: "Xe lăn có thể lên bằng đường dốc." },
@@ -2229,7 +2229,7 @@ export const LEVEL3_COLLECTIONS: CourseCollection[] = [
     { id: "lunchroom", n: 1, title: "A Quieter Lunchroom",      vi: "Nhà ăn bớt ồn hơn",       image: L3C3IMG + "level-3-c03-unit-01-quieter-lunchroom.webp",       focus: "Nêu nhu cầu · thử nghiệm · chỉnh sửa",  lessonId: "lunchroom", ready: true },
     { id: "bikeroute", n: 2, title: "A Safer Bike Route",       vi: "Tuyến xe đạp an toàn hơn", image: L3C3IMG + "level-3-c03-unit-02-safer-bike-route.webp",        focus: "Ràng buộc · đánh đổi · khuyến nghị",    lessonId: "bikeroute", ready: true },
     { id: "festival",  n: 3, title: "A Greener School Festival", vi: "Lễ hội trường xanh hơn",  image: L3C3IMG + "level-3-c03-unit-03-greener-school-festival.webp", focus: "Ưu tiên · nguồn lực · thương lượng",    lessonId: "festival",  ready: true },
-    { id: "accessible", n: 4, title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", image: L3C3IMG + "level-3-c03-unit-04-making-school-more-accessible.webp", focus: "Nhu cầu tiếp cận · lợi–hại · kết hợp giải pháp", lessonId: "accessible", ready: true },
+    { id: "accessible", n: 4, title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", image: L3C3IMG + "level-3-c03-unit-04-making-school-more-accessible-updated.webp", focus: "Nhu cầu tiếp cận · lợi–hại · kết hợp giải pháp", lessonId: "accessible", ready: true },
   ] },
 ];
 
