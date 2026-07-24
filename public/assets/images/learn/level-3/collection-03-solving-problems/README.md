@@ -8,6 +8,7 @@ This collection moves from discussing opinions to testing and improving practica
 | 02 | A Safer Bike Route | `level-3-c03-unit-02-safer-bike-route.webp` | Constraints, route trade-offs, accessibility, combining proposals and justification |
 | 03 | A Greener School Festival | `level-3-c03-unit-03-greener-school-festival.webp` | Priorities, limited resources, practical alternatives, negotiation and shared decisions |
 | 04 | Making the School More Accessible | `level-3-c03-unit-04-making-school-more-accessible.webp` | Accessibility needs, testing constraints, comparing benefits and drawbacks, combining solutions and inclusive recommendations |
+| 05 | Reducing Food Waste at School | `level-3-c03-unit-05-reducing-food-waste.webp` | Waste-audit evidence, hygiene and traffic constraints, testing alternatives and revising a combined solution |
 
 ## Suggested lesson flow
 

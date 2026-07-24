@@ -2704,6 +2704,281 @@ const THE_FESTIVAL_SCHEDULE_PROBLEM: Lesson = {
   },
 };
 
+/* ============ Level 3 · C01 · Unit 4: Choosing a Weekend Volunteer Activity ============ */
+const WEEKEND_VOLUNTEER_ACTIVITY: Lesson = {
+  id: "volunteer", theme: "making-choices", title: "Choosing a Weekend Volunteer Activity", vi: "Chọn hoạt động tình nguyện cuối tuần", ageRange: "9–12",
+  sceneImage: L3C1 + "level-3-c01-unit-04-weekend-volunteer-activity.webp",
+  vocab: [
+    { word: "volunteer", ipa: "/ˌvɒlənˈtɪər/", vi: "tình nguyện", emoji: "🙌", example: "We want to volunteer this weekend.", exampleVi: "Cuối tuần này bọn mình muốn đi tình nguyện." },
+    { word: "community", ipa: "/kəˈmjuːnəti/", vi: "cộng đồng", emoji: "🏘️", example: "Each activity helps the community.", exampleVi: "Mỗi hoạt động đều giúp ích cho cộng đồng." },
+    { word: "activity", ipa: "/ækˈtɪvəti/", vi: "hoạt động", emoji: "🎽", example: "There are three volunteer activities.", exampleVi: "Có ba hoạt động tình nguyện." },
+    { word: "option", ipa: "/ˈɒpʃn/", vi: "lựa chọn", emoji: "🔀", example: "Each option helps in a different way.", exampleVi: "Mỗi lựa chọn giúp theo một cách khác nhau." },
+    { word: "strength", ipa: "/streŋθ/", vi: "thế mạnh", emoji: "💪", example: "Planting is Mia's strength.", exampleVi: "Trồng cây là thế mạnh của Mia." },
+    { word: "compare", ipa: "/kəmˈpeər/", vi: "so sánh", emoji: "⚖️", example: "Let's compare the three options.", exampleVi: "Cùng so sánh ba lựa chọn nào." },
+    { word: "prefer", ipa: "/prɪˈfɜːr/", vi: "thích hơn", emoji: "👍", example: "I prefer the beach cleanup.", exampleVi: "Mình thích dọn bãi biển hơn." },
+    { word: "agree", ipa: "/əˈɡriː/", vi: "đồng ý", emoji: "🤝", example: "In the end, they agreed.", exampleVi: "Cuối cùng cả nhóm đồng ý." },
+  ],
+  patterns: [
+    { pattern: "One good thing about … is …", vi: "Một điểm hay của … là …", examples: [
+      { en: "One good thing about the beach cleanup is it helps the ocean.", vi: "Một điểm hay của việc dọn bãi biển là giúp ích cho đại dương." },
+      { en: "One good thing about the food drive is it helps hungry families.", vi: "Một điểm hay của việc quyên góp thực phẩm là giúp các gia đình thiếu ăn." }] },
+    { pattern: "I'd be good at … because …", vi: "Mình sẽ làm tốt … vì …", examples: [
+      { en: "I'd be good at planting because I like gardening.", vi: "Mình sẽ trồng cây tốt vì mình thích làm vườn." },
+      { en: "I'd be good at the food drive because I'm organised.", vi: "Mình hợp quyên góp thực phẩm vì mình ngăn nắp." }] },
+    { pattern: "We only have … so …", vi: "Mình chỉ có … nên …", examples: [
+      { en: "We only have two hours, so let's pick something close.", vi: "Mình chỉ có hai tiếng, nên chọn chỗ gần thôi." },
+      { en: "We only have a few tools, so we should share.", vi: "Mình chỉ có ít dụng cụ, nên phải dùng chung." }] },
+    { pattern: "Let's agree on …", vi: "Cùng thống nhất chọn …", examples: [
+      { en: "Let's agree on the community garden.", vi: "Cùng thống nhất chọn vườn cộng đồng nhé." },
+      { en: "Let's agree on one activity.", vi: "Cùng thống nhất một hoạt động nào." }] },
+  ],
+  listening: {
+    intro: "Listen to the group's discussion, then answer.", introVi: "Nghe nhóm bạn thảo luận rồi trả lời.",
+    script: "On Saturday, Maple's group wanted to volunteer. They had three options: a beach cleanup, planting trees in the community garden, or a food drive for canned food. \"One good thing about the beach cleanup is it helps the ocean,\" said Leo. \"But we only have two hours,\" said Mia, \"and the garden is close to school.\" Aisha added, \"I'd be good at the food drive because I'm organised.\" Every option was helpful, so they compared them and voted. Most of the group agreed on the community garden, because it was close and everyone could join.",
+    questions: [
+      { q: "How many volunteer options did the group have?", vi: "Nhóm có mấy lựa chọn tình nguyện?", options: ["Three", "One", "Five"], answer: "Three" },
+      { q: "Why did Mia like the community garden?", vi: "Vì sao Mia thích vườn cộng đồng?", options: ["It was close and they only had two hours", "It was the most expensive", "It was very far"], answer: "It was close and they only had two hours", explainVi: "Chỉ có hai tiếng nên chọn chỗ gần trường." },
+      { q: "How did the group finally choose?", vi: "Cuối cùng nhóm chọn bằng cách nào?", options: ["They compared the options and voted", "The teacher chose alone", "They flipped a coin"], answer: "They compared the options and voted" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "One good thing about the beach cleanup is it helps the ocean.", vi: "Một điểm hay của việc dọn bãi biển là giúp ích cho đại dương." },
+      { en: "I'd be good at planting because I like gardening.", vi: "Mình sẽ trồng cây tốt vì mình thích làm vườn." },
+    ],
+    guided: { q: "Which volunteer activity would you choose, and why?", vi: "Bạn sẽ chọn hoạt động tình nguyện nào, và vì sao?", hint: "I would choose ___ because ___." },
+    describe: { prompt: "Share your opinion in 3–5 sentences. Say which activity you prefer, give one reason, and respond politely to another idea.", vi: "Nêu ý kiến 3–5 câu: bạn thích hoạt động nào, một lý do, và phản hồi lịch sự với một ý khác.", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Someone who helps the community without pay is a …", vi: "Người giúp cộng đồng mà không lấy tiền công là …", options: ["volunteer", "option", "strength"], answer: "volunteer" },
+      { type: "reading", q: "The group only had two hours. Why did that matter?", vi: "Nhóm chỉ có hai tiếng. Vì sao điều đó quan trọng?", options: ["They needed an activity that was close and quick", "They wanted the hardest job", "They had no reason"], answer: "They needed an activity that was close and quick", explainVi: "Thời gian ít → chọn việc gần và nhanh (ràng buộc thực tế)." },
+      { type: "sentence", q: "A friend suggests the beach, but you prefer the garden. Which is POLITE?", vi: "Bạn gợi ý đi biển, nhưng bạn thích vườn hơn. Câu nào LỊCH SỰ?", options: ["That's a good idea, but I prefer the garden.", "No, the beach is boring.", "Stop suggesting things."], answer: "That's a good idea, but I prefer the garden." },
+      { type: "listening", q: "Which activity did the group finally choose?", vi: "Cuối cùng nhóm chọn hoạt động nào?", options: ["The community garden", "The beach cleanup", "The food drive"], answer: "The community garden" },
+    ],
+  },
+};
+
+/* ============ Level 3 · C01 · Unit 5: Choosing a Space for the School Celebration ============ */
+const SCHOOL_CELEBRATION_SPACE: Lesson = {
+  id: "celebspace", theme: "making-choices", title: "Choosing a Space for the School Celebration", vi: "Chọn không gian cho lễ hội trường", ageRange: "9–12",
+  sceneImage: L3C1 + "level-3-c01-unit-05-school-celebration-space.webp",
+  vocab: [
+    { word: "space", ipa: "/speɪs/", vi: "không gian", emoji: "📐", example: "We need a big space for the party.", exampleVi: "Bọn mình cần một không gian rộng cho buổi tiệc." },
+    { word: "indoors", ipa: "/ˌɪnˈdɔːrz/", vi: "trong nhà", emoji: "🏛️", example: "The hall is indoors.", exampleVi: "Hội trường ở trong nhà." },
+    { word: "outdoors", ipa: "/ˌaʊtˈdɔːrz/", vi: "ngoài trời", emoji: "🌳", example: "The courtyard is outdoors.", exampleVi: "Sân trong ở ngoài trời." },
+    { word: "weather", ipa: "/ˈweðər/", vi: "thời tiết", emoji: "🌦️", example: "The weather might change.", exampleVi: "Thời tiết có thể thay đổi." },
+    { word: "accessible", ipa: "/əkˈsesəbl/", vi: "dễ tiếp cận", emoji: "♿", example: "The hall is accessible for wheelchairs.", exampleVi: "Hội trường dễ tiếp cận cho xe lăn." },
+    { word: "benefit", ipa: "/ˈbenɪfɪt/", vi: "lợi ích", emoji: "➕", example: "One benefit of the hall is it stays dry.", exampleVi: "Một lợi ích của hội trường là luôn khô ráo." },
+    { word: "drawback", ipa: "/ˈdrɔːbæk/", vi: "điểm dở", emoji: "➖", example: "One drawback of outdoors is the rain.", exampleVi: "Một điểm dở của ngoài trời là mưa." },
+    { word: "compromise", ipa: "/ˈkɒmprəmaɪz/", vi: "thoả hiệp", emoji: "🤝", example: "They found a good compromise.", exampleVi: "Cả nhóm tìm được một thoả hiệp hợp lý." },
+  ],
+  patterns: [
+    { pattern: "One benefit of … is …", vi: "Một lợi ích của … là …", examples: [
+      { en: "One benefit of the hall is it stays dry.", vi: "Một lợi ích của hội trường là luôn khô ráo." },
+      { en: "One benefit of the courtyard is it is big and sunny.", vi: "Một lợi ích của sân trong là rộng và có nắng." }] },
+    { pattern: "One drawback of … is …", vi: "Một điểm dở của … là …", examples: [
+      { en: "One drawback of the courtyard is the weather.", vi: "Một điểm dở của sân trong là thời tiết." },
+      { en: "One drawback of the hall is it is smaller.", vi: "Một điểm dở của hội trường là nhỏ hơn." }] },
+    { pattern: "It is more accessible because …", vi: "Nó dễ tiếp cận hơn vì …", examples: [
+      { en: "The hall is more accessible because it has a ramp.", vi: "Hội trường dễ tiếp cận hơn vì có đường dốc." },
+      { en: "It is more accessible because the doors are wide.", vi: "Nó dễ tiếp cận hơn vì cửa rộng." }] },
+    { pattern: "As a compromise, we could …", vi: "Như một thoả hiệp, mình có thể …", examples: [
+      { en: "As a compromise, we could use the hall if it rains.", vi: "Như một thoả hiệp, mình có thể dùng hội trường nếu trời mưa." },
+      { en: "As a compromise, we could split the party into two rooms.", vi: "Như một thoả hiệp, mình có thể chia buổi tiệc ra hai phòng." }] },
+  ],
+  listening: {
+    intro: "Listen to the class discussion, then answer.", introVi: "Nghe cả lớp thảo luận rồi trả lời.",
+    script: "The class was choosing a space for the school celebration: the outdoor courtyard or the indoor hall. \"One benefit of the courtyard is it's big and sunny,\" said Omar. \"But one drawback is the weather — it might rain,\" said Nadia, holding a weather card. Priya, who uses a wheelchair, measured the doorway. \"The hall is more accessible,\" she said, \"because it has a smooth ramp and wide doors.\" As a compromise, the class agreed to set up in the courtyard, but move into the hall if it rained.",
+    questions: [
+      { q: "Which two spaces were they choosing between?", vi: "Họ chọn giữa hai không gian nào?", options: ["The courtyard and the hall", "The library and the gym", "The bus and the boat"], answer: "The courtyard and the hall" },
+      { q: "Why did Priya say the hall was better?", vi: "Vì sao Priya nói hội trường tốt hơn?", options: ["It is more accessible — a ramp and wide doors", "It is more colourful", "It is closer to the shop"], answer: "It is more accessible — a ramp and wide doors", explainVi: "Hội trường có đường dốc và cửa rộng nên dễ tiếp cận hơn." },
+      { q: "What compromise did the class make?", vi: "Cả lớp thoả hiệp thế nào?", options: ["Use the courtyard, but move to the hall if it rains", "Cancel the party", "Only use the hall all day"], answer: "Use the courtyard, but move to the hall if it rains" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "One benefit of the hall is it stays dry.", vi: "Một lợi ích của hội trường là luôn khô ráo." },
+      { en: "As a compromise, we could move inside if it rains.", vi: "Như một thoả hiệp, mình có thể vào trong nếu trời mưa." },
+    ],
+    guided: { q: "Where would you hold a school party, and why?", vi: "Bạn sẽ tổ chức tiệc trường ở đâu, và vì sao?", hint: "I would choose the ___ because ___." },
+    describe: { prompt: "Share your opinion in 3–5 sentences. Give one benefit, one drawback, and a fair compromise.", vi: "Nêu ý kiến 3–5 câu: một lợi ích, một điểm dở, và một thoả hiệp công bằng.", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "A place that is easy for everyone to enter and use is …", vi: "Nơi mà ai cũng dễ vào và sử dụng là …", options: ["accessible", "outdoors", "weather"], answer: "accessible" },
+      { type: "reading", q: "\"The courtyard might get rained on.\" This is a …", vi: "\"Sân trong có thể bị mưa.\" Đây là một …", options: ["drawback", "benefit", "compromise"], answer: "drawback", explainVi: "Điều bất lợi → điểm dở (drawback)." },
+      { type: "sentence", q: "Which sentence offers a fair compromise?", vi: "Câu nào đưa ra thoả hiệp công bằng?", options: ["We could use the courtyard, but move inside if it rains.", "We must always use the hall.", "The courtyard is the only choice."], answer: "We could use the courtyard, but move inside if it rains." },
+      { type: "listening", q: "Why is the hall more accessible?", vi: "Vì sao hội trường dễ tiếp cận hơn?", options: ["It has a ramp and wide doors", "It has more windows", "It is painted blue"], answer: "It has a ramp and wide doors" },
+    ],
+  },
+};
+
+/* ============ Level 3 · C02 · Unit 4: Should the School Day Start Later? ============ */
+const SHOULD_SCHOOL_START_LATER: Lesson = {
+  id: "startlater", theme: "giving-reasons", title: "Should the School Day Start Later?", vi: "Có nên bắt đầu buổi học muộn hơn?", ageRange: "9–12",
+  sceneImage: L3C2 + "level-3-c02-unit-04-school-day-start-later.webp",
+  vocab: [
+    { word: "schedule", ipa: "/ˈʃedjuːl/", vi: "thời khoá biểu", emoji: "🗓️", example: "A later start changes the schedule.", exampleVi: "Bắt đầu muộn hơn làm đổi thời khoá biểu." },
+    { word: "evidence", ipa: "/ˈevɪdəns/", vi: "bằng chứng", emoji: "🔍", example: "Use evidence to support your reason.", exampleVi: "Dùng bằng chứng để chống đỡ lý do." },
+    { word: "sleep", ipa: "/sliːp/", vi: "giấc ngủ", emoji: "😴", example: "More sleep helps students focus.", exampleVi: "Ngủ nhiều hơn giúp học sinh tập trung." },
+    { word: "alert", ipa: "/əˈlɜːrt/", vi: "tỉnh táo", emoji: "👀", example: "Students feel more alert after sleep.", exampleVi: "Học sinh tỉnh táo hơn sau khi ngủ đủ." },
+    { word: "tired", ipa: "/ˈtaɪərd/", vi: "mệt, buồn ngủ", emoji: "🥱", example: "Many students feel tired in the morning.", exampleVi: "Nhiều học sinh thấy buồn ngủ vào buổi sáng." },
+    { word: "consequence", ipa: "/ˈkɒnsɪkwəns/", vi: "hệ quả", emoji: "➡️", example: "One consequence is a later finish.", exampleVi: "Một hệ quả là tan học muộn hơn." },
+    { word: "relevant", ipa: "/ˈreləvənt/", vi: "liên quan, xác đáng", emoji: "🎯", example: "That reason is relevant.", exampleVi: "Lý do đó xác đáng." },
+    { word: "however", ipa: "/haʊˈevər/", vi: "tuy nhiên", emoji: "🔄", example: "However, sports would start later too.", exampleVi: "Tuy nhiên, các môn thể thao cũng bắt đầu muộn hơn." },
+  ],
+  patterns: [
+    { pattern: "One reason is … For example, …", vi: "Một lý do là … Ví dụ, …", examples: [
+      { en: "One reason is students are tired. For example, many can't focus at 8 a.m.", vi: "Một lý do là học sinh mệt. Ví dụ, nhiều bạn không tập trung nổi lúc 8 giờ." },
+      { en: "One reason is safety. For example, it is dark early in winter.", vi: "Một lý do là an toàn. Ví dụ, mùa đông trời tối sớm." }] },
+    { pattern: "The evidence shows that …", vi: "Bằng chứng cho thấy rằng …", examples: [
+      { en: "The evidence shows that more sleep helps learning.", vi: "Bằng chứng cho thấy ngủ nhiều hơn giúp học tốt hơn." },
+      { en: "The evidence shows that tired students make more mistakes.", vi: "Bằng chứng cho thấy học sinh mệt mắc nhiều lỗi hơn." }] },
+    { pattern: "However, one consequence is …", vi: "Tuy nhiên, một hệ quả là …", examples: [
+      { en: "However, one consequence is a later finish time.", vi: "Tuy nhiên, một hệ quả là tan học muộn hơn." },
+      { en: "However, one consequence is less time for clubs.", vi: "Tuy nhiên, một hệ quả là ít thời gian cho câu lạc bộ hơn." }] },
+    { pattern: "I partly agree, but …", vi: "Mình đồng ý một phần, nhưng …", examples: [
+      { en: "I partly agree, but sports would start later too.", vi: "Mình đồng ý một phần, nhưng thể thao cũng bắt đầu muộn hơn." },
+      { en: "I partly agree, but some buses run early.", vi: "Mình đồng ý một phần, nhưng vài chuyến xe buýt chạy sớm." }] },
+  ],
+  listening: {
+    intro: "Listen to the class debate, then answer.", introVi: "Nghe cả lớp tranh luận rồi trả lời.",
+    script: "Maple's class debated one question: should the school day start later? \"One reason is that many students are tired in the morning,\" said Leo. \"The evidence shows that more sleep helps us stay alert.\" Nadia partly agreed. \"That's a relevant point,\" she said, \"however, one consequence is that school would finish later, so sports and clubs would start later too.\" The teacher smiled. \"Both of you used evidence and thought about the consequences. That is exactly how to give reasons.\"",
+    questions: [
+      { q: "What was the debate question?", vi: "Câu hỏi tranh luận là gì?", options: ["Should the school day start later?", "Should lunch be longer?", "Should homework stop?"], answer: "Should the school day start later?" },
+      { q: "What evidence did Leo give?", vi: "Leo đưa ra bằng chứng gì?", options: ["More sleep helps students stay alert", "Students like the morning", "Buses are always late"], answer: "More sleep helps students stay alert", explainVi: "Leo nói bằng chứng cho thấy ngủ nhiều giúp tỉnh táo." },
+      { q: "What consequence did Nadia point out?", vi: "Nadia chỉ ra hệ quả gì?", options: ["School and activities would finish/start later", "Students would sleep in class", "Lunch would be cancelled"], answer: "School and activities would finish/start later" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The evidence shows that more sleep helps us stay alert.", vi: "Bằng chứng cho thấy ngủ nhiều hơn giúp tụi mình tỉnh táo hơn." },
+      { en: "I partly agree, but sports would start later too.", vi: "Mình đồng ý một phần, nhưng thể thao cũng bắt đầu muộn hơn." },
+    ],
+    guided: { q: "Should your school start later? Give one reason.", vi: "Trường bạn có nên bắt đầu muộn hơn không? Nêu một lý do.", hint: "I think school should ___ because ___." },
+    describe: { prompt: "Share your opinion in 3–5 sentences. Give your position, one reason with an example, and one consequence.", vi: "Nêu ý kiến 3–5 câu: quan điểm, một lý do kèm ví dụ, và một hệ quả.", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "A reason that clearly connects to the topic is …", vi: "Lý do gắn rõ với chủ đề gọi là …", options: ["relevant", "tired", "schedule"], answer: "relevant" },
+      { type: "reading", q: "\"More sleep helps students focus.\" This is used as …", vi: "\"Ngủ nhiều hơn giúp học sinh tập trung.\" Câu này dùng làm …", options: ["evidence for a reason", "a joke", "a schedule"], answer: "evidence for a reason", explainVi: "Câu này là bằng chứng chống đỡ lý do." },
+      { type: "sentence", q: "Which reply shows PARTIAL agreement?", vi: "Câu nào thể hiện đồng ý MỘT PHẦN?", options: ["I partly agree, but sports would start later.", "You are completely wrong.", "I agree with everything."], answer: "I partly agree, but sports would start later." },
+      { type: "listening", q: "What consequence did Nadia mention?", vi: "Nadia nhắc tới hệ quả gì?", options: ["School would finish later, so activities start later", "Students would forget lunch", "The bus would be free"], answer: "School would finish later, so activities start later" },
+    ],
+  },
+};
+
+/* ============ Level 3 · C02 · Unit 5: Should Students Wear School Uniforms? ============ */
+const SCHOOL_UNIFORMS: Lesson = {
+  id: "uniforms", theme: "giving-reasons", title: "Should Students Wear School Uniforms?", vi: "Học sinh có nên mặc đồng phục?", ageRange: "9–12",
+  sceneImage: L3C2 + "level-3-c02-unit-05-school-uniforms.webp",
+  vocab: [
+    { word: "uniform", ipa: "/ˈjuːnɪfɔːrm/", vi: "đồng phục", emoji: "👕", example: "A uniform is the same for everyone.", exampleVi: "Đồng phục thì giống nhau cho mọi người." },
+    { word: "express", ipa: "/ɪkˈspres/", vi: "thể hiện (bản thân)", emoji: "🎨", example: "Clothes let students express themselves.", exampleVi: "Quần áo giúp học sinh thể hiện bản thân." },
+    { word: "cost", ipa: "/kɒst/", vi: "chi phí", emoji: "💰", example: "One point is the cost of clothes.", exampleVi: "Một khía cạnh là chi phí quần áo." },
+    { word: "comfort", ipa: "/ˈkʌmfət/", vi: "sự thoải mái", emoji: "😌", example: "Comfort matters when you sit all day.", exampleVi: "Sự thoải mái quan trọng khi ngồi cả ngày." },
+    { word: "belong", ipa: "/bɪˈlɒŋ/", vi: "thuộc về, gắn kết", emoji: "🫂", example: "Uniforms can help students feel they belong.", exampleVi: "Đồng phục giúp học sinh thấy mình gắn kết." },
+    { word: "fair", ipa: "/feər/", vi: "công bằng", emoji: "⚖️", example: "A uniform can be fair to everyone.", exampleVi: "Đồng phục có thể công bằng với mọi người." },
+    { word: "example", ipa: "/ɪɡˈzɑːmpl/", vi: "ví dụ", emoji: "📌", example: "Give an example to support your reason.", exampleVi: "Nêu ví dụ để chống đỡ lý do." },
+    { word: "balance", ipa: "/ˈbæləns/", vi: "cân bằng", emoji: "🔄", example: "Let's find a balance.", exampleVi: "Cùng tìm một điểm cân bằng nào." },
+  ],
+  patterns: [
+    { pattern: "One argument for … is …", vi: "Một lập luận ủng hộ … là …", examples: [
+      { en: "One argument for uniforms is that they feel fair.", vi: "Một lập luận ủng hộ đồng phục là chúng công bằng." },
+      { en: "One argument for uniforms is that mornings are easier.", vi: "Một lập luận ủng hộ đồng phục là buổi sáng đỡ vất vả hơn." }] },
+    { pattern: "One argument against … is …", vi: "Một lập luận phản đối … là …", examples: [
+      { en: "One argument against uniforms is less self-expression.", vi: "Một lập luận phản đối đồng phục là ít thể hiện bản thân hơn." },
+      { en: "One argument against uniforms is the extra cost.", vi: "Một lập luận phản đối đồng phục là tốn thêm chi phí." }] },
+    { pattern: "For example, …", vi: "Ví dụ, …", examples: [
+      { en: "For example, no one is judged by expensive clothes.", vi: "Ví dụ, không ai bị đánh giá qua quần áo đắt tiền." },
+      { en: "For example, some uniforms are hot in summer.", vi: "Ví dụ, một số đồng phục rất nóng vào mùa hè." }] },
+    { pattern: "As a balance, we could …", vi: "Để cân bằng, mình có thể …", examples: [
+      { en: "As a balance, we could wear a uniform shirt but choose our own shoes.", vi: "Để cân bằng, mình mặc áo đồng phục nhưng tự chọn giày." },
+      { en: "As a balance, we could have a uniform on some days only.", vi: "Để cân bằng, mình chỉ mặc đồng phục vào vài ngày." }] },
+  ],
+  listening: {
+    intro: "Listen to the class discussion, then answer.", introVi: "Nghe cả lớp thảo luận rồi trả lời.",
+    script: "The class discussed school uniforms. \"One argument for uniforms is that they feel fair,\" said Aisha. \"For example, no one is judged by expensive clothes, and everyone belongs.\" Omar disagreed politely. \"One argument against them is less self-expression. Clothes let us show who we are.\" Priya added, \"Comfort matters too — some uniforms are hot in summer.\" As a balance, the class suggested a simple uniform shirt, but students could choose their own comfortable trousers and shoes.",
+    questions: [
+      { q: "What was Aisha's argument FOR uniforms?", vi: "Lập luận ỦNG HỘ đồng phục của Aisha là gì?", options: ["They feel fair; everyone belongs", "They are expensive", "They are always hot"], answer: "They feel fair; everyone belongs", explainVi: "Aisha nói đồng phục công bằng và ai cũng thấy gắn kết." },
+      { q: "Why did Omar argue against uniforms?", vi: "Vì sao Omar phản đối đồng phục?", options: ["Less self-expression", "They are too cheap", "They are too colourful"], answer: "Less self-expression", explainVi: "Omar cho rằng đồng phục làm giảm thể hiện bản thân." },
+      { q: "What balanced idea did the class suggest?", vi: "Cả lớp đề xuất ý cân bằng nào?", options: ["A uniform shirt, but own choice of trousers and shoes", "No clothes rules at all", "Everyone wears the exact same outfit always"], answer: "A uniform shirt, but own choice of trousers and shoes" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "One argument for uniforms is that they feel fair.", vi: "Một lập luận ủng hộ đồng phục là chúng công bằng." },
+      { en: "As a balance, we could wear a uniform shirt but choose our own shoes.", vi: "Để cân bằng, mình mặc áo đồng phục nhưng tự chọn giày." },
+    ],
+    guided: { q: "Should students wear uniforms? Give one reason with an example.", vi: "Học sinh có nên mặc đồng phục? Nêu một lý do kèm ví dụ.", hint: "I think ___ because ___. For example, ___." },
+    describe: { prompt: "Share your opinion in 3–5 sentences. Give one argument with an example, and a balanced compromise.", vi: "Nêu ý kiến 3–5 câu: một lập luận kèm ví dụ, và một thoả hiệp cân bằng.", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Feeling that you are part of a group is to …", vi: "Cảm giác mình là một phần của tập thể là …", options: ["belong", "cost", "example"], answer: "belong" },
+      { type: "reading", q: "\"No one is judged by expensive clothes.\" This supports which side?", vi: "\"Không ai bị đánh giá qua quần áo đắt tiền.\" Câu này ủng hộ bên nào?", options: ["For uniforms (fairness)", "Against uniforms", "Neither side"], answer: "For uniforms (fairness)", explainVi: "Đây là lập luận ủng hộ đồng phục vì công bằng." },
+      { type: "sentence", q: "Which is a balanced compromise?", vi: "Câu nào là thoả hiệp cân bằng?", options: ["We could wear a uniform shirt but choose our own shoes.", "Uniforms should be banned forever.", "Everyone must wear identical clothes daily."], answer: "We could wear a uniform shirt but choose our own shoes." },
+      { type: "listening", q: "What comfort problem did Priya mention?", vi: "Priya nhắc tới vấn đề thoải mái gì?", options: ["Some uniforms are hot in summer", "Uniforms are too soft", "Uniforms are too cheap"], answer: "Some uniforms are hot in summer" },
+    ],
+  },
+};
+
+/* ============ Level 3 · C03 · Unit 5: Reducing Food Waste at School ============ */
+const REDUCING_FOOD_WASTE: Lesson = {
+  id: "foodwaste", theme: "solving-problems", title: "Reducing Food Waste at School", vi: "Giảm lãng phí thức ăn ở trường", ageRange: "9–12",
+  sceneImage: L3C3 + "level-3-c03-unit-05-reducing-food-waste.webp",
+  vocab: [
+    { word: "waste", ipa: "/weɪst/", vi: "rác thải, lãng phí", emoji: "🗑️", example: "The school throws away a lot of food waste.", exampleVi: "Trường bỏ đi rất nhiều thức ăn thừa." },
+    { word: "reduce", ipa: "/rɪˈdjuːs/", vi: "giảm", emoji: "⬇️", example: "We want to reduce food waste.", exampleVi: "Bọn mình muốn giảm lãng phí thức ăn." },
+    { word: "sort", ipa: "/sɔːrt/", vi: "phân loại", emoji: "♻️", example: "Students sort their trash into bins.", exampleVi: "Học sinh phân loại rác vào các thùng." },
+    { word: "compost", ipa: "/ˈkɒmpɒst/", vi: "ủ phân hữu cơ", emoji: "🍎", example: "Fruit peels go in the compost bin.", exampleVi: "Vỏ trái cây bỏ vào thùng ủ hữu cơ." },
+    { word: "recycle", ipa: "/ˌriːˈsaɪkl/", vi: "tái chế", emoji: "♻️", example: "Milk cartons go in the recycling bin.", exampleVi: "Hộp sữa bỏ vào thùng tái chế." },
+    { word: "audit", ipa: "/ˈɔːdɪt/", vi: "khảo sát, kiểm kê", emoji: "📋", example: "They did a waste audit to measure the trash.", exampleVi: "Họ khảo sát rác để đo lượng bỏ đi." },
+    { word: "hygiene", ipa: "/ˈhaɪdʒiːn/", vi: "vệ sinh", emoji: "🧤", example: "Gloves keep good hygiene.", exampleVi: "Đeo găng tay giữ vệ sinh tốt." },
+    { word: "share", ipa: "/ʃeər/", vi: "chia sẻ", emoji: "🤲", example: "Unopened food goes on the share shelf.", exampleVi: "Đồ ăn chưa mở đặt lên kệ chia sẻ." },
+  ],
+  patterns: [
+    { pattern: "The audit shows that …", vi: "Cuộc khảo sát cho thấy …", examples: [
+      { en: "The audit shows that most waste is fruit and bread.", vi: "Cuộc khảo sát cho thấy phần lớn rác là trái cây và bánh mì." },
+      { en: "The audit shows that milk is often unopened.", vi: "Cuộc khảo sát cho thấy sữa thường còn chưa mở." }] },
+    { pattern: "One problem is … so we should …", vi: "Một vấn đề là … nên mình nên …", examples: [
+      { en: "One problem is the line gets crowded, so the bins must be easy to reach.", vi: "Một vấn đề là hàng bị đông, nên các thùng phải dễ với tới." },
+      { en: "One problem is hygiene, so we should wear gloves.", vi: "Một vấn đề là vệ sinh, nên mình nên đeo găng tay." }] },
+    { pattern: "We could try …", vi: "Mình có thể thử …", examples: [
+      { en: "We could try a share shelf for unopened food.", vi: "Mình có thể thử một kệ chia sẻ cho đồ ăn chưa mở." },
+      { en: "We could try clearer signs on the bins.", vi: "Mình có thể thử dán biển rõ hơn trên các thùng." }] },
+    { pattern: "After the test, we should …", vi: "Sau khi thử, mình nên …", examples: [
+      { en: "After the test, we should combine sorting and sharing.", vi: "Sau khi thử, mình nên kết hợp phân loại và chia sẻ." },
+      { en: "After the test, we should keep what worked best.", vi: "Sau khi thử, mình nên giữ lại cách hiệu quả nhất." }] },
+  ],
+  listening: {
+    intro: "Listen to the lunchroom project, then answer.", introVi: "Nghe dự án ở nhà ăn rồi trả lời.",
+    script: "Maple's class wanted to reduce food waste in the lunchroom. First, they did a waste audit. Sam, who uses a wheelchair, recorded the results on a clipboard. \"The audit shows that most waste is unopened milk and whole fruit,\" he said. A lunch helper showed them three bins: recycle, compost, and trash. \"One problem is that the line gets crowded,\" said Mia, \"so the bins must be easy to reach.\" They tested a share shelf, where students could leave unopened food for others. After the test, the class combined two ideas: clear sorting bins and a share shelf, with gloves for good hygiene.",
+    questions: [
+      { q: "What did the waste audit show?", vi: "Cuộc khảo sát rác cho thấy gì?", options: ["Most waste was unopened milk and whole fruit", "There was no waste at all", "Only paper was wasted"], answer: "Most waste was unopened milk and whole fruit", explainVi: "Phần lớn rác là sữa chưa mở và trái cây nguyên." },
+      { q: "What problem did Mia point out about the bins?", vi: "Mia chỉ ra vấn đề gì về các thùng?", options: ["The line gets crowded, so bins must be easy to reach", "The bins were too clean", "There were no students"], answer: "The line gets crowded, so bins must be easy to reach" },
+      { q: "What combined solution did the class choose?", vi: "Cả lớp chọn giải pháp kết hợp nào?", options: ["Sorting bins and a share shelf, with gloves", "Throwing everything in one bin", "Stopping lunch"], answer: "Sorting bins and a share shelf, with gloves" },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "The audit shows that most waste is unopened milk and fruit.", vi: "Cuộc khảo sát cho thấy phần lớn rác là sữa chưa mở và trái cây." },
+      { en: "We could try a share shelf for unopened food.", vi: "Mình có thể thử một kệ chia sẻ cho đồ ăn chưa mở." },
+    ],
+    guided: { q: "How could your school waste less food?", vi: "Trường bạn có thể bớt lãng phí thức ăn thế nào?", hint: "We could ___ to reduce waste." },
+    describe: { prompt: "Share your idea in 3–5 sentences. Describe the problem, one idea to test, and how you would combine solutions.", vi: "Nêu ý tưởng 3–5 câu: mô tả vấn đề, một ý để thử, và cách kết hợp các giải pháp.", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Fruit peels and food scraps go in the … bin.", vi: "Vỏ trái cây và thức ăn thừa bỏ vào thùng …", options: ["compost", "recycle", "share"], answer: "compost" },
+      { type: "reading", q: "\"The audit shows most waste is fruit.\" The audit gives the class …", vi: "\"Khảo sát cho thấy phần lớn rác là trái cây.\" Khảo sát cho lớp …", options: ["evidence to act on", "a snack", "a punishment"], answer: "evidence to act on", explainVi: "Số liệu khảo sát là bằng chứng để hành động." },
+      { type: "sentence", q: "Which sentence revises the plan by COMBINING ideas?", vi: "Câu nào chỉnh kế hoạch bằng cách KẾT HỢP các ý?", options: ["We should combine sorting bins and a share shelf.", "We should only use one idea.", "We should stop trying."], answer: "We should combine sorting bins and a share shelf." },
+      { type: "listening", q: "Why must the bins be easy to reach?", vi: "Vì sao các thùng phải dễ với tới?", options: ["Because the lunch line gets crowded", "Because they are heavy", "Because they are new"], answer: "Because the lunch line gets crowded" },
+    ],
+  },
+};
+
 export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE,
@@ -2716,11 +2991,11 @@ export const THEMES: CourseTheme[] = [
       THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY, THE_POWER_OUTAGE,
       THE_SCIENCE_FAIR_MIX_UP, THE_FIELD_TRIP_DETOUR, THE_COMMUNITY_NEWS_MIX_UP, THE_WILDLIFE_CAMERA_SURPRISE, THE_FESTIVAL_SCHEDULE_PROBLEM] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
-    lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT] },
+    lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT, WEEKEND_VOLUNTEER_ACTIVITY, SCHOOL_CELEBRATION_SPACE] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
-    lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND] },
+    lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND, SHOULD_SCHOOL_START_LATER, SCHOOL_UNIFORMS] },
   { id: "solving-problems", name: "Solving Problems", vi: "Giải Quyết Vấn Đề", emoji: "🛠️",
-    lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL, MAKING_SCHOOL_ACCESSIBLE] },
+    lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL, MAKING_SCHOOL_ACCESSIBLE, REDUCING_FOOD_WASTE] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -2781,17 +3056,22 @@ export const LEVEL3_COLLECTIONS: CourseCollection[] = [
     { id: "classtrip",   n: 1, title: "Planning a Class Trip",       vi: "Lên kế hoạch đi dã ngoại",  image: L3C1IMG + "level-3-c01-unit-01-planning-class-trip.webp",   focus: "So lựa chọn · lý do · thống nhất",   lessonId: "classtrip",   ready: true },
     { id: "screentime",  n: 2, title: "Screen Time or Outdoor Time?", vi: "Màn hình hay ngoài trời?", image: L3C1IMG + "level-3-c01-unit-02-screen-or-outdoor-time.webp", focus: "Lợi ích · điểm dở · thoả hiệp",     lessonId: "screentime",  ready: true },
     { id: "teamproject", n: 3, title: "Choosing a Team Project",     vi: "Chọn dự án nhóm",           image: L3C1IMG + "level-3-c01-unit-03-choosing-team-project.webp", focus: "Đề xuất · vai trò · quyết định nhóm", lessonId: "teamproject", ready: true },
+    { id: "volunteer",  n: 4, title: "Choosing a Weekend Volunteer Activity", vi: "Chọn hoạt động tình nguyện", image: L3C1IMG + "level-3-c01-unit-04-weekend-volunteer-activity.webp", focus: "So lựa chọn · thế mạnh · ràng buộc · thống nhất", lessonId: "volunteer", ready: true },
+    { id: "celebspace", n: 5, title: "Choosing a Space for the School Celebration", vi: "Chọn không gian lễ hội", image: L3C1IMG + "level-3-c01-unit-05-school-celebration-space.webp", focus: "Không gian · thời tiết · tiếp cận · thoả hiệp", lessonId: "celebspace", ready: true },
   ] },
   { id: "c2", name: "Giving Reasons", vi: "Bộ 2 · Đưa ra lý do", units: [
     { id: "homework",   n: 1, title: "Should Homework Be Shorter?", vi: "Bài tập có nên ngắn hơn?",   image: L3C2IMG + "level-3-c02-unit-01-shorter-homework.webp", focus: "Nêu ý kiến · ví dụ · phản đối lịch sự", lessonId: "homework",   ready: true },
     { id: "savespend",  n: 2, title: "Save It or Spend It?",       vi: "Tiết kiệm hay tiêu?",        image: L3C2IMG + "level-3-c02-unit-02-save-or-spend.webp",    focus: "Ưu tiên · hệ quả · thoả hiệp",         lessonId: "savespend",  ready: true },
     { id: "goodfriend", n: 3, title: "What Makes a Good Friend?",  vi: "Điều gì tạo nên bạn tốt?",   image: L3C2IMG + "level-3-c02-unit-03-good-friend.webp",      focus: "Phẩm chất · dẫn chứng · kết luận",     lessonId: "goodfriend", ready: true },
+    { id: "startlater", n: 4, title: "Should the School Day Start Later?", vi: "Có nên học muộn hơn?", image: L3C2IMG + "level-3-c02-unit-04-school-day-start-later.webp", focus: "Bằng chứng · lịch học · hệ quả · đồng ý một phần", lessonId: "startlater", ready: true },
+    { id: "uniforms",   n: 5, title: "Should Students Wear School Uniforms?", vi: "Có nên mặc đồng phục?", image: L3C2IMG + "level-3-c02-unit-05-school-uniforms.webp", focus: "Thể hiện · chi phí · gắn kết · thoả hiệp cân bằng", lessonId: "uniforms", ready: true },
   ] },
   { id: "c3", name: "Solving Problems", vi: "Bộ 3 · Giải quyết vấn đề", units: [
     { id: "lunchroom", n: 1, title: "A Quieter Lunchroom",      vi: "Nhà ăn bớt ồn hơn",       image: L3C3IMG + "level-3-c03-unit-01-quieter-lunchroom.webp",       focus: "Nêu nhu cầu · thử nghiệm · chỉnh sửa",  lessonId: "lunchroom", ready: true },
     { id: "bikeroute", n: 2, title: "A Safer Bike Route",       vi: "Tuyến xe đạp an toàn hơn", image: L3C3IMG + "level-3-c03-unit-02-safer-bike-route.webp",        focus: "Ràng buộc · đánh đổi · khuyến nghị",    lessonId: "bikeroute", ready: true },
     { id: "festival",  n: 3, title: "A Greener School Festival", vi: "Lễ hội trường xanh hơn",  image: L3C3IMG + "level-3-c03-unit-03-greener-school-festival.webp", focus: "Ưu tiên · nguồn lực · thương lượng",    lessonId: "festival",  ready: true },
     { id: "accessible", n: 4, title: "Making the School More Accessible", vi: "Làm trường dễ tiếp cận hơn", image: L3C3IMG + "level-3-c03-unit-04-making-school-more-accessible-updated.webp", focus: "Nhu cầu tiếp cận · lợi–hại · kết hợp giải pháp", lessonId: "accessible", ready: true },
+    { id: "foodwaste", n: 5, title: "Reducing Food Waste at School", vi: "Giảm lãng phí thức ăn", image: L3C3IMG + "level-3-c03-unit-05-reducing-food-waste.webp", focus: "Khảo sát rác · vệ sinh · thử nghiệm · kết hợp giải pháp", lessonId: "foodwaste", ready: true },
   ] },
 ];
 

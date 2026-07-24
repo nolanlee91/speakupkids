@@ -7,6 +7,8 @@ This collection moves beyond choosing. Learners support an opinion with relevant
 | 01 | Should Homework Be Shorter? | `level-3-c02-unit-01-shorter-homework.webp` | Stating opinions, supporting examples, qualifying a claim and polite disagreement |
 | 02 | Save It or Spend It? | `level-3-c02-unit-02-save-or-spend.webp` | Priorities, short- and long-term consequences, planning and compromise |
 | 03 | What Makes a Good Friend? | `level-3-c02-unit-03-good-friend.webp` | Qualities, evidence from situations, adding perspectives and nuanced conclusions |
+| 04 | Should the School Day Start Later? | `level-3-c02-unit-04-school-day-start-later.webp` | Relevant evidence, schedules, consequences, qualifying claims and partial agreement |
+| 05 | Should Students Wear School Uniforms? | `level-3-c02-unit-05-school-uniforms.webp` | Self-expression, cost, comfort, belonging, examples and balanced compromise |
 
 ## Suggested lesson flow
 
@@ -19,4 +21,3 @@ This collection moves beyond choosing. Learners support an opinion with relevant
 7. Complete a machine-graded Mini Check.
 
 The image establishes the discussion context only. Store all dialogue, prompts and correct answers in structured lesson data, never inside the artwork.
-
