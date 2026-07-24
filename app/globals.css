@@ -932,9 +932,13 @@
   .ish-item.locked { background: #f4f2ec; border-style: dashed; color: var(--lock); }
   .ish-item.got { border-color: #cdeede; background: #f2fbf8; }
   .ish-emoji { font-size: 1.8rem; line-height: 1; filter: none; }
+  .ish-emoji img, .ish-img { width: 46px; height: 46px; object-fit: contain; display: block; }
   .ish-item.locked .ish-emoji { opacity: .55; }
   .ish-name { font-weight: 800; font-size: .72rem; color: inherit; }
   .ish-item.got .ish-name { color: var(--teal-d); }
+
+  /* Danh sách các mùa trên Adventure Home */
+  .season-list { display: flex; flex-direction: column; gap: 16px; }
 
   /* ============ PHIÊU LƯU: Season Map ============ */
   .adv-map-wrap { max-width: 900px; margin: 0 auto; padding: 58px 14px 8px; }
@@ -1033,6 +1037,7 @@
   .chap-clue { text-align: center; background: linear-gradient(135deg, #fff8ec, #fdf2e4); border: 3px solid #ffe0b3;
     border-radius: 20px; padding: 22px 18px; box-shadow: 0 12px 28px rgba(242,179,61,.18); }
   .clue-badge { font-size: 3.4rem; line-height: 1; }
+  .clue-badge img { width: 84px; height: 84px; object-fit: contain; display: block; }
   .clue-title { font-weight: 900; color: var(--coral-d); font-size: 1.05rem; margin: 8px 0 6px; }
   .clue-en { font-weight: 700; color: var(--navy); }
   .clue-vi { font-size: .86rem; color: var(--muted); font-weight: 600; margin: 4px 0 16px; }
@@ -1047,6 +1052,7 @@
     border-radius: 16px; padding: 14px 16px; box-shadow: 0 8px 20px rgba(45,49,66,.08); }
   .cr-reward.new { border-color: #cdeede; background: #f2fbf8; }
   .cr-item { font-size: 2.4rem; line-height: 1; }
+  .cr-item img { width: 60px; height: 60px; object-fit: contain; display: block; }
   .cr-reward-t { font-weight: 800; color: var(--navy); }
   .cr-reward-d { font-size: .84rem; color: var(--muted); font-weight: 600; }
   .cr-next { color: var(--muted); font-weight: 700; font-size: .84rem; margin: 14px 0; }

@@ -13,7 +13,7 @@ import {
   completeChapter, setCurrentChapter, resetAdventure,
 } from "@/lib/state";
 import {
-  SEASON_LOST_COMPASS, chapterById, itemById, chapterStatesFor, chapterPlayable, resumeChapter,
+  SEASONS, seasonById, chapterById, itemById, chapterStatesFor, chapterPlayable, resumeChapter,
   type AdventureSeason, type AdventureChapter, type StoryStep, type ChapterUiState,
 } from "@/lib/adventures";
 import { speak, shuffle, celebrate } from "@/lib/fx";
@@ -41,23 +41,24 @@ export function Adventure({ state, setState, accent }: {
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   accent: "US" | "CA";
 }) {
-  const season = SEASON_LOST_COMPASS;
-  const [screen, setScreen] = useState<"home" | "map">("home");
+  const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
   const [travelFrom, setTravelFrom] = useState<string | null>(null); // chương vừa xong → Maple đi tiếp
 
   const reduce = usePrefersReducedMotion();
   const animate = state.prefs.motion !== false && !reduce;
 
-  const isDone = (chId: string) => isChapterCompleted(state, season.id, chId);
+  const season = activeSeasonId ? seasonById(activeSeasonId) : undefined;
 
   function openChapter(ch: AdventureChapter) {
+    if (!season) return;
     setState((s) => setCurrentChapter(s, season.id, ch.id));
     setTravelFrom(null);
     setPlaying(ch.id);
   }
 
-  function finishChapter(ch: AdventureChapter, stars: number) {
+  function finishChapter(ch: AdventureChapter, _stars: number) {
+    if (!season) return;
     const wasNew = !isChapterCompleted(state, season.id, ch.id);
     setState((s) => completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId }).state);
     if (wasNew) celebrate(animate);
@@ -66,7 +67,7 @@ export function Adventure({ state, setState, accent }: {
     setTravelFrom(wasNew && ch.nextChapterId ? ch.id : null);
   }
 
-  if (playing) {
+  if (playing && season) {
     const ch = chapterById(season.id, playing);
     if (ch && chapterPlayable(ch)) {
       return (
@@ -81,30 +82,24 @@ export function Adventure({ state, setState, accent }: {
     }
   }
 
-  if (screen === "home") {
-    return <AdventureHome season={season} state={state} onStart={() => setScreen("map")} />;
+  if (!season) {
+    return <AdventureHome seasons={SEASONS} state={state} onPick={(id) => setActiveSeasonId(id)} />;
   }
   return (
     <SeasonMap
       season={season} state={state} animate={animate}
       travelFrom={travelFrom} onTravelDone={() => setTravelFrom(null)}
-      onBack={() => setScreen("home")}
+      onBack={() => setActiveSeasonId(null)}
       onOpen={openChapter}
-      onReset={() => setState((s) => resetAdventure(s))}
+      onReset={() => setState((s) => resetAdventure(s, season.id))}
     />
   );
 }
 
-/* ==================== 1) ADVENTURE HOME ==================== */
-function AdventureHome({ season, state, onStart }: {
-  season: AdventureSeason; state: AppState; onStart: () => void;
+/* ==================== 1) ADVENTURE HOME — danh sách các mùa ==================== */
+function AdventureHome({ seasons, state, onPick }: {
+  seasons: AdventureSeason[]; state: AppState; onPick: (seasonId: string) => void;
 }) {
-  const prog = adventureOf(state, season.id);
-  const doneCount = prog.completedChapterIds.length;
-  const total = season.chapters.length;
-  const started = doneCount > 0 || !!prog.currentChapterId;
-  const cover = season.chapters[0].sceneImage;
-
   return (
     <section className="adv-home">
       <header className="adv-hero">
@@ -112,37 +107,54 @@ function AdventureHome({ season, state, onStart }: {
         <p className="adv-hero-sub">Dùng vốn tiếng Anh để giải bí ẩn và khám phá những vùng đất mới.</p>
       </header>
 
-      <button className="season-card" onClick={onStart}>
-        {cover && <img className="sc-img" src={cover} alt="" />}
-        <span className="sc-body">
-          <span className="sc-kicker">Season 1 · Chiến dịch</span>
-          <span className="sc-title">{season.title}</span>
-          <span className="sc-vi">{season.vi}</span>
-          <span className="sc-meta">
-            <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
-            <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
-          </span>
-        </span>
-      </button>
-
-      <ItemShelf season={season} state={state} />
+      <div className="season-list">
+        {seasons.map((s, i) => (
+          <SeasonCard key={s.id} season={s} index={i} state={state} onStart={() => onPick(s.id)} />
+        ))}
+      </div>
     </section>
   );
 }
 
-/* Kệ vật phẩm câu chuyện — dùng emoji/silhouette trung tính (chưa có ảnh item). */
+function SeasonCard({ season, index, state, onStart }: {
+  season: AdventureSeason; index: number; state: AppState; onStart: () => void;
+}) {
+  const prog = adventureOf(state, season.id);
+  const doneCount = prog.completedChapterIds.length;
+  const total = season.chapters.length;
+  const started = doneCount > 0 || !!prog.currentChapterId;
+  const cover = season.chapters[0].sceneImage;
+  return (
+    <button className="season-card" onClick={onStart}>
+      {cover && <img className="sc-img" src={cover} alt="" />}
+      <span className="sc-body">
+        <span className="sc-kicker">Season {index + 1} · Chiến dịch</span>
+        <span className="sc-title">{season.title}</span>
+        <span className="sc-vi">{season.vi}</span>
+        <span className="sc-meta">
+          <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
+          <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/* Kệ vật phẩm câu chuyện — hiện ảnh evidence nếu có, nếu không thì emoji trung tính. */
 function ItemShelf({ season, state }: { season: AdventureSeason; state: AppState }) {
   const owned = adventureOf(state, season.id).collectedItemIds;
   return (
     <div className="item-shelf">
       <h3 className="ish-head">Vật phẩm câu chuyện</h3>
-      <p className="ish-sub">Thu thập manh mối để ghép lại chiếc la bàn của Maple.</p>
+      <p className="ish-sub">{season.itemsTagline}</p>
       <div className="ish-grid">
         {season.items.map((it) => {
           const has = owned.includes(it.id);
           return (
             <div key={it.id} className={`ish-item ${has ? "got" : "locked"}`} title={has ? `${it.vi}` : "Chưa mở khoá"}>
-              <span className="ish-emoji" aria-hidden="true">{has ? it.emoji : "❔"}</span>
+              <span className="ish-emoji" aria-hidden="true">
+                {has ? (it.image ? <img className="ish-img" src={it.image} alt="" /> : it.emoji) : "❔"}
+              </span>
               <span className="ish-name">{has ? it.vi : "???"}</span>
             </div>
           );
@@ -264,6 +276,9 @@ function SeasonMap({ season, state, animate, travelFrom, onTravelDone, onBack, o
 
       {/* Thẻ xem trước / CTA chơi tiếp. */}
       <MapPreview season={season} restChapter={restChapter} isDone={isDone} onOpen={onOpen} hint={hint} />
+
+      {/* Kệ vật phẩm câu chuyện của mùa này. */}
+      <ItemShelf season={season} state={state} />
 
       {dev && (
         <button className="adv-dev-reset" onClick={() => { onReset(); setHint(""); }}>
@@ -518,7 +533,7 @@ function ClueStep({ step, season, onDone }: {
   const item = step.itemId ? itemById(season, step.itemId) : undefined;
   return (
     <div className="chap-clue">
-      <div className="clue-badge" aria-hidden="true">{item ? item.emoji : "🔦"}</div>
+      <div className="clue-badge" aria-hidden="true">{item ? (item.image ? <img src={item.image} alt="" /> : item.emoji) : "🔦"}</div>
       <div className="clue-title">Manh mối: {step.title}</div>
       <div className="clue-en">{step.en}</div>
       <div className="clue-vi">{step.vi}</div>
@@ -542,7 +557,7 @@ function ChapterResult({ season, chapter, stars, firstTime, showItem, scoredCoun
 
       {chapter.reward && (
         <div className={`cr-reward ${showItem ? "new" : "have"}`}>
-          <span className="cr-item" aria-hidden="true">{item ? item.emoji : "🔦"}</span>
+          <span className="cr-item" aria-hidden="true">{item ? (item.image ? <img src={item.image} alt="" /> : item.emoji) : "🔦"}</span>
           <div>
             <div className="cr-reward-t">{showItem ? "Vật phẩm mới!" : "Manh mối"} · {chapter.reward.clueTitle}</div>
             <div className="cr-reward-d">{chapter.reward.clueVi}</div>

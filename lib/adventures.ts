@@ -47,8 +47,8 @@ export type AdventureChapter = {
 };
 
 // Vật phẩm câu chuyện của Adventure (KHÔNG phải huy hiệu toàn app).
-// Chưa có file ảnh → dùng emoji/silhouette trung tính; KHÔNG tham chiếu asset chưa tồn tại.
-export type AdventureItem = { id: string; name: string; vi: string; emoji: string; planned?: boolean };
+// image: ảnh evidence nền trong suốt (nếu có); nếu chưa có → dùng emoji trung tính.
+export type AdventureItem = { id: string; name: string; vi: string; emoji: string; image?: string; planned?: boolean };
 
 export type AdventureSeason = {
   id: string;
@@ -58,6 +58,7 @@ export type AdventureSeason = {
   mapImage: string;       // ảnh bản đồ (chỉ nền)
   chapters: AdventureChapter[];
   items: AdventureItem[];  // bộ vật phẩm câu chuyện dự kiến của mùa
+  itemsTagline: string;    // câu mô tả kệ vật phẩm ("Thu thập… để …")
 };
 
 const A = "/assets/images/adventure/season-01-lost-maple-compass/";
@@ -442,9 +443,401 @@ export const SEASON_LOST_COMPASS: AdventureSeason = {
   mapImage: A + "map/season-01-world-map.webp",
   chapters: S01_CHAPTERS,
   items: S01_ITEMS,
+  itemsTagline: "Thu thập manh mối để ghép lại chiếc la bàn của Maple.",
 };
 
-export const SEASONS: AdventureSeason[] = [SEASON_LOST_COMPASS];
+/* ============================================================================
+ * SEASON 02 — THE SILENT HARBOUR SIGNAL
+ * Chiến dịch khoa học cộng đồng: tìm lại phao nghiên cứu Blue 7 mất tín hiệu.
+ * Không lặp mô-típ "3 mảnh" của S1 — mỗi chương cho MỘT bằng chứng (thông tin để suy luận).
+ * ==========================================================================*/
+const B = "/assets/images/adventure/season-02-silent-harbour-signal/";
+
+// 8 bằng chứng, mỗi chương một món (có ảnh evidence nền trong suốt).
+const S02_ITEMS: AdventureItem[] = [
+  { id: "research-station-token", name: "Research Station Token", vi: "Thẻ đồng trạm nghiên cứu", emoji: "🪙", image: B + "items/research-station-token.webp" }, // Ch1
+  { id: "blue-7-record", name: "Blue 7 Record", vi: "Bản ghi của Blue 7", emoji: "📼", image: B + "items/blue-7-record.webp" },                          // Ch2
+  { id: "harbour-photograph", name: "Harbour Photograph", vi: "Tấm ảnh bến cảng", emoji: "🖼️", image: B + "items/harbour-photograph.webp" },            // Ch3
+  { id: "tide-route-map", name: "Tide Route Map", vi: "Bản đồ hướng thuỷ triều", emoji: "🗺️", image: B + "items/tide-route-map.webp" },                 // Ch4
+  { id: "radio-bearing", name: "Radio Bearing", vi: "Phương vị sóng radio", emoji: "📡", image: B + "items/radio-bearing.webp" },                        // Ch5
+  { id: "broken-anchor-clip", name: "Broken Anchor Clip", vi: "Móc neo gãy", emoji: "⚓", image: B + "items/broken-anchor-clip.webp" },                   // Ch6
+  { id: "recovered-blue-7", name: "Recovered Blue 7", vi: "Phao Blue 7 được cứu", emoji: "🛟", image: B + "items/recovered-blue-7.webp" },                // Ch7
+  { id: "harbour-listener-badge", name: "Harbour Listener Badge", vi: "Huy hiệu Người nghe bến cảng", emoji: "🎖️", image: B + "items/harbour-listener-badge.webp" }, // Ch8
+];
+
+const S02_CHAPTERS: AdventureChapter[] = [
+  /* ---------------- Chapter 1 — The Letter That Hummed ---------------- */
+  // Ảnh: vườn hoàng hôn, bàn đá khắc hoa la bàn; Maple cầm PHONG BÌ niêm phong (đưa tay lên tai nghe);
+  // trên bàn: ĐỒNG XU/THẺ ĐỒNG, TẤM THẺ GẤP in 3 CHIẾC ĐỒNG HỒ (3 mốc giờ), MÁY GHI ÂM phát sáng xanh.
+  {
+    id: "s02-ch01", seasonId: "s02", chapterNumber: 1,
+    title: "The Letter That Hummed", vi: "Lá thư ngân nga",
+    shortDescription: "Maple mở lá thư niêm phong từ Khu vườn bí mật. Một máy ghi âm phát ra chuỗi tín hiệu lạ trộn nhiều âm thanh.",
+    estimatedMinutes: 6,
+    node: { x: 12, y: 67, key: "letter-hummed" },
+    sceneImage: B + "chapters/chapter-01-letter-that-hummed.webp",
+    nextChapterId: "s02-ch02",
+    reward: { stars: 3, itemId: "research-station-token", clueTitle: "Research Station Token", clueVi: "Thẻ đồng khắc dấu — chỉ đường tới một trạm nghiên cứu hải dương." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "In the Hidden Garden, Maple opens the sealed letter she found at the end of her last journey.",
+        vi: "Trong Khu vườn bí mật, Maple mở lá thư niêm phong em tìm được ở cuối hành trình trước." },
+      { kind: "dialogue", who: "maple", en: "There's a brass token, a card with three times, and a small recorder. The note says: \"Some messages are not written. They are heard.\"",
+        vi: "Có một thẻ đồng, một tấm thẻ ghi ba mốc giờ, và một máy ghi âm nhỏ. Mảnh giấy viết: \"Có những lời nhắn không được viết ra. Chúng được lắng nghe.\"" },
+      { kind: "observation",
+        prompt: "On the stone table, which object shows three different times?",
+        vi: "Trên bàn đá, vật nào ghi ba mốc giờ khác nhau?",
+        options: [
+          { label: "The folded card printed with three clocks", correct: true, feedback: "Đúng rồi! Tấm thẻ gấp in ba mặt đồng hồ — ba mốc giờ quan trọng." },
+          { label: "The brass token", correct: false, feedback: "Thẻ đồng chỉ khắc một dấu hiệu, không ghi giờ." },
+          { label: "The glowing recorder", correct: false, feedback: "Máy ghi âm phát ra âm thanh, nhưng không hiển thị ba mốc giờ." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The recorder plays a boat engine, crying seagulls, and a deep call. Which sound comes from UNDER the water?",
+        vi: "Máy ghi phát tiếng động cơ thuyền, tiếng hải âu kêu, và một tiếng gọi trầm. Âm thanh nào đến từ DƯỚI nước?",
+        options: ["The deep underwater call", "The seagulls crying", "The boat engine"],
+        answer: "The deep underwater call",
+        explainVi: "Tiếng động cơ và hải âu ở TRÊN mặt nước; chỉ tiếng gọi trầm vọng lên là từ DƯỚI nước." },
+      { kind: "arrangeSentence",
+        prompt: "Maple describes what she hears. Put the words in order:",
+        vi: "Maple tả điều em nghe được. Hãy xếp các từ:",
+        solution: ["I", "can", "hear", "a", "call", "under", "the", "water"],
+        say: "I can hear a call under the water.",
+        explainVi: "\"I can hear...\" dùng để nói điều mình NGHE thấy — một tiếng gọi ở dưới nước." },
+      { kind: "clueReveal", title: "Research Station Token", itemId: "research-station-token",
+        en: "The brass token is marked with a wave symbol. It points the group to a marine research station across the harbour.",
+        vi: "Thẻ đồng khắc biểu tượng sóng nước. Nó chỉ cả nhóm tới một trạm nghiên cứu hải dương bên kia bến cảng." },
+    ],
+  },
+
+  /* ---------------- Chapter 2 — The Missing Buoy ---------------- */
+  // Ảnh: trạm nghiên cứu, cửa kính nhìn ra cảng Vancouver; Dr. Maya Chen (áo teal, logo sóng);
+  // bàn có HẢI ĐỒ (Maple chỉ điểm đỏ), 3 THIẾT BỊ GHI có màn sóng, 3 TẤM ẢNH PHAO, SỔ NHẬT KÝ bảo trì;
+  // màn hình tường: đồ thị sóng + biểu tượng MÂY MƯA (bão).
+  {
+    id: "s02-ch02", seasonId: "s02", chapterNumber: 2,
+    title: "The Missing Buoy", vi: "Chiếc phao mất tích",
+    shortDescription: "Ở trạm nghiên cứu, Dr. Chen kể phao Blue 7 ngừng phát sau bão. Nhóm tìm ra nó vẫn phát một tín hiệu cuối.",
+    estimatedMinutes: 7,
+    node: { x: 36, y: 34, key: "missing-buoy" },
+    sceneImage: B + "chapters/chapter-02-missing-buoy.webp",
+    nextChapterId: "s02-ch03",
+    reward: { stars: 3, itemId: "blue-7-record", clueTitle: "Blue 7 Record", clueVi: "Bản ghi cuối của Blue 7 — bằng chứng cho thấy nó vẫn trôi và vẫn phát sau bão." },
+    storySteps: [
+      { kind: "dialogue", who: "stranger", name: "Dr. Maya Chen", en: "Welcome. Blue 7 is a research buoy. It records ocean sounds — but it stopped transmitting right after the storm.",
+        vi: "Chào các em. Blue 7 là một chiếc phao nghiên cứu. Nó ghi lại âm thanh đại dương — nhưng đã ngừng phát tín hiệu ngay sau cơn bão." },
+      { kind: "observation",
+        prompt: "Three photos of buoys lie on the table. How is one buoy different from the others?",
+        vi: "Ba tấm ảnh phao đặt trên bàn. Một chiếc phao khác hai chiếc kia ở điểm nào?",
+        options: [
+          { label: "One buoy is leaning over, the others stand straight", correct: true, feedback: "Đúng! Một chiếc nghiêng hẳn sang bên — chi tiết khác biệt cần chú ý." },
+          { label: "One buoy is bright pink", correct: false, feedback: "Không — cả ba chiếc phao đều màu xanh." },
+          { label: "All three look exactly the same", correct: false, feedback: "Nhìn kỹ lại: một chiếc đang nghiêng, khác hai chiếc đứng thẳng." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The maintenance log shows Blue 7 sent one last signal AFTER the storm ended. What does this tell the group?",
+        vi: "Sổ nhật ký cho thấy Blue 7 phát một tín hiệu cuối SAU khi bão tan. Điều này cho nhóm biết gì?",
+        options: ["It kept moving and drifted away while still working", "Its battery died during the storm", "Someone turned it off on purpose"],
+        answer: "It kept moving and drifted away while still working",
+        explainVi: "Nếu còn phát tín hiệu SAU bão thì phao chưa hỏng pin — nhiều khả năng nó vẫn hoạt động và bị trôi đi." },
+      { kind: "arrangeSentence",
+        prompt: "Maple reads the log aloud. Put the words in order:",
+        vi: "Maple đọc to dòng nhật ký. Hãy xếp các từ:",
+        solution: ["Blue", "7", "was", "last", "checked", "on", "Friday"],
+        say: "Blue 7 was last checked on Friday.",
+        explainVi: "Quá khứ đơn \"was checked\" + mốc thời gian \"on Friday\" — kể lại việc đã xảy ra." },
+      { kind: "dialogue", who: "maple", en: "So the buoy didn't just break. It floated away — and we can follow where it went.",
+        vi: "Vậy là chiếc phao không chỉ bị hỏng. Nó đã trôi đi — và mình có thể lần theo nơi nó tới." },
+      { kind: "clueReveal", title: "Blue 7 Record", itemId: "blue-7-record",
+        en: "Dr. Chen gives the group a copy of Blue 7's last recording. It proves the buoy drifted while still transmitting.",
+        vi: "Dr. Chen đưa nhóm một bản sao bản ghi cuối của Blue 7. Nó chứng minh chiếc phao đã trôi đi khi vẫn còn phát tín hiệu." },
+    ],
+  },
+
+  /* ---------------- Chapter 3 — Voices at the Market ---------------- */
+  // Ảnh: chợ cá bến cảng; Maple cầm SỔ TAY + bút; 3 nhân chứng: NGƯỜI BÁN CÁ (chỉ tay), CÔ CHÈO KAYAK (mái chèo),
+  // BẠN CHỤP ẢNH CHIM (máy ảnh, cầm TẤM ẢNH in phao + tháp). Quầy đá có cá. Các nhân chứng chỉ hướng khác nhau.
+  {
+    id: "s02-ch03", seasonId: "s02", chapterNumber: 3,
+    title: "Voices at the Market", vi: "Những lời kể ở khu chợ",
+    shortDescription: "Ba nhân chứng đều thấy vật màu xanh trôi qua cảng, nhưng lời kể mâu thuẫn. Một người có tấm ảnh đáng tin hơn.",
+    estimatedMinutes: 7,
+    node: { x: 54, y: 45, key: "market-voices" },
+    sceneImage: B + "chapters/chapter-03-voices-at-the-market.webp",
+    nextChapterId: "s02-ch04",
+    reward: { stars: 3, itemId: "harbour-photograph", clueTitle: "Harbour Photograph", clueVi: "Tấm ảnh chụp phao gần một tháp cũ — bằng chứng khách quan đáng tin nhất." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "At the fish market, three people saw a blue object drift by. A fish seller, a kayaker, and a young photographer — but their stories disagree.",
+        vi: "Ở chợ cá, ba người từng thấy một vật màu xanh trôi qua. Người bán cá, cô chèo kayak, và một bạn chụp ảnh nhỏ — nhưng lời kể của họ mâu thuẫn nhau." },
+      { kind: "observation",
+        prompt: "Which witness is holding an actual photograph as proof?",
+        vi: "Nhân chứng nào đang cầm một tấm ảnh thật để làm bằng chứng?",
+        options: [
+          { label: "The young photographer with the camera", correct: true, feedback: "Đúng! Bạn nhỏ đeo máy ảnh đang cầm một tấm ảnh chụp phao — bằng chứng nhìn thấy được." },
+          { label: "The fish seller pointing away", correct: false, feedback: "Người bán cá chỉ tay và kể lại, nhưng không có ảnh." },
+          { label: "The kayaker with the paddle", correct: false, feedback: "Cô chèo kayak cầm mái chèo, không cầm ảnh." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The seller and the kayaker disagree about the time and direction. The photo shows the sun and a real landmark. Which clue is most reliable?",
+        vi: "Người bán cá và cô kayak kể khác nhau về giờ và hướng. Tấm ảnh lại có mặt trời và một mốc cảnh thật. Manh mối nào đáng tin nhất?",
+        options: ["The photograph, because it shows real details", "The loudest voice", "The person who spoke first"],
+        answer: "The photograph, because it shows real details",
+        explainVi: "Lời kể có thể nhớ nhầm; tấm ảnh cho chi tiết khách quan (vị trí mặt trời, mốc cảnh) nên đáng tin hơn." },
+      { kind: "arrangeSentence",
+        prompt: "Maple writes down what the kayaker told her. Put the words in order:",
+        vi: "Maple ghi lại lời cô chèo kayak. Hãy xếp các từ:",
+        solution: ["She", "said", "that", "she", "saw", "a", "blue", "buoy"],
+        say: "She said that she saw a blue buoy.",
+        explainVi: "Câu tường thuật: \"She said that...\" dùng để kể lại lời người khác." },
+      { kind: "clueReveal", title: "Harbour Photograph", itemId: "harbour-photograph",
+        en: "The photographer lends the group the photo. It shows Blue 7 near an old tide marker — a solid clue to follow.",
+        vi: "Bạn chụp ảnh cho nhóm mượn tấm ảnh. Nó cho thấy Blue 7 gần một cột mốc thuỷ triều cũ — một manh mối chắc chắn để lần theo." },
+    ],
+  },
+
+  /* ---------------- Chapter 4 — The Library of Tides ---------------- */
+  // Ảnh: thư viện cổ, cửa vòm nhìn ra cảng có thuyền buồm; bàn gỗ có HẢI ĐỒ lớn + COMPA đo (tuyến đỏ/xanh + mũi tên),
+  // BẢNG TIDE dạng CỘT + đồng hồ, TẤM ẢNH phao xanh gần một hòn đảo; kệ có QUẢ ĐỊA CẦU + MÔ HÌNH THUYỀN.
+  {
+    id: "s02-ch04", seasonId: "s02", chapterNumber: 4,
+    title: "The Library of Tides", vi: "Thư viện thuỷ triều",
+    shortDescription: "Dựa vào giờ trong ảnh và hướng thuỷ triều rút, nhóm ước lượng phao đã trôi về phía đảo Pine.",
+    estimatedMinutes: 7,
+    node: { x: 80, y: 48, key: "library-tides" },
+    sceneImage: B + "chapters/chapter-04-library-of-tides.webp",
+    nextChapterId: "s02-ch05",
+    reward: { stars: 3, itemId: "tide-route-map", clueTitle: "Tide Route Map", clueVi: "Bản đồ đánh dấu hướng thuỷ triều rút — dẫn về đảo Pine." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "In the library, the group spreads out an old current map and a simple tide table next to the photograph.",
+        vi: "Trong thư viện, nhóm trải một tấm hải đồ dòng chảy cũ và một bảng thuỷ triều đơn giản cạnh tấm ảnh." },
+      { kind: "multipleChoice",
+        prompt: "The tide table shows the water level dropping hour by hour. This means the tide was...",
+        vi: "Bảng thuỷ triều cho thấy mực nước hạ dần theo từng giờ. Điều đó nghĩa là thuỷ triều đang...",
+        options: ["falling", "rising", "staying the same"],
+        answer: "falling",
+        explainVi: "Mực nước hạ dần = thuỷ triều RÚT (falling). Nước rút sẽ kéo vật trôi ra xa bờ." },
+      { kind: "observation",
+        prompt: "Three drift routes are drawn on the chart. The falling tide pulled the water toward Pine Island. Which route fits the clues?",
+        vi: "Trên hải đồ vẽ ba tuyến trôi. Thuỷ triều rút kéo nước về phía đảo Pine. Tuyến nào khớp với manh mối?",
+        options: [
+          { label: "The route following the current toward Pine Island", correct: true, feedback: "Đúng! Tuyến đi theo dòng chảy về đảo Pine khớp với hướng nước rút." },
+          { label: "The route going back toward the city", correct: false, feedback: "Không hợp lý — nước rút RA xa bờ, không quay lại thành phố." },
+          { label: "The route in a small circle", correct: false, feedback: "Dòng chảy đẩy theo một hướng, không xoay vòng tại chỗ." },
+        ] },
+      { kind: "arrangeSentence",
+        prompt: "Maple explains the movement. Put the words in order:",
+        vi: "Maple giải thích chuyển động của nước. Hãy xếp các từ:",
+        solution: ["The", "water", "was", "falling", "toward", "the", "island"],
+        say: "The water was falling toward the island.",
+        explainVi: "\"was falling\" (quá khứ tiếp diễn) mô tả nước đang rút về phía hòn đảo lúc đó." },
+      { kind: "dialogue", who: "maple", en: "If the tide was falling, Blue 7 drifted this way — out toward Pine Island. That's where we go next.",
+        vi: "Nếu thuỷ triều đang rút thì Blue 7 trôi theo hướng này — ra phía đảo Pine. Đó là nơi mình tới tiếp theo." },
+      { kind: "clueReveal", title: "Tide Route Map", itemId: "tide-route-map",
+        en: "The group marks the drift route on the map. All the clues point to Pine Island.",
+        vi: "Nhóm đánh dấu tuyến trôi trên bản đồ. Mọi manh mối đều chỉ về đảo Pine." },
+    ],
+  },
+
+  /* ---------------- Chapter 5 — The Island Radio ---------------- */
+  // Ảnh: đài radio bỏ không trên đảo Pine, chạng vạng, nhìn ra vịnh; Maple đeo TAI NGHE, tay trên MÁY RADIO có 3 ĐỒNG HỒ ĐO
+  // (vạch xanh/vàng/đỏ); bạn gái xoay VÔ-LĂNG chỉnh 1 ANTENNA; bạn trai chỉnh ANTENNA thứ 2; có 3 ANTENNA hướng khác nhau.
+  {
+    id: "s02-ch05", seasonId: "s02", chapterNumber: 5,
+    title: "The Island Radio", vi: "Đài radio trên đảo",
+    shortDescription: "Một đài radio bỏ không đang lặp lại tín hiệu của phao. Nhóm xoay ba ăng-ten, so cường độ để tìm vịnh phía bắc.",
+    estimatedMinutes: 7,
+    node: { x: 88, y: 23, key: "island-radio" },
+    sceneImage: B + "chapters/chapter-05-island-radio.webp",
+    nextChapterId: "s02-ch06",
+    reward: { stars: 3, itemId: "radio-bearing", clueTitle: "Radio Bearing", clueVi: "Phương vị của tín hiệu mạnh nhất — chỉ về một vịnh nhỏ phía bắc." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "On Pine Island, an empty radio station keeps repeating Blue 7's signal. But the station is not where the signal starts.",
+        vi: "Trên đảo Pine, một đài radio bỏ không cứ lặp lại tín hiệu của Blue 7. Nhưng đài không phải là nơi phát ra tín hiệu." },
+      { kind: "multipleChoice",
+        prompt: "The station repeats the signal but did not create it. What is a station like this called?",
+        vi: "Đài lặp lại tín hiệu nhưng không tạo ra nó. Một đài như vậy gọi là gì?",
+        options: ["A relay that passes the signal on", "The real source of the signal", "A broken radio with no use"],
+        answer: "A relay that passes the signal on",
+        explainVi: "Nơi tạo tín hiệu là \"source\"; đài chỉ chuyển tiếp gọi là \"relay\". Phải tìm nguồn thật, không phải đài." },
+      { kind: "observation",
+        prompt: "Three antennas face different ways. The radio has three meters: weak, medium and strong. Which antenna points toward the buoy?",
+        vi: "Ba ăng-ten hướng khác nhau. Máy radio có ba đồng hồ đo: yếu, vừa, mạnh. Ăng-ten nào chỉ về phía phao?",
+        options: [
+          { label: "The one with the strongest signal", correct: true, feedback: "Đúng! Tín hiệu MẠNH nhất chỉ đúng hướng có phao nhất." },
+          { label: "The one with the weakest signal", correct: false, feedback: "Tín hiệu yếu nghĩa là hướng đó xa nguồn — không phải hướng cần tìm." },
+          { label: "Any antenna, they are all the same", correct: false, feedback: "Không — ba đồng hồ chỉ ba mức khác nhau, hãy chọn mức mạnh nhất." },
+        ] },
+      { kind: "arrangeSentence",
+        prompt: "Maple gives the instruction to aim the antenna. Put the words in order:",
+        vi: "Maple hướng dẫn chỉnh ăng-ten. Hãy xếp các từ:",
+        solution: ["Turn", "the", "antenna", "slowly", "to", "the", "north"],
+        say: "Turn the antenna slowly to the north.",
+        explainVi: "Câu mệnh lệnh chỉ hướng: \"Turn ... to the north\" — xoay ăng-ten về phía bắc." },
+      { kind: "clueReveal", title: "Radio Bearing", itemId: "radio-bearing",
+        en: "The strongest signal points to a small bay in the north. The group notes the bearing and heads that way.",
+        vi: "Tín hiệu mạnh nhất chỉ về một vịnh nhỏ phía bắc. Nhóm ghi lại phương vị và đi về hướng đó." },
+    ],
+  },
+
+  /* ---------------- Chapter 6 — The Cave at Low Tide ---------------- */
+  // Ảnh: hang biển lúc triều thấp, cửa hang nhìn ra hoàng hôn; Maple + 2 bạn + Dr. Chen đội ĐÈN TRÁN, đi ủng;
+  // cúi xem VỆT KÉO LÊ trên cát + GỖ TRÔI tươi; bạn trai cầm KHÚC GỖ TRÔI; dưới đất: MÓC NEO GÃY + MẢNH VỎ NHỰA XANH.
+  {
+    id: "s02-ch06", seasonId: "s02", chapterNumber: 6,
+    title: "The Cave at Low Tide", vi: "Hang biển khi triều rút",
+    shortDescription: "Hang chỉ vào được lúc triều thấp. Bên trong chỉ còn móc neo gãy và mảnh vỏ phao — triều lên đã kéo Blue 7 ra lại.",
+    estimatedMinutes: 7,
+    node: { x: 58, y: 74, key: "cave-low-tide" },
+    sceneImage: B + "chapters/chapter-06-cave-at-low-tide.webp",
+    nextChapterId: "s02-ch07",
+    reward: { stars: 3, itemId: "broken-anchor-clip", clueTitle: "Broken Anchor Clip", clueVi: "Móc neo gãy và vệt kéo lê — bằng chứng Blue 7 đã bị triều kéo ra khỏi hang." },
+    storySteps: [
+      { kind: "dialogue", who: "stranger", name: "Dr. Maya Chen", en: "This cave is only safe at low tide. We go in together, and we come out before the water returns.",
+        vi: "Hang này chỉ an toàn khi triều thấp. Chúng ta vào cùng nhau, và ra ngoài trước khi nước quay lại." },
+      { kind: "multipleChoice",
+        prompt: "The tide will come back in about an hour. What SHOULD the group do?",
+        vi: "Khoảng một tiếng nữa triều sẽ lên lại. Nhóm NÊN làm gì?",
+        options: ["Explore with the adult and leave before the tide returns", "Split up and stay as long as they like", "Wait inside until the water rises"],
+        answer: "Explore with the adult and leave before the tide returns",
+        explainVi: "An toàn là trên hết: đi cùng người lớn và RA trước khi triều lên (\"leave before the tide returns\")." },
+      { kind: "observation",
+        prompt: "On the cave floor, what does the group find?",
+        vi: "Trên nền hang, nhóm tìm thấy gì?",
+        options: [
+          { label: "A broken anchor clip and a piece of blue casing", correct: true, feedback: "Đúng! Móc neo gãy và một mảnh vỏ nhựa xanh — của Blue 7, nhưng KHÔNG có chiếc phao." },
+          { label: "The whole buoy, safe and sound", correct: false, feedback: "Nhìn lại — chỉ có mảnh vỡ; chiếc phao đã không còn ở đây." },
+          { label: "A wooden treasure chest", correct: false, feedback: "Đây là câu chuyện khoa học, không phải săn kho báu — chỉ có mảnh vỡ của phao." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "There are drag marks on the sand and fresh driftwood by the water. What do these clues mean?",
+        vi: "Có vệt kéo lê trên cát và gỗ trôi còn mới cạnh mép nước. Những manh mối này nói lên điều gì?",
+        options: ["The returning tide pulled Blue 7 back out of the cave", "The buoy was never here at all", "Someone carried the buoy up the cliff"],
+        answer: "The returning tide pulled Blue 7 back out of the cave",
+        explainVi: "Vệt kéo lê + gỗ trôi mới → nhân quả: triều lên đã kéo Blue 7 trôi ngược ra khỏi hang." },
+      { kind: "arrangeSentence",
+        prompt: "Maple reminds the team about safety. Put the words in order:",
+        vi: "Maple nhắc cả nhóm về an toàn. Hãy xếp các từ:",
+        solution: ["We", "must", "leave", "before", "the", "tide", "comes", "back"],
+        say: "We must leave before the tide comes back.",
+        explainVi: "\"must\" + \"before\" nêu điều bắt buộc: phải rời đi TRƯỚC khi triều lên lại." },
+      { kind: "clueReveal", title: "Broken Anchor Clip", itemId: "broken-anchor-clip",
+        en: "The group keeps the broken anchor clip. The drag marks show Blue 7 left the cave with the returning tide.",
+        vi: "Nhóm giữ lại chiếc móc neo gãy. Vệt kéo lê cho thấy Blue 7 đã rời hang cùng con nước lên." },
+    ],
+  },
+
+  /* ---------------- Chapter 7 — Signal in the Storm ---------------- */
+  // Ảnh: bến tàu cũ trong mưa bão, đêm; Maple cầm BỘ ĐÀM (đang nói); bạn gái giữ HẢI ĐỒ trên giá; bạn trai nhìn ỐNG NHÒM;
+  // Dr. Chen cầm bộ đàm; ngoài biển động: THUYỀN CỨU HỘ có 2 người ÁO PHAO CAM; PHAO "7" mắc cạnh BÈ GỖ/gỗ trôi gần chân bến.
+  {
+    id: "s02-ch07", seasonId: "s02", chapterNumber: 7,
+    title: "Signal in the Storm", vi: "Tín hiệu trong bão",
+    shortDescription: "Mưa bão ập tới. Maple thấy Blue 7 mắc kẹt gần bến tàu cũ và đọc vị trí qua bộ đàm để đội cứu hộ vớt lên an toàn.",
+    estimatedMinutes: 7,
+    node: { x: 71, y: 16, key: "storm-signal" },
+    sceneImage: B + "chapters/chapter-07-signal-in-the-storm.webp",
+    nextChapterId: "s02-ch08",
+    reward: { stars: 3, itemId: "recovered-blue-7", clueTitle: "Recovered Blue 7", clueVi: "Blue 7 được đội cứu hộ vớt lên an toàn nhờ chỉ dẫn rõ ràng của Maple." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "Rain and wind arrive early. From a safe railing, Maple spots Blue 7 tangled in driftwood near the old pier.",
+        vi: "Mưa và gió ập tới sớm. Từ lan can an toàn, Maple phát hiện Blue 7 mắc trong đám gỗ trôi gần bến tàu cũ." },
+      { kind: "observation",
+        prompt: "Where is Blue 7 stuck?",
+        vi: "Blue 7 đang mắc kẹt ở đâu?",
+        options: [
+          { label: "Tangled in the driftwood near the old pier", correct: true, feedback: "Đúng! Chiếc phao số 7 mắc trong đám gỗ trôi ngay cạnh bến tàu cũ." },
+          { label: "Far out in the open sea", correct: false, feedback: "Không — nó ở gần bến tàu, không phải ngoài khơi xa." },
+          { label: "High up on the dry beach", correct: false, feedback: "Nhìn lại — phao còn ở dưới nước, mắc vào gỗ trôi cạnh bến." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "Maple must tell the rescue crew exactly where the buoy is. Which is the CLEAR instruction?",
+        vi: "Maple phải báo đội cứu hộ chính xác vị trí phao. Câu chỉ dẫn nào RÕ RÀNG?",
+        options: ["It's near the pier, tangled in the driftwood on the right", "It's over there somewhere", "Just go and find it"],
+        answer: "It's near the pier, tangled in the driftwood on the right",
+        explainVi: "Chỉ dẫn rõ cần vị trí cụ thể (gần bến, trong gỗ trôi, bên phải) — không nói mơ hồ \"đâu đó\"." },
+      { kind: "dialogue", who: "maple", en: "Radio check: \"Do you mean the wooden pier on the left?\" — Yes. Move the boat closer to the pier, slowly.",
+        vi: "Hỏi lại qua bộ đàm: \"Ý cô là bến gỗ bên trái phải không?\" — Đúng. Cho thuyền tiến lại gần bến, thật chậm." },
+      { kind: "arrangeSentence",
+        prompt: "Maple guides the rescue boat. Put the words in order:",
+        vi: "Maple hướng dẫn thuyền cứu hộ. Hãy xếp các từ:",
+        solution: ["Move", "the", "boat", "closer", "to", "the", "pier"],
+        say: "Move the boat closer to the pier.",
+        explainVi: "\"Move ... closer to ...\" là mẫu câu chỉ hướng di chuyển lại gần một điểm." },
+      { kind: "clueReveal", title: "Recovered Blue 7", itemId: "recovered-blue-7",
+        en: "Following Maple's clear directions, the trained crew lifts Blue 7 safely from the water. The buoy is found at last!",
+        vi: "Nhờ chỉ dẫn rõ ràng của Maple, đội cứu hộ được huấn luyện vớt Blue 7 lên an toàn. Cuối cùng cũng tìm được chiếc phao!" },
+    ],
+  },
+
+  /* ---------------- Chapter 8 — The Song Beneath the Harbour ---------------- */
+  // Ảnh: trở lại trạm, hoàng hôn; Maple cầm BẢNG BẰNG CHỨNG (ảnh bến, 3 LỚP SÓNG đỏ/vàng/xanh, mảnh bản đồ, hoa la bàn, móc neo);
+  // 2 bạn ĐEO TAI NGHE; Dr. Chen cầm HUY HIỆU tròn khắc sóng; giữa bàn: PHAO "7" nối cáp, đèn xanh sáng; màn hình 3 LỚP SÓNG;
+  // ngoài cửa: PHAO + ĐÀN CÁ VOI ORCA bơi qua lúc hoàng hôn.
+  {
+    id: "s02-ch08", seasonId: "s02", chapterNumber: 8,
+    title: "The Song Beneath the Harbour", vi: "Bài ca dưới lòng cảng",
+    shortDescription: "Chặng cuối: nhóm khôi phục Blue 7, tách ba lớp âm thanh trong bản ghi, và kể lại toàn bộ hành trình.",
+    estimatedMinutes: 8,
+    node: { x: 24, y: 31, key: "harbour-song" },
+    sceneImage: B + "chapters/chapter-08-song-beneath-the-harbour.webp",
+    reward: { stars: 3, itemId: "harbour-listener-badge", clueTitle: "Harbour Listener Badge", clueVi: "Huy hiệu Người nghe bến cảng — phần thưởng cho việc giải xong bí ẩn bằng bằng chứng." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "Back at the station, the team replaces Blue 7's battery, reconnects its cable, and downloads the final recording.",
+        vi: "Trở lại trạm, cả nhóm thay pin cho Blue 7, nối lại dây cáp, và tải về bản ghi cuối cùng." },
+      { kind: "multipleChoice",
+        prompt: "The mystery signal was actually THREE sounds mixed together. What were they?",
+        vi: "Tín hiệu bí ẩn thực ra là BA âm thanh trộn vào nhau. Đó là những gì?",
+        options: [
+          "The buoy hitting driftwood, the island radio relay, and an orca call",
+          "Three different broken engines",
+          "A secret human voice message",
+        ],
+        answer: "The buoy hitting driftwood, the island radio relay, and an orca call",
+        explainVi: "Ba lớp: phao gõ vào gỗ trôi, đài radio chuyển tiếp, và tiếng gọi của đàn cá voi orca — chồng lên nhau." },
+      { kind: "observation",
+        prompt: "On the screen, three waves are shown. Which one is the orca call?",
+        vi: "Trên màn hình có ba dạng sóng. Dạng nào là tiếng gọi của cá voi orca?",
+        options: [
+          { label: "The smooth, rolling blue wave", correct: true, feedback: "Đúng! Sóng xanh mượt, uốn lượn là tiếng gọi tự nhiên của cá voi orca." },
+          { label: "The sharp, jagged red wave", correct: false, feedback: "Sóng đỏ lởm chởm là tiếng phao va vào gỗ trôi — tiếng gõ, không phải cá voi." },
+          { label: "The square, stepped yellow wave", correct: false, feedback: "Sóng vàng vuông vức là tín hiệu radio chuyển tiếp — do máy móc tạo ra." },
+        ] },
+      { kind: "arrangeSentence",
+        prompt: "Maple retells the investigation. Put the words in order:",
+        vi: "Maple kể lại cuộc điều tra. Hãy xếp các từ:",
+        solution: ["The", "most", "important", "clue", "was", "the", "photograph"],
+        say: "The most important clue was the photograph.",
+        explainVi: "\"The most important clue was...\" — mẫu câu tóm tắt, nhấn mạnh manh mối quan trọng nhất." },
+      { kind: "multipleChoice",
+        prompt: "What did the whole investigation prove?",
+        vi: "Cả cuộc điều tra đã chứng minh điều gì?",
+        options: [
+          "The signal was never broken — it was three real sounds together",
+          "Blue 7 was never real",
+          "The orcas were sending a message to Maple",
+        ],
+        answer: "The signal was never broken — it was three real sounds together",
+        explainVi: "Bằng chứng cho thấy tín hiệu \"lạ\" không phải lỗi — đó là ba âm thanh thật chồng lên nhau. Tiếng cá voi là nghiên cứu động vật, không phải lời nhắn cho Maple." },
+      { kind: "dialogue", who: "maple", en: "We first found the clues, then we followed the tide, and finally we found Blue 7. Listen — it's recording the harbour again!",
+        vi: "Đầu tiên bọn mình tìm manh mối, rồi lần theo thuỷ triều, và cuối cùng tìm ra Blue 7. Nghe kìa — nó lại đang ghi âm bến cảng rồi!" },
+      { kind: "clueReveal", title: "Harbour Listener Badge", itemId: "harbour-listener-badge",
+        en: "Dr. Chen gives Maple the Harbour Listener Badge. As the orcas pass by, Blue 7 picks up a faint new signal — from the mountains. Season complete.",
+        vi: "Dr. Chen trao cho Maple Huy hiệu Người nghe bến cảng. Khi đàn cá voi bơi qua, Blue 7 bắt được một tín hiệu mới mờ nhạt — từ phía những ngọn núi. Hoàn thành mùa." },
+    ],
+  },
+];
+
+export const SEASON_SILENT_SIGNAL: AdventureSeason = {
+  id: "s02",
+  title: "The Silent Harbour Signal",
+  vi: "Tín hiệu lặng của bến cảng",
+  subtitle: "Lắng nghe, so sánh manh mối và suy luận để tìm lại chiếc phao nghiên cứu Blue 7.",
+  mapImage: B + "map/season-02-world-map.webp",
+  chapters: S02_CHAPTERS,
+  items: S02_ITEMS,
+  itemsTagline: "Thu thập bằng chứng để tìm lại phao nghiên cứu Blue 7.",
+};
+
+export const SEASONS: AdventureSeason[] = [SEASON_LOST_COMPASS, SEASON_SILENT_SIGNAL];
 export const seasonById = (id: string) => SEASONS.find((s) => s.id === id);
 export const chapterById = (seasonId: string, chapterId: string) =>
   seasonById(seasonId)?.chapters.find((c) => c.id === chapterId);

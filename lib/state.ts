@@ -374,8 +374,12 @@ export function adventuresDone(s: AppState): number {
   return Object.values(s.adventure.seasons).reduce((a, p) => a + p.completedChapterIds.length, 0);
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
-export function resetAdventure(s: AppState): AppState {
-  return { ...s, adventure: { seasons: {} } };
+// seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.
+export function resetAdventure(s: AppState, seasonId?: string): AppState {
+  if (!seasonId) return { ...s, adventure: { seasons: {} } };
+  const seasons = { ...s.adventure.seasons };
+  delete seasons[seasonId];
+  return { ...s, adventure: { seasons } };
 }
 
 // cộng sao 1 lần khi hoàn thành; trả {state, newly}
