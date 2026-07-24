@@ -837,7 +837,300 @@ export const SEASON_SILENT_SIGNAL: AdventureSeason = {
   itemsTagline: "Thu thập bằng chứng để tìm lại phao nghiên cứu Blue 7.",
 };
 
-export const SEASONS: AdventureSeason[] = [SEASON_LOST_COMPASS, SEASON_SILENT_SIGNAL];
+/* ============================================================================
+ * SEASON 03 — THE SKY GARDEN CHALLENGE
+ * Thử thách THIẾT KẾ (không phải bí ẩn): thiết kế – thử – chỉnh – khánh thành
+ * một khu vườn sân thượng phục vụ nhiều nhu cầu cộng đồng. Mỗi chương một bằng chứng.
+ * ==========================================================================*/
+const C = "/assets/images/adventure/season-03-sky-garden-challenge/";
+
+const S03_ITEMS: AdventureItem[] = [
+  { id: "rooftop-survey", name: "Rooftop Survey", vi: "Bản khảo sát sân thượng", emoji: "📋", image: C + "items/rooftop-survey.webp" },              // Ch1
+  { id: "combined-garden-plan", name: "Combined Garden Plan", vi: "Bản thiết kế vườn kết hợp", emoji: "🗺️", image: C + "items/combined-garden-plan.webp" }, // Ch2
+  { id: "lightweight-planter", name: "Lightweight Planter", vi: "Chậu trồng nhẹ", emoji: "🪴", image: C + "items/lightweight-planter.webp" },           // Ch3
+  { id: "rainwater-system", name: "Rainwater System", vi: "Hệ thu nước mưa", emoji: "🛢️", image: C + "items/rainwater-system.webp" },                  // Ch4
+  { id: "wind-test-result", name: "Wind Test Result", vi: "Kết quả thử gió", emoji: "🌬️", image: C + "items/wind-test-result.webp" },                  // Ch5
+  { id: "sky-garden-builder-badge", name: "Sky Garden Builder Badge", vi: "Huy hiệu Kiến tạo vườn trời", emoji: "🏅", image: C + "items/sky-garden-builder-badge.webp" }, // Ch6
+];
+
+const S03_CHAPTERS: AdventureChapter[] = [
+  /* ---------------- Chapter 1 — The Empty Rooftop ---------------- */
+  // Ảnh: sân thượng trống; cô Rivera cầm bảng ghi; Maple chỉ xuống; Mai cầm máy tính bảng; Kai đo bằng THƯỚC DÂY;
+  // cầu thang KÍNH (cửa có biển XE LĂN), tường gạch + cây phong + VÒI NƯỚC ở tường xa, 2 MIỆNG THOÁT NƯỚC, CỜ/DẢI GIÓ bay;
+  // bàn gỗ có BẢN VẼ cuộn + bút. Skyline Vancouver.
+  {
+    id: "s03-ch01", seasonId: "s03", chapterNumber: 1,
+    title: "The Empty Rooftop", vi: "Sân thượng trống",
+    shortDescription: "Maple cùng Mai, Kai và cô Rivera khảo sát một sân thượng trống để lên kế hoạch làm vườn cho cộng đồng.",
+    estimatedMinutes: 6,
+    node: { x: 17, y: 70, key: "empty-rooftop" },
+    sceneImage: C + "chapters/chapter-01-empty-rooftop.webp",
+    nextChapterId: "s03-ch02",
+    reward: { stars: 3, itemId: "rooftop-survey", clueTitle: "Rooftop Survey", clueVi: "Bản khảo sát sân thượng: nắng, gió, nước, lối đi — nền tảng cho mọi bản thiết kế." },
+    storySteps: [
+      { kind: "dialogue", who: "stranger", name: "Cô Rivera", en: "Welcome to the rooftop! Our goal is to design a garden that works for the whole community.",
+        vi: "Chào mừng lên sân thượng! Mục tiêu của chúng ta là thiết kế một khu vườn phù hợp cho cả cộng đồng." },
+      { kind: "dialogue", who: "maple", en: "Before we plan, let's survey the roof: where is the sun, the wind, the water, and how do people get up here?",
+        vi: "Trước khi lên kế hoạch, hãy khảo sát sân thượng: nắng ở đâu, gió thế nào, nước ở đâu, và mọi người lên đây bằng cách nào?" },
+      { kind: "observation",
+        prompt: "The ribbon on the flagpole is streaming out straight. What does that tell the group?",
+        vi: "Dải cờ trên cột đang bay thẳng căng. Điều đó cho nhóm biết gì?",
+        options: [
+          { label: "It is windy up here", correct: true, feedback: "Đúng! Dải cờ bay căng nghĩa là trên sân thượng có gió — một yếu tố quan trọng cần tính đến." },
+          { label: "It is night time", correct: false, feedback: "Không — trời vẫn sáng; dải cờ cho biết về GIÓ, không phải thời gian." },
+          { label: "The garden is finished", correct: false, feedback: "Chưa đâu — sân thượng còn trống. Dải cờ chỉ cho biết trời đang có gió." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "Which of these is an OBSERVATION (a fact you can see), not an opinion?",
+        vi: "Câu nào là QUAN SÁT (điều nhìn thấy được), không phải ý kiến?",
+        options: ["There are two drains in the floor.", "This is the best rooftop in the world.", "Gardens are boring."],
+        answer: "There are two drains in the floor.",
+        explainVi: "Quan sát là điều nhìn thấy/đo được (có hai miệng thoát nước). \"Tuyệt nhất\" hay \"chán\" là ý kiến." },
+      { kind: "arrangeSentence",
+        prompt: "Maple notes where the water is. Put the words in order:",
+        vi: "Maple ghi lại vị trí nguồn nước. Hãy xếp các từ:",
+        solution: ["There", "is", "a", "tap", "on", "the", "wall"],
+        say: "There is a tap on the wall.",
+        explainVi: "\"There is …\" + cụm chỉ nơi chốn \"on the wall\" — mô tả có một vòi nước ở trên tường." },
+      { kind: "clueReveal", title: "Rooftop Survey", itemId: "rooftop-survey",
+        en: "The group records the sun, shade, wind, water, and access. This rooftop survey is the base for every design choice.",
+        vi: "Nhóm ghi lại nắng, bóng râm, gió, nước và lối tiếp cận. Bản khảo sát này là nền tảng cho mọi lựa chọn thiết kế." },
+    ],
+  },
+
+  /* ---------------- Chapter 2 — Three Garden Plans ---------------- */
+  // Ảnh: 3 MÔ HÌNH vườn: (trái) vườn RAU có luống + giàn; (giữa) vườn THỤ PHẤN có hoa dại + nhà côn trùng + chong chóng;
+  // (phải) vườn ĐỌC SÁCH có ghế dưới mái che + hình người XE LĂN; mô hình GHÉP ở giữa có token màu; thẻ icon (nắng/bướm/ghế); bản vẽ + bút.
+  {
+    id: "s03-ch02", seasonId: "s03", chapterNumber: 2,
+    title: "Three Garden Plans", vi: "Ba bản thiết kế vườn",
+    shortDescription: "Nhóm so ba mô hình — vườn rau, vườn thụ phấn, vườn đọc sách — rồi bắt đầu ghép thành một bản kết hợp.",
+    estimatedMinutes: 7,
+    node: { x: 32, y: 54, key: "three-plans" },
+    sceneImage: C + "chapters/chapter-02-three-garden-plans.webp",
+    nextChapterId: "s03-ch03",
+    reward: { stars: 3, itemId: "combined-garden-plan", clueTitle: "Combined Garden Plan", clueVi: "Bản thiết kế kết hợp điểm mạnh của cả ba mô hình thay vì chọn một." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "On the table sit three model gardens: a food garden with vegetables, a pollinator garden with wildflowers, and a quiet reading garden with a bench.",
+        vi: "Trên bàn có ba mô hình vườn: vườn rau, vườn thụ phấn đầy hoa dại, và vườn đọc sách yên tĩnh có ghế ngồi." },
+      { kind: "observation",
+        prompt: "Which model has a bench under a shade for quiet reading?",
+        vi: "Mô hình nào có ghế ngồi dưới mái che để đọc sách yên tĩnh?",
+        options: [
+          { label: "The reading garden on the right", correct: true, feedback: "Đúng! Mô hình bên phải có ghế dưới mái che — vườn đọc sách." },
+          { label: "The food garden with vegetables", correct: false, feedback: "Đó là vườn rau với các luống rau, không có ghế đọc sách." },
+          { label: "The pollinator garden with flowers", correct: false, feedback: "Đó là vườn thụ phấn với hoa dại và nhà côn trùng." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The food garden needs the most water. The pollinator garden helps bees but has no seating. What should the group do?",
+        vi: "Vườn rau cần nhiều nước nhất. Vườn thụ phấn giúp ong nhưng không có chỗ ngồi. Nhóm nên làm gì?",
+        options: ["Combine the best parts of each plan", "Pick only one plan and drop the rest", "Cancel the whole garden"],
+        answer: "Combine the best parts of each plan",
+        explainVi: "Mỗi mô hình có điểm mạnh riêng → kết hợp phần hay nhất của cả ba là giải pháp thoả hiệp tốt nhất." },
+      { kind: "arrangeSentence",
+        prompt: "Maple compares the plans. Put the words in order:",
+        vi: "Maple so sánh các mô hình. Hãy xếp các từ:",
+        solution: ["The", "reading", "garden", "is", "quieter", "than", "the", "others"],
+        say: "The reading garden is quieter than the others.",
+        explainVi: "So sánh hơn: \"quieter than\" (yên tĩnh hơn) — dùng để đối chiếu các lựa chọn." },
+      { kind: "dialogue", who: "maple", en: "That's a good idea. However, the food garden needs more water. We could take one bed from each plan.",
+        vi: "Ý hay đấy. Tuy nhiên, vườn rau cần nhiều nước hơn. Chúng ta có thể lấy một luống từ mỗi bản thiết kế." },
+      { kind: "clueReveal", title: "Combined Garden Plan", itemId: "combined-garden-plan",
+        en: "The group starts a combined layout: a few vegetable beds, a strip of pollinator flowers, and a small reading corner.",
+        vi: "Nhóm bắt đầu một bản bố cục kết hợp: vài luống rau, một dải hoa thụ phấn, và một góc đọc sách nhỏ." },
+    ],
+  },
+
+  /* ---------------- Chapter 3 — The Weight Problem ---------------- */
+  // Ảnh: chú KỸ SƯ (áo phản quang cam) + cô Rivera + 3 bạn; CÂN THĂNG BẰNG cân khối; CHẬU ĐÁ nặng + BỒN NƯỚC lớn;
+  // Maple nhấc chậu bê-tông nặng; Mai cầm TÚI VẢI TRỒNG nhẹ có cây con; Kai đặt CHẬU NHẸ lên mô hình lưới; khối đỏ/xanh + mũi tên phân bổ tải.
+  {
+    id: "s03-ch03", seasonId: "s03", chapterNumber: 3,
+    title: "The Weight Problem", vi: "Bài toán trọng lượng",
+    shortDescription: "Chú kỹ sư cảnh báo đất ướt và chậu đá quá nặng cho một vùng mái. Nhóm đổi sang chậu nhẹ và dàn đều tải.",
+    estimatedMinutes: 7,
+    node: { x: 14, y: 40, key: "weight-problem" },
+    sceneImage: C + "chapters/chapter-03-weight-problem.webp",
+    nextChapterId: "s03-ch04",
+    reward: { stars: 3, itemId: "lightweight-planter", clueTitle: "Lightweight Planter", clueVi: "Chậu trồng nhẹ thay cho chậu đá — an toàn hơn cho sân thượng." },
+    storySteps: [
+      { kind: "dialogue", who: "stranger", name: "Chú kỹ sư", en: "I checked the model. Wet soil, big stone planters, and a full water tank would be too heavy for this roof zone.",
+        vi: "Chú đã kiểm tra mô hình. Đất ướt, chậu đá lớn và bồn nước đầy sẽ quá nặng cho vùng mái này." },
+      { kind: "observation",
+        prompt: "The engineer weighs a stone planter and a light fabric planter. Which is safer for the roof?",
+        vi: "Chú kỹ sư cân một chậu đá và một chậu vải nhẹ. Loại nào an toàn hơn cho mái?",
+        options: [
+          { label: "The light fabric planter", correct: true, feedback: "Đúng! Chậu vải nhẹ hơn nhiều nên an toàn hơn cho sân thượng." },
+          { label: "The heavy stone planter", correct: false, feedback: "Chậu đá quá nặng — đúng thứ khiến mái quá tải." },
+          { label: "Both weigh exactly the same", correct: false, feedback: "Không — trên cân, chậu đá trĩu xuống nặng hơn hẳn." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "When the soil gets wet with rain, what happens to its weight?",
+        vi: "Khi đất bị ướt vì mưa, trọng lượng của nó thay đổi thế nào?",
+        options: ["It gets heavier", "It gets lighter", "It stays exactly the same"],
+        answer: "It gets heavier",
+        explainVi: "Nước thấm vào làm đất NẶNG hơn — vì thế phải tính cả lúc đất ướt (nhân–quả)." },
+      { kind: "arrangeSentence",
+        prompt: "Maple warns the team about safety. Put the words in order:",
+        vi: "Maple nhắc cả nhóm về an toàn. Hãy xếp các từ:",
+        solution: ["We", "must", "not", "put", "heavy", "pots", "here"],
+        say: "We must not put heavy pots here.",
+        explainVi: "\"must not\" = tuyệt đối không được — không đặt chậu nặng ở vùng mái yếu." },
+      { kind: "dialogue", who: "maple", en: "So we revise the plan: use lightweight planters and spread the load, because the roof is stronger near the walls.",
+        vi: "Vậy mình chỉnh lại: dùng chậu nhẹ và dàn đều tải, vì mái chắc hơn ở gần các bức tường." },
+      { kind: "clueReveal", title: "Lightweight Planter", itemId: "lightweight-planter",
+        en: "The heavy stone pots are swapped for lightweight planters, and the loads are spread across stronger roof areas.",
+        vi: "Những chậu đá nặng được thay bằng chậu nhẹ, và tải được dàn ra các vùng mái chắc hơn." },
+    ],
+  },
+
+  /* ---------------- Chapter 4 — Saving Every Drop ---------------- */
+  // Ảnh: ỐNG từ mái kính dẫn vào THÙNG NƯỚC MƯA (xanh) có vòi — Maple mở vòi; Mai chỉnh DÂY NHỎ GIỌT (drip); Kai tưới BÌNH TƯỚI;
+  // dưới đất có 4 ỐNG NGHIỆM ĐO ẨM (mực nước/đất khác nhau) + cắm QUE ĐO ẨM màu trong luống.
+  {
+    id: "s03-ch04", seasonId: "s03", chapterNumber: 4,
+    title: "Saving Every Drop", vi: "Tiết kiệm từng giọt",
+    shortDescription: "Một vòi nước không đủ tưới cả vườn. Nhóm thử thùng nước mưa, dây nhỏ giọt và bình tưới rồi kết hợp lại.",
+    estimatedMinutes: 7,
+    node: { x: 71, y: 34, key: "saving-water" },
+    sceneImage: C + "chapters/chapter-04-saving-every-drop.webp",
+    nextChapterId: "s03-ch05",
+    reward: { stars: 3, itemId: "rainwater-system", clueTitle: "Rainwater System", clueVi: "Thùng nước mưa + dây nhỏ giọt, kết hợp tưới tay đúng chỗ." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "The single tap cannot water the whole garden well. The group tests a rain barrel, a drip line, watering cans, and moisture tubes.",
+        vi: "Một vòi nước không thể tưới tốt cả vườn. Nhóm thử một thùng nước mưa, một dây nhỏ giọt, bình tưới, và các ống đo độ ẩm." },
+      { kind: "observation",
+        prompt: "A pipe from the glass roof leads into the green barrel. What is the barrel collecting?",
+        vi: "Một ống từ mái kính dẫn vào chiếc thùng xanh. Thùng đang hứng gì?",
+        options: [
+          { label: "Rainwater from the roof", correct: true, feedback: "Đúng! Ống dẫn nước mưa từ mái vào thùng — nguồn nước miễn phí cho vườn." },
+          { label: "Tap water from the wall", correct: false, feedback: "Không — ống nối với MÁI, không phải vòi tường. Đó là nước mưa." },
+          { label: "Fruit juice", correct: false, feedback: "Chắc chắn không phải nước ép — đó là nước mưa hứng từ mái." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The moisture tubes show the far bed is dry and the near bed is wet. What should they do?",
+        vi: "Các ống đo cho thấy luống xa bị KHÔ còn luống gần thì ƯỚT. Nhóm nên làm gì?",
+        options: ["Give more water to the dry bed and less to the wet one", "Give the same water to every bed", "Stop watering completely"],
+        answer: "Give more water to the dry bed and less to the wet one",
+        explainVi: "Tưới THEO nhu cầu: chỗ khô cần nhiều nước hơn (more), chỗ ướt cần ít hơn (less)." },
+      { kind: "arrangeSentence",
+        prompt: "Maple gives the watering steps. Put the words in order:",
+        vi: "Maple hướng dẫn các bước tưới. Hãy xếp các từ:",
+        solution: ["First", "fill", "the", "barrel", "then", "water", "the", "plants"],
+        say: "First fill the barrel, then water the plants.",
+        explainVi: "Từ nối trình tự: \"First … then …\" — làm đầy thùng trước, rồi mới tưới cây." },
+      { kind: "dialogue", who: "maple", en: "Let's combine them: the rain barrel and drip line for the far beds, so that water reaches them, and watering cans for the rest.",
+        vi: "Mình kết hợp nhé: thùng nước mưa và dây nhỏ giọt cho các luống xa, để nước tới được đó, còn bình tưới cho phần còn lại." },
+      { kind: "clueReveal", title: "Rainwater System", itemId: "rainwater-system",
+        en: "A small rainwater system feeds the far beds through a drip line, while hand watering covers the rest.",
+        vi: "Một hệ thu nước mưa nhỏ cấp cho các luống xa qua dây nhỏ giọt, còn phần còn lại thì tưới tay." },
+    ],
+  },
+
+  /* ---------------- Chapter 5 — A Stormy Test ---------------- */
+  // Ảnh: trời bão, mưa; chú KỸ SƯ đẩy QUẠT LỚN (thử gió); cô Rivera xịt VÒI (giả mưa); MÁI CHE VẢI phấp phới lỏng; GIÀN LEO nghiêng;
+  // 3 bạn ở bàn quan sát KẾT QUẢ (mô hình + token + ống đo ẩm + bảng ghi); MIỆNG THOÁT NƯỚC trên sàn ướt; lá bay.
+  {
+    id: "s03-ch05", seasonId: "s03", chapterNumber: 5,
+    title: "A Stormy Test", vi: "Bài thử trong bão",
+    shortDescription: "Một bài thử gió–mưa có kiểm soát phơi bày giàn leo yếu, mái che lỏng và thoát nước kém. Nhóm gia cố rồi thử lại.",
+    estimatedMinutes: 7,
+    node: { x: 50, y: 58, key: "stormy-test" },
+    sceneImage: C + "chapters/chapter-05-stormy-test.webp",
+    nextChapterId: "s03-ch06",
+    reward: { stars: 3, itemId: "wind-test-result", clueTitle: "Wind Test Result", clueVi: "Kết quả thử gió–mưa: biết chỗ nào yếu để gia cố trước khi bão thật tới." },
+    storySteps: [
+      { kind: "dialogue", who: "stranger", name: "Chú kỹ sư", en: "Let's run a safe test before real bad weather: a big fan for wind, and a hose for rain.",
+        vi: "Mình chạy một bài thử an toàn trước khi thời tiết xấu thật: một chiếc quạt lớn tạo gió, và một vòi nước giả mưa." },
+      { kind: "observation",
+        prompt: "During the test, the tall trellis leans over in the wind. What does this show?",
+        vi: "Trong lúc thử, chiếc giàn leo cao nghiêng ngả trong gió. Điều này cho thấy gì?",
+        options: [
+          { label: "The trellis is not anchored well enough", correct: true, feedback: "Đúng! Giàn leo nghiêng nghĩa là chưa được neo chắc — cần gia cố." },
+          { label: "The trellis is perfect as it is", correct: false, feedback: "Nếu hoàn hảo thì nó đã đứng vững — việc nó nghiêng cho thấy điểm yếu." },
+          { label: "It is a warm, sunny day", correct: false, feedback: "Nhìn lại — trời đang bão và mưa; giàn leo nghiêng vì gió mạnh." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "The shade fabric is loose. What MIGHT happen in a real storm?",
+        vi: "Tấm mái che đang lỏng. Trong một cơn bão thật, điều gì CÓ THỂ xảy ra?",
+        options: ["It might blow away or tear", "It might grow bigger", "It will stay perfectly still"],
+        answer: "It might blow away or tear",
+        explainVi: "\"might\" nêu khả năng: mái che lỏng có thể bị gió thổi bay hoặc rách — nên phải buộc chặt." },
+      { kind: "arrangeSentence",
+        prompt: "The group reports a drainage problem. Put the words in order:",
+        vi: "Nhóm báo cáo vấn đề thoát nước. Hãy xếp các từ:",
+        solution: ["If", "it", "rains", "the", "path", "gets", "wet"],
+        say: "If it rains, the path gets wet.",
+        explainVi: "Câu điều kiện loại 1: \"If it rains, the path gets wet.\" — nêu nhân–quả để sửa lối đi." },
+      { kind: "dialogue", who: "maple", en: "Let's fix it: tie down the shade, add anchors to the trellis, clear the drain, and move the wet path. Then we test again.",
+        vi: "Mình sửa nhé: buộc chặt mái che, neo thêm cho giàn leo, thông miệng thoát nước, và dời lối đi bị ướt. Rồi thử lại." },
+      { kind: "clueReveal", title: "Wind Test Result", itemId: "wind-test-result",
+        en: "The test shows exactly which parts are weak. The team strengthens the anchors, shelter, drainage, and paths before the real weather comes.",
+        vi: "Bài thử chỉ rõ những chỗ còn yếu. Cả nhóm gia cố neo, mái che, thoát nước và lối đi trước khi thời tiết thật ập tới." },
+    ],
+  },
+
+  /* ---------------- Chapter 6 — The Garden Opens ---------------- */
+  // Ảnh: vườn hoàn thiện lúc hoàng hôn; Maple cầm KHAY MÔ HÌNH thuyết trình; Mai (găng tay) + Kai; cô Rivera + chú kỹ sư;
+  // KHÁCH tham quan (có bạn XE LĂN trên LỐI ĐI phẳng; các bạn đọc sách ở GÓC ĐỌC có kệ sách); thùng nước mưa, chậu nhẹ, mái che đã chắc.
+  {
+    id: "s03-ch06", seasonId: "s03", chapterNumber: 6,
+    title: "The Garden Opens", vi: "Khu vườn khánh thành",
+    shortDescription: "Chặng cuối: khu vườn hoàn thiện kết hợp mọi tính năng. Maple thuyết trình cách bằng chứng đã thay đổi thiết kế ban đầu.",
+    estimatedMinutes: 8,
+    node: { x: 83, y: 66, key: "garden-opens" },
+    sceneImage: C + "chapters/chapter-06-garden-opens.webp",
+    reward: { stars: 3, itemId: "sky-garden-builder-badge", clueTitle: "Sky Garden Builder Badge", clueVi: "Huy hiệu Kiến tạo vườn trời — phần thưởng cho việc thiết kế, thử và chỉnh sửa bằng bằng chứng." },
+    storySteps: [
+      { kind: "dialogue", who: "narrator", en: "Opening day! The finished garden has vegetables, pollinator flowers, a reading corner, accessible paths, rainwater collection, lightweight planters, and wind-safe structures. Visitors arrive.",
+        vi: "Ngày khánh thành! Khu vườn hoàn thiện có rau, hoa thụ phấn, góc đọc sách, lối đi dễ tiếp cận, thu nước mưa, chậu nhẹ và kết cấu chống gió. Khách bắt đầu tới." },
+      { kind: "observation",
+        prompt: "A visitor uses a wheelchair on the garden path. Why is the path smooth and wide?",
+        vi: "Một vị khách dùng xe lăn trên lối đi trong vườn. Vì sao lối đi lại phẳng và rộng?",
+        options: [
+          { label: "So everyone can reach the whole garden", correct: true, feedback: "Đúng! Lối phẳng và rộng để MỌI người, kể cả người dùng xe lăn, đều tới được khắp vườn." },
+          { label: "Just to look pretty", correct: false, feedback: "Đẹp là phụ — mục đích chính là để ai cũng đi lại được (dễ tiếp cận)." },
+          { label: "It happened by accident", correct: false, feedback: "Không phải tình cờ — nhóm cố ý thiết kế lối đi dễ tiếp cận." },
+        ] },
+      { kind: "multipleChoice",
+        prompt: "Maple explains why they changed the stone planters. What is the reason?",
+        vi: "Maple giải thích vì sao nhóm đổi chậu đá. Lý do là gì?",
+        options: ["They were too heavy for the roof, so they used lighter ones", "They were the wrong colour", "They were too cheap"],
+        answer: "They were too heavy for the roof, so they used lighter ones",
+        explainVi: "Kể lại có lý do: chậu đá quá nặng cho mái → đổi sang chậu nhẹ (we changed … because …)." },
+      { kind: "arrangeSentence",
+        prompt: "Maple retells one change to the visitors. Put the words in order:",
+        vi: "Maple kể lại một thay đổi cho khách. Hãy xếp các từ:",
+        solution: ["We", "changed", "the", "plan", "because", "of", "the", "test"],
+        say: "We changed the plan because of the test.",
+        explainVi: "Quá khứ đơn + lý do: \"We changed … because of the test.\" — kể lại và giải thích." },
+      { kind: "multipleChoice",
+        prompt: "Which test changed the design the most?",
+        vi: "Bài thử nào thay đổi thiết kế nhiều nhất?",
+        options: ["The stormy wind-and-rain test", "A calm, sunny afternoon", "No test at all"],
+        answer: "The stormy wind-and-rain test",
+        explainVi: "Bài thử gió–mưa mới bộc lộ giàn yếu, mái lỏng, thoát nước kém → thay đổi thiết kế nhiều nhất." },
+      { kind: "dialogue", who: "maple", en: "Our recommendation: a garden works best when it serves many needs and is tested before it opens. Thank you, team!",
+        vi: "Khuyến nghị của bọn mình: một khu vườn tốt nhất khi phục vụ nhiều nhu cầu và được thử trước khi mở. Cảm ơn cả đội!" },
+      { kind: "clueReveal", title: "Sky Garden Builder Badge", itemId: "sky-garden-builder-badge",
+        en: "Ms. Rivera gives the team the Sky Garden Builder Badge. The rooftop is now a garden for everyone — proof that testing and teamwork make ideas better. Season complete.",
+        vi: "Cô Rivera trao cho cả đội Huy hiệu Kiến tạo vườn trời. Sân thượng giờ là khu vườn cho mọi người — minh chứng rằng thử nghiệm và làm việc nhóm khiến ý tưởng tốt hơn. Hoàn thành mùa." },
+    ],
+  },
+];
+
+export const SEASON_SKY_GARDEN: AdventureSeason = {
+  id: "s03",
+  title: "The Sky Garden Challenge",
+  vi: "Thử thách vườn trên mây",
+  subtitle: "Thiết kế, thử nghiệm và chỉnh sửa một khu vườn sân thượng cho cả cộng đồng.",
+  mapImage: C + "map/season-03-rooftop-plan.webp",
+  chapters: S03_CHAPTERS,
+  items: S03_ITEMS,
+  itemsTagline: "Thu thập bằng chứng để dựng nên khu vườn sân thượng hoàn chỉnh.",
+};
+
+export const SEASONS: AdventureSeason[] = [SEASON_LOST_COMPASS, SEASON_SILENT_SIGNAL, SEASON_SKY_GARDEN];
 export const seasonById = (id: string) => SEASONS.find((s) => s.id === id);
 export const chapterById = (seasonId: string, chapterId: string) =>
   seasonById(seasonId)?.chapters.find((c) => c.id === chapterId);
