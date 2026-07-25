@@ -4067,6 +4067,457 @@ const THE_SCHOOL_PODCAST_DEADLINE = makeScenarioLesson({
   ] },
 });
 
+/* ============ Level 2 · Units 21–30 ============ */
+const THE_LIBRARY_BOOK_FAIR_MIX_UP = makeScenarioLesson({
+  id: "bookfair", theme: "story-time", title: "The Library Book Fair Mix-Up", vi: "Nhầm lẫn ở hội sách thư viện",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-21-library-book-fair-mix-up.webp",
+  vocab: [
+    { word: "book fair", ipa: "/bʊk fer/", vi: "hội sách", emoji: "📚", example: "The class set up a book fair.", exampleVi: "Cả lớp tổ chức một hội sách." },
+    { word: "symbol", ipa: "/ˈsɪmbl/", vi: "ký hiệu", emoji: "🔷", example: "Each box has a colour symbol.", exampleVi: "Mỗi thùng có một ký hiệu màu." },
+    { word: "label", ipa: "/ˈleɪbl/", vi: "nhãn", emoji: "🏷️", example: "The label shows where the box goes.", exampleVi: "Nhãn cho biết thùng đặt ở đâu." },
+    { word: "floor plan", ipa: "/flɔːr plæn/", vi: "sơ đồ sàn", emoji: "🗺️", example: "The floor plan shows each section.", exampleVi: "Sơ đồ sàn chỉ từng khu." },
+    { word: "section", ipa: "/ˈsekʃn/", vi: "khu vực", emoji: "📍", example: "The green section is for picture books.", exampleVi: "Khu xanh lá dành cho sách tranh." },
+    { word: "arrange", ipa: "/əˈreɪndʒ/", vi: "sắp xếp", emoji: "🧩", example: "They arrange the boxes by symbol.", exampleVi: "Họ sắp xếp thùng theo ký hiệu." },
+  ],
+  patterns: [
+    { pattern: "The box with … belongs in …", vi: "Thùng có … thuộc về …", examples: [
+      { en: "The box with the blue triangle belongs in the blue section.", vi: "Thùng có tam giác xanh dương thuộc khu xanh dương." },
+      { en: "The box with the red square belongs near the door.", vi: "Thùng có vuông đỏ thuộc gần cửa." }] },
+    { pattern: "This can't be right because …", vi: "Cái này không đúng vì …", examples: [
+      { en: "This can't be right because the symbols don't match.", vi: "Cái này không đúng vì ký hiệu không khớp." },
+      { en: "This can't be right because the plan shows a circle here.", vi: "Cái này không đúng vì sơ đồ ghi hình tròn ở đây." }] },
+    { pattern: "First …, then …", vi: "Đầu tiên …, rồi …", examples: [
+      { en: "First we check the plan, then we match each box.", vi: "Đầu tiên xem sơ đồ, rồi ghép từng thùng." },
+      { en: "First we sort by shape, then by colour.", vi: "Đầu tiên phân theo hình, rồi theo màu." }] },
+  ],
+  listening: {
+    intro: "Listen to the book-fair problem, then answer.", introVi: "Nghe sự cố ở hội sách rồi trả lời.",
+    script: "The class was setting up the book fair. Each box had a coloured shape, and the floor plan showed where every shape belonged. Maya noticed the box with the purple diamond was on the table for the blue-triangle section. \"This can't be right,\" she said. Ben checked the plan again. First they matched every box to its symbol on the plan, then they moved each box to the correct section. Soon the fair was ready.",
+    questions: [
+      { q: "How were the boxes labelled?", vi: "Các thùng được dán nhãn thế nào?", options: ["With coloured shapes", "With names", "With numbers only"], answer: "With coloured shapes" },
+      { q: "What did Maya notice?", vi: "Maya nhận ra điều gì?", options: ["A box was in the wrong section", "The books were torn", "The library was closed"], answer: "A box was in the wrong section" },
+      { q: "How did they fix the mix-up?", vi: "Họ khắc phục nhầm lẫn thế nào?", options: ["They matched each box to the plan", "They guessed", "They stacked all boxes together"], answer: "They matched each box to the plan" },
+    ],
+  },
+  repeat: [
+    { en: "The box with the blue triangle belongs in the blue section.", vi: "Thùng có tam giác xanh dương thuộc khu xanh dương." },
+    { en: "First we check the plan, then we match each box.", vi: "Đầu tiên xem sơ đồ, rồi ghép từng thùng." },
+  ],
+  guided: { q: "How should the class arrange the boxes correctly?", vi: "Cả lớp nên sắp xếp các thùng đúng thế nào?", hint: "First they should ___. Then they can ___." },
+  describe: { prompt: "Explain the mix-up in 3–5 sentences. Use two clues, a sequence connector and a solution.", vi: "Giải thích nhầm lẫn trong 3–5 câu, dùng hai manh mối, từ nối trình tự và một giải pháp.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "What shows where each box belongs?", vi: "Cái gì cho biết mỗi thùng đặt ở đâu?", options: ["The floor plan", "A recipe", "A ticket"], answer: "The floor plan" },
+    { type: "sentence", q: "Which sentence uses evidence to reject an arrangement?", vi: "Câu nào dùng bằng chứng để bác bỏ cách sắp xếp?", options: ["This can't be right because the symbols don't match.", "Books are nice.", "I like blue."], answer: "This can't be right because the symbols don't match." },
+    { type: "listening", q: "What was wrong with the purple-diamond box?", vi: "Thùng thoi tím sai chỗ nào?", options: ["It was in the blue-triangle section", "It was empty", "It was too heavy"], answer: "It was in the blue-triangle section" },
+    { type: "reading", q: "The symbols must match the plan. What should you do first?", vi: "Ký hiệu phải khớp sơ đồ. Nên làm gì trước?", options: ["Check the plan", "Move boxes randomly", "Close the fair"], answer: "Check the plan" },
+  ] },
+});
+
+const THE_WEATHER_STATION_DATA_PUZZLE = makeScenarioLesson({
+  id: "weatherdata", theme: "story-time", title: "The Weather Station Data Puzzle", vi: "Câu đố dữ liệu trạm thời tiết",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-22-weather-station-data-puzzle.webp",
+  vocab: [
+    { word: "weather station", ipa: "/ˈweðər steɪʃn/", vi: "trạm thời tiết", emoji: "🌦️", example: "The school has a small weather station.", exampleVi: "Trường có một trạm thời tiết nhỏ." },
+    { word: "rain gauge", ipa: "/reɪn ɡeɪdʒ/", vi: "ống đo mưa", emoji: "🌧️", example: "The rain gauge measures the rain.", exampleVi: "Ống đo mưa đo lượng mưa." },
+    { word: "data", ipa: "/ˈdeɪtə/", vi: "dữ liệu", emoji: "📊", example: "They collect data every day.", exampleVi: "Họ thu thập dữ liệu mỗi ngày." },
+    { word: "graph", ipa: "/ɡræf/", vi: "biểu đồ", emoji: "📈", example: "The graph shows the temperature.", exampleVi: "Biểu đồ cho thấy nhiệt độ." },
+    { word: "blocked", ipa: "/blɒkt/", vi: "bị nghẽn", emoji: "🍂", example: "Leaves blocked the rain gauge.", exampleVi: "Lá cây làm nghẽn ống đo mưa." },
+    { word: "measurement", ipa: "/ˈmeʒərmənt/", vi: "phép đo", emoji: "📏", example: "The measurement looked wrong.", exampleVi: "Phép đo trông có vẻ sai." },
+  ],
+  patterns: [
+    { pattern: "The data shows … but …", vi: "Dữ liệu cho thấy … nhưng …", examples: [
+      { en: "The data shows little rain, but the puddle is large.", vi: "Dữ liệu ghi ít mưa, nhưng vũng nước lại to." },
+      { en: "The graph shows a low number, but the ground is wet.", vi: "Biểu đồ ghi số thấp, nhưng mặt đất ướt." }] },
+    { pattern: "This is probably because …", vi: "Điều này có lẽ vì …", examples: [
+      { en: "This is probably because leaves blocked the gauge.", vi: "Điều này có lẽ vì lá làm nghẽn ống đo." },
+      { en: "This is probably because the gauge tipped over.", vi: "Điều này có lẽ vì ống đo bị nghiêng." }] },
+    { pattern: "We should … before …", vi: "Chúng ta nên … trước khi …", examples: [
+      { en: "We should clear the gauge before we measure again.", vi: "Nên làm sạch ống đo trước khi đo lại." },
+      { en: "We should compare two sources before deciding.", vi: "Nên so hai nguồn trước khi kết luận." }] },
+  ],
+  listening: {
+    intro: "Listen to the weather-station puzzle, then answer.", introVi: "Nghe câu đố ở trạm thời tiết rồi trả lời.",
+    script: "The science club checked their weather station. The rain-gauge data showed almost no rain, but there was a big puddle on the ground. \"The data shows little rain, but the puddle is large,\" said Aria. Then they found leaves blocking the rain gauge. That was the clue. The teacher, not the students, cleared the equipment. They decided to clean the gauge and compare it with the puddle before trusting the number.",
+    questions: [
+      { q: "What two things didn't match?", vi: "Hai thứ nào không khớp nhau?", options: ["The rain data and the puddle", "The clock and the calendar", "The books and the boxes"], answer: "The rain data and the puddle" },
+      { q: "What was blocking the rain gauge?", vi: "Cái gì làm nghẽn ống đo mưa?", options: ["Leaves", "Snow", "A ball"], answer: "Leaves" },
+      { q: "What did they decide to do?", vi: "Họ quyết định làm gì?", options: ["Clean the gauge and compare again", "Ignore the puddle", "Throw the gauge away"], answer: "Clean the gauge and compare again" },
+    ],
+  },
+  repeat: [
+    { en: "The data shows little rain, but the puddle is large.", vi: "Dữ liệu ghi ít mưa, nhưng vũng nước lại to." },
+    { en: "We should clear the gauge before we measure again.", vi: "Nên làm sạch ống đo trước khi đo lại." },
+  ],
+  guided: { q: "Why might the rain data be wrong, and what should the club do?", vi: "Vì sao dữ liệu mưa có thể sai, và câu lạc bộ nên làm gì?", hint: "The data is wrong because ___. We should ___." },
+  describe: { prompt: "Explain the puzzle in 3–5 sentences. Compare two clues and give a safe conclusion.", vi: "Giải thích câu đố trong 3–5 câu, so hai manh mối và đưa ra kết luận an toàn.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "What measures how much rain falls?", vi: "Cái gì đo lượng mưa rơi?", options: ["A rain gauge", "A screwdriver", "A palette"], answer: "A rain gauge" },
+    { type: "sentence", q: "Which sentence compares two sources?", vi: "Câu nào so sánh hai nguồn?", options: ["The data shows little rain, but the puddle is large.", "Rain is wet.", "I like graphs."], answer: "The data shows little rain, but the puddle is large." },
+    { type: "listening", q: "What was blocking the rain gauge?", vi: "Cái gì làm nghẽn ống đo mưa?", options: ["Leaves", "Books", "A helmet"], answer: "Leaves" },
+    { type: "reading", q: "The number looks wrong. What should you do first?", vi: "Con số trông sai. Nên làm gì trước?", options: ["Compare it with another clue", "Believe it at once", "Erase the graph"], answer: "Compare it with another clue" },
+  ] },
+});
+
+const THE_MISSING_THEATRE_PROP = makeScenarioLesson({
+  id: "theatreprop", theme: "story-time", title: "The Missing Theatre Prop", vi: "Đạo cụ sân khấu biến mất",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-23-missing-theatre-prop.webp",
+  vocab: [
+    { word: "prop", ipa: "/prɒp/", vi: "đạo cụ", emoji: "🏮", example: "The lantern is an important prop.", exampleVi: "Chiếc đèn lồng là một đạo cụ quan trọng." },
+    { word: "backstage", ipa: "/ˌbækˈsteɪdʒ/", vi: "hậu trường", emoji: "🎭", example: "They searched backstage.", exampleVi: "Họ tìm ở hậu trường." },
+    { word: "clue", ipa: "/kluː/", vi: "manh mối", emoji: "🔎", example: "The ribbon is a good clue.", exampleVi: "Dải ruy-băng là một manh mối tốt." },
+    { word: "trail", ipa: "/treɪl/", vi: "dấu vết", emoji: "👣", example: "They followed the trail of ribbons.", exampleVi: "Họ lần theo dấu vết ruy-băng." },
+    { word: "cart", ipa: "/kɑːrt/", vi: "xe đẩy", emoji: "🛒", example: "The cart left tracks in the dust.", exampleVi: "Xe đẩy để lại vết trên lớp bụi." },
+    { word: "trunk", ipa: "/trʌŋk/", vi: "rương", emoji: "🧳", example: "The prop might be in the old trunk.", exampleVi: "Đạo cụ có thể ở trong chiếc rương cũ." },
+  ],
+  patterns: [
+    { pattern: "There is a … here, so …", vi: "Có … ở đây, nên …", examples: [
+      { en: "There is a dust outline here, so the prop was on this shelf.", vi: "Có vết bụi ở đây, nên đạo cụ từng ở trên kệ này." },
+      { en: "There are cart tracks here, so it moved this way.", vi: "Có vết xe đẩy ở đây, nên nó được chuyển lối này." }] },
+    { pattern: "It probably … because …", vi: "Nó có lẽ … vì …", examples: [
+      { en: "It probably went to the trunk because the ribbon leads there.", vi: "Nó có lẽ đi tới chiếc rương vì dải ruy-băng dẫn tới đó." },
+      { en: "It probably didn't go outside because the door was locked.", vi: "Nó có lẽ không ra ngoài vì cửa đã khóa." }] },
+    { pattern: "That clue doesn't help because …", vi: "Manh mối đó không giúp gì vì …", examples: [
+      { en: "That clue doesn't help because the costume was always there.", vi: "Manh mối đó không giúp gì vì bộ trang phục vốn ở đó rồi." },
+      { en: "That clue doesn't help because it points the wrong way.", vi: "Manh mối đó không giúp gì vì nó chỉ sai hướng." }] },
+  ],
+  listening: {
+    intro: "Listen to the backstage search, then answer.", introVi: "Nghe cuộc tìm kiếm ở hậu trường rồi trả lời.",
+    script: "Before the play, the gold lantern prop was missing. Backstage, the stage manager and the students looked for clues. There was a dust outline on the shelf, so the lantern had been there. They saw cart tracks on the floor and a trail of gold ribbon. One ribbon lay near an old trunk. A costume on the rack was not a useful clue, because it had not moved. Following the tracks and the ribbon, they found the lantern inside the trunk.",
+    questions: [
+      { q: "What showed where the lantern had been?", vi: "Cái gì cho thấy đèn lồng từng ở đâu?", options: ["A dust outline on the shelf", "A loud noise", "A new poster"], answer: "A dust outline on the shelf" },
+      { q: "Which clue did they follow?", vi: "Họ lần theo manh mối nào?", options: ["Cart tracks and a ribbon trail", "A song", "A clock"], answer: "Cart tracks and a ribbon trail" },
+      { q: "Where did they find the lantern?", vi: "Họ tìm thấy đèn lồng ở đâu?", options: ["Inside the old trunk", "Outside", "On the stage lights"], answer: "Inside the old trunk" },
+    ],
+  },
+  repeat: [
+    { en: "There is a dust outline here, so the prop was on this shelf.", vi: "Có vết bụi ở đây, nên đạo cụ từng ở trên kệ này." },
+    { en: "It probably went to the trunk because the ribbon leads there.", vi: "Nó có lẽ đi tới chiếc rương vì dải ruy-băng dẫn tới đó." },
+  ],
+  guided: { q: "Which clues show where the prop went?", vi: "Những manh mối nào cho thấy đạo cụ đã đi đâu?", hint: "The first clue is ___. The second clue is ___." },
+  describe: { prompt: "Report the search in 3–5 sentences. Use two clues, reject one false lead and infer the route.", vi: "Kể lại cuộc tìm kiếm trong 3–5 câu, dùng hai manh mối, loại một manh mối sai và suy ra đường đi.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "An object used by actors in a play is a …", vi: "Vật diễn viên dùng trong vở kịch là …", options: ["prop", "recipe", "route"], answer: "prop" },
+    { type: "sentence", q: "Which sentence uses a clue to reason?", vi: "Câu nào dùng manh mối để suy luận?", options: ["There are cart tracks here, so it moved this way.", "The stage is big.", "I like plays."], answer: "There are cart tracks here, so it moved this way." },
+    { type: "listening", q: "Where was the lantern found?", vi: "Đèn lồng được tìm thấy ở đâu?", options: ["Inside the old trunk", "On the roof", "In the pool"], answer: "Inside the old trunk" },
+    { type: "reading", q: "A costume never moved. Is it a useful clue?", vi: "Bộ trang phục không hề di chuyển. Nó có phải manh mối hữu ích?", options: ["No, it doesn't help", "Yes, always", "It moved the trunk"], answer: "No, it doesn't help" },
+  ] },
+});
+
+const THE_BIKE_TRAIL_ROUTE_CHANGE = makeScenarioLesson({
+  id: "biketrail", theme: "story-time", title: "The Bike Trail Route Change", vi: "Đổi tuyến đường mòn xe đạp",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-24-bike-trail-route-change.webp",
+  vocab: [
+    { word: "trail", ipa: "/treɪl/", vi: "đường mòn", emoji: "🚵", example: "The bike trail goes along the water.", exampleVi: "Đường mòn xe đạp chạy dọc mặt nước." },
+    { word: "route", ipa: "/ruːt/", vi: "tuyến đường", emoji: "🗺️", example: "The map shows three routes.", exampleVi: "Bản đồ chỉ ba tuyến đường." },
+    { word: "muddy", ipa: "/ˈmʌdi/", vi: "lầy lội", emoji: "🟤", example: "The path is muddy after rain.", exampleVi: "Con đường lầy lội sau mưa." },
+    { word: "barrier", ipa: "/ˈbæriər/", vi: "rào chắn", emoji: "🚧", example: "A barrier blocks the bridge.", exampleVi: "Một rào chắn chặn cây cầu." },
+    { word: "storm", ipa: "/stɔːrm/", vi: "cơn giông", emoji: "⛈️", example: "A storm is coming soon.", exampleVi: "Một cơn giông sắp tới." },
+    { word: "shortcut", ipa: "/ˈʃɔːrtkʌt/", vi: "đường tắt", emoji: "➡️", example: "The shortcut is faster but muddy.", exampleVi: "Đường tắt nhanh hơn nhưng lầy." },
+  ],
+  patterns: [
+    { pattern: "If we take …, we will …", vi: "Nếu đi …, chúng ta sẽ …", examples: [
+      { en: "If we take the muddy shortcut, we will get stuck.", vi: "Nếu đi đường tắt lầy lội, chúng ta sẽ bị mắc kẹt." },
+      { en: "If we take the green route, we will stay dry.", vi: "Nếu đi tuyến xanh lá, chúng ta sẽ khô ráo." }] },
+    { pattern: "… is a better route because …", vi: "… là tuyến tốt hơn vì …", examples: [
+      { en: "The green route is better because the bridge is closed.", vi: "Tuyến xanh lá tốt hơn vì cầu đã đóng." },
+      { en: "The longer route is better because a storm is coming.", vi: "Tuyến dài hơn tốt hơn vì cơn giông sắp tới." }] },
+    { pattern: "We should … before …", vi: "Chúng ta nên … trước khi …", examples: [
+      { en: "We should return before the storm arrives.", vi: "Nên quay về trước khi giông tới." },
+      { en: "We should check the map before we ride.", vi: "Nên xem bản đồ trước khi đạp xe." }] },
+  ],
+  listening: {
+    intro: "Listen to the bike-trail decision, then answer.", introVi: "Nghe quyết định trên đường mòn xe đạp rồi trả lời.",
+    script: "The bike club stopped at the trailhead to read the map. The direct route crossed a bridge, but a barrier blocked it and the path was muddy. Dark storm clouds were building, and the clock showed only an hour of daylight. \"If we take the muddy shortcut, we will get stuck,\" said Leo. They compared the routes. The green route was longer but dry and safe. They chose it so they could return before the storm arrived.",
+    questions: [
+      { q: "Why couldn't they use the direct route?", vi: "Vì sao họ không đi được tuyến thẳng?", options: ["A barrier and mud blocked it", "It was too sunny", "There was no map"], answer: "A barrier and mud blocked it" },
+      { q: "What was coming?", vi: "Điều gì sắp tới?", options: ["A storm", "A parade", "A ferry"], answer: "A storm" },
+      { q: "Which route did they choose and why?", vi: "Họ chọn tuyến nào và vì sao?", options: ["The green route, because it was dry and safe", "The muddy shortcut", "No route"], answer: "The green route, because it was dry and safe" },
+    ],
+  },
+  repeat: [
+    { en: "If we take the muddy shortcut, we will get stuck.", vi: "Nếu đi đường tắt lầy lội, chúng ta sẽ bị mắc kẹt." },
+    { en: "The green route is better because the bridge is closed.", vi: "Tuyến xanh lá tốt hơn vì cầu đã đóng." },
+  ],
+  guided: { q: "Which route should the club take, and why?", vi: "Câu lạc bộ nên đi tuyến nào, và vì sao?", hint: "We should take ___ because ___." },
+  describe: { prompt: "Explain the route choice in 3–5 sentences. Compare two routes and predict the weather.", vi: "Giải thích lựa chọn tuyến trong 3–5 câu, so hai tuyến và dự đoán thời tiết.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "What blocks the bridge?", vi: "Cái gì chặn cây cầu?", options: ["A barrier", "A rainbow", "A recipe"], answer: "A barrier" },
+    { type: "sentence", q: "Which sentence gives a reason for a route?", vi: "Câu nào nêu lý do chọn tuyến?", options: ["The green route is better because the bridge is closed.", "Bikes are fast.", "I like maps."], answer: "The green route is better because the bridge is closed." },
+    { type: "listening", q: "Why did they avoid the shortcut?", vi: "Vì sao họ tránh đường tắt?", options: ["It was muddy and blocked", "It was too long", "It had no view"], answer: "It was muddy and blocked" },
+    { type: "reading", q: "A storm is coming. What should the club do?", vi: "Cơn giông sắp tới. Câu lạc bộ nên làm gì?", options: ["Return before it arrives", "Ride slowly into it", "Wait on the bridge"], answer: "Return before it arrives" },
+  ] },
+});
+
+const THE_DONATION_SORTING_CHALLENGE = makeScenarioLesson({
+  id: "donationsort", theme: "story-time", title: "The Community Donation Sorting Challenge", vi: "Thử thách phân loại đồ quyên góp",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-25-donation-sorting-challenge.webp",
+  vocab: [
+    { word: "donation", ipa: "/doʊˈneɪʃn/", vi: "đồ quyên góp", emoji: "🎁", example: "People bring donations to the centre.", exampleVi: "Mọi người mang đồ quyên góp đến trung tâm." },
+    { word: "sort", ipa: "/sɔːrt/", vi: "phân loại", emoji: "🗂️", example: "We sort the items into groups.", exampleVi: "Chúng mình phân loại đồ theo nhóm." },
+    { word: "category", ipa: "/ˈkætəɡɔːri/", vi: "nhóm phân loại", emoji: "🏷️", example: "Each category has a picture label.", exampleVi: "Mỗi nhóm có một nhãn hình." },
+    { word: "supplies", ipa: "/səˈplaɪz/", vi: "đồ tiếp tế", emoji: "📦", example: "The supplies include food and blankets.", exampleVi: "Đồ tiếp tế gồm thức ăn và chăn." },
+    { word: "urgent", ipa: "/ˈɜːrdʒənt/", vi: "khẩn cấp", emoji: "⏰", example: "The wet box is urgent.", exampleVi: "Chiếc thùng ướt là việc khẩn cấp." },
+    { word: "damp", ipa: "/dæmp/", vi: "ẩm ướt", emoji: "💧", example: "The damp box might spoil the food.", exampleVi: "Thùng ẩm có thể làm hỏng thức ăn." },
+  ],
+  patterns: [
+    { pattern: "The … goes in the … category.", vi: "… thuộc nhóm …", examples: [
+      { en: "The cans go in the food category.", vi: "Các lon thuộc nhóm thức ăn." },
+      { en: "The blankets go in the warm-clothes category.", vi: "Các tấm chăn thuộc nhóm đồ ấm." }] },
+    { pattern: "We should do … first because …", vi: "Nên làm … trước vì …", examples: [
+      { en: "We should dry the damp box first because the food may spoil.", vi: "Nên xử lý thùng ẩm trước vì thức ăn có thể hỏng." },
+      { en: "We should sort the urgent items first because time is short.", vi: "Nên phân loại đồ khẩn cấp trước vì ít thời gian." }] },
+    { pattern: "If we …, then …", vi: "Nếu …, thì …", examples: [
+      { en: "If we label each shelf, then sorting is faster.", vi: "Nếu dán nhãn từng kệ, việc phân loại nhanh hơn." },
+      { en: "If we work in groups, then we finish on time.", vi: "Nếu chia nhóm, chúng ta xong đúng giờ." }] },
+  ],
+  listening: {
+    intro: "Listen to the sorting challenge, then answer.", introVi: "Nghe thử thách phân loại rồi trả lời.",
+    script: "Volunteers were sorting donations into three categories: food, warm clothes and school supplies. Each shelf had a picture label. Some cans were on the floor, and one cardboard box was damp from the melting snow. \"We should dry the damp box first because the food may spoil,\" said Nadia. Then they matched each item to its labelled shelf. Working in groups, they sorted the cans, blankets and notebooks quickly and finished before the centre opened.",
+    questions: [
+      { q: "How many categories were there?", vi: "Có mấy nhóm phân loại?", options: ["Three: food, warm clothes and supplies", "One", "Ten"], answer: "Three: food, warm clothes and supplies" },
+      { q: "Which task was urgent?", vi: "Việc nào khẩn cấp?", options: ["Drying the damp box", "Painting the wall", "Reading a book"], answer: "Drying the damp box" },
+      { q: "How did they sort quickly?", vi: "Họ phân loại nhanh bằng cách nào?", options: ["They matched items to labelled shelves in groups", "They guessed", "They mixed everything"], answer: "They matched items to labelled shelves in groups" },
+    ],
+  },
+  repeat: [
+    { en: "The cans go in the food category.", vi: "Các lon thuộc nhóm thức ăn." },
+    { en: "We should dry the damp box first because the food may spoil.", vi: "Nên xử lý thùng ẩm trước vì thức ăn có thể hỏng." },
+  ],
+  guided: { q: "How should the volunteers sort the donations efficiently?", vi: "Các tình nguyện viên nên phân loại đồ hiệu quả thế nào?", hint: "First we should ___. Then we can ___." },
+  describe: { prompt: "Explain the sorting plan in 3–5 sentences. Use categories, one urgent action and an efficient order.", vi: "Giải thích kế hoạch phân loại trong 3–5 câu, dùng các nhóm, một việc khẩn cấp và thứ tự hiệu quả.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "Putting items into groups is called …", vi: "Xếp đồ vào các nhóm gọi là …", options: ["sorting", "painting", "swimming"], answer: "sorting" },
+    { type: "sentence", q: "Which sentence tells the urgent task?", vi: "Câu nào cho biết việc khẩn cấp?", options: ["We should dry the damp box first because the food may spoil.", "Boxes are brown.", "I like blankets."], answer: "We should dry the damp box first because the food may spoil." },
+    { type: "listening", q: "Which item was urgent?", vi: "Món nào khẩn cấp?", options: ["The damp box", "A dry notebook", "A clean can"], answer: "The damp box" },
+    { type: "reading", q: "A box is damp from snow. Why deal with it first?", vi: "Một thùng bị ẩm vì tuyết. Vì sao xử lý trước?", options: ["The food may spoil", "It looks nice", "It is empty"], answer: "The food may spoil" },
+  ] },
+});
+
+const THE_CANOE_CLUB_EQUIPMENT_MIX_UP = makeScenarioLesson({
+  id: "canoeclub", theme: "story-time", title: "The Canoe Club Equipment Mix-Up", vi: "Nhầm đồ ở câu lạc bộ ca-nô",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-26-canoe-club-equipment-mix-up.webp",
+  vocab: [
+    { word: "canoe", ipa: "/kəˈnuː/", vi: "xuồng ca-nô", emoji: "🛶", example: "The red canoe is on the shore.", exampleVi: "Chiếc ca-nô đỏ ở trên bờ." },
+    { word: "life vest", ipa: "/laɪf vest/", vi: "áo phao", emoji: "🦺", example: "Everyone must wear a life vest.", exampleVi: "Mọi người phải mặc áo phao." },
+    { word: "paddle", ipa: "/ˈpædl/", vi: "mái chèo", emoji: "🚣", example: "Each paddle has a coloured tip.", exampleVi: "Mỗi mái chèo có đầu màu." },
+    { word: "helmet", ipa: "/ˈhelmɪt/", vi: "mũ bảo hiểm", emoji: "⛑️", example: "The helmet keeps your head safe.", exampleVi: "Mũ bảo hiểm bảo vệ đầu." },
+    { word: "checklist", ipa: "/ˈtʃeklɪst/", vi: "danh sách kiểm", emoji: "📋", example: "The checklist shows every item.", exampleVi: "Danh sách kiểm liệt kê mọi món." },
+    { word: "match", ipa: "/mætʃ/", vi: "khớp, ghép đúng", emoji: "🔗", example: "Each set must match one paddler.", exampleVi: "Mỗi bộ phải khớp một người chèo." },
+  ],
+  patterns: [
+    { pattern: "Everyone must … before …", vi: "Mọi người phải … trước khi …", examples: [
+      { en: "Everyone must wear a life vest before getting in the canoe.", vi: "Mọi người phải mặc áo phao trước khi lên ca-nô." },
+      { en: "Everyone must check the list before leaving.", vi: "Mọi người phải kiểm danh sách trước khi đi." }] },
+    { pattern: "This set is missing …", vi: "Bộ này còn thiếu …", examples: [
+      { en: "This set is missing a helmet.", vi: "Bộ này còn thiếu một mũ bảo hiểm." },
+      { en: "This set is missing a paddle.", vi: "Bộ này còn thiếu một mái chèo." }] },
+    { pattern: "The wet marks show that …", vi: "Vết ướt cho thấy …", examples: [
+      { en: "The wet marks show that this paddle came from the water.", vi: "Vết ướt cho thấy mái chèo này vừa từ dưới nước lên." },
+      { en: "The wet footprints show which way they walked.", vi: "Vết chân ướt cho thấy họ đi lối nào." }] },
+  ],
+  listening: {
+    intro: "Listen to the canoe-club problem, then answer.", introVi: "Nghe sự cố ở câu lạc bộ ca-nô rồi trả lời.",
+    script: "At the canoe club, the equipment was mixed up before practice. The coordinator held a checklist: each paddler needed a life vest, a paddle and a helmet. One set was missing a helmet, and a paddle was on the wrong hook. Wet footprints showed that someone had just come back from the water. \"Everyone must wear a life vest before getting in the canoe,\" said the coordinator. The students matched each item to the checklist and fixed all the sets safely.",
+    questions: [
+      { q: "What did each paddler need?", vi: "Mỗi người chèo cần gì?", options: ["A life vest, a paddle and a helmet", "Only a paddle", "A book"], answer: "A life vest, a paddle and a helmet" },
+      { q: "What safety rule did the coordinator give?", vi: "Người phụ trách đưa ra quy tắc an toàn nào?", options: ["Everyone must wear a life vest", "Run to the water", "Skip the checklist"], answer: "Everyone must wear a life vest" },
+      { q: "What did the wet footprints show?", vi: "Vết chân ướt cho thấy điều gì?", options: ["Someone had come back from the water", "It was raining inside", "Nothing"], answer: "Someone had come back from the water" },
+    ],
+  },
+  repeat: [
+    { en: "Everyone must wear a life vest before getting in the canoe.", vi: "Mọi người phải mặc áo phao trước khi lên ca-nô." },
+    { en: "This set is missing a helmet.", vi: "Bộ này còn thiếu một mũ bảo hiểm." },
+  ],
+  guided: { q: "How should the club fix the equipment sets safely?", vi: "Câu lạc bộ nên sửa các bộ đồ an toàn thế nào?", hint: "First they should ___. Everyone must ___." },
+  describe: { prompt: "Explain the fix in 3–5 sentences. Use the checklist, a safety rule and one clue.", vi: "Giải thích cách sửa trong 3–5 câu, dùng danh sách kiểm, một quy tắc an toàn và một manh mối.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "What must everyone wear in a canoe?", vi: "Trên ca-nô mọi người phải mặc gì?", options: ["A life vest", "A palette", "A tent"], answer: "A life vest" },
+    { type: "sentence", q: "Which sentence states a safety rule?", vi: "Câu nào nêu một quy tắc an toàn?", options: ["Everyone must wear a life vest before getting in the canoe.", "Canoes are red.", "I like water."], answer: "Everyone must wear a life vest before getting in the canoe." },
+    { type: "listening", q: "What was one set missing?", vi: "Một bộ còn thiếu gì?", options: ["A helmet", "A book", "A can"], answer: "A helmet" },
+    { type: "reading", q: "Wet footprints lead from the water. What do they show?", vi: "Vết chân ướt đi từ mặt nước lên. Chúng cho thấy gì?", options: ["Where someone walked", "The colour of the canoe", "The time of day"], answer: "Where someone walked" },
+  ] },
+});
+
+const THE_GREENHOUSE_TEMPERATURE_MYSTERY = makeScenarioLesson({
+  id: "greenhouse", theme: "story-time", title: "The Greenhouse Temperature Mystery", vi: "Bí ẩn nhiệt độ nhà kính",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-27-greenhouse-temperature-mystery.webp",
+  vocab: [
+    { word: "greenhouse", ipa: "/ˈɡriːnhaʊs/", vi: "nhà kính", emoji: "🏡", example: "Plants grow in the greenhouse.", exampleVi: "Cây trồng trong nhà kính." },
+    { word: "wilt", ipa: "/wɪlt/", vi: "héo", emoji: "🥀", example: "The plants began to wilt.", exampleVi: "Cây bắt đầu héo." },
+    { word: "thermometer", ipa: "/θərˈmɒmɪtər/", vi: "nhiệt kế", emoji: "🌡️", example: "The thermometer reads very high.", exampleVi: "Nhiệt kế chỉ rất cao." },
+    { word: "airflow", ipa: "/ˈerfloʊ/", vi: "luồng không khí", emoji: "💨", example: "The plants need better airflow.", exampleVi: "Cây cần luồng khí tốt hơn." },
+    { word: "vent", ipa: "/vent/", vi: "cửa thông gió", emoji: "🪟", example: "The roof vent was closed.", exampleVi: "Cửa thông gió trên mái đang đóng." },
+    { word: "cause", ipa: "/kɔːz/", vi: "nguyên nhân", emoji: "🔍", example: "Heat was the real cause.", exampleVi: "Nhiệt độ mới là nguyên nhân thật sự." },
+  ],
+  patterns: [
+    { pattern: "The plants are wilting, but …", vi: "Cây đang héo, nhưng …", examples: [
+      { en: "The plants are wilting, but the soil is already wet.", vi: "Cây đang héo, nhưng đất đã ẩm rồi." },
+      { en: "The plants are wilting, but they were watered.", vi: "Cây đang héo, nhưng chúng đã được tưới." }] },
+    { pattern: "So the problem is probably …, not …", vi: "Nên vấn đề có lẽ là …, chứ không phải …", examples: [
+      { en: "So the problem is probably heat, not thirst.", vi: "Nên vấn đề có lẽ là nhiệt, chứ không phải thiếu nước." },
+      { en: "So the problem is probably poor airflow, not dry soil.", vi: "Nên vấn đề có lẽ là thiếu thoáng khí, chứ không phải đất khô." }] },
+    { pattern: "If we …, then …", vi: "Nếu …, thì …", examples: [
+      { en: "If we open the vent, then the greenhouse will cool down.", vi: "Nếu mở cửa thông gió, nhà kính sẽ mát hơn." },
+      { en: "If we use the fan, then the air will move.", vi: "Nếu dùng quạt, không khí sẽ lưu thông." }] },
+  ],
+  listening: {
+    intro: "Listen to the greenhouse mystery, then answer.", introVi: "Nghe bí ẩn nhà kính rồi trả lời.",
+    script: "The garden club found the greenhouse plants wilting. Someone said the plants were thirsty, but the watering can was full and the soil was already wet. The thermometer read very high, the roof vent was closed, and the fan was unplugged. \"The plants are wilting, but they were watered,\" said Omar. \"So the problem is probably heat, not thirst.\" The teacher opened the vent and turned on the fan. Cooler, moving air helped the plants recover.",
+    questions: [
+      { q: "Why was 'thirsty' the wrong answer?", vi: "Vì sao 'khát nước' là đáp án sai?", options: ["The soil was already wet", "There were no plants", "The fan was on"], answer: "The soil was already wet" },
+      { q: "What did the thermometer show?", vi: "Nhiệt kế cho thấy gì?", options: ["A very high temperature", "Zero", "Rain"], answer: "A very high temperature" },
+      { q: "What was the real problem?", vi: "Vấn đề thật sự là gì?", options: ["Heat and poor airflow", "Too much water", "Too many books"], answer: "Heat and poor airflow" },
+    ],
+  },
+  repeat: [
+    { en: "The plants are wilting, but they were watered.", vi: "Cây đang héo, nhưng chúng đã được tưới." },
+    { en: "So the problem is probably heat, not thirst.", vi: "Nên vấn đề có lẽ là nhiệt, chứ không phải thiếu nước." },
+  ],
+  guided: { q: "What is really making the plants wilt, and how do you know?", vi: "Điều gì thật sự làm cây héo, và làm sao bạn biết?", hint: "The problem is probably ___ because ___." },
+  describe: { prompt: "Explain the mystery in 3–5 sentences. Compare the clues and tell symptom from cause.", vi: "Giải thích bí ẩn trong 3–5 câu, so các manh mối và phân biệt triệu chứng với nguyên nhân.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "When a plant droops, we say it …", vi: "Khi cây rũ xuống, ta nói nó …", options: ["wilts", "recycles", "arrives"], answer: "wilts" },
+    { type: "sentence", q: "Which sentence separates symptom from cause?", vi: "Câu nào tách triệu chứng khỏi nguyên nhân?", options: ["The plants are wilting, but they were watered.", "Plants are green.", "I like flowers."], answer: "The plants are wilting, but they were watered." },
+    { type: "listening", q: "Why wasn't lack of water the cause?", vi: "Vì sao thiếu nước không phải nguyên nhân?", options: ["The soil was already wet", "The plants were plastic", "It was night"], answer: "The soil was already wet" },
+    { type: "reading", q: "The greenhouse is too hot. What helps?", vi: "Nhà kính quá nóng. Cái gì giúp ích?", options: ["Open the vent and use the fan", "Add more heat", "Close every window"], answer: "Open the vent and use the fan" },
+  ] },
+});
+
+const THE_COMMUNITY_CONCERT_SCHEDULE_CLASH = makeScenarioLesson({
+  id: "concertclash", theme: "story-time", title: "The Community Concert Schedule Clash", vi: "Trùng lịch buổi hòa nhạc cộng đồng",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-28-community-concert-schedule-clash.webp",
+  vocab: [
+    { word: "concert", ipa: "/ˈkɒnsərt/", vi: "buổi hòa nhạc", emoji: "🎵", example: "The community concert is on Saturday.", exampleVi: "Buổi hòa nhạc cộng đồng vào thứ Bảy." },
+    { word: "schedule", ipa: "/ˈskedʒuːl/", vi: "lịch trình", emoji: "🗓️", example: "The schedule shows each group's time.", exampleVi: "Lịch trình ghi giờ của từng nhóm." },
+    { word: "clash", ipa: "/klæʃ/", vi: "trùng giờ", emoji: "⚠️", example: "Two groups have a time clash.", exampleVi: "Hai nhóm bị trùng giờ." },
+    { word: "rehearse", ipa: "/rɪˈhɜːrs/", vi: "tập dượt", emoji: "🎺", example: "Each group needs time to rehearse.", exampleVi: "Mỗi nhóm cần thời gian tập dượt." },
+    { word: "timeline", ipa: "/ˈtaɪmlaɪn/", vi: "dòng thời gian", emoji: "📊", example: "The timeline uses coloured bars.", exampleVi: "Dòng thời gian dùng các thanh màu." },
+    { word: "group", ipa: "/ɡruːp/", vi: "nhóm", emoji: "👥", example: "The green group plays flutes.", exampleVi: "Nhóm xanh lá chơi sáo." },
+  ],
+  patterns: [
+    { pattern: "… and … clash because …", vi: "… và … trùng nhau vì …", examples: [
+      { en: "The purple and green groups clash because they use the room at the same time.", vi: "Nhóm tím và xanh lá trùng nhau vì cùng dùng phòng một lúc." },
+      { en: "The times clash because both bars overlap.", vi: "Giờ trùng nhau vì hai thanh chồng lên nhau." }] },
+    { pattern: "We could move … to …", vi: "Chúng ta có thể chuyển … sang …", examples: [
+      { en: "We could move the green group to the early slot.", vi: "Có thể chuyển nhóm xanh lá sang giờ sớm." },
+      { en: "We could use the divided room for two groups.", vi: "Có thể dùng phòng ngăn đôi cho hai nhóm." }] },
+    { pattern: "The trade-off is …", vi: "Sự đánh đổi là …", examples: [
+      { en: "The trade-off is that one group starts earlier.", vi: "Sự đánh đổi là một nhóm bắt đầu sớm hơn." },
+      { en: "The trade-off is a little less rehearsal time.", vi: "Sự đánh đổi là ít thời gian tập hơn một chút." }] },
+  ],
+  listening: {
+    intro: "Listen to the concert planning, then answer.", introVi: "Nghe buổi lên kế hoạch hòa nhạc rồi trả lời.",
+    script: "The band groups were planning the community concert. On the whiteboard, a coloured timeline showed each group's rehearsal time. The purple triangle bar and the green circle bar overlapped, so those two groups clashed. \"They clash because they use the room at the same time,\" said Priya. The teacher suggested moving the green group to an earlier slot and using a divider so two smaller groups could share the room. The trade-off was a little less time, but every group could rehearse.",
+    questions: [
+      { q: "How was the schedule shown?", vi: "Lịch trình được thể hiện thế nào?", options: ["As a coloured timeline", "As a song", "As a photo"], answer: "As a coloured timeline" },
+      { q: "Which groups clashed?", vi: "Những nhóm nào bị trùng giờ?", options: ["The purple and green groups", "No groups", "All the parents"], answer: "The purple and green groups" },
+      { q: "How did they solve the clash?", vi: "Họ giải quyết việc trùng giờ thế nào?", options: ["Moved a group earlier and used a divider", "Cancelled the concert", "Ignored it"], answer: "Moved a group earlier and used a divider" },
+    ],
+  },
+  repeat: [
+    { en: "The purple and green groups clash because they use the room at the same time.", vi: "Nhóm tím và xanh lá trùng nhau vì cùng dùng phòng một lúc." },
+    { en: "We could move the green group to the early slot.", vi: "Có thể chuyển nhóm xanh lá sang giờ sớm." },
+  ],
+  guided: { q: "How should the groups fix the schedule clash?", vi: "Các nhóm nên sửa việc trùng lịch thế nào?", hint: "They clash because ___. We could ___." },
+  describe: { prompt: "Explain the schedule fix in 3–5 sentences. Name the clash, a change and the trade-off.", vi: "Giải thích cách sửa lịch trong 3–5 câu, nêu điểm trùng, một thay đổi và sự đánh đổi.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "When two times overlap, there is a …", vi: "Khi hai giờ chồng nhau, có một …", options: ["clash", "recipe", "rainbow"], answer: "clash" },
+    { type: "sentence", q: "Which sentence explains the clash?", vi: "Câu nào giải thích việc trùng giờ?", options: ["The times clash because both bars overlap.", "Music is fun.", "I like drums."], answer: "The times clash because both bars overlap." },
+    { type: "listening", q: "How did they make room for two groups?", vi: "Họ tạo chỗ cho hai nhóm bằng cách nào?", options: ["They used a divider", "They left", "They played louder"], answer: "They used a divider" },
+    { type: "reading", q: "Moving a group earlier gives less rehearsal time. This is a …", vi: "Chuyển một nhóm sớm hơn thì ít giờ tập hơn. Đây là một …", options: ["trade-off", "clash", "holiday"], answer: "trade-off" },
+  ] },
+});
+
+const THE_PHOTO_EXHIBITION_SEQUENCE_PUZZLE = makeScenarioLesson({
+  id: "photoseq", theme: "story-time", title: "The Photo Exhibition Sequence Puzzle", vi: "Câu đố trình tự triển lãm ảnh",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-29-photo-exhibition-sequence-puzzle.webp",
+  vocab: [
+    { word: "exhibition", ipa: "/ˌeksɪˈbɪʃn/", vi: "triển lãm", emoji: "🖼️", example: "The class made a photo exhibition.", exampleVi: "Cả lớp làm một triển lãm ảnh." },
+    { word: "photograph", ipa: "/ˈfoʊtəɡrɑːf/", vi: "bức ảnh", emoji: "📷", example: "Each photograph shows the weather.", exampleVi: "Mỗi bức ảnh cho thấy thời tiết." },
+    { word: "sequence", ipa: "/ˈsiːkwəns/", vi: "trình tự", emoji: "🔢", example: "The photos tell a weather sequence.", exampleVi: "Các bức ảnh kể một trình tự thời tiết." },
+    { word: "order", ipa: "/ˈɔːrdər/", vi: "thứ tự", emoji: "📋", example: "We put them in the right order.", exampleVi: "Chúng mình xếp đúng thứ tự." },
+    { word: "before", ipa: "/bɪˈfɔːr/", vi: "trước", emoji: "⬅️", example: "The storm comes before the rainbow.", exampleVi: "Cơn giông đến trước cầu vồng." },
+    { word: "after", ipa: "/ˈæftər/", vi: "sau", emoji: "➡️", example: "The sun shines after the rain.", exampleVi: "Nắng chiếu sau cơn mưa." },
+  ],
+  patterns: [
+    { pattern: "… comes before / after …", vi: "… đến trước / sau …", examples: [
+      { en: "The dark clouds come before the rain.", vi: "Mây đen đến trước cơn mưa." },
+      { en: "The rainbow comes after the sun appears.", vi: "Cầu vồng đến sau khi nắng lên." }] },
+    { pattern: "This must be … because …", vi: "Cái này chắc là … vì …", examples: [
+      { en: "This must be the first photo because the sky is darkest.", vi: "Đây chắc là ảnh đầu vì trời tối nhất." },
+      { en: "This must be the last photo because the rainbow shows.", vi: "Đây chắc là ảnh cuối vì có cầu vồng." }] },
+    { pattern: "That order can't be right because …", vi: "Thứ tự đó không đúng vì …", examples: [
+      { en: "That order can't be right because the rainbow can't come first.", vi: "Thứ tự đó sai vì cầu vồng không thể đến đầu tiên." },
+      { en: "That order can't be right because the puddles form after the rain.", vi: "Thứ tự đó sai vì vũng nước hình thành sau mưa." }] },
+  ],
+  listening: {
+    intro: "Listen to the photo puzzle, then answer.", introVi: "Nghe câu đố xếp ảnh rồi trả lời.",
+    script: "The photography club had to hang five weather photos in the right order. The photos showed dark storm clouds, rain falling, puddles on the ground, the sun breaking through, and a rainbow. \"The dark clouds come before the rain,\" said Sofia. One friend put the rainbow first, but that order couldn't be right, because a rainbow appears after the sun. Using the changes in the sky, they arranged the photos from storm to rainbow and labelled each frame with tape.",
+    questions: [
+      { q: "What did the photos show?", vi: "Các bức ảnh cho thấy gì?", options: ["A weather story from storm to rainbow", "A birthday party", "A bike race"], answer: "A weather story from storm to rainbow" },
+      { q: "Why couldn't the rainbow be first?", vi: "Vì sao cầu vồng không thể ở đầu?", options: ["A rainbow appears after the sun", "It was too bright", "It was torn"], answer: "A rainbow appears after the sun" },
+      { q: "How did they decide the order?", vi: "Họ quyết định thứ tự bằng cách nào?", options: ["By the changes in the sky", "By guessing", "By the frame colour"], answer: "By the changes in the sky" },
+    ],
+  },
+  repeat: [
+    { en: "The dark clouds come before the rain.", vi: "Mây đen đến trước cơn mưa." },
+    { en: "That order can't be right because the rainbow can't come first.", vi: "Thứ tự đó sai vì cầu vồng không thể đến đầu tiên." },
+  ],
+  guided: { q: "In what order should the photos go, and why?", vi: "Các bức ảnh nên xếp theo thứ tự nào, và vì sao?", hint: "First comes ___ because ___." },
+  describe: { prompt: "Explain the correct sequence in 3–5 sentences. Use 'before/after' and reject one wrong order.", vi: "Giải thích trình tự đúng trong 3–5 câu, dùng 'before/after' và bác một thứ tự sai.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "Putting things in time order makes a …", vi: "Xếp mọi thứ theo thứ tự thời gian tạo thành một …", options: ["sequence", "recipe", "barrier"], answer: "sequence" },
+    { type: "sentence", q: "Which sentence orders events in time?", vi: "Câu nào sắp xếp sự việc theo thời gian?", options: ["The sun shines after the rain.", "Photos are nice.", "I like cameras."], answer: "The sun shines after the rain." },
+    { type: "listening", q: "Why can't the rainbow be first?", vi: "Vì sao cầu vồng không thể ở đầu?", options: ["It appears after the sun", "It is small", "It is colourful"], answer: "It appears after the sun" },
+    { type: "reading", q: "Puddles form after the rain. Where do they go in the order?", vi: "Vũng nước hình thành sau mưa. Chúng đứng ở đâu trong thứ tự?", options: ["After the rain photo", "Before the storm", "First"], answer: "After the rain photo" },
+  ] },
+});
+
+const THE_WINTER_SUPPLY_DELIVERY_DELAY = makeScenarioLesson({
+  id: "winterdelivery", theme: "story-time", title: "The Winter Supply Delivery Delay", vi: "Chậm giao đồ tiếp tế mùa đông",
+  sceneImage: "/assets/images/learn/level-2/level-2-unit-30-winter-supply-delivery-delay.webp",
+  vocab: [
+    { word: "delivery", ipa: "/dɪˈlɪvəri/", vi: "việc giao hàng", emoji: "📦", example: "The winter delivery is late.", exampleVi: "Việc giao đồ mùa đông bị muộn." },
+    { word: "elevator", ipa: "/ˈelɪveɪtər/", vi: "thang máy", emoji: "🛗", example: "The elevator is out of order.", exampleVi: "Thang máy bị hỏng." },
+    { word: "out of order", ipa: "/aʊt əv ˈɔːrdər/", vi: "hỏng, ngừng hoạt động", emoji: "🚫", example: "The sign says 'out of order'.", exampleVi: "Biển ghi 'ngừng hoạt động'." },
+    { word: "slippery", ipa: "/ˈslɪpəri/", vi: "trơn trượt", emoji: "⚠️", example: "The wet floor is slippery.", exampleVi: "Sàn ướt thì trơn trượt." },
+    { word: "route", ipa: "/ruːt/", vi: "tuyến đường", emoji: "🗺️", example: "The plan shows two routes.", exampleVi: "Sơ đồ chỉ hai tuyến." },
+    { word: "safe", ipa: "/seɪf/", vi: "an toàn", emoji: "✅", example: "We need a safe route.", exampleVi: "Chúng mình cần một tuyến an toàn." },
+  ],
+  patterns: [
+    { pattern: "We can't use … because …", vi: "Không dùng được … vì …", examples: [
+      { en: "We can't use the elevator because it is out of order.", vi: "Không dùng được thang máy vì nó hỏng." },
+      { en: "We can't cross here because the floor is slippery.", vi: "Không đi qua đây được vì sàn trơn." }] },
+    { pattern: "The … route is safer because …", vi: "Tuyến … an toàn hơn vì …", examples: [
+      { en: "The blue route is safer because it avoids the wet floor.", vi: "Tuyến xanh dương an toàn hơn vì tránh sàn ướt." },
+      { en: "The longer route is safer because it uses the stairs, not the elevator.", vi: "Tuyến dài hơn an toàn hơn vì dùng cầu thang, không dùng thang máy." }] },
+    { pattern: "First …, then …", vi: "Đầu tiên …, rồi …", examples: [
+      { en: "First we mark the wet floor, then we choose a route.", vi: "Đầu tiên đánh dấu sàn ướt, rồi chọn tuyến." },
+      { en: "First we take the blue route, then we deliver the box.", vi: "Đầu tiên đi tuyến xanh dương, rồi giao thùng." }] },
+  ],
+  listening: {
+    intro: "Listen to the delivery problem, then answer.", introVi: "Nghe sự cố giao hàng rồi trả lời.",
+    script: "The winter supplies — warm hats and scarves — needed to reach the upstairs room, but the delivery was delayed. The elevator had an 'out of order' sign, and melting snow had made part of the floor slippery, marked with a wet-floor sign and a cone. The coordinator showed a floor plan with a blue route and a red route. \"We can't use the elevator because it is out of order,\" said Mateo. The blue route was longer but avoided the wet floor and used the stairs, so the team chose it to deliver the supplies safely.",
+    questions: [
+      { q: "Why couldn't they use the elevator?", vi: "Vì sao họ không dùng được thang máy?", options: ["It was out of order", "It was full", "It was too fast"], answer: "It was out of order" },
+      { q: "What made part of the floor dangerous?", vi: "Điều gì làm một phần sàn nguy hiểm?", options: ["Melting snow made it slippery", "Too many boxes", "Bright lights"], answer: "Melting snow made it slippery" },
+      { q: "Which route did they choose and why?", vi: "Họ chọn tuyến nào và vì sao?", options: ["The blue route, because it was safer", "The wet route", "No route"], answer: "The blue route, because it was safer" },
+    ],
+  },
+  repeat: [
+    { en: "We can't use the elevator because it is out of order.", vi: "Không dùng được thang máy vì nó hỏng." },
+    { en: "The blue route is safer because it avoids the wet floor.", vi: "Tuyến xanh dương an toàn hơn vì tránh sàn ướt." },
+  ],
+  guided: { q: "Which route should the team take to deliver the supplies safely?", vi: "Nhóm nên đi tuyến nào để giao đồ an toàn?", hint: "We should take ___ because ___." },
+  describe: { prompt: "Explain the delivery plan in 3–5 sentences. Combine the elevator, the wet floor and a safe route.", vi: "Giải thích kế hoạch giao hàng trong 3–5 câu, kết hợp thang máy, sàn ướt và một tuyến an toàn.", min: 3, max: 5 },
+  miniCheck: { tasks: [
+    { type: "vocab", q: "A wet floor is …", vi: "Sàn ướt thì …", options: ["slippery", "warm", "empty"], answer: "slippery" },
+    { type: "sentence", q: "Which sentence gives a safe reason?", vi: "Câu nào nêu lý do an toàn?", options: ["The blue route is safer because it avoids the wet floor.", "Snow is white.", "I like winter."], answer: "The blue route is safer because it avoids the wet floor." },
+    { type: "listening", q: "Why couldn't they use the elevator?", vi: "Vì sao họ không dùng được thang máy?", options: ["It was out of order", "It was blue", "It was small"], answer: "It was out of order" },
+    { type: "reading", q: "The elevator is broken and the floor is wet. What should the team do?", vi: "Thang máy hỏng và sàn ướt. Nhóm nên làm gì?", options: ["Take the safe stairs route", "Use the elevator anyway", "Run across the wet floor"], answer: "Take the safe stairs route" },
+  ] },
+});
+
 /* ============ Level 3 · Collection 03 · Units 06–10 ============ */
 const COOLING_A_HOT_CLASSROOM = makeScenarioLesson({
   id: "coolclass", theme: "solving-problems", title: "Cooling a Hot Classroom", vi: "Làm mát lớp học nóng",
@@ -4323,7 +4774,11 @@ export const THEMES: CourseTheme[] = [
       THE_TIME_CAPSULE_DISCOVERY, THE_BEACH_CLEANUP_CHANGE_OF_PLAN, THE_AQUARIUM_NIGHT_MYSTERY, THE_POWER_OUTAGE,
       THE_SCIENCE_FAIR_MIX_UP, THE_FIELD_TRIP_DETOUR, THE_COMMUNITY_NEWS_MIX_UP, THE_WILDLIFE_CAMERA_SURPRISE, THE_FESTIVAL_SCHEDULE_PROBLEM,
       THE_COOKING_WORKSHOP_MIX_UP, THE_RAINY_SPORTS_DAY_PLAN, THE_MUSEUM_AUDIO_GUIDE_MIX_UP,
-      THE_NEIGHBOURHOOD_DELIVERY_PUZZLE, THE_SCHOOL_PODCAST_DEADLINE] },
+      THE_NEIGHBOURHOOD_DELIVERY_PUZZLE, THE_SCHOOL_PODCAST_DEADLINE,
+      THE_LIBRARY_BOOK_FAIR_MIX_UP, THE_WEATHER_STATION_DATA_PUZZLE, THE_MISSING_THEATRE_PROP,
+      THE_BIKE_TRAIL_ROUTE_CHANGE, THE_DONATION_SORTING_CHALLENGE, THE_CANOE_CLUB_EQUIPMENT_MIX_UP,
+      THE_GREENHOUSE_TEMPERATURE_MYSTERY, THE_COMMUNITY_CONCERT_SCHEDULE_CLASH,
+      THE_PHOTO_EXHIBITION_SEQUENCE_PUZZLE, THE_WINTER_SUPPLY_DELIVERY_DELAY] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
     lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT, WEEKEND_VOLUNTEER_ACTIVITY, SCHOOL_CELEBRATION_SPACE] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
@@ -4402,6 +4857,16 @@ export const LEVEL2_UNITS: CourseUnit[] = [
   { id: "audiomix",      n: 18, title: "The Museum Audio Guide Mix-Up",     vi: "Nhầm máy thuyết minh",          image: L2IMG + "level-2-unit-18-museum-audio-guide-mix-up.webp", focus: "So nguồn · phát hiện lệch · sửa tuyến", lessonId: "audiomix", ready: true },
   { id: "delivery",      n: 19, title: "The Neighbourhood Delivery Puzzle", vi: "Câu đố giao hàng khu phố",      image: L2IMG + "level-2-unit-19-neighbourhood-delivery-puzzle.webp", focus: "Ghép manh mối · đường vòng · thứ tự tối ưu", lessonId: "delivery", ready: true },
   { id: "podcast",       n: 20, title: "The School Podcast Deadline",       vi: "Hạn chót podcast của trường",  image: L2IMG + "level-2-unit-20-school-podcast-deadline.webp", focus: "Ưu tiên · việc song song · điều chỉnh kế hoạch", lessonId: "podcast", ready: true },
+  { id: "bookfair",      n: 21, title: "The Library Book Fair Mix-Up",      vi: "Nhầm ở hội sách thư viện",    image: L2IMG + "level-2-unit-21-library-book-fair-mix-up.webp", focus: "Ghép mã hình · sơ đồ sàn · sửa sắp xếp", lessonId: "bookfair", ready: true },
+  { id: "weatherdata",   n: 22, title: "The Weather Station Data Puzzle",    vi: "Câu đố dữ liệu thời tiết",    image: L2IMG + "level-2-unit-22-weather-station-data-puzzle.webp", focus: "So dữ liệu · đánh giá nguyên nhân · kết luận an toàn", lessonId: "weatherdata", ready: true },
+  { id: "theatreprop",   n: 23, title: "The Missing Theatre Prop",          vi: "Đạo cụ sân khấu biến mất",    image: L2IMG + "level-2-unit-23-missing-theatre-prop.webp", focus: "Lần manh mối vật lý · loại manh mối sai · suy ra đường đi", lessonId: "theatreprop", ready: true },
+  { id: "biketrail",     n: 24, title: "The Bike Trail Route Change",        vi: "Đổi tuyến đường mòn xe đạp",  image: L2IMG + "level-2-unit-24-bike-trail-route-change.webp", focus: "Đọc bản đồ · so địa hình/thời gian · dự đoán thời tiết", lessonId: "biketrail", ready: true },
+  { id: "donationsort",  n: 25, title: "The Donation Sorting Challenge",     vi: "Phân loại đồ quyên góp",      image: L2IMG + "level-2-unit-25-donation-sorting-challenge.webp", focus: "Phân nhóm · ưu tiên khẩn cấp · thứ tự hiệu quả", lessonId: "donationsort", ready: true },
+  { id: "canoeclub",     n: 26, title: "The Canoe Club Equipment Mix-Up",    vi: "Nhầm đồ ở CLB ca-nô",         image: L2IMG + "level-2-unit-26-canoe-club-equipment-mix-up.webp", focus: "Ghép bộ đồ · quy tắc an toàn · dựng lại hành trình", lessonId: "canoeclub", ready: true },
+  { id: "greenhouse",    n: 27, title: "The Greenhouse Temperature Mystery", vi: "Bí ẩn nhiệt độ nhà kính",     image: L2IMG + "level-2-unit-27-greenhouse-temperature-mystery.webp", focus: "So nhiệt/nước/khí · triệu chứng vs nguyên nhân", lessonId: "greenhouse", ready: true },
+  { id: "concertclash",  n: 28, title: "The Concert Schedule Clash",         vi: "Trùng lịch buổi hòa nhạc",    image: L2IMG + "level-2-unit-28-community-concert-schedule-clash.webp", focus: "Đọc dòng thời gian · điều phối · đánh đổi", lessonId: "concertclash", ready: true },
+  { id: "photoseq",      n: 29, title: "The Photo Exhibition Sequence Puzzle", vi: "Xếp trình tự triển lãm ảnh", image: L2IMG + "level-2-unit-29-photo-exhibition-sequence-puzzle.webp", focus: "Suy trình tự · before/after · bác thứ tự sai", lessonId: "photoseq", ready: true },
+  { id: "winterdelivery", n: 30, title: "The Winter Supply Delivery Delay",  vi: "Chậm giao đồ mùa đông",       image: L2IMG + "level-2-unit-30-winter-supply-delivery-delay.webp", focus: "Kết hợp tuyến/giờ/an toàn · chọn tuyến an toàn", lessonId: "winterdelivery", ready: true },
 ];
 
 /* ============ Level 3 · Opinions & Conversations — chia theo Bộ (Collection) ============ */

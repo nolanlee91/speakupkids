@@ -24,6 +24,16 @@ Canonical image folder for Level 2 lessons.
 | 18 | The Museum Audio Guide Mix-Up | `level-2-unit-18-museum-audio-guide-mix-up.webp` | Comparing sources, reported observations, identifying mismatches, route sequencing and explaining a correction |
 | 19 | The Neighbourhood Delivery Puzzle | `level-2-unit-19-neighbourhood-delivery-puzzle.webp` | Relative location, route alternatives, matching evidence, conditionals and choosing an efficient sequence |
 | 20 | The School Podcast Deadline | `level-2-unit-20-school-podcast-deadline.webp` | Prioritising tasks, modal language, sequencing, cause and effect, revising a plan and defending a solution |
+| 21 | The Library Book Fair Mix-Up | `level-2-unit-21-library-book-fair-mix-up.webp` | Matching visual codes, spatial planning, comparing evidence and correcting a multi-step arrangement |
+| 22 | The Weather Station Data Puzzle | `level-2-unit-22-weather-station-data-puzzle.webp` | Interpreting observations, comparing data sources, evaluating possible causes and explaining a safe conclusion |
+| 23 | The Missing Theatre Prop | `level-2-unit-23-missing-theatre-prop.webp` | Tracking physical clues, sequencing movement, rejecting false leads and inferring the prop's likely route |
+| 24 | The Bike Trail Route Change | `level-2-unit-24-bike-trail-route-change.webp` | Reading a pictorial map, comparing terrain and time constraints, predicting weather and defending an alternative route |
+| 25 | The Community Donation Sorting Challenge | `level-2-unit-25-donation-sorting-challenge.webp` | Categorising supplies, prioritising urgent actions, coordinating constraints and explaining an efficient sorting plan |
+| 26 | The Canoe Club Equipment Mix-Up | `level-2-unit-26-canoe-club-equipment-mix-up.webp` | Matching equipment evidence, applying safety rules, reconstructing movement and explaining corrected sets |
+| 27 | The Greenhouse Temperature Mystery | `level-2-unit-27-greenhouse-temperature-mystery.webp` | Comparing heat, water and airflow evidence, distinguishing symptoms from causes and defending a conclusion |
+| 28 | The Community Concert Schedule Clash | `level-2-unit-28-community-concert-schedule-clash.webp` | Interpreting a visual timeline, coordinating spaces and groups, revising a schedule and explaining trade-offs |
+| 29 | The Photo Exhibition Sequence Puzzle | `level-2-unit-29-photo-exhibition-sequence-puzzle.webp` | Inferring chronology from visual change, checking competing sequences and justifying a narrative order |
+| 30 | The Winter Supply Delivery Delay | `level-2-unit-30-winter-supply-delivery-delay.webp` | Combining route, time and safety constraints, comparing alternatives and defending a practical delivery plan |
 
 ## Difficulty progression
 
@@ -32,6 +42,8 @@ Canonical image folder for Level 2 lessons.
 - Units 07–10: compare evidence, reject misleading clues, retell events and justify a conclusion.
 - Units 11–15: reconcile conflicting information, compare alternatives, revise a plan and defend a multi-step conclusion.
 - Units 16–20: coordinate several constraints, prioritise actions and explain a complete multi-step solution.
+- Units 21–25: combine visual evidence with time, safety and category constraints, reject weaker options and defend a complete solution.
+- Units 26–30: integrate several evidence types, distinguish cause from symptom, negotiate trade-offs and justify a revised multi-step plan.
 
 Unit 10 story guardrail: the students observe and discuss evidence while the adult coordinator controls the breaker panel. Do not write tasks that encourage children to touch electrical equipment. The final solution should combine safe isolation of the overloaded power strip with adult inspection before power is restored.
 

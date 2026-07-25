@@ -32,8 +32,8 @@ export const GAMES: GameInfo[] = [
     blurb: "Xếp các từ thành câu đúng ngữ pháp theo chủ đề.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "riddle", name: "English Riddles", vi: "Đố vui tiếng Anh", emoji: "🦉", image: "/assets/images/gen/game-riddle.webp", tint: "#e5f9ee",
     blurb: "Đọc/nghe manh mối rồi chọn đáp án, luyện đọc hiểu.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "listen", name: "Listen & Choose", vi: "Nghe & chọn", emoji: "🎧", tint: "#eaf3ff",
-    blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Không cần ảnh" },
+  { id: "listen", name: "Listen & Choose", vi: "Nghe & chọn", emoji: "🎧", image: "/assets/images/gen/game-listen.webp", tint: "#eaf3ff",
+    blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Thumbnail 4:3 · 800×600" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
