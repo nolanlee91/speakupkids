@@ -22,7 +22,7 @@ A collection is a themed release group, not the whole level. More collections an
 | 02 — Giving Reasons | `collection-02-giving-reasons/` | Support opinions with examples, examine consequences and respond to other reasons | Peer discussion supported by visual examples |
 | 03 — Solving Problems Together | `collection-03-solving-problems/` | Investigate constraints, test proposals, evaluate trade-offs and revise a solution | Active fieldwork, testing and implementation |
 
-The current Level 3 catalogue contains 20 units in total: five units in Collection 01, five in Collection 02, and ten in Collection 03.
+The current Level 3 catalogue contains 30 units in total: six units in Collection 01, nine in Collection 02, and fifteen in Collection 03.
 
 ## Level 3 curriculum rule
 

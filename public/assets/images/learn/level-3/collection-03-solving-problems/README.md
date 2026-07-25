@@ -14,6 +14,11 @@ This collection moves from discussing opinions to testing and improving practica
 | 08 | Saving Water in the School Garden | `level-3-c03-unit-08-saving-water-in-school-garden.webp` | Measuring evidence, resource limits, comparing conservation methods, predicting effects and revising a plan |
 | 09 | Improving the Lost-and-Found System | `level-3-c03-unit-09-improving-lost-and-found.webp` | Categorising evidence, visibility and privacy trade-offs, testing usability and recommending a workable system |
 | 10 | Designing a Better Recess Space | `level-3-c03-unit-10-designing-a-better-recess-space.webp` | Balancing different user needs, space and noise constraints, inclusive testing, negotiation and combined design |
+| 11 | Improving a Rainy School Courtyard | `level-3-c03-unit-11-rainy-school-courtyard.webp` | Gathering drainage evidence, comparing shelter and surface solutions, considering weather and access constraints, and revising a courtyard plan |
+| 12 | Making a Beach Path Easier to Use | `level-3-c03-unit-12-accessible-beach-path.webp` | Accessibility field testing, slope and turning-space evidence, environmental and cost trade-offs, and an inclusive combined recommendation |
+| 13 | Reducing Noise in the Community Sports Hall | `level-3-c03-unit-13-quieter-sports-hall.webp` | Measuring sound, comparing zoning and material changes, testing acoustic solutions, and revising a flexible hall layout |
+| 14 | Helping Pollinators in the School Garden | `level-3-c03-unit-14-pollinator-school-garden.webp` | Habitat observations, maintenance and access constraints, comparing interventions, and planning improvements across the seasons |
+| 15 | Reducing Energy Use at the Community Library | `level-3-c03-unit-15-library-energy-use.webp` | Energy-audit evidence, comfort and cost trade-offs, prioritising changes, and presenting a phased recommendation |
 
 ## Suggested lesson flow
 
@@ -39,3 +44,7 @@ Unit 07 safety guardrail: students observe from a protected pedestrian area and 
 Unit 09 privacy guardrail: item photos must not include faces, names or personal information. Treat privacy as a real design constraint rather than making photography the automatic best answer.
 
 Unit 10 inclusion guardrail: the student using forearm crutches is an equal designer and tester with agency. Do not frame access as charity or make a single user's needs represent everyone.
+
+Unit 12 inclusion guardrail: the wheelchair user is an equal designer and field tester with agency. Consider different mobility and sensory access needs, and avoid charity framing or presenting one surface as a universal solution.
+
+Unit 14 safety guardrail: learners observe pollinators without touching or trapping insects. An adult supervises digging, tool use and the installation of habitat materials.

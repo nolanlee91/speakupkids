@@ -9,6 +9,7 @@ Starter collection for **Opinions & Conversations**.
 | 03 | Choosing a Team Project | `level-3-c01-unit-03-choosing-team-project.webp` | Proposals, polite responses, strengths, roles and group decisions |
 | 04 | Choosing a Weekend Volunteer Activity | `level-3-c01-unit-04-weekend-volunteer-activity.webp` | Comparing community options, personal strengths, practical constraints and reaching agreement |
 | 05 | Choosing a Space for the School Celebration | `level-3-c01-unit-05-school-celebration-space.webp` | Space, weather, accessibility, benefits and drawbacks, compromise and shared decisions |
+| 06 | Choosing a Class Reading Project | `level-3-c01-unit-06-choosing-class-reading-project.webp` | Comparing creative formats, roles, time and resources, responding to preferences and reaching a workable agreement |
 
 ## Suggested lesson flow
 

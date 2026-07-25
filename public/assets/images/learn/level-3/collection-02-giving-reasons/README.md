@@ -9,6 +9,10 @@ This collection moves beyond choosing. Learners support an opinion with relevant
 | 03 | What Makes a Good Friend? | `level-3-c02-unit-03-good-friend.webp` | Qualities, evidence from situations, adding perspectives and nuanced conclusions |
 | 04 | Should the School Day Start Later? | `level-3-c02-unit-04-school-day-start-later.webp` | Relevant evidence, schedules, consequences, qualifying claims and partial agreement |
 | 05 | Should Students Wear School Uniforms? | `level-3-c02-unit-05-school-uniforms.webp` | Self-expression, cost, comfort, belonging, examples and balanced compromise |
+| 06 | Should Phones Be Allowed on School Trips? | `level-3-c02-unit-06-phones-on-school-trips.webp` | Safety and navigation benefits, attention and privacy concerns, conditions, examples and a balanced policy |
+| 07 | Is Group Work Better Than Working Alone? | `level-3-c02-unit-07-group-or-independent-work.webp` | Collaboration, focus, roles, time, relevant evidence, qualifying claims and context-dependent conclusions |
+| 08 | Should a Classroom Have a Visiting Pet? | `level-3-c02-unit-08-visiting-classroom-pet.webp` | Wellbeing and learning benefits, allergies, hygiene and distraction concerns, respectful disagreement and practical conditions |
+| 09 | Should the Cafeteria Offer More Plant-Based Meals? | `level-3-c02-unit-09-plant-based-cafeteria-meals.webp` | Choice, nutrition, taste, cost and waste, interpreting preference evidence and proposing a balanced menu |
 
 ## Suggested lesson flow
 

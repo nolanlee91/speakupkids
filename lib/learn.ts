@@ -1,3 +1,5 @@
+import { LEVEL3_NEW_LESSONS } from "./learn-level3-new";
+
 // Nội dung học tập (data-driven). Tách khỏi page.tsx.
 // Vertical slice: Everyday Town → "At the Park" (đầy đủ cho cấp độ Detective).
 
@@ -4780,13 +4782,17 @@ export const THEMES: CourseTheme[] = [
       THE_GREENHOUSE_TEMPERATURE_MYSTERY, THE_COMMUNITY_CONCERT_SCHEDULE_CLASH,
       THE_PHOTO_EXHIBITION_SEQUENCE_PUZZLE, THE_WINTER_SUPPLY_DELIVERY_DELAY] },
   { id: "making-choices", name: "Making Choices", vi: "Đưa Ra Lựa Chọn", emoji: "💬",
-    lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT, WEEKEND_VOLUNTEER_ACTIVITY, SCHOOL_CELEBRATION_SPACE] },
+    lessons: [PLANNING_A_CLASS_TRIP, SCREEN_OR_OUTDOOR_TIME, CHOOSING_A_TEAM_PROJECT, WEEKEND_VOLUNTEER_ACTIVITY, SCHOOL_CELEBRATION_SPACE,
+      LEVEL3_NEW_LESSONS.readingproject] },
   { id: "giving-reasons", name: "Giving Reasons", vi: "Đưa Ra Lý Do", emoji: "🧠",
-    lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND, SHOULD_SCHOOL_START_LATER, SCHOOL_UNIFORMS] },
+    lessons: [SHOULD_HOMEWORK_BE_SHORTER, SAVE_IT_OR_SPEND_IT, WHAT_MAKES_A_GOOD_FRIEND, SHOULD_SCHOOL_START_LATER, SCHOOL_UNIFORMS,
+      LEVEL3_NEW_LESSONS.tripphones, LEVEL3_NEW_LESSONS.groupwork, LEVEL3_NEW_LESSONS.classpet, LEVEL3_NEW_LESSONS.plantmeals] },
   { id: "solving-problems", name: "Solving Problems", vi: "Giải Quyết Vấn Đề", emoji: "🛠️",
     lessons: [A_QUIETER_LUNCHROOM, A_SAFER_BIKE_ROUTE, A_GREENER_SCHOOL_FESTIVAL, MAKING_SCHOOL_ACCESSIBLE, REDUCING_FOOD_WASTE,
       COOLING_A_HOT_CLASSROOM, IMPROVING_THE_SCHOOL_PICKUP_ZONE, SAVING_WATER_IN_THE_SCHOOL_GARDEN,
-      IMPROVING_THE_LOST_AND_FOUND, DESIGNING_A_BETTER_RECESS_SPACE] },
+      IMPROVING_THE_LOST_AND_FOUND, DESIGNING_A_BETTER_RECESS_SPACE,
+      LEVEL3_NEW_LESSONS.rainycourtyard, LEVEL3_NEW_LESSONS.beachaccess, LEVEL3_NEW_LESSONS.quiethall,
+      LEVEL3_NEW_LESSONS.pollinator, LEVEL3_NEW_LESSONS.libraryenergy] },
 ];
 
 /* ============ Chương trình học: Level 1 · Everyday English (9 Unit) ============ */
@@ -4903,6 +4909,23 @@ export const LEVEL3_COLLECTIONS: CourseCollection[] = [
     { id: "recessspace", n: 10, title: "Designing a Better Recess Space", vi: "Thiết kế sân chơi giờ nghỉ", image: L3C3IMG + "level-3-c03-unit-10-designing-a-better-recess-space.webp", focus: "Nhu cầu khác nhau · bố cục · thiết kế hòa nhập", lessonId: "recessspace", ready: true },
   ] },
 ];
+
+LEVEL3_COLLECTIONS[0]?.units.push(
+  { id: "readingproject", n: 6, title: "Choosing a Class Reading Project", vi: "Chọn dự án đọc sách của lớp", image: L3C1IMG + "level-3-c01-unit-06-choosing-class-reading-project.webp", focus: "Hình thức · vai trò · thời gian · thỏa hiệp", lessonId: "readingproject", ready: true },
+);
+LEVEL3_COLLECTIONS[1]?.units.push(
+  { id: "tripphones", n: 6, title: "Should Phones Be Allowed on School Trips?", vi: "Có nên mang điện thoại trong chuyến đi?", image: L3C2IMG + "level-3-c02-unit-06-phones-on-school-trips.webp", focus: "An toàn · riêng tư · xao nhãng · quy định cân bằng", lessonId: "tripphones", ready: true },
+  { id: "groupwork", n: 7, title: "Is Group Work Better Than Working Alone?", vi: "Làm nhóm có tốt hơn làm một mình?", image: L3C2IMG + "level-3-c02-unit-07-group-or-independent-work.webp", focus: "Hợp tác · tập trung · vai trò · kết luận theo tình huống", lessonId: "groupwork", ready: true },
+  { id: "classpet", n: 8, title: "Should a Classroom Have a Visiting Pet?", vi: "Lớp học có nên đón thú cưng?", image: L3C2IMG + "level-3-c02-unit-08-visiting-classroom-pet.webp", focus: "Sức khỏe · dị ứng · vệ sinh · điều kiện thực tế", lessonId: "classpet", ready: true },
+  { id: "plantmeals", n: 9, title: "Should the Cafeteria Offer More Plant-Based Meals?", vi: "Nhà ăn có nên thêm món từ thực vật?", image: L3C2IMG + "level-3-c02-unit-09-plant-based-cafeteria-meals.webp", focus: "Dinh dưỡng · sở thích · chi phí · lãng phí", lessonId: "plantmeals", ready: true },
+);
+LEVEL3_COLLECTIONS[2]?.units.push(
+  { id: "rainycourtyard", n: 11, title: "Improving a Rainy School Courtyard", vi: "Cải thiện sân trường ngày mưa", image: L3C3IMG + "level-3-c03-unit-11-rainy-school-courtyard.webp", focus: "Thoát nước · mái che · bề mặt · thử nghiệm", lessonId: "rainycourtyard", ready: true },
+  { id: "beachaccess", n: 12, title: "Making a Beach Path Easier to Use", vi: "Làm lối đi biển dễ sử dụng hơn", image: L3C3IMG + "level-3-c03-unit-12-accessible-beach-path.webp", focus: "Tiếp cận · độ dốc · môi trường · giải pháp kết hợp", lessonId: "beachaccess", ready: true },
+  { id: "quiethall", n: 13, title: "Reducing Noise in the Community Sports Hall", vi: "Giảm tiếng ồn trong nhà thi đấu", image: L3C3IMG + "level-3-c03-unit-13-quieter-sports-hall.webp", focus: "Đo âm thanh · phân khu · vật liệu · bố cục linh hoạt", lessonId: "quiethall", ready: true },
+  { id: "pollinator", n: 14, title: "Helping Pollinators in the School Garden", vi: "Giúp côn trùng thụ phấn trong vườn trường", image: L3C3IMG + "level-3-c03-unit-14-pollinator-school-garden.webp", focus: "Quan sát · môi trường sống · chăm sóc · kế hoạch theo mùa", lessonId: "pollinator", ready: true },
+  { id: "libraryenergy", n: 15, title: "Reducing Energy Use at the Community Library", vi: "Giảm điện năng ở thư viện cộng đồng", image: L3C3IMG + "level-3-c03-unit-15-library-energy-use.webp", focus: "Khảo sát năng lượng · tiện nghi · chi phí · ưu tiên", lessonId: "libraryenergy", ready: true },
+);
 
 /* ============ helpers ============ */
 export const allLearnLessons = (): Lesson[] => THEMES.flatMap((t) => t.lessons);
