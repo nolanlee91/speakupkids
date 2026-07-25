@@ -72,12 +72,15 @@ function GameResult({ title, stars, info, doneLabel, onDone, secondary }: {
 function GameShell({ emoji, title, vi, onExit, children }: { emoji: string; title: string; vi: string; onExit: () => void; children: React.ReactNode }) {
   return (
     <div id="game" className="game-overlay">
-      <div className="game-top">
-        <button className="bk" onClick={onExit}>← Thoát</button>
-        <h3>{emoji} {title}</h3>
-        <span className="game-vi">{vi}</span>
+      {/* game-sheet: dải kem ôm đúng nội dung → trang ngắn (vd Nghe & chọn) lộ scenery ở đáy, không trống */}
+      <div className="game-sheet">
+        <div className="game-top">
+          <button className="bk" onClick={onExit}>← Thoát</button>
+          <h3>{emoji} {title}</h3>
+          <span className="game-vi">{vi}</span>
+        </div>
+        <div className="game-body">{children}</div>
       </div>
-      <div className="game-body">{children}</div>
     </div>
   );
 }

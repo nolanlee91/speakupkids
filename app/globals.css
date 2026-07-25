@@ -1298,5 +1298,14 @@
         rgba(250,243,231,1) calc(100% - 120px),
         rgba(250,243,231,0) 100%); }
     .game-overlay > * { position: relative; z-index: 1; }
+    /* Khu Practice (GameShell #game): thay dải kem cố định full-height bằng dải kem ÔM nội dung
+       (cao đúng bằng content) → vòng chơi ngắn như "Nghe & chọn" lộ scenery ở đáy thay vì kem trống. */
+    #game::before { display: none; }
+    #game .game-sheet { position: relative; z-index: 1; width: min(100%, 900px); margin: 0 auto;
+      background: linear-gradient(90deg,
+        rgba(250,243,231,0) 0,
+        rgba(250,243,231,1) 120px,
+        rgba(250,243,231,1) calc(100% - 120px),
+        rgba(250,243,231,0) 100%); }
     .game-top, .game-body, .quiz-body { max-width: 760px; }
   }
