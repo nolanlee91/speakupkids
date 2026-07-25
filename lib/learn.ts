@@ -3254,6 +3254,556 @@ const AT_THE_RECYCLING_DEPOT: Lesson = {
   },
 };
 
+/* ============ Level 1 · Unit 21: At the Farmers' Market ============ */
+const AT_THE_FARMERS_MARKET: Lesson = {
+  id: "farmersmarket", theme: "everyday-town", title: "At the Farmers' Market", vi: "Ở chợ nông sản", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-21-at-the-farmers-market.webp",
+  vocab: [
+    { word: "market", ipa: "/ˈmɑːrkɪt/", vi: "chợ", emoji: "🛒", example: "We buy fruit at the market.", exampleVi: "Chúng mình mua trái cây ở chợ." },
+    { word: "apple", ipa: "/ˈæpl/", vi: "quả táo", emoji: "🍎", example: "The red apples look fresh.", exampleVi: "Những quả táo đỏ trông tươi." },
+    { word: "carrot", ipa: "/ˈkærət/", vi: "củ cà rốt", emoji: "🥕", example: "The carrots are bright orange.", exampleVi: "Những củ cà rốt màu cam tươi." },
+    { word: "berry", ipa: "/ˈberi/", vi: "quả mọng", emoji: "🫐", example: "These berries are sweet.", exampleVi: "Những quả mọng này ngọt." },
+    { word: "scale", ipa: "/skeɪl/", vi: "cái cân", emoji: "⚖️", example: "The scale weighs the fruit.", exampleVi: "Cái cân cân trái cây." },
+    { word: "fresh", ipa: "/freʃ/", vi: "tươi", emoji: "🌿", example: "The vegetables are very fresh.", exampleVi: "Rau củ rất tươi." },
+    { word: "kilogram", ipa: "/ˈkɪləɡræm/", vi: "ki-lô-gam", emoji: "🏋️", example: "I want one kilogram of apples.", exampleVi: "Mình muốn một ki-lô táo." },
+    { word: "reusable bag", ipa: "/riːˈjuːzəbl bæɡ/", vi: "túi dùng lại", emoji: "🛍️", example: "Bring a reusable bag to the market.", exampleVi: "Mang túi dùng lại đến chợ." },
+  ],
+  patterns: [
+    { pattern: "Can I have …?", vi: "Cho mình … được không?", examples: [
+      { en: "Can I have some carrots, please?", vi: "Cho mình ít cà rốt được không ạ?" },
+      { en: "Can I have a kilogram of apples?", vi: "Cho mình một ki-lô táo được không?" }] },
+    { pattern: "How much is …?", vi: "… giá bao nhiêu?", examples: [
+      { en: "How much is a basket of berries?", vi: "Một giỏ quả mọng giá bao nhiêu?" },
+      { en: "How much are the carrots?", vi: "Cà rốt giá bao nhiêu?" }] },
+    { pattern: "I'd like … of …", vi: "Mình muốn … …", examples: [
+      { en: "I'd like one kilogram of apples.", vi: "Mình muốn một ki-lô táo." },
+      { en: "I'd like two baskets of berries.", vi: "Mình muốn hai giỏ quả mọng." }] },
+    { pattern: "There is / There are …", vi: "Có … (số ít / số nhiều)", examples: [
+      { en: "There are red and green apples.", vi: "Có táo đỏ và táo xanh." },
+      { en: "There is a scale on the table.", vi: "Có một cái cân trên bàn." }] },
+  ],
+  listening: {
+    intro: "Listen to the market story, then answer.", introVi: "Nghe chuyện ở chợ rồi trả lời.",
+    script: "Leo went to the farmers' market with a reusable bag. He wanted apples and carrots. \"Can I have one kilogram of apples, please?\" he asked. The vendor put the apples on the scale. \"That's one kilogram,\" she said. Leo also bought a basket of fresh berries. He paid with coins and put everything in his reusable bag.",
+    questions: [
+      { q: "What did Leo bring to carry his fruit?", vi: "Leo mang gì để đựng trái cây?", options: ["A reusable bag", "A suitcase", "A box"], answer: "A reusable bag", explainVi: "Leo mang túi dùng lại đến chợ." },
+      { q: "How did the vendor measure the apples?", vi: "Người bán đo táo bằng cách nào?", options: ["She used a scale", "She counted to ten", "She guessed"], answer: "She used a scale", explainVi: "Người bán đặt táo lên cân." },
+      { q: "How did Leo pay?", vi: "Leo trả tiền bằng gì?", options: ["With coins", "With a phone", "With stamps"], answer: "With coins", explainVi: "Leo trả bằng tiền xu." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I have one kilogram of apples, please?", vi: "Cho mình một ki-lô táo được không ạ?" },
+      { en: "How much are the carrots?", vi: "Cà rốt giá bao nhiêu?" },
+    ],
+    guided: { q: "What fruit would you like to buy at the market?", vi: "Bạn muốn mua trái cây gì ở chợ?", hint: "I'd like ___, please." },
+    describe: { prompt: "Look at the market picture. Describe it in 3–5 sentences. Use \"I can see\", \"There are\", and \"I'd like\".", vi: "Nhìn tranh chợ. Mô tả 3–5 câu, dùng \"I can see\", \"There are\" và \"I'd like\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you use to weigh fruit?", vi: "Bạn dùng gì để cân trái cây?", options: ["A scale", "A brush", "A stamp"], answer: "A scale" },
+      { type: "sentence", q: "Which sentence politely asks to buy carrots?", vi: "Câu nào hỏi mua cà rốt một cách lịch sự?", options: ["Can I have some carrots, please?", "Give carrots now.", "Carrots are orange."], answer: "Can I have some carrots, please?" },
+      { type: "listening", q: "What did Leo use to carry his fruit?", vi: "Leo dùng gì để đựng trái cây?", options: ["A reusable bag", "A wheelbarrow", "A hat"], answer: "A reusable bag" },
+      { type: "reading", q: "Read: \"I'd like one kilogram of apples.\" How many apples does she want?", vi: "Đọc câu trên. Bạn ấy muốn bao nhiêu táo?", options: ["One kilogram", "One apple", "Ten kilograms"], answer: "One kilogram", explainVi: "\"one kilogram\" = một ki-lô táo." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 22: At the Community Pool ============ */
+const AT_THE_COMMUNITY_POOL: Lesson = {
+  id: "pool", theme: "everyday-town", title: "At the Community Pool", vi: "Ở hồ bơi cộng đồng", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-22-at-the-community-pool.webp",
+  vocab: [
+    { word: "pool", ipa: "/puːl/", vi: "hồ bơi", emoji: "🏊", example: "The children swim in the pool.", exampleVi: "Các bạn bơi trong hồ." },
+    { word: "goggles", ipa: "/ˈɡɒɡlz/", vi: "kính bơi", emoji: "🥽", example: "She puts on her goggles.", exampleVi: "Bạn ấy đeo kính bơi." },
+    { word: "swimsuit", ipa: "/ˈswɪmsuːt/", vi: "đồ bơi", emoji: "🩱", example: "His swimsuit is dark blue.", exampleVi: "Đồ bơi của cậu ấy màu xanh đậm." },
+    { word: "kickboard", ipa: "/ˈkɪkbɔːrd/", vi: "ván tập bơi", emoji: "🛟", example: "The boy holds a blue kickboard.", exampleVi: "Cậu bé cầm ván tập bơi màu xanh." },
+    { word: "towel", ipa: "/ˈtaʊəl/", vi: "khăn tắm", emoji: "🧻", example: "She dries off with a towel.", exampleVi: "Bạn ấy lau khô bằng khăn." },
+    { word: "lifeguard", ipa: "/ˈlaɪfɡɑːrd/", vi: "nhân viên cứu hộ", emoji: "🛟", example: "The lifeguard watches the pool.", exampleVi: "Nhân viên cứu hộ trông chừng hồ bơi." },
+    { word: "whistle", ipa: "/ˈwɪsl/", vi: "cái còi", emoji: "📢", example: "The lifeguard blows a whistle.", exampleVi: "Nhân viên cứu hộ thổi còi." },
+    { word: "safe", ipa: "/seɪf/", vi: "an toàn", emoji: "✅", example: "Follow the rules to stay safe.", exampleVi: "Làm theo quy tắc để an toàn." },
+  ],
+  patterns: [
+    { pattern: "I can / I can't …", vi: "Mình có thể / không thể …", examples: [
+      { en: "I can swim across the pool.", vi: "Mình có thể bơi qua hồ." },
+      { en: "I can't dive here.", vi: "Mình không được nhảy cắm đầu ở đây." }] },
+    { pattern: "… is / are + -ing", vi: "… đang … (thì tiếp diễn)", examples: [
+      { en: "The girl is putting on her goggles.", vi: "Bạn gái đang đeo kính bơi." },
+      { en: "The boy is holding a kickboard.", vi: "Cậu bé đang cầm ván tập bơi." }] },
+    { pattern: "You must / You mustn't …", vi: "Bạn phải / không được …", examples: [
+      { en: "You must listen to the lifeguard.", vi: "Bạn phải nghe nhân viên cứu hộ." },
+      { en: "You mustn't run near the pool.", vi: "Bạn không được chạy gần hồ bơi." }] },
+    { pattern: "Please …", vi: "Làm ơn …", examples: [
+      { en: "Please walk, don't run.", vi: "Làm ơn đi bộ, đừng chạy." },
+      { en: "Please dry off with a towel.", vi: "Làm ơn lau khô bằng khăn." }] },
+  ],
+  listening: {
+    intro: "Listen to the pool story, then answer.", introVi: "Nghe chuyện ở hồ bơi rồi trả lời.",
+    script: "Maya went to the community pool with her friends. She put on her goggles and swimsuit. The lifeguard blew his whistle. \"Please walk, don't run,\" he said. Ben was learning to swim with a blue kickboard. After swimming, Maya dried off with a towel and drank some water. Everyone followed the rules and stayed safe.",
+    questions: [
+      { q: "What did Maya put on?", vi: "Maya đeo/mặc gì?", options: ["Her goggles and swimsuit", "Her boots", "A hat"], answer: "Her goggles and swimsuit", explainVi: "Maya đeo kính bơi và mặc đồ bơi." },
+      { q: "Why did the lifeguard blow the whistle?", vi: "Vì sao nhân viên cứu hộ thổi còi?", options: ["To say walk, don't run", "To start a song", "To call lunch"], answer: "To say walk, don't run", explainVi: "Còi nhắc mọi người đi bộ, đừng chạy." },
+      { q: "What did Ben use to learn to swim?", vi: "Ben dùng gì để tập bơi?", options: ["A kickboard", "A bicycle", "A book"], answer: "A kickboard", explainVi: "Ben tập bơi với ván tập bơi." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "I can swim across the pool.", vi: "Mình có thể bơi qua hồ." },
+      { en: "Please walk, don't run.", vi: "Làm ơn đi bộ, đừng chạy." },
+    ],
+    guided: { q: "What can you do at the pool?", vi: "Bạn có thể làm gì ở hồ bơi?", hint: "I can ___." },
+    describe: { prompt: "Look at the pool picture. Describe it in 3–5 sentences. Use \"I can see\", \"is/are …-ing\", and \"You must\".", vi: "Nhìn tranh hồ bơi. Mô tả 3–5 câu, dùng \"I can see\", \"is/are …-ing\" và \"You must\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you wear to see under water?", vi: "Bạn đeo gì để nhìn dưới nước?", options: ["Goggles", "A towel", "A whistle"], answer: "Goggles" },
+      { type: "sentence", q: "Which sentence is a pool rule?", vi: "Câu nào là quy tắc hồ bơi?", options: ["You mustn't run near the pool.", "The water is blue.", "I like swimming."], answer: "You mustn't run near the pool." },
+      { type: "listening", q: "What did Ben use to learn to swim?", vi: "Ben dùng gì để tập bơi?", options: ["A kickboard", "A towel", "A whistle"], answer: "A kickboard" },
+      { type: "reading", q: "Read: \"Please walk, don't run.\" What should you do near the pool?", vi: "Đọc câu trên. Bạn nên làm gì gần hồ bơi?", options: ["Walk", "Run", "Jump"], answer: "Walk", explainVi: "Quy tắc: đi bộ, không chạy." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 23: At the Bakery ============ */
+const AT_THE_BAKERY: Lesson = {
+  id: "bakery", theme: "everyday-town", title: "At the Bakery", vi: "Ở tiệm bánh", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-23-at-the-bakery.webp",
+  vocab: [
+    { word: "bakery", ipa: "/ˈbeɪkəri/", vi: "tiệm bánh", emoji: "🥖", example: "The bakery smells wonderful.", exampleVi: "Tiệm bánh thơm phức." },
+    { word: "baker", ipa: "/ˈbeɪkər/", vi: "thợ làm bánh", emoji: "👨‍🍳", example: "The baker wears a white hat.", exampleVi: "Thợ làm bánh đội mũ trắng." },
+    { word: "bread", ipa: "/bred/", vi: "bánh mì", emoji: "🍞", example: "Fresh bread is warm and soft.", exampleVi: "Bánh mì tươi ấm và mềm." },
+    { word: "loaf", ipa: "/loʊf/", vi: "ổ bánh mì", emoji: "🥖", example: "She buys a loaf of bread.", exampleVi: "Bạn ấy mua một ổ bánh mì." },
+    { word: "roll", ipa: "/roʊl/", vi: "bánh mì tròn", emoji: "🥯", example: "The rolls are golden brown.", exampleVi: "Những chiếc bánh mì tròn vàng ruộm." },
+    { word: "muffin", ipa: "/ˈmʌfɪn/", vi: "bánh nướng xốp", emoji: "🧁", example: "I love chocolate muffins.", exampleVi: "Mình thích bánh muffin sô-cô-la." },
+    { word: "croissant", ipa: "/krwɑːˈsɒnt/", vi: "bánh sừng bò", emoji: "🥐", example: "The croissant is flaky.", exampleVi: "Bánh sừng bò giòn xốp." },
+    { word: "tongs", ipa: "/tɒŋz/", vi: "cái kẹp", emoji: "🥢", example: "The baker uses tongs to pick up bread.", exampleVi: "Thợ làm bánh dùng kẹp để gắp bánh." },
+  ],
+  patterns: [
+    { pattern: "Can I have …?", vi: "Cho mình … được không?", examples: [
+      { en: "Can I have two muffins, please?", vi: "Cho mình hai cái muffin được không ạ?" },
+      { en: "Can I have a loaf of bread?", vi: "Cho mình một ổ bánh mì được không?" }] },
+    { pattern: "I'd like …, please.", vi: "Mình muốn … ạ.", examples: [
+      { en: "I'd like a croissant, please.", vi: "Mình muốn một bánh sừng bò ạ." },
+      { en: "I'd like three rolls, please.", vi: "Mình muốn ba chiếc bánh mì tròn ạ." }] },
+    { pattern: "Which one do you want, … or …?", vi: "Bạn muốn cái nào, … hay …?", examples: [
+      { en: "Which one do you want, a muffin or a croissant?", vi: "Bạn muốn cái nào, muffin hay bánh sừng bò?" },
+      { en: "Do you want white bread or brown bread?", vi: "Bạn muốn bánh mì trắng hay bánh mì nâu?" }] },
+    { pattern: "How many … would you like?", vi: "Bạn muốn mấy …?", examples: [
+      { en: "How many rolls would you like?", vi: "Bạn muốn mấy chiếc bánh mì tròn?" },
+      { en: "How many muffins would you like?", vi: "Bạn muốn mấy cái muffin?" }] },
+  ],
+  listening: {
+    intro: "Listen to the bakery story, then answer.", introVi: "Nghe chuyện ở tiệm bánh rồi trả lời.",
+    script: "Sam and his sister went to the bakery after school. The baker used tongs to put warm rolls on a tray. \"Can I have two muffins, please?\" said Sam. His sister wanted a croissant. The baker put everything in a paper bag. \"How many rolls would you like?\" he asked. They chose four. The bread smelled wonderful.",
+    questions: [
+      { q: "What did the baker use to pick up the rolls?", vi: "Thợ làm bánh dùng gì để gắp bánh?", options: ["Tongs", "A spoon", "His hands"], answer: "Tongs", explainVi: "Thợ làm bánh dùng cái kẹp." },
+      { q: "What did Sam order?", vi: "Sam gọi gì?", options: ["Two muffins", "A pizza", "Ten apples"], answer: "Two muffins", explainVi: "Sam xin hai cái muffin." },
+      { q: "How many rolls did they choose?", vi: "Họ chọn mấy chiếc bánh mì tròn?", options: ["Four", "One", "Twenty"], answer: "Four", explainVi: "Họ chọn bốn chiếc." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I have two muffins, please?", vi: "Cho mình hai cái muffin được không ạ?" },
+      { en: "I'd like a croissant, please.", vi: "Mình muốn một bánh sừng bò ạ." },
+    ],
+    guided: { q: "What would you like from the bakery?", vi: "Bạn muốn mua gì ở tiệm bánh?", hint: "I'd like ___, please." },
+    describe: { prompt: "Look at the bakery picture. Describe it in 3–5 sentences. Use \"I can see\", \"There are\", and \"I'd like\".", vi: "Nhìn tranh tiệm bánh. Mô tả 3–5 câu, dùng \"I can see\", \"There are\" và \"I'd like\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What does a baker make?", vi: "Thợ làm bánh làm ra gì?", options: ["Bread", "Shoes", "Cars"], answer: "Bread" },
+      { type: "sentence", q: "Which sentence politely orders two muffins?", vi: "Câu nào gọi hai cái muffin một cách lịch sự?", options: ["Can I have two muffins, please?", "Muffins now.", "The muffin is brown."], answer: "Can I have two muffins, please?" },
+      { type: "listening", q: "What did the baker use to pick up the rolls?", vi: "Thợ làm bánh dùng gì để gắp bánh?", options: ["Tongs", "A whistle", "A towel"], answer: "Tongs" },
+      { type: "reading", q: "Read: \"How many rolls would you like?\" What is the baker asking about?", vi: "Đọc câu trên. Thợ làm bánh đang hỏi về điều gì?", options: ["The number of rolls", "The colour", "The price of milk"], answer: "The number of rolls", explainVi: "\"How many\" = hỏi số lượng bánh." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 24: At the Dentist ============ */
+const AT_THE_DENTIST: Lesson = {
+  id: "dentist", theme: "everyday-town", title: "At the Dentist", vi: "Ở phòng nha", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-24-at-the-dentist.webp",
+  vocab: [
+    { word: "dentist", ipa: "/ˈdentɪst/", vi: "nha sĩ", emoji: "🦷", example: "The dentist checks our teeth.", exampleVi: "Nha sĩ kiểm tra răng của chúng mình." },
+    { word: "teeth", ipa: "/tiːθ/", vi: "những chiếc răng", emoji: "🦷", example: "Brush your teeth every day.", exampleVi: "Đánh răng mỗi ngày." },
+    { word: "toothbrush", ipa: "/ˈtuːθbrʌʃ/", vi: "bàn chải đánh răng", emoji: "🪥", example: "Use a soft toothbrush.", exampleVi: "Dùng bàn chải mềm." },
+    { word: "toothpaste", ipa: "/ˈtuːθpeɪst/", vi: "kem đánh răng", emoji: "🧴", example: "Put a little toothpaste on the brush.", exampleVi: "Cho một chút kem lên bàn chải." },
+    { word: "brush", ipa: "/brʌʃ/", vi: "đánh (răng)", emoji: "🪥", example: "Brush your teeth in the morning.", exampleVi: "Đánh răng vào buổi sáng." },
+    { word: "floss", ipa: "/flɒs/", vi: "chỉ nha khoa", emoji: "🧵", example: "Floss between your teeth.", exampleVi: "Dùng chỉ nha khoa giữa các răng." },
+    { word: "check-up", ipa: "/ˈtʃek ʌp/", vi: "buổi khám", emoji: "🩺", example: "I have a dental check-up today.", exampleVi: "Hôm nay mình có buổi khám răng." },
+    { word: "healthy", ipa: "/ˈhelθi/", vi: "khỏe mạnh", emoji: "💪", example: "Healthy teeth are strong.", exampleVi: "Răng khỏe thì chắc." },
+  ],
+  patterns: [
+    { pattern: "You should …", vi: "Bạn nên …", examples: [
+      { en: "You should brush twice a day.", vi: "Bạn nên đánh răng hai lần một ngày." },
+      { en: "You should visit the dentist.", vi: "Bạn nên đi khám nha sĩ." }] },
+    { pattern: "You shouldn't …", vi: "Bạn không nên …", examples: [
+      { en: "You shouldn't eat too much candy.", vi: "Bạn không nên ăn quá nhiều kẹo." },
+      { en: "You shouldn't forget to floss.", vi: "Bạn không nên quên dùng chỉ nha khoa." }] },
+    { pattern: "Does it hurt?", vi: "Có đau không?", examples: [
+      { en: "Does it hurt? No, it doesn't.", vi: "Có đau không? Không đau đâu." },
+      { en: "Don't worry, it won't hurt.", vi: "Đừng lo, sẽ không đau đâu." }] },
+    { pattern: "How often do you …?", vi: "Bạn … bao lâu một lần?", examples: [
+      { en: "How often do you brush your teeth?", vi: "Bạn đánh răng bao lâu một lần?" },
+      { en: "How often do you see the dentist?", vi: "Bạn đi khám nha sĩ bao lâu một lần?" }] },
+  ],
+  listening: {
+    intro: "Listen to the dentist story, then answer.", introVi: "Nghe chuyện ở phòng nha rồi trả lời.",
+    script: "Noah felt a little nervous at the dentist. The dentist smiled and showed him a big model of teeth. \"Don't worry, it won't hurt,\" she said. She showed Noah how to brush in small circles. \"You should brush twice a day and floss too,\" she said. \"You shouldn't eat too much candy.\" After the check-up, Noah's teeth felt clean and healthy.",
+    questions: [
+      { q: "How did Noah feel at first?", vi: "Lúc đầu Noah cảm thấy thế nào?", options: ["A little nervous", "Very sleepy", "Angry"], answer: "A little nervous", explainVi: "Noah hơi lo lắng lúc đầu." },
+      { q: "What did the dentist say about candy?", vi: "Nha sĩ nói gì về kẹo?", options: ["You shouldn't eat too much", "Eat it all day", "Candy is good for teeth"], answer: "You shouldn't eat too much", explainVi: "Không nên ăn quá nhiều kẹo." },
+      { q: "How often should Noah brush?", vi: "Noah nên đánh răng bao lâu một lần?", options: ["Twice a day", "Once a week", "Never"], answer: "Twice a day", explainVi: "Nên đánh răng hai lần một ngày." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "You should brush twice a day.", vi: "Bạn nên đánh răng hai lần một ngày." },
+      { en: "Don't worry, it won't hurt.", vi: "Đừng lo, sẽ không đau đâu." },
+    ],
+    guided: { q: "How do you take care of your teeth?", vi: "Bạn chăm sóc răng thế nào?", hint: "I should ___." },
+    describe: { prompt: "Look at the dentist picture. Describe it in 3–5 sentences. Use \"I can see\", \"is …-ing\", and \"You should\".", vi: "Nhìn tranh phòng nha. Mô tả 3–5 câu, dùng \"I can see\", \"is …-ing\" và \"You should\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you use to clean your teeth?", vi: "Bạn dùng gì để làm sạch răng?", options: ["A toothbrush", "A hammer", "A spoon"], answer: "A toothbrush" },
+      { type: "sentence", q: "Which sentence gives good advice?", vi: "Câu nào là lời khuyên tốt?", options: ["You should brush twice a day.", "Eat lots of candy.", "Never brush."], answer: "You should brush twice a day." },
+      { type: "listening", q: "How did the dentist help Noah feel calm?", vi: "Nha sĩ giúp Noah bình tĩnh thế nào?", options: ["She said it won't hurt", "She turned off the lights", "She left the room"], answer: "She said it won't hurt" },
+      { type: "reading", q: "Read: \"You shouldn't eat too much candy.\" What is the advice?", vi: "Đọc câu trên. Lời khuyên là gì?", options: ["Eat less candy", "Eat more candy", "Candy has no sugar"], answer: "Eat less candy", explainVi: "\"shouldn't\" = không nên — ăn ít kẹo lại." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 25: At the Hardware Store ============ */
+const AT_THE_HARDWARE_STORE: Lesson = {
+  id: "hardware", theme: "everyday-town", title: "At the Hardware Store", vi: "Ở cửa hàng dụng cụ", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-25-at-the-hardware-store.webp",
+  vocab: [
+    { word: "hardware store", ipa: "/ˈhɑːrdwer stɔːr/", vi: "cửa hàng dụng cụ", emoji: "🔧", example: "We buy tools at the hardware store.", exampleVi: "Chúng mình mua dụng cụ ở cửa hàng dụng cụ." },
+    { word: "wood", ipa: "/wʊd/", vi: "gỗ", emoji: "🪵", example: "The birdhouse is made of wood.", exampleVi: "Nhà chim làm bằng gỗ." },
+    { word: "tape measure", ipa: "/teɪp ˈmeʒər/", vi: "thước dây", emoji: "📏", example: "Use a tape measure to check the length.", exampleVi: "Dùng thước dây để đo chiều dài." },
+    { word: "measure", ipa: "/ˈmeʒər/", vi: "đo", emoji: "📐", example: "Measure the wood before you cut.", exampleVi: "Đo gỗ trước khi cắt." },
+    { word: "screwdriver", ipa: "/ˈskruːdraɪvər/", vi: "tua vít", emoji: "🪛", example: "A screwdriver turns the screws.", exampleVi: "Tua vít vặn ốc vít." },
+    { word: "screw", ipa: "/skruː/", vi: "ốc vít", emoji: "🔩", example: "We need six screws.", exampleVi: "Chúng mình cần sáu con ốc vít." },
+    { word: "paintbrush", ipa: "/ˈpeɪntbrʌʃ/", vi: "cọ sơn", emoji: "🖌️", example: "Paint the wood with a paintbrush.", exampleVi: "Sơn gỗ bằng cọ." },
+    { word: "project", ipa: "/ˈprɒdʒekt/", vi: "dự án nhỏ", emoji: "🛠️", example: "Our project is a birdhouse.", exampleVi: "Dự án của chúng mình là một cái nhà chim." },
+  ],
+  patterns: [
+    { pattern: "We need …", vi: "Chúng mình cần …", examples: [
+      { en: "We need some wood and screws.", vi: "Chúng mình cần ít gỗ và ốc vít." },
+      { en: "We need a paintbrush.", vi: "Chúng mình cần một cây cọ." }] },
+    { pattern: "We need to …", vi: "Chúng mình cần phải …", examples: [
+      { en: "We need to measure the wood.", vi: "Chúng mình cần đo gỗ." },
+      { en: "We need to sand it first.", vi: "Chúng mình cần chà nhám trước." }] },
+    { pattern: "It is made of …", vi: "Nó làm bằng …", examples: [
+      { en: "The birdhouse is made of wood.", vi: "Cái nhà chim làm bằng gỗ." },
+      { en: "The box is made of metal.", vi: "Cái hộp làm bằng kim loại." }] },
+    { pattern: "First …, then …", vi: "Đầu tiên …, rồi …", examples: [
+      { en: "First we measure, then we cut.", vi: "Đầu tiên đo, rồi cắt." },
+      { en: "First we sand it, then we paint it.", vi: "Đầu tiên chà nhám, rồi sơn." }] },
+  ],
+  listening: {
+    intro: "Listen to the workshop story, then answer.", introVi: "Nghe chuyện ở buổi làm đồ gỗ rồi trả lời.",
+    script: "Ella and her friends were building a birdhouse at the hardware store workshop. \"First we need to measure the wood,\" said the helper. Ella used a tape measure. Then they chose a paint colour from the cards. \"We need six screws,\" said her friend. They used a screwdriver carefully and stayed safe. Their project was almost ready to paint.",
+    questions: [
+      { q: "What were they building?", vi: "Họ đang làm gì?", options: ["A birdhouse", "A car", "A boat"], answer: "A birdhouse", explainVi: "Họ đang làm một cái nhà chim." },
+      { q: "What did Ella use to measure the wood?", vi: "Ella dùng gì để đo gỗ?", options: ["A tape measure", "A spoon", "A brush"], answer: "A tape measure", explainVi: "Ella dùng thước dây." },
+      { q: "How many screws did they need?", vi: "Họ cần mấy con ốc vít?", options: ["Six", "One", "Twenty"], answer: "Six", explainVi: "Họ cần sáu con ốc vít." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "We need to measure the wood.", vi: "Chúng mình cần đo gỗ." },
+      { en: "The birdhouse is made of wood.", vi: "Cái nhà chim làm bằng gỗ." },
+    ],
+    guided: { q: "What do you need to build a small project?", vi: "Bạn cần gì để làm một dự án nhỏ?", hint: "I need ___." },
+    describe: { prompt: "Look at the hardware-store picture. Describe it in 3–5 sentences. Use \"I can see\", \"There are\", and \"We need to\".", vi: "Nhìn tranh cửa hàng dụng cụ. Mô tả 3–5 câu, dùng \"I can see\", \"There are\" và \"We need to\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you use to turn a screw?", vi: "Bạn dùng gì để vặn ốc vít?", options: ["A screwdriver", "A towel", "A whistle"], answer: "A screwdriver" },
+      { type: "sentence", q: "Which sentence tells what you need to do first?", vi: "Câu nào cho biết việc cần làm trước?", options: ["We need to measure the wood.", "The wood is brown.", "I like birds."], answer: "We need to measure the wood." },
+      { type: "listening", q: "What did Ella use to measure?", vi: "Ella dùng gì để đo?", options: ["A tape measure", "A screwdriver", "A paintbrush"], answer: "A tape measure" },
+      { type: "reading", q: "Read: \"The birdhouse is made of wood.\" What material is it?", vi: "Đọc câu trên. Nó làm bằng vật liệu gì?", options: ["Wood", "Glass", "Water"], answer: "Wood", explainVi: "\"made of wood\" = làm bằng gỗ." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 26: At the Art Class ============ */
+const AT_THE_ART_CLASS: Lesson = {
+  id: "artclass", theme: "everyday-town", title: "At the Art Class", vi: "Ở lớp vẽ", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-26-at-the-art-class.webp",
+  vocab: [
+    { word: "art class", ipa: "/ɑːrt klɑːs/", vi: "lớp vẽ", emoji: "🎨", example: "We make pictures in art class.", exampleVi: "Chúng mình vẽ tranh trong lớp vẽ." },
+    { word: "paint", ipa: "/peɪnt/", vi: "màu vẽ", emoji: "🎨", example: "The paint is bright and colourful.", exampleVi: "Màu vẽ tươi và sặc sỡ." },
+    { word: "paintbrush", ipa: "/ˈpeɪntbrʌʃ/", vi: "cọ vẽ", emoji: "🖌️", example: "She dips her paintbrush in the paint.", exampleVi: "Bạn ấy nhúng cọ vào màu." },
+    { word: "palette", ipa: "/ˈpælət/", vi: "bảng pha màu", emoji: "🎨", example: "The palette has many colours.", exampleVi: "Bảng pha màu có nhiều màu." },
+    { word: "easel", ipa: "/ˈiːzl/", vi: "giá vẽ", emoji: "🖼️", example: "The painting is on an easel.", exampleVi: "Bức tranh đặt trên giá vẽ." },
+    { word: "canvas", ipa: "/ˈkænvəs/", vi: "vải vẽ", emoji: "🖼️", example: "He paints on a canvas.", exampleVi: "Cậu ấy vẽ trên vải vẽ." },
+    { word: "clay", ipa: "/kleɪ/", vi: "đất sét", emoji: "🏺", example: "She makes a bowl from clay.", exampleVi: "Bạn ấy nặn một cái bát bằng đất sét." },
+    { word: "colourful", ipa: "/ˈkʌlərfl/", vi: "đầy màu sắc", emoji: "🌈", example: "The classroom is colourful.", exampleVi: "Lớp học đầy màu sắc." },
+  ],
+  patterns: [
+    { pattern: "… is / are + -ing", vi: "… đang … (thì tiếp diễn)", examples: [
+      { en: "The boy is painting a mountain.", vi: "Cậu bé đang vẽ một ngọn núi." },
+      { en: "She is making a bowl from clay.", vi: "Bạn ấy đang nặn một cái bát bằng đất sét." }] },
+    { pattern: "I like … / I prefer …", vi: "Mình thích … / Mình thích … hơn", examples: [
+      { en: "I like painting best.", vi: "Mình thích vẽ nhất." },
+      { en: "I prefer blue to red.", vi: "Mình thích màu xanh hơn màu đỏ." }] },
+    { pattern: "Can I borrow …?", vi: "Mình mượn … được không?", examples: [
+      { en: "Can I borrow your paintbrush?", vi: "Mình mượn cọ của bạn được không?" },
+      { en: "Can I borrow the green paint?", vi: "Mình mượn màu xanh lá được không?" }] },
+    { pattern: "This colour is …", vi: "Màu này …", examples: [
+      { en: "This colour is very bright.", vi: "Màu này rất tươi." },
+      { en: "Yellow and blue make green.", vi: "Vàng và xanh dương tạo ra xanh lá." }] },
+  ],
+  listening: {
+    intro: "Listen to the art-class story, then answer.", introVi: "Nghe chuyện ở lớp vẽ rồi trả lời.",
+    script: "In art class, everyone was busy. Kai was painting a mountain on his canvas. Lily was mixing colours on her palette. \"Can I borrow your green paint?\" she asked. At the next table, Zoe was making a bowl from clay. The teacher helped everyone. \"I like painting best,\" said Kai. The classroom was bright and colourful.",
+    questions: [
+      { q: "What was Kai painting?", vi: "Kai đang vẽ gì?", options: ["A mountain", "A car", "A dog"], answer: "A mountain", explainVi: "Kai vẽ một ngọn núi." },
+      { q: "What did Lily ask to borrow?", vi: "Lily hỏi mượn gì?", options: ["Green paint", "A towel", "A ball"], answer: "Green paint", explainVi: "Lily mượn màu xanh lá." },
+      { q: "What was Zoe making?", vi: "Zoe đang làm gì?", options: ["A bowl from clay", "A sandwich", "A kite"], answer: "A bowl from clay", explainVi: "Zoe nặn một cái bát bằng đất sét." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I borrow your paintbrush?", vi: "Mình mượn cọ của bạn được không?" },
+      { en: "I like painting best.", vi: "Mình thích vẽ nhất." },
+    ],
+    guided: { q: "What do you like to make in art class?", vi: "Bạn thích làm gì trong lớp vẽ?", hint: "I like ___." },
+    describe: { prompt: "Look at the art-class picture. Describe it in 3–5 sentences. Use \"I can see\", \"is …-ing\", and \"I like\".", vi: "Nhìn tranh lớp vẽ. Mô tả 3–5 câu, dùng \"I can see\", \"is …-ing\" và \"I like\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you paint on in art class?", vi: "Bạn vẽ lên cái gì trong lớp vẽ?", options: ["A canvas", "A whistle", "A scale"], answer: "A canvas" },
+      { type: "sentence", q: "Which sentence politely asks to borrow?", vi: "Câu nào hỏi mượn một cách lịch sự?", options: ["Can I borrow your paintbrush?", "Give me that.", "The paint is blue."], answer: "Can I borrow your paintbrush?" },
+      { type: "listening", q: "What was Zoe making?", vi: "Zoe đang làm gì?", options: ["A bowl from clay", "A painting", "A muffin"], answer: "A bowl from clay" },
+      { type: "reading", q: "Read: \"I prefer blue to red.\" Which colour does she like more?", vi: "Đọc câu trên. Bạn ấy thích màu nào hơn?", options: ["Blue", "Red", "Green"], answer: "Blue", explainVi: "\"prefer blue to red\" = thích xanh hơn đỏ." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 27: At the Ferry Terminal ============ */
+const AT_THE_FERRY_TERMINAL: Lesson = {
+  id: "ferryterminal", theme: "everyday-town", title: "At the Ferry Terminal", vi: "Ở bến phà", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-27-at-the-ferry-terminal.webp",
+  vocab: [
+    { word: "ferry", ipa: "/ˈferi/", vi: "phà", emoji: "🛳️", example: "The ferry crosses the water.", exampleVi: "Chiếc phà băng qua mặt nước." },
+    { word: "terminal", ipa: "/ˈtɜːrmɪnl/", vi: "bến (phà)", emoji: "🚢", example: "We wait at the ferry terminal.", exampleVi: "Chúng mình đợi ở bến phà." },
+    { word: "ticket", ipa: "/ˈtɪkɪt/", vi: "vé", emoji: "🎫", example: "We need a ticket for the ferry.", exampleVi: "Chúng mình cần vé đi phà." },
+    { word: "suitcase", ipa: "/ˈsuːtkeɪs/", vi: "va li", emoji: "🧳", example: "Mum pulls a blue suitcase.", exampleVi: "Mẹ kéo một chiếc va li màu xanh." },
+    { word: "passenger", ipa: "/ˈpæsɪndʒər/", vi: "hành khách", emoji: "🧍", example: "The passengers wait on the dock.", exampleVi: "Hành khách đợi trên bến." },
+    { word: "arrive", ipa: "/əˈraɪv/", vi: "đến (nơi)", emoji: "🛬", example: "The ferry will arrive soon.", exampleVi: "Phà sắp đến." },
+    { word: "board", ipa: "/bɔːrd/", vi: "lên (tàu/phà)", emoji: "🚶", example: "We board the ferry at ten.", exampleVi: "Chúng mình lên phà lúc mười giờ." },
+    { word: "seagull", ipa: "/ˈsiːɡʌl/", vi: "chim hải âu", emoji: "🐦", example: "A seagull flies over the water.", exampleVi: "Một con hải âu bay trên mặt nước." },
+  ],
+  patterns: [
+    { pattern: "When does … arrive?", vi: "… đến lúc nào?", examples: [
+      { en: "When does the ferry arrive?", vi: "Phà đến lúc nào?" },
+      { en: "When does the next boat leave?", vi: "Chuyến tàu tiếp theo rời bến lúc nào?" }] },
+    { pattern: "It arrives at …", vi: "Nó đến lúc …", examples: [
+      { en: "It arrives at ten o'clock.", vi: "Nó đến lúc mười giờ." },
+      { en: "The ferry leaves at half past two.", vi: "Phà rời bến lúc hai giờ rưỡi." }] },
+    { pattern: "Where are you going?", vi: "Bạn đang đi đâu?", examples: [
+      { en: "Where are you going? We're going to the island.", vi: "Bạn đang đi đâu? Chúng mình đi ra đảo." },
+      { en: "They are going home by ferry.", vi: "Họ về nhà bằng phà." }] },
+    { pattern: "… is / are + -ing", vi: "… đang … (thì tiếp diễn)", examples: [
+      { en: "The girl is pointing at the ferry.", vi: "Bạn gái đang chỉ vào chiếc phà." },
+      { en: "The boy is looking at his watch.", vi: "Cậu bé đang nhìn đồng hồ." }] },
+  ],
+  listening: {
+    intro: "Listen to the ferry story, then answer.", introVi: "Nghe chuyện ở bến phà rồi trả lời.",
+    script: "Ana and her family waited at the ferry terminal. Ana pointed at the big white ferry on the water. \"When does it arrive?\" she asked. \"It arrives at ten o'clock,\" said Mum, pulling her blue suitcase. Ana's brother looked at his watch. Seagulls flew over the water. Soon the passengers would board the ferry and travel to the island.",
+    questions: [
+      { q: "What did Ana point at?", vi: "Ana chỉ vào gì?", options: ["The ferry", "A dog", "A tree"], answer: "The ferry", explainVi: "Ana chỉ vào chiếc phà trắng." },
+      { q: "When does the ferry arrive?", vi: "Phà đến lúc nào?", options: ["At ten o'clock", "At midnight", "Next year"], answer: "At ten o'clock", explainVi: "Phà đến lúc mười giờ." },
+      { q: "Where were they going?", vi: "Họ đang đi đâu?", options: ["To the island", "To the moon", "To school"], answer: "To the island", explainVi: "Họ đi ra đảo bằng phà." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "When does the ferry arrive?", vi: "Phà đến lúc nào?" },
+      { en: "We're going to the island.", vi: "Chúng mình đi ra đảo." },
+    ],
+    guided: { q: "Where would you like to go by ferry?", vi: "Bạn muốn đi phà đến đâu?", hint: "I'd like to go to ___." },
+    describe: { prompt: "Look at the ferry-terminal picture. Describe it in 3–5 sentences. Use \"I can see\", \"is …-ing\", and \"When does\".", vi: "Nhìn tranh bến phà. Mô tả 3–5 câu, dùng \"I can see\", \"is …-ing\" và \"When does\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you need to travel on the ferry?", vi: "Bạn cần gì để đi phà?", options: ["A ticket", "A toothbrush", "A screwdriver"], answer: "A ticket" },
+      { type: "sentence", q: "Which sentence asks about time?", vi: "Câu nào hỏi về giờ giấc?", options: ["When does the ferry arrive?", "The ferry is white.", "I like boats."], answer: "When does the ferry arrive?" },
+      { type: "listening", q: "When does the ferry arrive?", vi: "Phà đến lúc nào?", options: ["At ten o'clock", "At three o'clock", "At night"], answer: "At ten o'clock" },
+      { type: "reading", q: "Read: \"They are going home by ferry.\" How do they travel?", vi: "Đọc câu trên. Họ di chuyển bằng gì?", options: ["By ferry", "By car", "By plane"], answer: "By ferry", explainVi: "\"by ferry\" = bằng phà." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 28: At the Campground ============ */
+const AT_THE_CAMPGROUND: Lesson = {
+  id: "campground", theme: "everyday-town", title: "At the Campground", vi: "Ở khu cắm trại", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-28-at-the-campground.webp",
+  vocab: [
+    { word: "campground", ipa: "/ˈkæmpɡraʊnd/", vi: "khu cắm trại", emoji: "🏕️", example: "We stay at the campground.", exampleVi: "Chúng mình ở lại khu cắm trại." },
+    { word: "tent", ipa: "/tent/", vi: "lều", emoji: "⛺", example: "We put up a blue tent.", exampleVi: "Chúng mình dựng một chiếc lều xanh." },
+    { word: "sleeping bag", ipa: "/ˈsliːpɪŋ bæɡ/", vi: "túi ngủ", emoji: "🛌", example: "She rolls out her sleeping bag.", exampleVi: "Bạn ấy trải túi ngủ ra." },
+    { word: "flashlight", ipa: "/ˈflæʃlaɪt/", vi: "đèn pin", emoji: "🔦", example: "Take a flashlight for the night.", exampleVi: "Mang đèn pin cho ban đêm." },
+    { word: "backpack", ipa: "/ˈbækpæk/", vi: "ba lô", emoji: "🎒", example: "The backpacks are near the table.", exampleVi: "Những chiếc ba lô ở gần bàn." },
+    { word: "campfire", ipa: "/ˈkæmpfaɪər/", vi: "lửa trại", emoji: "🔥", example: "We sit around the campfire.", exampleVi: "Chúng mình ngồi quanh lửa trại." },
+    { word: "map", ipa: "/mæp/", vi: "bản đồ", emoji: "🗺️", example: "The map shows the trails.", exampleVi: "Bản đồ chỉ các đường mòn." },
+    { word: "set up", ipa: "/set ʌp/", vi: "dựng lên", emoji: "🛠️", example: "First we set up the tent.", exampleVi: "Đầu tiên chúng mình dựng lều." },
+  ],
+  patterns: [
+    { pattern: "We need to …", vi: "Chúng mình cần …", examples: [
+      { en: "We need to set up the tent.", vi: "Chúng mình cần dựng lều." },
+      { en: "We need to fill the water bottles.", vi: "Chúng mình cần đổ đầy bình nước." }] },
+    { pattern: "First …, then …", vi: "Đầu tiên …, rồi …", examples: [
+      { en: "First we put up the tent, then we roll out the sleeping bags.", vi: "Đầu tiên dựng lều, rồi trải túi ngủ." },
+      { en: "First we read the map, then we walk.", vi: "Đầu tiên xem bản đồ, rồi đi bộ." }] },
+    { pattern: "The … is next to / near …", vi: "… ở cạnh / gần …", examples: [
+      { en: "The backpack is next to the table.", vi: "Ba lô ở cạnh bàn." },
+      { en: "The fire pit is near the tent.", vi: "Hố lửa ở gần lều." }] },
+    { pattern: "You must / mustn't …", vi: "Bạn phải / không được …", examples: [
+      { en: "You must stay near the campsite.", vi: "Bạn phải ở gần khu trại." },
+      { en: "You mustn't leave the campfire alone.", vi: "Bạn không được để lửa trại không ai trông." }] },
+  ],
+  listening: {
+    intro: "Listen to the camping story, then answer.", introVi: "Nghe chuyện đi cắm trại rồi trả lời.",
+    script: "The Kim family arrived at the campground by the lake. \"First we need to set up the tent,\" said Dad. Leo helped him push the poles into the blue tent. His sister rolled out the sleeping bags. Mia held a flashlight and a water bottle. They looked at the map to find the trail. \"You mustn't leave the campfire alone,\" said Dad. Everyone worked together and stayed safe.",
+    questions: [
+      { q: "What did they set up first?", vi: "Họ dựng gì trước tiên?", options: ["The tent", "A television", "A pool"], answer: "The tent", explainVi: "Đầu tiên họ dựng lều." },
+      { q: "What did Mia hold?", vi: "Mia cầm gì?", options: ["A flashlight and a water bottle", "A guitar", "A cat"], answer: "A flashlight and a water bottle", explainVi: "Mia cầm đèn pin và bình nước." },
+      { q: "What safety rule did Dad give?", vi: "Bố đưa ra quy tắc an toàn nào?", options: ["Don't leave the campfire alone", "Run in the dark", "Swim at night"], answer: "Don't leave the campfire alone", explainVi: "Không được để lửa trại không ai trông." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "First we need to set up the tent.", vi: "Đầu tiên chúng mình cần dựng lều." },
+      { en: "You mustn't leave the campfire alone.", vi: "Bạn không được để lửa trại không ai trông." },
+    ],
+    guided: { q: "What do you need for a camping trip?", vi: "Bạn cần gì cho chuyến cắm trại?", hint: "I need ___." },
+    describe: { prompt: "Look at the campground picture. Describe it in 3–5 sentences. Use \"I can see\", \"is …-ing\", and \"We need to\".", vi: "Nhìn tranh khu cắm trại. Mô tả 3–5 câu, dùng \"I can see\", \"is …-ing\" và \"We need to\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you sleep in when camping?", vi: "Khi cắm trại bạn ngủ trong cái gì?", options: ["A sleeping bag", "A suitcase", "A palette"], answer: "A sleeping bag" },
+      { type: "sentence", q: "Which sentence tells the first step?", vi: "Câu nào cho biết bước đầu tiên?", options: ["First we set up the tent.", "The lake is blue.", "I like trees."], answer: "First we set up the tent." },
+      { type: "listening", q: "What did Mia hold?", vi: "Mia cầm gì?", options: ["A flashlight and a water bottle", "A tent", "A map"], answer: "A flashlight and a water bottle" },
+      { type: "reading", q: "Read: \"The fire pit is near the tent.\" Where is the fire pit?", vi: "Đọc câu trên. Hố lửa ở đâu?", options: ["Near the tent", "In the lake", "On the table"], answer: "Near the tent", explainVi: "\"near the tent\" = gần lều." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 29: At the Wellness Shop ============ */
+const AT_THE_WELLNESS_SHOP: Lesson = {
+  id: "wellness", theme: "everyday-town", title: "At the Wellness Shop", vi: "Ở cửa hàng chăm sóc sức khỏe", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-29-at-the-wellness-shop.webp",
+  vocab: [
+    { word: "wellness shop", ipa: "/ˈwelnəs ʃɒp/", vi: "cửa hàng chăm sóc sức khỏe", emoji: "🧴", example: "We buy soap at the wellness shop.", exampleVi: "Chúng mình mua xà phòng ở cửa hàng chăm sóc sức khỏe." },
+    { word: "shelf", ipa: "/ʃelf/", vi: "cái kệ", emoji: "🗄️", example: "The bottles are on the shelf.", exampleVi: "Những chai lọ ở trên kệ." },
+    { word: "bottle", ipa: "/ˈbɒtl/", vi: "cái chai", emoji: "🍶", example: "She picks up a small bottle.", exampleVi: "Bạn ấy cầm một chai nhỏ." },
+    { word: "soap", ipa: "/soʊp/", vi: "xà phòng", emoji: "🧼", example: "Wash your hands with soap.", exampleVi: "Rửa tay bằng xà phòng." },
+    { word: "tissues", ipa: "/ˈtɪʃuːz/", vi: "khăn giấy", emoji: "🧻", example: "He holds a box of tissues.", exampleVi: "Cậu ấy cầm một hộp khăn giấy." },
+    { word: "thermometer", ipa: "/θərˈmɒmɪtər/", vi: "nhiệt kế", emoji: "🌡️", example: "The thermometer checks your temperature.", exampleVi: "Nhiệt kế đo nhiệt độ." },
+    { word: "lotion", ipa: "/ˈloʊʃn/", vi: "kem dưỡng", emoji: "🧴", example: "This lotion is for dry skin.", exampleVi: "Kem dưỡng này cho da khô." },
+    { word: "basket", ipa: "/ˈbɑːskɪt/", vi: "cái giỏ", emoji: "🧺", example: "Put the bottles in the basket.", exampleVi: "Bỏ các chai vào giỏ." },
+  ],
+  patterns: [
+    { pattern: "Excuse me, where is …?", vi: "Xin hỏi, … ở đâu ạ?", examples: [
+      { en: "Excuse me, where is the soap?", vi: "Xin hỏi, xà phòng ở đâu ạ?" },
+      { en: "Excuse me, where are the tissues?", vi: "Xin hỏi, khăn giấy ở đâu ạ?" }] },
+    { pattern: "I need …", vi: "Mình cần …", examples: [
+      { en: "I need a box of tissues.", vi: "Mình cần một hộp khăn giấy." },
+      { en: "We need some soap.", vi: "Chúng mình cần ít xà phòng." }] },
+    { pattern: "How much is …?", vi: "… giá bao nhiêu?", examples: [
+      { en: "How much is this bottle of lotion?", vi: "Chai kem dưỡng này giá bao nhiêu?" },
+      { en: "How much are the tissues?", vi: "Khăn giấy giá bao nhiêu?" }] },
+    { pattern: "Can you help me …?", vi: "Bạn giúp mình … được không?", examples: [
+      { en: "Can you help me find a thermometer?", vi: "Bạn giúp mình tìm nhiệt kế được không?" },
+      { en: "Can you help me, please?", vi: "Bạn giúp mình được không ạ?" }] },
+  ],
+  listening: {
+    intro: "Listen to the wellness-shop story, then answer.", introVi: "Nghe chuyện ở cửa hàng chăm sóc sức khỏe rồi trả lời.",
+    script: "Emma and her brother went to the wellness shop with their mum. \"Excuse me, where is the soap?\" Emma asked. The shopkeeper pointed to a shelf. Emma's brother needed a box of tissues because he had a cold. The shopkeeper showed them a thermometer too. \"How much is this bottle?\" asked Mum. They put everything in a basket and paid at the counter.",
+    questions: [
+      { q: "What did Emma ask about first?", vi: "Emma hỏi về gì trước tiên?", options: ["Where the soap is", "The time", "The weather"], answer: "Where the soap is", explainVi: "Emma hỏi xà phòng ở đâu." },
+      { q: "Why did her brother need tissues?", vi: "Vì sao em trai cần khăn giấy?", options: ["He had a cold", "He was hungry", "He was tired"], answer: "He had a cold", explainVi: "Em trai bị cảm nên cần khăn giấy." },
+      { q: "Where did they put everything?", vi: "Họ để mọi thứ vào đâu?", options: ["In a basket", "In a tent", "In a pool"], answer: "In a basket", explainVi: "Họ bỏ vào giỏ rồi ra quầy trả tiền." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Excuse me, where is the soap?", vi: "Xin hỏi, xà phòng ở đâu ạ?" },
+      { en: "Can you help me, please?", vi: "Bạn giúp mình được không ạ?" },
+    ],
+    guided: { q: "What do you need from the wellness shop?", vi: "Bạn cần gì ở cửa hàng chăm sóc sức khỏe?", hint: "I need ___." },
+    describe: { prompt: "Look at the wellness-shop picture. Describe it in 3–5 sentences. Use \"I can see\", \"There are\", and \"I need\".", vi: "Nhìn tranh cửa hàng. Mô tả 3–5 câu, dùng \"I can see\", \"There are\" và \"I need\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "What do you wash your hands with?", vi: "Bạn rửa tay bằng gì?", options: ["Soap", "A screwdriver", "A ticket"], answer: "Soap" },
+      { type: "sentence", q: "Which sentence politely asks where something is?", vi: "Câu nào hỏi vị trí một cách lịch sự?", options: ["Excuse me, where is the soap?", "Soap now.", "The shelf is tall."], answer: "Excuse me, where is the soap?" },
+      { type: "listening", q: "Why did her brother need tissues?", vi: "Vì sao em trai cần khăn giấy?", options: ["He had a cold", "He was happy", "He was cold outside"], answer: "He had a cold" },
+      { type: "reading", q: "Read: \"I need a box of tissues.\" What does she want?", vi: "Đọc câu trên. Bạn ấy muốn gì?", options: ["Tissues", "Apples", "A tent"], answer: "Tissues", explainVi: "\"a box of tissues\" = một hộp khăn giấy." },
+    ],
+  },
+};
+
+/* ============ Level 1 · Unit 30: At the School Cafeteria ============ */
+const AT_THE_SCHOOL_CAFETERIA: Lesson = {
+  id: "cafeteria", theme: "everyday-town", title: "At the School Cafeteria", vi: "Ở nhà ăn trường", ageRange: "9–12",
+  sceneImage: "/assets/images/learn/level-1/level-1-unit-30-at-the-school-cafeteria.webp",
+  vocab: [
+    { word: "cafeteria", ipa: "/ˌkæfəˈtɪəriə/", vi: "nhà ăn", emoji: "🍽️", example: "We eat lunch in the cafeteria.", exampleVi: "Chúng mình ăn trưa ở nhà ăn." },
+    { word: "tray", ipa: "/treɪ/", vi: "cái khay", emoji: "🍱", example: "He carries his lunch on a tray.", exampleVi: "Cậu ấy bưng bữa trưa trên khay." },
+    { word: "soup", ipa: "/suːp/", vi: "súp", emoji: "🍲", example: "The soup is warm.", exampleVi: "Món súp còn ấm." },
+    { word: "sandwich", ipa: "/ˈsænwɪdʒ/", vi: "bánh mì kẹp", emoji: "🥪", example: "I'd like a sandwich, please.", exampleVi: "Cho mình một bánh mì kẹp ạ." },
+    { word: "fruit", ipa: "/fruːt/", vi: "trái cây", emoji: "🍎", example: "There is fresh fruit on the tray.", exampleVi: "Có trái cây tươi trên khay." },
+    { word: "vegetables", ipa: "/ˈvedʒtəblz/", vi: "rau củ", emoji: "🥗", example: "Eat some vegetables every day.", exampleVi: "Ăn rau củ mỗi ngày." },
+    { word: "compost", ipa: "/ˈkɒmpɒst/", vi: "rác hữu cơ", emoji: "🍂", example: "Food scraps go in the compost bin.", exampleVi: "Thức ăn thừa bỏ vào thùng rác hữu cơ." },
+    { word: "recycle", ipa: "/riːˈsaɪkl/", vi: "tái chế", emoji: "♻️", example: "We recycle the bottles.", exampleVi: "Chúng mình tái chế các chai." },
+  ],
+  patterns: [
+    { pattern: "Can I have …, please?", vi: "Cho mình … được không ạ?", examples: [
+      { en: "Can I have some soup, please?", vi: "Cho mình ít súp được không ạ?" },
+      { en: "Can I have a sandwich, please?", vi: "Cho mình một bánh mì kẹp được không ạ?" }] },
+    { pattern: "Would you like … or …?", vi: "Bạn muốn … hay …?", examples: [
+      { en: "Would you like fruit or a muffin?", vi: "Bạn muốn trái cây hay bánh muffin?" },
+      { en: "Would you like soup or a sandwich?", vi: "Bạn muốn súp hay bánh mì kẹp?" }] },
+    { pattern: "… goes in …", vi: "… bỏ vào …", examples: [
+      { en: "Food scraps go in the compost bin.", vi: "Thức ăn thừa bỏ vào thùng rác hữu cơ." },
+      { en: "The bottle goes in the recycling bin.", vi: "Cái chai bỏ vào thùng tái chế." }] },
+    { pattern: "… is / are + -ing", vi: "… đang … (thì tiếp diễn)", examples: [
+      { en: "The girl is sorting her waste.", vi: "Bạn gái đang phân loại rác." },
+      { en: "The boy is carrying his tray.", vi: "Cậu bé đang bưng khay." }] },
+  ],
+  listening: {
+    intro: "Listen to the cafeteria story, then answer.", introVi: "Nghe chuyện ở nhà ăn rồi trả lời.",
+    script: "At lunchtime, the cafeteria was busy. The lunch helper gave Ravi a bowl of warm soup. \"Can I have a sandwich too, please?\" he asked. There was fresh fruit and lots of vegetables to choose from. After eating, Sara sorted her waste. Food scraps went in the green compost bin, and her bottle went in the blue recycling bin. Everyone helped keep the cafeteria clean.",
+    questions: [
+      { q: "What did the helper give Ravi first?", vi: "Người phục vụ đưa Ravi gì trước tiên?", options: ["A bowl of soup", "A book", "A ball"], answer: "A bowl of soup", explainVi: "Ravi được đưa một bát súp ấm." },
+      { q: "Where did the food scraps go?", vi: "Thức ăn thừa bỏ vào đâu?", options: ["In the compost bin", "In the pool", "On the floor"], answer: "In the compost bin", explainVi: "Thức ăn thừa bỏ vào thùng rác hữu cơ." },
+      { q: "Where did Sara's bottle go?", vi: "Chai của Sara bỏ vào đâu?", options: ["In the recycling bin", "In the soup", "In her bag"], answer: "In the recycling bin", explainVi: "Chai bỏ vào thùng tái chế màu xanh dương." },
+    ],
+  },
+  speaking: {
+    repeat: [
+      { en: "Can I have some soup, please?", vi: "Cho mình ít súp được không ạ?" },
+      { en: "The bottle goes in the recycling bin.", vi: "Cái chai bỏ vào thùng tái chế." },
+    ],
+    guided: { q: "What would you like for lunch?", vi: "Bạn muốn ăn gì cho bữa trưa?", hint: "I'd like ___, please." },
+    describe: { prompt: "Look at the cafeteria picture. Describe it in 3–5 sentences. Use \"I can see\", \"is …-ing\", and \"goes in\".", vi: "Nhìn tranh nhà ăn. Mô tả 3–5 câu, dùng \"I can see\", \"is …-ing\" và \"goes in\".", min: 3, max: 5 },
+  },
+  miniCheck: {
+    tasks: [
+      { type: "vocab", q: "Where do food scraps go?", vi: "Thức ăn thừa bỏ vào đâu?", options: ["In the compost bin", "In the pool", "On the tray"], answer: "In the compost bin" },
+      { type: "sentence", q: "Which sentence politely asks for soup?", vi: "Câu nào xin súp một cách lịch sự?", options: ["Can I have some soup, please?", "Soup now.", "The soup is hot."], answer: "Can I have some soup, please?" },
+      { type: "listening", q: "Where did Sara's bottle go?", vi: "Chai của Sara bỏ vào đâu?", options: ["In the recycling bin", "In the compost bin", "In her pocket"], answer: "In the recycling bin" },
+      { type: "reading", q: "Read: \"The girl is sorting her waste.\" What is she doing?", vi: "Đọc câu trên. Bạn ấy đang làm gì?", options: ["Sorting waste", "Eating soup", "Reading a book"], answer: "Sorting waste", explainVi: "\"sorting her waste\" = đang phân loại rác." },
+    ],
+  },
+};
+
 type ScenarioLessonInput = {
   id: string; theme: string; title: string; vi: string; sceneImage: string;
   vocab: VocabularyItem[]; patterns: SentencePattern[];
@@ -3762,7 +4312,9 @@ export const THEMES: CourseTheme[] = [
   { id: "everyday-town", name: "Everyday Town", vi: "Phố Ngày Thường", emoji: "🏙️",
     lessons: [AT_THE_PARK, IN_THE_KITCHEN, IN_THE_CLASSROOM, AT_THE_SUPERMARKET, AT_THE_BUS_STOP, AT_THE_LIBRARY, AT_THE_COMMUNITY_SPORTS_CENTRE,
       AT_THE_CAFE, AT_THE_DOCTORS_CLINIC, AT_THE_CLOTHING_STORE, AT_THE_COMMUNITY_GARDEN, AT_THE_BIKE_REPAIR_SHOP,
-      AT_THE_POST_OFFICE, AT_THE_PET_SHELTER, AT_THE_SKYTRAIN_STATION, AT_THE_MUSIC_STORE, AT_THE_RECYCLING_DEPOT] },
+      AT_THE_POST_OFFICE, AT_THE_PET_SHELTER, AT_THE_SKYTRAIN_STATION, AT_THE_MUSIC_STORE, AT_THE_RECYCLING_DEPOT,
+      AT_THE_FARMERS_MARKET, AT_THE_COMMUNITY_POOL, AT_THE_BAKERY, AT_THE_DENTIST, AT_THE_HARDWARE_STORE,
+      AT_THE_ART_CLASS, AT_THE_FERRY_TERMINAL, AT_THE_CAMPGROUND, AT_THE_WELLNESS_SHOP, AT_THE_SCHOOL_CAFETERIA] },
   { id: "discovery-days", name: "Discovery Days", vi: "Ngày Khám Phá", emoji: "🔬",
     lessons: [AT_THE_SCIENCE_FAIR, AT_THE_SCIENCE_MUSEUM, AT_THE_VANCOUVER_WATERFRONT] },
   { id: "story-time", name: "Story Time", vi: "Giờ Kể Chuyện", emoji: "📖",
@@ -3815,6 +4367,16 @@ export const LEVEL1_UNITS: CourseUnit[] = [
   { id: "skytrain",   n: 18, title: "At the SkyTrain Station",  vi: "Ở ga tàu điện",         image: L1IMG + "level-1-unit-18-at-the-skytrain-station.webp",  focus: "Tàu điện · phương hướng · giờ giấc",      lessonId: "skytrain",   ready: true },
   { id: "musicstore", n: 19, title: "At the Music Store",       vi: "Ở cửa hàng nhạc cụ",    image: L1IMG + "level-1-unit-19-at-the-music-store.webp",       focus: "Nhạc cụ · can/can't · âm thanh · xin thử", lessonId: "musicstore", ready: true },
   { id: "recycling",  n: 20, title: "At the Recycling Depot",   vi: "Ở điểm tái chế",        image: L1IMG + "level-1-unit-20-at-the-recycling-depot.webp",   focus: "Vật liệu · phân loại · made of · should", lessonId: "recycling",  ready: true },
+  { id: "farmersmarket", n: 21, title: "At the Farmers' Market", vi: "Ở chợ nông sản",       image: L1IMG + "level-1-unit-21-at-the-farmers-market.webp",    focus: "Trái cây/rau · số lượng & cân · mua lịch sự",  lessonId: "farmersmarket", ready: true },
+  { id: "pool",       n: 22, title: "At the Community Pool",     vi: "Ở hồ bơi cộng đồng",     image: L1IMG + "level-1-unit-22-at-the-community-pool.webp",    focus: "Đồ bơi · an toàn hồ bơi · can/can't",          lessonId: "pool",       ready: true },
+  { id: "bakery",     n: 23, title: "At the Bakery",             vi: "Ở tiệm bánh",            image: L1IMG + "level-1-unit-23-at-the-bakery.webp",           focus: "Bánh mì/bánh ngọt · số lượng · gọi món",       lessonId: "bakery",     ready: true },
+  { id: "dentist",    n: 24, title: "At the Dentist",            vi: "Ở phòng nha",            image: L1IMG + "level-1-unit-24-at-the-dentist.webp",          focus: "Răng miệng · thói quen · should/shouldn't",    lessonId: "dentist",    ready: true },
+  { id: "hardware",   n: 25, title: "At the Hardware Store",     vi: "Ở cửa hàng dụng cụ",     image: L1IMG + "level-1-unit-25-at-the-hardware-store.webp",   focus: "Vật liệu · đo đạc · need to · dự án nhỏ",      lessonId: "hardware",   ready: true },
+  { id: "artclass",   n: 26, title: "At the Art Class",          vi: "Ở lớp vẽ",               image: L1IMG + "level-1-unit-26-at-the-art-class.webp",        focus: "Đồ vẽ · màu sắc · -ing · mượn đồ",             lessonId: "artclass",   ready: true },
+  { id: "ferryterminal", n: 27, title: "At the Ferry Terminal",  vi: "Ở bến phà",              image: L1IMG + "level-1-unit-27-at-the-ferry-terminal.webp",   focus: "Đi phà · giờ giấc · hỏi giờ đến",              lessonId: "ferryterminal", ready: true },
+  { id: "campground", n: 28, title: "At the Campground",         vi: "Ở khu cắm trại",         image: L1IMG + "level-1-unit-28-at-the-campground.webp",       focus: "Đồ cắm trại · trình tự · need to · an toàn",   lessonId: "campground", ready: true },
+  { id: "wellness",   n: 29, title: "At the Wellness Shop",      vi: "Ở cửa hàng chăm sóc",    image: L1IMG + "level-1-unit-29-at-the-wellness-shop.webp",    focus: "Đồ chăm sóc · hỏi mua lịch sự · số lượng",     lessonId: "wellness",   ready: true },
+  { id: "cafeteria",  n: 30, title: "At the School Cafeteria",   vi: "Ở nhà ăn trường",        image: L1IMG + "level-1-unit-30-at-the-school-cafeteria.webp", focus: "Nhóm thức ăn · gọi món · phân loại rác",       lessonId: "cafeteria",  ready: true },
 ];
 
 /* ============ Level 2 · Stories & Situations (3 Unit) ============ */

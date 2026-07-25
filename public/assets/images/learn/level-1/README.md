@@ -24,6 +24,16 @@ Canonical image folder for Level 1 lessons.
 | 18 | At the SkyTrain Station | `level-1-unit-18-at-the-skytrain-station.webp` |
 | 19 | At the Music Store | `level-1-unit-19-at-the-music-store.webp` |
 | 20 | At the Recycling Depot | `level-1-unit-20-at-the-recycling-depot.webp` |
+| 21 | At the Farmers' Market | `level-1-unit-21-at-the-farmers-market.webp` |
+| 22 | At the Community Pool | `level-1-unit-22-at-the-community-pool.webp` |
+| 23 | At the Bakery | `level-1-unit-23-at-the-bakery.webp` |
+| 24 | At the Dentist | `level-1-unit-24-at-the-dentist.webp` |
+| 25 | At the Hardware Store | `level-1-unit-25-at-the-hardware-store.webp` |
+| 26 | At the Art Class | `level-1-unit-26-at-the-art-class.webp` |
+| 27 | At the Ferry Terminal | `level-1-unit-27-at-the-ferry-terminal.webp` |
+| 28 | At the Campground | `level-1-unit-28-at-the-campground.webp` |
+| 29 | At the Wellness Shop | `level-1-unit-29-at-the-wellness-shop.webp` |
+| 30 | At the School Cafeteria | `level-1-unit-30-at-the-school-cafeteria.webp` |
 
 These are familiar-place lessons. Build vocabulary, sentence patterns, listening and a machine-graded Mini Check around each scene.
 
@@ -44,3 +54,19 @@ Unit 10 visual focus: sports-centre actions and objects, present continuous, `ca
 - Unit 18: public transport and platform vocabulary, directions, time, asking which train to take and where it goes.
 - Unit 19: musical instruments, preferences, ability with `can / can't`, describing sounds and politely asking to try an instrument.
 - Unit 20: materials and sorting, `made of`, `goes in`, `should / shouldn't`, quantities and simple recycling instructions.
+
+## Units 21–25 visual and language focus
+
+- Unit 21: fruit and vegetables, quantities and weights, polite buying requests, prices and reusable bags.
+- Unit 22: swimming gear and pool safety, present-continuous actions, `can / can't` and following simple instructions.
+- Unit 23: breads and pastries, quantities, containers, choices and polite ordering.
+- Unit 24: teeth and dental objects, daily routines, `should / shouldn't`, reassuring questions and simple advice.
+- Unit 25: materials, measurements and safe hand tools, `need / need to` and planning a small project.
+
+## Units 26–30 visual and language focus
+
+- Unit 26: art materials, colours and creative actions, present continuous, preferences and asking to borrow an item.
+- Unit 27: ferry travel objects, time and directions, asking when transport arrives and describing where people are going.
+- Unit 28: camping equipment, preparation actions and positions, `need / need to`, sequencing and simple outdoor-safety instructions.
+- Unit 29: everyday personal-care items, polite shopping questions, quantities, describing what someone needs and asking for help.
+- Unit 30: food groups, cafeteria objects, choices and quantities, polite requests, present-continuous actions and sorting lunch waste.
