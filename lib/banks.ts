@@ -230,5 +230,18 @@ export const LISTEN_SETS: ListenSet[] = [
       { id: "ls8", say: "Our group presented a poster about oceans.", options: ["Nhóm mình đã thuyết trình một tấm áp phích về đại dương.", "Nhóm mình đã xem một bộ phim về đại dương.", "Nhóm mình đã đi tham quan đại dương."], answer: "Nhóm mình đã thuyết trình một tấm áp phích về đại dương.", difficulty: "hard" },
     ],
   },
+  // Bám nội dung Learn Level 2 & 3 (chuyến đi, lựa chọn, lý do, điều kiện) — hợp với cảnh ảnh mới trong Practice.
+  {
+    id: "outdoors", title: "Trips & Choices", items: [
+      { id: "od1", say: "We are going on a class trip tomorrow.", options: ["Ngày mai chúng mình đi dã ngoại cùng lớp.", "Hôm qua chúng mình đã đi dã ngoại.", "Chúng mình sẽ không đi dã ngoại."], answer: "Ngày mai chúng mình đi dã ngoại cùng lớp.", difficulty: "easy" },
+      { id: "od2", say: "Let's take the ferry across the water.", options: ["Hãy đi phà qua bên kia mặt nước.", "Hãy đi bộ qua cây cầu.", "Hãy đi xe buýt đến trường."], answer: "Hãy đi phà qua bên kia mặt nước.", difficulty: "easy" },
+      { id: "od3", say: "I can see a deer near the forest trail.", options: ["Mình thấy một con hươu gần lối mòn trong rừng.", "Mình thấy một con chó gần bãi biển.", "Mình thấy một con chim gần hồ nước."], answer: "Mình thấy một con hươu gần lối mòn trong rừng.", difficulty: "easy" },
+      { id: "od4", say: "We should bring water because the hike is long.", options: ["Chúng mình nên mang nước vì quãng đi bộ dài.", "Chúng mình nên mang ô vì trời sắp mưa.", "Chúng mình nên mang đèn pin vì trời tối."], answer: "Chúng mình nên mang nước vì quãng đi bộ dài.", difficulty: "medium" },
+      { id: "od5", say: "The museum trip costs less than the boat trip.", options: ["Chuyến đi bảo tàng ít tốn kém hơn chuyến đi thuyền.", "Chuyến đi bảo tàng tốn kém hơn chuyến đi thuyền.", "Chuyến đi thuyền dài hơn chuyến đi bảo tàng."], answer: "Chuyến đi bảo tàng ít tốn kém hơn chuyến đi thuyền.", difficulty: "medium" },
+      { id: "od6", say: "Most of the class voted for the nature trip.", options: ["Phần lớn cả lớp bỏ phiếu cho chuyến đi thiên nhiên.", "Phần lớn cả lớp bỏ phiếu cho chuyến đi bảo tàng.", "Không ai bỏ phiếu cho chuyến đi nào cả."], answer: "Phần lớn cả lớp bỏ phiếu cho chuyến đi thiên nhiên.", difficulty: "medium" },
+      { id: "od7", say: "If it rains, we will visit the museum instead.", options: ["Nếu trời mưa, chúng mình sẽ đi bảo tàng thay thế.", "Vì trời mưa, chúng mình đã huỷ chuyến đi.", "Nếu trời nắng, chúng mình sẽ ở nhà."], answer: "Nếu trời mưa, chúng mình sẽ đi bảo tàng thay thế.", difficulty: "hard" },
+      { id: "od8", say: "We chose the trail because it is close and cheap.", options: ["Chúng mình chọn lối mòn vì nó gần và rẻ.", "Chúng mình chọn chiếc thuyền vì nó nhanh và đắt.", "Chúng mình chọn bảo tàng vì nó xa và đẹp."], answer: "Chúng mình chọn lối mòn vì nó gần và rẻ.", difficulty: "hard" },
+    ],
+  },
 ];
 export const listenSetById = (id: string) => LISTEN_SETS.find((s) => s.id === id);

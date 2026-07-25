@@ -504,7 +504,7 @@ function RiddleGame({ setId, cb, accent, onExit }: { setId?: string; cb: GameCal
 
 /* ============ 4. Listen & Choose (nghe câu → chọn nghĩa, KHÔNG ảnh) ============ */
 const LISTEN_META: Record<string, [string, string]> = {
-  everyday: ["Sinh hoạt hằng ngày", "🏠"], school: ["Ở trường", "🏫"],
+  everyday: ["Sinh hoạt hằng ngày", "🏠"], school: ["Ở trường", "🏫"], outdoors: ["Chuyến đi & Lựa chọn", "🏞️"],
 };
 function ListenRound({ setId, difficulty, cb, accent, onExit, onNext }: {
   setId: string; difficulty: Difficulty; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;

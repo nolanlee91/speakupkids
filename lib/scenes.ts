@@ -18,6 +18,8 @@ export type DetectiveScene = {
 
 const IMG = "/assets/images/gen/";
 const L1 = "/assets/images/learn/level-1/";
+const L2 = "/assets/images/learn/level-2/";
+const L3 = "/assets/images/learn/level-3/";
 
 export const DETECTIVE_SCENES: DetectiveScene[] = [
   {
@@ -162,6 +164,38 @@ export const DETECTIVE_SCENES: DetectiveScene[] = [
       { id: "wf8", kind: "infer", q: "The sky is full of grey clouds. What might happen soon?", vi: "Bầu trời đầy mây xám. Điều gì có thể sắp xảy ra?", options: ["It might rain", "It will be very hot", "It will snow candy"], answer: "It might rain", explainVi: "Mây xám dày thường báo hiệu sắp mưa." },
       { id: "wf9", kind: "locate", q: "What season is it? Look at the leaves.", vi: "Đang là mùa nào? Hãy nhìn lá cây.", options: ["Autumn", "Summer", "Spring"], answer: "Autumn", explainVi: "Lá phong đỏ cam rơi đầy đất là dấu hiệu mùa thu." },
       { id: "wf10", kind: "sequence", q: "The girl is pointing at the map. What will the friends probably do?", vi: "Bạn nữ chỉ vào bản đồ. Các bạn có lẽ sẽ làm gì?", options: ["Follow the map to their next stop", "Jump into the cold water", "Go to sleep on the path"], answer: "Follow the map to their next stop", explainVi: "Chỉ bản đồ để dẫn đường tới điểm tiếp theo." },
+    ],
+  },
+  {
+    id: "missingbackpack", title: "The Missing Backpack", vi: "Chiếc balô thất lạc", image: L2 + "level-2-unit-01-missing-backpack.webp",
+    emojis: ["🎒", "🧭", "📓", "🥤", "🔎", "🚪", "🪑", "🏫"],
+    questions: [
+      { id: "mb1", kind: "observe", q: "Where are the children?", vi: "Các bạn đang ở đâu?", options: ["In a school hallway", "On a beach", "In a kitchen"], answer: "In a school hallway" },
+      { id: "mb2", kind: "observe", q: "What is on the floor near the bench?", vi: "Trên sàn cạnh ghế có gì?", options: ["A green notebook", "A red ball", "A slice of cake"], answer: "A green notebook" },
+      { id: "mb3", kind: "observe", q: "What colour is the water bottle on the floor?", vi: "Chai nước trên sàn màu gì?", options: ["Light blue", "Bright red", "Yellow"], answer: "Light blue" },
+      { id: "mb4", kind: "locate", q: "What is the boy with glasses holding?", vi: "Cậu bé đeo kính cầm gì?", options: ["A map of the school", "A sandwich", "A cat"], answer: "A map of the school" },
+      { id: "mb5", kind: "compare", q: "Which child is looking under the bench?", vi: "Bạn nào đang nhìn dưới gầm ghế?", options: ["The girl in the striped shirt", "The boy with glasses", "The boy in the plaid shirt"], answer: "The girl in the striped shirt" },
+      { id: "mb6", kind: "observe", q: "What is the weather like outside the window?", vi: "Ngoài cửa sổ thời tiết thế nào?", options: ["Sunny", "Snowy", "Stormy"], answer: "Sunny" },
+      { id: "mb7", kind: "infer", q: "The children are looking down and searching the floor. What are they doing?", vi: "Các bạn cúi xuống tìm trên sàn. Họ đang làm gì?", options: ["Looking for something lost", "Cleaning the floor", "Playing football"], answer: "Looking for something lost", explainVi: "Cúi nhìn và tìm quanh sàn nghĩa là đang tìm đồ bị mất." },
+      { id: "mb8", kind: "locate", q: "What can you see through the doorway in the background?", vi: "Nhìn qua ô cửa phía sau thấy gì?", options: ["A library with bookshelves", "A swimming pool", "A farm"], answer: "A library with bookshelves" },
+      { id: "mb9", kind: "infer", q: "A notebook, a card and a bottle lie on the floor. What probably happened?", vi: "Quyển vở, tấm thẻ và chai nước nằm trên sàn. Có lẽ đã xảy ra gì?", options: ["A bag tipped over and things fell out", "It started to snow indoors", "Someone built a tower"], answer: "A bag tipped over and things fell out", explainVi: "Nhiều đồ rơi vãi trên sàn → một chiếc túi đã bị đổ." },
+      { id: "mb10", kind: "sequence", q: "They found clues on the floor. What should they do next?", vi: "Các bạn tìm thấy manh mối trên sàn. Tiếp theo nên làm gì?", options: ["Follow the clues to find the backpack", "Go to sleep", "Throw the clues away"], answer: "Follow the clues to find the backpack", explainVi: "Có manh mối thì lần theo để tìm chiếc balô thất lạc." },
+    ],
+  },
+  {
+    id: "classtrip", title: "Planning the Class Trip", vi: "Lên kế hoạch chuyến đi lớp", image: L3 + "collection-01-making-choices/level-3-c01-unit-01-planning-class-trip.webp",
+    emojis: ["🗺️", "🔭", "🌲", "🦌", "⛴️", "🗳️", "🌍", "🧑‍🏫"],
+    questions: [
+      { id: "ct1", kind: "observe", q: "Where are the students?", vi: "Các bạn học sinh đang ở đâu?", options: ["In a classroom", "On a boat", "In a park"], answer: "In a classroom" },
+      { id: "ct2", kind: "observe", q: "How many trip choices are on the table?", vi: "Trên bàn có mấy lựa chọn chuyến đi?", options: ["Two", "Three", "Five"], answer: "Three" },
+      { id: "ct3", kind: "observe", q: "What is on the first card?", vi: "Trên tấm thẻ đầu tiên có gì?", options: ["A telescope and a science flask", "A birthday cake", "A racing car"], answer: "A telescope and a science flask" },
+      { id: "ct4", kind: "compare", q: "Which card shows a forest with a deer?", vi: "Tấm thẻ nào có rừng cây và một con hươu?", options: ["The middle card", "The first card", "The last card"], answer: "The middle card" },
+      { id: "ct5", kind: "observe", q: "What is on the last card?", vi: "Trên tấm thẻ cuối cùng có gì?", options: ["A boat with an anchor", "An airplane", "A school bus"], answer: "A boat with an anchor" },
+      { id: "ct6", kind: "locate", q: "Who is holding a small voting board?", vi: "Ai đang cầm bảng bỏ phiếu nhỏ?", options: ["The teacher", "The youngest boy", "Nobody"], answer: "The teacher" },
+      { id: "ct7", kind: "locate", q: "What is on the shelf in the background?", vi: "Trên kệ phía sau có gì?", options: ["A globe", "A television", "A fish tank"], answer: "A globe" },
+      { id: "ct8", kind: "infer", q: "The students point at the cards and talk. What are they doing?", vi: "Các bạn chỉ vào các thẻ và trò chuyện. Họ đang làm gì?", options: ["Choosing where to go on a trip", "Cooking dinner", "Cleaning the room"], answer: "Choosing where to go on a trip", explainVi: "Chỉ vào các lựa chọn và bàn bạc → đang chọn nơi đi chơi." },
+      { id: "ct9", kind: "infer", q: "Each card has small tokens under it. What are the tokens for?", vi: "Dưới mỗi thẻ có những đồng nhỏ. Chúng dùng để làm gì?", options: ["Voting and comparing the choices", "Buying food", "Telling the time"], answer: "Voting and comparing the choices", explainVi: "Các đồng nhỏ dùng để bỏ phiếu, so sánh giữa các lựa chọn." },
+      { id: "ct10", kind: "sequence", q: "After everyone votes, what will the class do?", vi: "Sau khi mọi người bỏ phiếu, cả lớp sẽ làm gì?", options: ["Pick the trip with the most votes", "Go home immediately", "Erase the whole board"], answer: "Pick the trip with the most votes", explainVi: "Bỏ phiếu xong thì chọn chuyến đi được nhiều phiếu nhất." },
     ],
   },
 ];
@@ -319,6 +353,34 @@ export const TALK_SCENES: TalkScene[] = [
       { id: "dw5", kind: "arrange", vi: "Xếp câu: Bên kia mặt nước có núi tuyết.", solution: ["Across", "the", "water", "are", "snowy", "mountains"], say: "Across the water are snowy mountains." },
       { id: "dw6", kind: "arrange", vi: "Xếp câu: Một cậu bé đang sửa xe đạp.", solution: ["A", "boy", "is", "fixing", "his", "bike"], say: "A boy is fixing his bike." },
       { id: "dw7", kind: "fill", vi: "Điền từ: Bầu trời nhiều mây nên trời có thể …", q: "The sky is cloudy, so it might ___.", options: ["rain", "sing", "sleep"], answer: "rain", say: "The sky is cloudy, so it might rain." },
+    ],
+  },
+  {
+    id: "missingbackpack", title: "Describe the Missing Backpack", vi: "Mô tả chiếc balô thất lạc", image: L2 + "level-2-unit-01-missing-backpack.webp",
+    emojis: ["🎒", "🧭", "📓", "🥤", "🔎", "🚪", "🪑", "🏫"],
+    intro: "Nhìn dãy hành lang. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tmb1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The children are searching the floor.", "The children are swimming.", "The children are eating lunch."], answer: "The children are searching the floor.", say: "The children are searching the floor." },
+      { id: "tmb2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["A boy is holding a map.", "A water bottle is on the floor.", "A dog is reading a map."], answer: "A dog is reading a map.", say: "A boy is holding the map, not a dog." },
+      { id: "tmb3", kind: "fill", vi: "Điền từ: Cậu bé cầm một … của trường.", q: "The boy is holding a ___ of the school.", options: ["map", "cake", "shoe"], answer: "map", say: "The boy is holding a map of the school." },
+      { id: "tmb4", kind: "position", vi: "Quyển vở xanh ở đâu?", q: "Where is the green notebook?", options: ["on the floor", "in the sky", "under the sea"], answer: "on the floor", say: "The green notebook is on the floor." },
+      { id: "tmb5", kind: "arrange", vi: "Xếp câu: Các bạn đang tìm một chiếc balô.", solution: ["The", "children", "are", "looking", "for", "a", "backpack"], say: "The children are looking for a backpack." },
+      { id: "tmb6", kind: "arrange", vi: "Xếp câu: Một chai nước nằm trên sàn.", solution: ["A", "water", "bottle", "is", "on", "the", "floor"], say: "A water bottle is on the floor." },
+      { id: "tmb7", kind: "fill", vi: "Điền từ: Nắng chiếu qua khung … lớn.", q: "Sunlight comes through the big ___.", options: ["window", "oven", "river"], answer: "window", say: "Sunlight comes through the big window." },
+    ],
+  },
+  {
+    id: "classtrip", title: "Describe the Class Trip Plan", vi: "Mô tả buổi lên kế hoạch chuyến đi", image: L3 + "collection-01-making-choices/level-3-c01-unit-01-planning-class-trip.webp",
+    emojis: ["🗺️", "🔭", "🌲", "🦌", "⛴️", "🗳️", "🌍", "🧑‍🏫"],
+    intro: "Nhìn buổi bàn kế hoạch. Chọn, xếp câu mô tả đúng — rồi nói theo Maple nhé!",
+    tasks: [
+      { id: "tct1", kind: "choose", vi: "Chọn câu mô tả ĐÚNG bức tranh.", q: "Which sentence is TRUE about the picture?", options: ["The students are choosing a class trip.", "The students are sleeping.", "The students are on a boat."], answer: "The students are choosing a class trip.", say: "The students are choosing a class trip." },
+      { id: "tct2", kind: "spot", vi: "Câu nào KHÔNG đúng với tranh?", q: "Which sentence is FALSE about the picture?", options: ["There are three cards on the table.", "The teacher holds a voting board.", "A deer is sitting at the table."], answer: "A deer is sitting at the table.", say: "The deer is only a picture on a card." },
+      { id: "tct3", kind: "fill", vi: "Điền từ: Trên bàn có … tấm thẻ chuyến đi.", q: "There are ___ trip cards on the table.", options: ["three", "ten", "two"], answer: "three", say: "There are three trip cards on the table." },
+      { id: "tct4", kind: "position", vi: "Quả địa cầu ở đâu?", q: "Where is the globe?", options: ["on the shelf", "under the table", "up in the sky"], answer: "on the shelf", say: "The globe is on the shelf." },
+      { id: "tct5", kind: "arrange", vi: "Xếp câu: Cả lớp đang lên kế hoạch một chuyến đi.", solution: ["The", "class", "is", "planning", "a", "school", "trip"], say: "The class is planning a school trip." },
+      { id: "tct6", kind: "arrange", vi: "Xếp câu: Chúng mình bỏ phiếu cho lựa chọn tốt nhất.", solution: ["We", "vote", "for", "the", "best", "choice"], say: "We vote for the best choice." },
+      { id: "tct7", kind: "fill", vi: "Điền từ: Tấm thẻ cuối có hình một … với chiếc mỏ neo.", q: "The last card shows a ___ with an anchor.", options: ["boat", "plane", "train"], answer: "boat", say: "The last card shows a boat with an anchor." },
     ],
   },
 ];
