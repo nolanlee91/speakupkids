@@ -445,6 +445,7 @@ const RIDDLE_META: Record<string, [string, string]> = {
   nature: ["Thiên nhiên", "/assets/images/gen/practice-topics/topic-nature.webp"],
   logic: ["Đố mẹo", "/assets/images/gen/practice-topics/topic-logic.webp"],
   storywords: ["Từ trong truyện", "/assets/images/gen/practice-topics/topic-stories.webp"],
+  home: ["Trong nhà", "/assets/images/gen/practice-topics/topic-everyday.webp"],
 };
 function RiddleRound({ setId, difficulty, cb, accent, onExit, onNext }: {
   setId: string; difficulty: Difficulty; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
@@ -531,6 +532,7 @@ const LISTEN_META: Record<string, [string, string]> = {
   everyday: ["Sinh hoạt hằng ngày", "/assets/images/gen/practice-topics/topic-everyday.webp"],
   school: ["Ở trường", "/assets/images/gen/practice-topics/topic-school.webp"],
   outdoors: ["Chuyến đi & Lựa chọn", "/assets/images/gen/practice-topics/topic-places.webp"],
+  feelings: ["Cảm xúc", "/assets/images/gen/practice-topics/topic-feelings.webp"],
 };
 function ListenRound({ setId, difficulty, cb, accent, onExit, onNext }: {
   setId: string; difficulty: Difficulty; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
