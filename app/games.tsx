@@ -60,7 +60,7 @@ function GameResult({ title, stars, info, doneLabel, onDone, secondary }: {
       {typeof stars === "number" && <div className="gr-stars">{"⭐".repeat(stars)}{"☆".repeat(3 - stars)}</div>}
       <h3>{title}</h3>
       {info && info.total > 0 && (
-        <p className="gr-explore">Đã khám phá <b>{info.explored}/{info.total}</b> thử thách{info.newly > 0 ? <> · <b>+{info.newly}</b> câu mới</> : ""}.</p>
+        <p className="gr-explore">Đã mở <b>{info.explored}/{info.total}</b> thử thách của bộ này{info.newly > 0 ? <> · <b>+{info.newly}</b> câu mới</> : ""}.</p>
       )}
       {info?.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{info.sticker.name}</b>!</p>}
       <button className="btn green" onClick={onDone}>{doneLabel}</button>
@@ -128,11 +128,11 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficult
                   {empty ? `Chưa có câu mức ${DIFF_VI[difficulty!]}` : `${DIFF_VI[difficulty!]} · ${nAtDiff} câu`}
                 </span>
               )}
-              {/* Game ảnh (không chia độ khó): không hiện tổng câu để tránh nhầm với số câu mỗi lượt. */}
+              {/* Game ảnh: nói rõ tổng ngân hàng và độ dài mỗi lượt để không bị hiểu là điểm số. */}
               <span className="sc-sub">
                 {showDiff
-                  ? `${discovered}/${it.total} thử thách${prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}`
-                  : prog.playCount > 0 ? `Đã chơi ${prog.playCount} lượt` : "Chạm để chơi"}
+                  ? `Đã mở ${discovered}/${it.total} thử thách${prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}`
+                  : `${discovered > 0 ? `Đã mở ${discovered}/${it.total}` : `${it.total} thử thách`} · Mỗi lượt ${ROUND_SIZE.picdet} câu`}
               </span>
               {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
             </button>
@@ -183,8 +183,8 @@ function buildImgPool(sceneId: string): ImgItem[] {
   }
   return items;
 }
-function PictureRound({ sceneId, cb, accent, onExit, onNext }: {
-  sceneId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
+function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
+  sceneId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void; onReplay: () => void;
 }) {
   const [session] = useState(() => {
     const scene = detectiveSceneById(sceneId) || talkSceneById(sceneId) || DETECTIVE_SCENES[0];
@@ -225,9 +225,13 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext }: {
   }, [i, items]);
 
   if (fin) {
-    const a = resultActions(onNext, onExit, "Bức khác →");
+    const a = {
+      doneLabel: "Khám phá câu mới",
+      onDone: onReplay,
+      secondary: { label: onNext ? "Chọn bức khác →" : "Xong →", onClick: onNext || onExit },
+    };
     return <GameShell emoji="🔎" title={title} vi={vi} onExit={onExit}>
-      <GameResult title={`Đúng ${score}/${items.length} thử thách!`} stars={stars} info={info} {...a} />
+      <GameResult title={`Bạn trả lời đúng ${score}/${items.length} câu!`} stars={stars} info={info} {...a} />
     </GameShell>;
   }
   function answerMcq(o: string) {
@@ -315,6 +319,7 @@ function PictureGame({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
   const initial = sceneId && (detectiveSceneById(sceneId) || talkSceneById(sceneId)) ? sceneId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
+  const [round, setRound] = useState(0);
   // Xáo trộn thứ tự cảnh MỖI LẦN vào — KHÔNG đi theo thứ tự level 1→2→3 như bên Learn.
   const [items] = useState<GalleryItem[]>(() => shuffle(DETECTIVE_SCENES.map((s) => {
     const t = talkSceneById(s.id);
@@ -327,9 +332,10 @@ function PictureGame({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
       intro="Chọn một bức tranh — quan sát, suy luận, mô tả rồi nói theo Maple."
       items={items} prefix="picdet" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
   }
-  return <PictureRound key={chosen} sceneId={chosen!} cb={cb} accent={accent}
+  return <PictureRound key={`${chosen}-${round}`} sceneId={chosen!} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
-    onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
+    onNext={galleryMode ? () => setChosen(undefined) : undefined}
+    onReplay={() => setRound((n) => n + 1)} />;
 }
 
 /* ============ 2. Sentence Puzzle ============ */
