@@ -120,10 +120,17 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficult
               </span>
               <span className="sc-name">{it.name}</span>
               <span className="sc-sub">{it.sub}</span>
-              <span className={`sc-count ${showDiff ? difficulty : "mixed"}`}>
-                {showDiff ? (empty ? `Chưa có câu mức ${DIFF_VI[difficulty!]}` : `${DIFF_VI[difficulty!]} · ${nAtDiff} câu`) : "Trộn đủ dạng thử thách"}
+              {showDiff && (
+                <span className={`sc-count ${difficulty}`}>
+                  {empty ? `Chưa có câu mức ${DIFF_VI[difficulty!]}` : `${DIFF_VI[difficulty!]} · ${nAtDiff} câu`}
+                </span>
+              )}
+              {/* Game ảnh (không chia độ khó): không hiện tổng câu để tránh nhầm với số câu mỗi lượt. */}
+              <span className="sc-sub">
+                {showDiff
+                  ? `${discovered}/${it.total} thử thách${prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}`
+                  : prog.playCount > 0 ? `Đã chơi ${prog.playCount} lượt` : "Chạm để chơi"}
               </span>
-              <span className="sc-sub">{discovered}/{it.total} thử thách{prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}</span>
               {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
             </button>
           );
@@ -148,10 +155,7 @@ function useFinish(fin: boolean, run: () => FinishInfo): FinishInfo | null {
 type ImgItem = {
   id: string; difficulty: Difficulty; mode: "mcq" | "arrange"; badge: string; vi: string;
   q?: string; options?: string[]; answer?: string; explainVi?: string; say?: string; solution?: string[];
-  // Chỉ dùng ở chế độ "Trộn nhiều tranh": mỗi câu mang theo ảnh/tên cảnh của chính nó.
-  image?: string; sceneVi?: string; sceneTitle?: string; emojis?: string[];
 };
-const MIX_ID = "mix";
 const IMG_BADGE: Record<string, string> = {
   observe: "Quan sát", locate: "Vị trí", compare: "So sánh", infer: "Suy luận", sequence: "Diễn tiến",
   choose: "Chọn câu đúng", spot: "Tìm câu sai", fill: "Điền từ", position: "Ở đâu", arrange: "Xếp câu mô tả",
@@ -176,43 +180,28 @@ function buildImgPool(sceneId: string): ImgItem[] {
   }
   return items;
 }
-// Chế độ "Trộn nhiều tranh": gộp câu của TẤT CẢ cảnh, mỗi câu gắn kèm ảnh/tên cảnh của nó
-// → một lượt có thể nhảy qua nhiều bức tranh khác nhau, không đi tuần tự từng ảnh như bên Learn.
-function buildMixedPool(): ImgItem[] {
-  const out: ImgItem[] = [];
-  for (const s of DETECTIVE_SCENES) {
-    for (const it of buildImgPool(s.id)) {
-      out.push({ ...it, image: s.image, sceneVi: s.vi, sceneTitle: s.title, emojis: s.emojis });
-    }
-  }
-  return out;
-}
-
 function PictureRound({ sceneId, cb, accent, onExit, onNext }: {
   sceneId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
 }) {
-  const mixed = sceneId === MIX_ID;
   const [session] = useState(() => {
     const scene = detectiveSceneById(sceneId) || talkSceneById(sceneId) || DETECTIVE_SCENES[0];
-    const key = mixed ? "picdet:mix" : "picdet:" + scene.id;
+    const key = "picdet:" + scene.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const pool = mixed ? buildMixedPool() : buildImgPool(scene.id);
+    const pool = buildImgPool(scene.id);
     const picked = selectRound(pool, prog, ROUND_SIZE.picdet, (it) => it.difficulty);
     const items = picked.map((it) => (it.mode === "mcq" && it.options ? { ...it, options: shuffle(it.options) } : it));
     return { scene, key, items, total: pool.length };
   });
   const { scene, items, key, total } = session;
-  const title = mixed ? "Thám tử hình ảnh" : scene.title;
-  const vi = mixed ? "Trộn nhiều tranh" : (scene as { vi: string }).vi;
+  const title = scene.title;
+  const vi = (scene as { vi: string }).vi;
+  const image = (scene as { image: string }).image;
+  const emojis = (scene as { emojis: string[] }).emojis;
 
   const [i, setI] = useState(0);
   const [results, setResults] = useState<RoundResult[]>([]);
   const [fin, setFin] = useState(false);
   const it = items[i];
-  // Ở chế độ trộn, ảnh/tên cảnh đổi theo TỪNG câu; ở chế độ một tranh thì cố định.
-  const image = mixed ? (it.image || scene.image) : (scene as { image: string }).image;
-  const sceneName = mixed ? (it.sceneVi || vi) : (scene as { vi: string }).vi;
-  const emojis = mixed ? (it.emojis || []) : (scene as { emojis: string[] }).emojis;
   const isArrange = it.mode === "arrange";
 
   const [picked, setPicked] = useState<string | null>(null);
@@ -262,8 +251,8 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext }: {
   const last = i + 1 >= items.length;
   return (
     <GameShell emoji="🔎" title={title} vi={vi} onExit={exit}>
-      <Scene image={image} emojis={emojis} name={sceneName} />
-      <div className="q-progress">Thử thách {i + 1}/{items.length} <span className="round-diff mixed">{mixed ? "Trộn nhiều tranh" : "Trộn"}</span></div>
+      <Scene image={image} emojis={emojis} name={vi} />
+      <div className="q-progress">Thử thách {i + 1}/{items.length}</div>
       <div className="talk-task">
         <span className="talk-kind">{it.badge}</span>
         <div className="talk-instr">{it.vi}</div>
@@ -323,23 +312,16 @@ function PictureGame({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
   const initial = sceneId && (detectiveSceneById(sceneId) || talkSceneById(sceneId)) ? sceneId : undefined;
   const galleryMode = !initial;
   const [chosen, setChosen] = useState<string | undefined>(initial);
-  // Xáo trộn thứ tự cảnh MỘT LẦN mỗi lần vào — Practice KHÔNG đi theo thứ tự Learn (park→kitchen→…).
-  // Thẻ "Trộn nhiều tranh" luôn đứng đầu: một lượt bốc câu từ NHIỀU bức khác nhau, đỡ cảm giác lặp như Learn.
-  const [items] = useState<GalleryItem[]>(() => {
-    const scenes = shuffle(DETECTIVE_SCENES.map((s) => {
-      const t = talkSceneById(s.id);
-      return { id: s.id, name: s.vi, sub: s.title, image: s.image,
-        total: s.questions.length + (t ? t.tasks.length : 0),
-        counts: { easy: 0, medium: 0, hard: 0 } as Record<Difficulty, number> };
-    }));
-    const mixTotal = scenes.reduce((n, s) => n + s.total, 0);
-    const mixCard: GalleryItem = { id: MIX_ID, name: "Trộn nhiều tranh", sub: "Mixed pictures",
-      image: "/assets/images/gen/game-picdet.webp", total: mixTotal, counts: { easy: 0, medium: 0, hard: 0 } };
-    return [mixCard, ...scenes];
-  });
+  // Xáo trộn thứ tự cảnh MỖI LẦN vào — KHÔNG đi theo thứ tự level 1→2→3 như bên Learn.
+  const [items] = useState<GalleryItem[]>(() => shuffle(DETECTIVE_SCENES.map((s) => {
+    const t = talkSceneById(s.id);
+    return { id: s.id, name: s.vi, sub: s.title, image: s.image,
+      total: s.questions.length + (t ? t.tasks.length : 0),
+      counts: { easy: 0, medium: 0, hard: 0 } as Record<Difficulty, number> };
+  })));
   if (galleryMode && !chosen) {
-    return <GameGallery emoji="🔎" title="Thám tử hình ảnh" vi="Chọn cách chơi"
-      intro="Chọn 'Trộn nhiều tranh' để bốc câu từ nhiều bức khác nhau, hoặc chọn một bức để tập trung. Mỗi lượt trộn đủ dạng thử thách."
+    return <GameGallery emoji="🔎" title="Thám tử hình ảnh" vi="Chọn bức tranh để khám phá"
+      intro="Chọn một bức tranh — quan sát, suy luận, mô tả rồi nói theo Maple."
       items={items} prefix="picdet" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
   }
   return <PictureRound key={chosen} sceneId={chosen!} cb={cb} accent={accent}
@@ -353,10 +335,10 @@ const PUZZLE_META: Record<string, [string, string]> = {
   school: ["Trường lớp", "/assets/images/gen/practice-topics/topic-school.webp"],
   food: ["Đồ ăn", "/assets/images/gen/practice-topics/topic-food.webp"],
   places: ["Nơi chốn & Du lịch", "/assets/images/gen/practice-topics/topic-places.webp"],
-  feelings: ["Cảm xúc", "/assets/images/gen/practice-topics/topic-stories.webp"],
-  past: ["Chuyện đã qua", "/assets/images/gen/practice-topics/topic-stories.webp"],
+  feelings: ["Cảm xúc", "/assets/images/gen/practice-topics/topic-feelings.webp"],
+  past: ["Chuyện đã qua", "/assets/images/gen/practice-topics/topic-past.webp"],
   stories: ["Câu chuyện & Tình huống", "/assets/images/gen/practice-topics/topic-stories.webp"],
-  opinions: ["Nêu ý kiến & Lý do", "/assets/images/gen/practice-topics/topic-stories.webp"],
+  opinions: ["Nêu ý kiến & Lý do", "/assets/images/gen/practice-topics/topic-opinions.webp"],
 };
 function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string; difficulty: Difficulty; cb: GameCallbacks; onExit: () => void; onNext?: () => void }) {
   const [session] = useState(() => {
@@ -447,10 +429,10 @@ function SentencePuzzle({ setId, cb, onExit }: { setId?: string; cb: GameCallbac
 
 /* ============ 3. English Riddles ============ */
 const RIDDLE_META: Record<string, [string, string]> = {
-  animals: ["Con vật", "/assets/images/gen/practice-topics/topic-nature.webp"],
+  animals: ["Con vật", "/assets/images/gen/practice-topics/topic-animals.webp"],
   food: ["Đồ ăn", "/assets/images/gen/practice-topics/topic-food.webp"],
   places: ["Nơi chốn", "/assets/images/gen/practice-topics/topic-places.webp"],
-  objects: ["Đồ vật", "/assets/images/gen/practice-topics/topic-logic.webp"],
+  objects: ["Đồ vật", "/assets/images/gen/practice-topics/topic-objects.webp"],
   nature: ["Thiên nhiên", "/assets/images/gen/practice-topics/topic-nature.webp"],
   logic: ["Đố mẹo", "/assets/images/gen/practice-topics/topic-logic.webp"],
   storywords: ["Từ trong truyện", "/assets/images/gen/practice-topics/topic-stories.webp"],
