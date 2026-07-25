@@ -141,7 +141,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
     const pct = pid ? lessonPct(state, pid, SECTIONS.length) : 0;
     const check = pid ? state.learn.lessons[pid]?.check : undefined;
     return (
-      <li key={u.id} className={`unit ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
+      <li key={u.id} className={`unit ${u.image ? "visual" : "phonics"} ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
         <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
           <span className={`unit-thumb ${u.image ? "" : "ph"}`} style={u.image ? { backgroundImage: `url('${u.image}')` } : undefined}>
             {!u.image && <span className="unit-thumb-txt" aria-hidden="true">{u.thumb}</span>}
@@ -172,7 +172,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
     const allUnits = groups ? groups.flatMap((g) => g.units) : (units || []);
     const done = levelDone(allUnits);
     return (
-      <div className={`course-level ${isOpen ? "open" : ""}`}>
+      <div className={`course-level ${allUnits.some((u) => !!u.image) ? "has-visual" : "text-only"} ${isOpen ? "open" : ""}`}>
         <button className="course-lvl-head" onClick={() => setOpenLevel(isOpen ? "" : id)} aria-expanded={isOpen}>
           <span className={`clh-ic level-${id}`}><AppIcon name={icon} /></span>
           <span className="clh-txt"><b>{title}</b><small>{sub}</small></span>

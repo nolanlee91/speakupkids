@@ -1268,10 +1268,44 @@
     .playground { max-width: 1000px; padding-top: 6px; }
     .portal.featured { min-height: 200px; }
 
-    /* ===== LEARN · chọn bài: thẻ Unit 2 cột ===== */
+    /* ===== LEARN · chọn bài: ảnh lớn cho Level 1–3, Level 0 vẫn gọn ===== */
     .learn.course { max-width: 1120px; }
     .course-level .unit-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .course-level .unit-list .unit { margin: 0; }
+    .course-level.has-visual .unit-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+    .course-level.has-visual .unit.visual,
+    .course-level.has-visual .unit.visual .unit-btn { height: 100%; }
+    .course-level.has-visual .unit.visual .unit-btn {
+      flex-direction: column; align-items: stretch; gap: 0; padding: 8px;
+      overflow: hidden; text-align: left;
+    }
+    .course-level.has-visual .unit.visual .unit-btn:hover:not(:disabled) { transform: translateY(-3px); }
+    .course-level.has-visual .unit.visual .unit-thumb {
+      width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 14px;
+      background-position: center; flex: 0 0 auto;
+    }
+    .course-level.has-visual .unit.visual .unit-n {
+      left: 10px; top: 10px; width: 30px; height: 30px; font-size: .88rem;
+      background: rgba(28,37,56,.72); backdrop-filter: blur(4px);
+    }
+    .course-level.has-visual .unit.visual .unit-badge {
+      right: 10px; bottom: 10px; width: 30px; height: 30px;
+    }
+    .course-level.has-visual .unit.visual .unit-body {
+      display: flex; flex-direction: column; flex: 1; width: 100%;
+      padding: 12px 8px 8px;
+    }
+    .course-level.has-visual .unit.visual .unit-title { line-height: 1.28; min-height: 2.55em; }
+    .course-level.has-visual .unit.visual .unit-title small {
+      display: block; margin-top: 3px; font-size: .78rem; line-height: 1.25;
+    }
+    .course-level.has-visual .unit.visual .unit-focus {
+      line-height: 1.45; min-height: 3.35em; margin: 7px 0 10px;
+    }
+    .course-level.has-visual .unit.visual .unit-bar { margin-top: auto; }
+    .course-level.has-visual .unit.visual .unit-go {
+      align-self: flex-end; margin: 2px 8px 8px; min-height: 20px;
+    }
 
     /* ===== LEARN · màn đang học + trang chặng: cột đọc hẹp, hero gọn, vocab 2 cột ===== */
     .learn:not(.course) { max-width: 840px; }
