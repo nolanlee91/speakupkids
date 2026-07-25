@@ -112,7 +112,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
             <li key={sc.key} className={`track ${done ? "done" : ""}`} onClick={() => setView(sc.key)}>
               <span className="track-ic">{done ? <AppIcon name="check" /> : <AppIcon name={sc.key === "words" ? "words" : sc.key === "sentences" ? "sentence" : sc.key === "listening" ? "listen" : "speak"} />}</span>
               <span className="track-txt">
-                <span className="track-nm">{sc.vi} <small>· {sc.name}</small></span>
+                <span className="track-nm">{sc.name} <small>· {sc.vi}</small></span>
                 <span className="track-desc">{sc.desc}</span>
               </span>
               <span className="track-go">{i + 1}/4 ▸</span>
@@ -122,7 +122,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
         <li className="track check" onClick={() => setView("check")}>
           <span className="track-ic"><AppIcon name="check" /></span>
           <span className="track-txt">
-            <span className="track-nm">Kiểm tra nhỏ <small>· Mini Check</small></span>
+            <span className="track-nm">Mini Check <small>· Kiểm tra nhỏ</small></span>
             <span className="track-desc">{learnState?.check ? `Lần trước: ${learnState.check.score}/${learnState.check.total}` : "Từ vựng · câu · nghe · nói"}</span>
           </span>
           <span className="track-go">{learnState?.done ? "✓" : "▸"}</span>
@@ -150,7 +150,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
             {done && <span className="unit-badge ok">✓</span>}
           </span>
           <span className="unit-body">
-            <span className="unit-title">{u.vi} <small>· {u.title}</small></span>
+            <span className="unit-title">{u.title} <small>· {u.vi}</small></span>
             <span className="unit-focus">{u.focus}</span>
             {u.ready
               ? <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
@@ -182,7 +182,7 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
         {isOpen && (groups
           ? groups.map((g) => (
               <div key={g.id} className="course-collection">
-                <div className="clh-collection">{g.vi} <small>· {g.name}</small></div>
+                <div className="clh-collection">{g.name} <small>· {g.vi}</small></div>
                 <ol className="unit-list">{g.units.map(renderUnit)}</ol>
               </div>
             ))
@@ -238,7 +238,7 @@ function MarkDone({ label, onDone, enabled = true }: { label: string; onDone: ()
 function WordsView({ lesson, diff, accent, onDone, back }: { lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onDone: () => void; back: () => void }) {
   const vis = showVi(diff);
   return (
-    <Page icon="words" title="Từ vựng" vi="Words" back={back}>
+    <Page icon="words" title="Words" vi="Từ vựng" back={back}>
       <Bubble>Nghe và đọc {lesson.vocab.length} từ mới ({lesson.vi}). Chạm 🔊 để nghe nhé!</Bubble>
       <div className="voca-list">
         {lesson.vocab.map((v) => (
@@ -266,7 +266,7 @@ function WordsView({ lesson, diff, accent, onDone, back }: { lesson: Lesson; dif
 function SentencesView({ lesson, diff, onDone, back }: { lesson: Lesson; diff: DifficultyLevel; onDone: () => void; back: () => void }) {
   const vis = showVi(diff);
   return (
-    <Page icon="sentence" title="Mẫu câu" vi="Sentences" back={back}>
+    <Page icon="sentence" title="Sentences" vi="Mẫu câu" back={back}>
       <Bubble>Bốn mẫu câu giúp bạn nói về bức tranh. Thử thay từ mới vào chỗ trống nhé!</Bubble>
       <div className="pat-list">
         {lesson.patterns.map((p) => (
@@ -326,7 +326,7 @@ function ListeningView({ lesson, diff, accent, onDone, back }: { lesson: Lesson;
   const [showScript, setShowScript] = useState(false);
   const [scored, setScored] = useState<number | null>(null);
   return (
-    <Page icon="listen" title="Nghe hiểu" vi="Listening" back={back}>
+    <Page icon="listen" title="Listening" vi="Nghe hiểu" back={back}>
       <Bubble>{L.intro}{vis && <span className="say-vi"> — {L.introVi}</span>}</Bubble>
       <div className="listen-box">
         <button className="btn listen-play" onClick={() => speak(L.script, accent, 0.85)}>🔊 Nghe Maple kể</button>
@@ -354,7 +354,7 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, onDone, back }: {
   const vis = showVi(diff);
   const prompts = showPrompts(diff);
   return (
-    <Page icon="speak" title="Nghe & nói theo" vi="Listen & Repeat" back={back}>
+    <Page icon="speak" title="Listen & Repeat" vi="Nghe & nói theo" back={back}>
       <Bubble>Nghe Maple đọc rồi nói theo cho quen miệng. <b>Không chấm điểm</b> đâu — cứ thoải mái nhé! 🎶</Bubble>
 
       <div className="speak-block">
@@ -409,7 +409,7 @@ function MiniCheckView({ lesson, onFinish, back }: { lesson: Lesson; diff: Diffi
   }
 
   return (
-    <Page icon="check" title="Kiểm tra nhỏ" vi="Mini Check" back={back}>
+    <Page icon="check" title="Mini Check" vi="Kiểm tra nhỏ" back={back}>
       <Bubble>Bốn thử thách có đáp án để xem bạn đã sẵn sàng phiêu lưu chưa!</Bubble>
       <div className="qcard learn-quiz">
         <div className="q-progress"><span className="q-badge">{MC_BADGE[t.type] || "Thử thách"}</span> {i + 1}/{total}</div>

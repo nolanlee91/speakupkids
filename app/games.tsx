@@ -315,7 +315,7 @@ function PictureGame({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
   // Xáo trộn thứ tự cảnh MỖI LẦN vào — KHÔNG đi theo thứ tự level 1→2→3 như bên Learn.
   const [items] = useState<GalleryItem[]>(() => shuffle(DETECTIVE_SCENES.map((s) => {
     const t = talkSceneById(s.id);
-    return { id: s.id, name: s.vi, sub: s.title, image: s.image,
+    return { id: s.id, name: s.title, sub: s.vi, image: s.image,
       total: s.questions.length + (t ? t.tasks.length : 0),
       counts: { easy: 0, medium: 0, hard: 0 } as Record<Difficulty, number> };
   })));
@@ -418,7 +418,7 @@ function SentencePuzzle({ setId, cb, onExit }: { setId?: string; cb: GameCallbac
   if (galleryMode && !chosen) {
     return <GameGallery emoji="" title="Xếp câu" vi="Chọn một chủ đề"
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một chủ đề để luyện trật tự từ."
-      items={PUZZLE_SETS.map((s) => ({ id: s.id, name: PUZZLE_META[s.id]?.[0] || s.title, sub: s.title, image: PUZZLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
+      items={PUZZLE_SETS.map((s) => ({ id: s.id, name: s.title, sub: PUZZLE_META[s.id]?.[0] || s.title, image: PUZZLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (p) => puzzleDifficulty(p.solution.length, p.difficulty)) }))}
       prefix="puzzle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
@@ -508,7 +508,7 @@ function RiddleGame({ setId, cb, accent, onExit }: { setId?: string; cb: GameCal
   if (galleryMode && !chosen) {
     return <GameGallery emoji="" title="Đố vui tiếng Anh" vi="Chọn một bộ câu đố"
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bộ câu đố — đọc/nghe manh mối rồi chọn đáp án."
-      items={RIDDLE_SETS.map((s) => ({ id: s.id, name: RIDDLE_META[s.id]?.[0] || s.title, sub: s.title, image: RIDDLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
+      items={RIDDLE_SETS.map((s) => ({ id: s.id, name: s.title, sub: RIDDLE_META[s.id]?.[0] || s.title, image: RIDDLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
       prefix="riddle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }
@@ -553,7 +553,7 @@ function ListenRound({ setId, difficulty, cb, accent, onExit, onNext }: {
 
   if (fin) {
     const a = resultActions(onNext, onExit, "Bộ khác →");
-    return <GameShell emoji="🎧" title="Nghe & chọn" vi={set.title} onExit={onExit}>
+    return <GameShell emoji="🎧" title="Listen & Choose" vi={`Nghe · ${set.title}`} onExit={onExit}>
       <GameResult title={`Nghe đúng ${score}/${items.length} câu!`} stars={stars} info={info} {...a} />
     </GameShell>;
   }
@@ -563,7 +563,7 @@ function ListenRound({ setId, difficulty, cb, accent, onExit, onNext }: {
     setResults((x) => [...x, { id: r.id, correct: o === r.answer }]);
   }
   return (
-    <GameShell emoji="🎧" title="Nghe & chọn" vi={set.title} onExit={exit}>
+    <GameShell emoji="🎧" title="Listen & Choose" vi={`Nghe · ${set.title}`} onExit={exit}>
       <div className="q-progress">Câu {i + 1}/{items.length} <RoundDiff difficulty={difficulty} /></div>
       <div className="listen-card">
         <div className="listen-ic" aria-hidden="true">🎧</div>
@@ -602,7 +602,7 @@ function ListenChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: Ga
   if (galleryMode && !chosen) {
     return <GameGallery emoji="" title="Nghe & chọn" vi="Chọn một bộ nghe"
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bộ — nghe Maple đọc câu rồi chọn nghĩa đúng."
-      items={LISTEN_SETS.map((s) => ({ id: s.id, name: LISTEN_META[s.id]?.[0] || s.title, sub: s.title, image: LISTEN_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-listening.webp", total: s.items.length,
+      items={LISTEN_SETS.map((s) => ({ id: s.id, name: s.title, sub: LISTEN_META[s.id]?.[0] || s.title, image: LISTEN_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-listening.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
       prefix="listen" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
   }

@@ -73,7 +73,7 @@ export function PhonicsLesson({ state, setState, unit, accent, onExit, onComplet
             <li key={sc.key} className={`track ${d ? "done" : ""}`} onClick={() => setView(sc.key)}>
               <span className="track-ic">{d ? "✓" : sc.icon}</span>
               <span className="track-txt">
-                <span className="track-nm">{sc.vi} <small>· {sc.name}</small></span>
+                <span className="track-nm">{sc.name} <small>· {sc.vi}</small></span>
                 <span className="track-desc">{sc.desc}</span>
               </span>
               <span className="track-go">{i + 1}/4 ▸</span>
@@ -83,7 +83,7 @@ export function PhonicsLesson({ state, setState, unit, accent, onExit, onComplet
         <li className="track check" onClick={() => setView("check")}>
           <span className="track-ic">🎯</span>
           <span className="track-txt">
-            <span className="track-nm">Kiểm tra nhỏ <small>· Mini Check</small></span>
+            <span className="track-nm">Mini Check <small>· Kiểm tra nhỏ</small></span>
             <span className="track-desc">{checkState ? `Lần trước: ${checkState.score}/${checkState.total}` : "Nhận âm · ghép vần · nghe chọn"}</span>
           </span>
           <span className="track-go">{state.learn.lessons[unit.id]?.done ? "✓" : "▸"}</span>
@@ -109,7 +109,7 @@ function Page({ icon, title, back, children }: { icon: string; title: string; ba
 /* ---------- 1) Âm mới ---------- */
 function SoundsView({ unit, onDone, back }: { unit: PhonicsUnit; onDone: () => void; back: () => void }) {
   return (
-    <Page icon="🔤" title="Âm mới · Sounds" back={back}>
+    <Page icon="🔤" title="Sounds · Âm mới" back={back}>
       <p className="ph-intro">Chạm 🔊 để nghe âm qua từ khoá.</p>
       <div className="ph-sound-grid">
         {unit.sounds.map((s) => (
@@ -149,7 +149,7 @@ function BlendView({ unit, accent, onDone, back }: { unit: PhonicsUnit; accent: 
   }
 
   return (
-    <Page icon="🧩" title="Ghép vần · Blend it" back={back}>
+    <Page icon="🧩" title="Blend it · Ghép vần" back={back}>
       <p className="ph-intro">Đọc từng âm, rồi ghép lại thành từ. Chạm 🔊 để nghe.</p>
       <div className="ph-blend">
         <div className="ph-blend-sounds">
@@ -226,7 +226,7 @@ function PhonQuizView({ unit, title, icon, items, accent, onDone, back }: {
 /* ---------- 4) Đọc theo ---------- */
 function ReadSayView({ unit, accent, onDone, back }: { unit: PhonicsUnit; accent: "US" | "CA"; onDone: () => void; back: () => void }) {
   return (
-    <Page icon="🗣️" title="Đọc theo · Read & say" back={back}>
+    <Page icon="🗣️" title="Read & say · Đọc theo" back={back}>
       <p className="ph-intro">Chạm 🔊 nghe Maple đọc, rồi đọc theo thật to.</p>
       <div className="ph-read-list">
         {unit.readSay.map((w, k) => (

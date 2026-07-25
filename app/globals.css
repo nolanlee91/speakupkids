@@ -1196,8 +1196,11 @@
     body { background:
       linear-gradient(rgba(250,243,231,.55), rgba(250,243,231,.55)),
       #cdd8db url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
-    /* Content shell: dải kem đặc canh giữa; HAI MÉP mờ dần (feather) sang scenery cho liền mạch, không cắt màu cứng. */
-    #app::before { content: ""; position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+    /* Content shell: dải kem đặc canh giữa; HAI MÉP mờ dần (feather) sang scenery cho liền mạch, không cắt màu cứng.
+       Dùng position:absolute (không phải fixed) để dải kem CAO ĐÚNG BẰNG nội dung — trang ngắn (vd Practice hub)
+       sẽ lộ scenery ở phần dưới thay vì kem trống. #app là containing block (position:relative). */
+    #app { position: relative; }
+    #app::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
       width: min(100%, 1280px); z-index: -1;
       background: linear-gradient(90deg,
         rgba(250,243,231,0) 0,
@@ -1281,7 +1284,19 @@
     .adv-home { max-width: 1000px; padding-top: 78px; }
     .season-card { max-width: 560px; margin: 0 auto; }
 
-    /* ===== FOCUS MODE (game round · chapter · collection · account): nền kem đặc, gần như không scenery ===== */
-    .game-overlay { background: var(--paper); }
+    /* ===== FOCUS MODE (game round · chapter · collection · account) =====
+       Trước: nền kem đặc phủ kín → hai bên trống trơn. Nay dùng chung ngôn ngữ với Home:
+       scenery làm nền, một dải kem canh giữa (mép mờ) ôm cột nội dung → hai bên lộ scenery. */
+    .game-overlay { background:
+      linear-gradient(rgba(250,243,231,.55), rgba(250,243,231,.55)),
+      #cdd8db url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed; }
+    .game-overlay::before { content: ""; position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: min(100%, 900px); z-index: 0; pointer-events: none;
+      background: linear-gradient(90deg,
+        rgba(250,243,231,0) 0,
+        rgba(250,243,231,1) 120px,
+        rgba(250,243,231,1) calc(100% - 120px),
+        rgba(250,243,231,0) 100%); }
+    .game-overlay > * { position: relative; z-index: 1; }
     .game-top, .game-body, .quiz-body { max-width: 760px; }
   }

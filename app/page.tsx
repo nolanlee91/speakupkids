@@ -375,8 +375,8 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
         {rest.map((g, i) => (
           <button key={g.id} className={`portal small theme-g-${g.id} pos-${i}`} onClick={() => launch(g.id)}>
             {g.image ? <span className="portal-thumb"><img src={g.image} alt="" /></span> : <span className="portal-obj">{g.emoji}</span>}
-            <span className="po-name sm">{g.vi}</span>
-            <span className="po-en">{g.name}</span>
+            <span className="po-name sm">{g.name}</span>
+            <span className="po-en">{g.vi}</span>
           </button>
         ))}
       </div>

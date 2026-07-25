@@ -306,7 +306,7 @@ function MapPreview({ season, restChapter, isDone, onOpen, hint }: {
       <div className="mp-row">
         <span className="mp-num">{restChapter.chapterNumber}</span>
         <div className="mp-txt">
-          <div className="mp-title">{restChapter.vi} <small>· {restChapter.title}</small></div>
+          <div className="mp-title">{restChapter.title} <small>· {restChapter.vi}</small></div>
           <div className="mp-desc">{restChapter.shortDescription}</div>
         </div>
         <button className="btn accent mp-play" onClick={() => onOpen(restChapter)}>
