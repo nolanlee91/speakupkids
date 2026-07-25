@@ -18,8 +18,8 @@ export const STICKERS: Sticker[] = [
 export const stickerById = (id: string) => STICKERS.find((s) => s.id === id);
 
 /* ---------- GAME: danh mục khu Practice ---------- */
-export type GameKind = "picdet" | "puzzle" | "riddle" | "talk";
-// Loại phiên chơi do GamePlay điều phối: bốn game chính + Echo (luyện nói tùy chọn).
+export type GameKind = "picdet" | "puzzle" | "riddle" | "listen";
+// Loại phiên chơi do GamePlay điều phối: các game chính + Echo (luyện nói tùy chọn).
 export type StopKind = GameKind | "echo";
 
 export type GameInfo = {
@@ -27,28 +27,31 @@ export type GameInfo = {
 };
 export const GAMES: GameInfo[] = [
   { id: "picdet", name: "Picture Detective", vi: "Thám tử hình ảnh", emoji: "🔎", image: "/assets/images/gen/game-picdet.webp", tint: "#e9f6ff",
-    blurb: "Quan sát, tìm vị trí, so sánh và suy luận từ bức tranh.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "talk", name: "Build the Description", vi: "Xây câu từ hình ảnh", emoji: "💬", image: "/assets/images/gen/game-talk.webp", tint: "#ffece3",
-    blurb: "Chọn từ, điền từ, dùng giới từ và xếp câu mô tả tranh.", assetNote: "Thumbnail 4:3 · 800×600" },
+    blurb: "Quan sát, suy luận, mô tả rồi nói theo Maple — tất cả trên một bức tranh.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "puzzle", name: "Sentence Puzzle", vi: "Xếp câu", emoji: "🧩", image: "/assets/images/gen/game-puzzle.webp", tint: "#f1e9ff",
     blurb: "Xếp các từ thành câu đúng ngữ pháp theo chủ đề.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "riddle", name: "English Riddles", vi: "Đố vui tiếng Anh", emoji: "🦉", image: "/assets/images/gen/game-riddle.webp", tint: "#e5f9ee",
     blurb: "Đọc/nghe manh mối rồi chọn đáp án, luyện đọc hiểu.", assetNote: "Thumbnail 4:3 · 800×600" },
+  { id: "listen", name: "Listen & Choose", vi: "Nghe & chọn", emoji: "🎧", tint: "#eaf3ff",
+    blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Không cần ảnh" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
 // Sticker theo game-type (MVP): tặng MỘT LẦN khi khám phá hết câu/task của một topic bất kỳ thuộc game đó.
 export const STICKER_FOR_GAME: Record<GameKind, string> = {
-  picdet: "st-detective", talk: "st-star", puzzle: "st-puzzle", riddle: "st-owl",
+  picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star",
 };
-// Số câu/task mỗi lượt theo game.
-export const ROUND_SIZE: Record<GameKind, number> = { picdet: 5, talk: 5, puzzle: 6, riddle: 5 };
+// Số câu/task mỗi lượt theo game. picdet gộp 2 hoạt động nên lấy 6 câu/lượt.
+export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5 };
 
 /* ---------- Kiểu dữ liệu ngân hàng chữ (dùng bởi lib/banks.ts) ---------- */
 export type Puzzle = { id: string; solution: string[]; vi: string; difficulty?: Difficulty; grammarFocus?: string };
 export type PuzzleSet = { id: string; title: string; items: Puzzle[] };
 export type Riddle = { id: string; text: string; hint: string; options: string[]; answer: string; vi: string; difficulty?: Difficulty };
 export type RiddleSet = { id: string; title: string; items: Riddle[] };
+// Listen & Choose: nghe `say` (câu tiếng Anh) → chọn nghĩa đúng trong `options` (tiếng Việt).
+export type ListenItem = { id: string; say: string; options: string[]; answer: string; difficulty?: Difficulty };
+export type ListenSet = { id: string; title: string; items: ListenItem[] };
 
 /* ---------- Echo Challenge (luyện nói tùy chọn, KHÔNG chấm điểm) ---------- */
 export type EchoPhrase = { en: string; vi: string };

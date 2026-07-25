@@ -1,7 +1,7 @@
 // Ngân hàng nội dung chữ cho Sentence Puzzle & English Riddles.
 // Mỗi game có nhiều bộ/chủ đề; MỖI câu gắn sẵn độ khó (easy/medium/hard) để trẻ TỰ CHỌN mức chơi.
 // Puzzle: cân ~3 Dễ / 3 Vừa / 2 Khó mỗi chủ đề. Riddle: bộ từ vựng = Dễ/Vừa, bộ Đố mẹo = Khó.
-import type { PuzzleSet, RiddleSet } from "./games";
+import type { PuzzleSet, RiddleSet, ListenSet } from "./games";
 
 /* ================= SENTENCE PUZZLE — 6 chủ đề ================= */
 export const PUZZLE_SETS: PuzzleSet[] = [
@@ -75,6 +75,32 @@ export const PUZZLE_SETS: PuzzleSet[] = [
       { id: "t6", solution: ["We", "had", "never", "seen", "such", "a", "bright", "rainbow"], vi: "Chúng mình chưa từng thấy cầu vồng rực rỡ đến vậy.", difficulty: "medium" },
       { id: "t7", solution: ["The", "dog", "returned", "the", "ball", "after", "chasing", "it"], vi: "Chú chó mang bóng về sau khi đuổi theo.", difficulty: "easy" },
       { id: "t8", solution: ["She", "realized", "that", "her", "backpack", "was", "still", "at", "school"], vi: "Bạn ấy nhận ra balô vẫn còn ở trường.", difficulty: "medium" },
+    ],
+  },
+  // Bám nội dung Learn Level 2 (Stories & Situations): định lượng, so sánh, điều kiện, việc song song.
+  {
+    id: "stories", title: "Stories & Situations", items: [
+      { id: "st1", solution: ["Measure", "the", "flour", "carefully"], vi: "Hãy đong bột cẩn thận.", difficulty: "easy" },
+      { id: "st2", solution: ["We", "should", "postpone", "the", "match"], vi: "Chúng mình nên hoãn trận đấu.", difficulty: "easy" },
+      { id: "st3", solution: ["Each", "guide", "matches", "one", "route"], vi: "Mỗi máy thuyết minh khớp một tuyến.", difficulty: "easy" },
+      { id: "st4", solution: ["The", "recipe", "cards", "were", "swapped", "yesterday"], vi: "Các thẻ công thức đã bị đổi nhầm hôm qua.", difficulty: "medium" },
+      { id: "st5", solution: ["We", "chose", "the", "most", "efficient", "order"], vi: "Chúng mình chọn thứ tự hiệu quả nhất.", difficulty: "medium" },
+      { id: "st6", solution: ["The", "forecast", "says", "the", "rain", "will", "continue"], vi: "Dự báo nói mưa sẽ tiếp tục.", difficulty: "medium" },
+      { id: "st7", solution: ["If", "it", "keeps", "raining", "we", "could", "play", "indoors"], vi: "Nếu trời cứ mưa, chúng mình có thể chơi trong nhà.", difficulty: "hard" },
+      { id: "st8", solution: ["While", "the", "recorder", "charges", "we", "can", "rehearse", "the", "questions"], vi: "Trong khi máy sạc, chúng mình có thể tập câu hỏi.", difficulty: "hard" },
+    ],
+  },
+  // Bám nội dung Learn Level 3 (Opinions & Solving Problems): bằng chứng, lợi–hại, khuyến nghị, thỏa hiệp.
+  {
+    id: "opinions", title: "Opinions & Reasons", items: [
+      { id: "op1", solution: ["We", "should", "conserve", "water"], vi: "Chúng mình nên tiết kiệm nước.", difficulty: "easy" },
+      { id: "op2", solution: ["The", "survey", "shows", "clear", "results"], vi: "Khảo sát cho thấy kết quả rõ ràng.", difficulty: "easy" },
+      { id: "op3", solution: ["Different", "users", "need", "different", "spaces"], vi: "Những người dùng khác nhau cần không gian khác nhau.", difficulty: "easy" },
+      { id: "op4", solution: ["Mulch", "helps", "the", "soil", "stay", "moist"], vi: "Lớp phủ giúp đất giữ ẩm.", difficulty: "medium" },
+      { id: "op5", solution: ["The", "benefit", "is", "shade", "and", "cooler", "air"], vi: "Lợi ích là bóng râm và không khí mát hơn.", difficulty: "medium" },
+      { id: "op6", solution: ["A", "fair", "compromise", "would", "help", "everyone"], vi: "Một thỏa hiệp hợp lý sẽ giúp mọi người.", difficulty: "medium" },
+      { id: "op7", solution: ["Although", "photos", "help", "us", "identify", "items", "they", "reduce", "privacy"], vi: "Mặc dù ảnh giúp nhận ra đồ vật, chúng làm giảm riêng tư.", difficulty: "hard" },
+      { id: "op8", solution: ["Based", "on", "the", "trial", "we", "would", "use", "fewer", "categories"], vi: "Dựa trên thử nghiệm, chúng mình sẽ dùng ít nhóm hơn.", difficulty: "hard" },
     ],
   },
 ];
@@ -158,8 +184,51 @@ export const RIDDLE_SETS: RiddleSet[] = [
       { id: "lg8", text: "I go up but never come down. What is it?", hint: "🎂", options: ["Your age", "A ball", "The rain"], answer: "Your age", vi: "Chỉ tăng chứ không giảm — số tuổi của bạn.", difficulty: "hard" },
     ],
   },
+  // Bộ từ vựng bám Learn Level 2 & 3 (recipe, forecast, deadline, detour, exhibit, schedule, mulch, route).
+  {
+    id: "storywords", title: "Story Words", items: [
+      { id: "sw1", text: "You read me to learn the ingredients and steps for a dish. What am I?", hint: "📋", options: ["Recipe", "Ticket", "Poster"], answer: "Recipe", vi: "Bạn đọc mình để biết nguyên liệu và các bước nấu — công thức.", difficulty: "easy" },
+      { id: "sw2", text: "I tell people whether it will rain or shine tomorrow. What am I?", hint: "🌦️", options: ["Forecast", "Story", "Recipe"], answer: "Forecast", vi: "Mình báo ngày mai mưa hay nắng — bản dự báo.", difficulty: "easy" },
+      { id: "sw3", text: "I am a plan that shows the times of events in order. What am I?", hint: "🗓️", options: ["Schedule", "Riddle", "Recipe"], answer: "Schedule", vi: "Bản kế hoạch ghi giờ các sự kiện — lịch trình.", difficulty: "easy" },
+      { id: "sw4", text: "I am the path you follow to reach a place. What am I?", hint: "🗺️", options: ["Route", "Corner", "Wall"], answer: "Route", vi: "Con đường bạn đi để tới nơi — tuyến đường.", difficulty: "easy" },
+      { id: "sw5", text: "I am an object put on display for visitors in a museum. What am I?", hint: "🏛️", options: ["Exhibit", "Ticket", "Guard"], answer: "Exhibit", vi: "Vật được trưng bày cho khách xem — khu trưng bày.", difficulty: "medium" },
+      { id: "sw6", text: "I am the last moment when your work must be finished. What am I?", hint: "⏰", options: ["Deadline", "Holiday", "Weekend"], answer: "Deadline", vi: "Thời điểm cuối cùng phải xong việc — hạn chót.", difficulty: "medium" },
+      { id: "sw7", text: "I am a longer way around when the direct road is blocked. What am I?", hint: "🚧", options: ["Detour", "Shortcut", "Bridge"], answer: "Detour", vi: "Đường vòng khi lối thẳng bị chặn.", difficulty: "medium" },
+      { id: "sw8", text: "I cover the soil to keep water in and help plants grow. What am I?", hint: "🍂", options: ["Mulch", "Sand", "Glass"], answer: "Mulch", vi: "Lớp phủ giữ nước cho đất — lớp phủ đất.", difficulty: "hard" },
+    ],
+  },
 ];
 export const riddleSetById = (id: string) => RIDDLE_SETS.find((s) => s.id === id);
 export function randomRiddleSet(): RiddleSet {
   return RIDDLE_SETS[Math.floor(Math.random() * RIDDLE_SETS.length)];
 }
+
+/* ================= LISTEN & CHOOSE — nghe câu → chọn nghĩa (không ảnh) ================= */
+// `say` = câu Maple đọc (ẩn, hiện lại sau khi trả lời). options = 3 nghĩa tiếng Việt. Mỗi bộ ~3 Dễ / 3 Vừa / 2 Khó.
+export const LISTEN_SETS: ListenSet[] = [
+  {
+    id: "everyday", title: "Everyday", items: [
+      { id: "le1", say: "I brush my teeth every morning.", options: ["Mình đánh răng mỗi sáng.", "Mình rửa tay mỗi sáng.", "Mình chải tóc mỗi sáng."], answer: "Mình đánh răng mỗi sáng.", difficulty: "easy" },
+      { id: "le2", say: "She is reading a book now.", options: ["Bạn ấy đang đọc sách.", "Bạn ấy đang viết thư.", "Bạn ấy đang nấu ăn."], answer: "Bạn ấy đang đọc sách.", difficulty: "easy" },
+      { id: "le3", say: "He forgot to charge his phone.", options: ["Cậu ấy quên sạc điện thoại.", "Cậu ấy quên mang điện thoại.", "Cậu ấy làm rơi điện thoại."], answer: "Cậu ấy quên sạc điện thoại.", difficulty: "easy" },
+      { id: "le4", say: "We usually eat dinner at seven.", options: ["Chúng mình thường ăn tối lúc bảy giờ.", "Chúng mình thường ăn sáng lúc bảy giờ.", "Chúng mình thường ngủ lúc bảy giờ."], answer: "Chúng mình thường ăn tối lúc bảy giờ.", difficulty: "medium" },
+      { id: "le5", say: "It is raining, so take an umbrella.", options: ["Trời đang mưa nên hãy mang ô.", "Trời nắng nên hãy đội mũ.", "Trời lạnh nên hãy mặc áo ấm."], answer: "Trời đang mưa nên hãy mang ô.", difficulty: "medium" },
+      { id: "le6", say: "They are cleaning their room together.", options: ["Họ đang cùng nhau dọn phòng.", "Họ đang cùng nhau chơi game.", "Họ đang cùng nhau xem phim."], answer: "Họ đang cùng nhau dọn phòng.", difficulty: "medium" },
+      { id: "le7", say: "I would rather walk than take the bus.", options: ["Mình thà đi bộ còn hơn đi xe buýt.", "Mình thích đi xe buýt hơn đi bộ.", "Mình không đi bộ cũng không đi xe buýt."], answer: "Mình thà đi bộ còn hơn đi xe buýt.", difficulty: "hard" },
+      { id: "le8", say: "Please turn off the lights before you leave.", options: ["Làm ơn tắt đèn trước khi bạn rời đi.", "Làm ơn bật đèn khi bạn bước vào.", "Làm ơn đóng cửa sổ trước khi ngủ."], answer: "Làm ơn tắt đèn trước khi bạn rời đi.", difficulty: "hard" },
+    ],
+  },
+  {
+    id: "school", title: "At School", items: [
+      { id: "ls1", say: "The teacher is writing on the board.", options: ["Cô giáo đang viết trên bảng.", "Cô giáo đang đọc sách.", "Cô giáo đang chỉ vào bản đồ."], answer: "Cô giáo đang viết trên bảng.", difficulty: "easy" },
+      { id: "ls2", say: "We are doing a science experiment.", options: ["Chúng mình đang làm một thí nghiệm khoa học.", "Chúng mình đang vẽ một bức tranh.", "Chúng mình đang hát một bài hát."], answer: "Chúng mình đang làm một thí nghiệm khoa học.", difficulty: "easy" },
+      { id: "ls3", say: "I borrowed two books from the library.", options: ["Mình mượn hai quyển sách từ thư viện.", "Mình mua hai quyển sách ở hiệu sách.", "Mình trả hai quyển sách cho bạn."], answer: "Mình mượn hai quyển sách từ thư viện.", difficulty: "easy" },
+      { id: "ls4", say: "Raise your hand if you have a question.", options: ["Hãy giơ tay nếu bạn có câu hỏi.", "Hãy đứng dậy nếu bạn thấy mệt.", "Hãy vỗ tay nếu bạn thấy vui."], answer: "Hãy giơ tay nếu bạn có câu hỏi.", difficulty: "medium" },
+      { id: "ls5", say: "Don't forget to hand in your homework.", options: ["Đừng quên nộp bài tập về nhà.", "Đừng quên mang bữa trưa.", "Đừng quên mặc đồng phục."], answer: "Đừng quên nộp bài tập về nhà.", difficulty: "medium" },
+      { id: "ls6", say: "The library is quiet, so please whisper.", options: ["Thư viện yên tĩnh nên hãy nói thầm.", "Sân trường ồn ào nên hãy nói to.", "Lớp học vui nên hãy cười lớn."], answer: "Thư viện yên tĩnh nên hãy nói thầm.", difficulty: "medium" },
+      { id: "ls7", say: "If you finish early, you can read quietly.", options: ["Nếu xong sớm, bạn có thể đọc sách trong yên lặng.", "Nếu đến muộn, bạn phải ở lại lớp.", "Nếu làm sai, bạn phải làm lại từ đầu."], answer: "Nếu xong sớm, bạn có thể đọc sách trong yên lặng.", difficulty: "hard" },
+      { id: "ls8", say: "Our group presented a poster about oceans.", options: ["Nhóm mình đã thuyết trình một tấm áp phích về đại dương.", "Nhóm mình đã xem một bộ phim về đại dương.", "Nhóm mình đã đi tham quan đại dương."], answer: "Nhóm mình đã thuyết trình một tấm áp phích về đại dương.", difficulty: "hard" },
+    ],
+  },
+];
+export const listenSetById = (id: string) => LISTEN_SETS.find((s) => s.id === id);

@@ -169,7 +169,7 @@ export default function App() {
         {view === "home" && <Today state={state} go={goView} openLesson={openCurrentLesson} />}
         {view === "learn" && <Learn state={state} setState={setState} entry={learnEntry}
           onEcho={() => launch({ kind: "echo", title: "Echo" })}
-          onTalk={(sceneId) => launch({ kind: "talk", refId: sceneId, title: "Build the Description" })}
+          onTalk={(sceneId) => launch({ kind: "picdet", refId: sceneId, title: "Thám tử hình ảnh" })}
           onComplete={completeLearn} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, title: "Luyện tập" })} />}
         {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent} />}
