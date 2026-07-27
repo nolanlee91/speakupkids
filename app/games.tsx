@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { speak, shuffle, celebrate } from "@/lib/fx";
 import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
 import { DETECTIVE_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scenes";
+import { practiceItemLocked } from "@/lib/gating";
 import { PUZZLE_SETS, RIDDLE_SETS, LISTEN_SETS, puzzleSetById, riddleSetById, listenSetById } from "@/lib/banks";
 import {
   EMPTY_TOPIC, selectRound, countByDifficulty, starsFor, picdetDifficulty, talkDifficulty, puzzleDifficulty,
@@ -37,6 +38,8 @@ export type GameCallbacks = {
   commit: (key: string, results: RoundResult[]) => void;                                  // ghi câu đã trả lời (thoát giữa chừng)
   finish: (key: string, results: RoundResult[], stars: number, topicTotal: number) => FinishInfo; // hoàn thành trọn lượt
   echoDone: () => void;                                                                    // Echo: chỉ đánh dấu đã luyện
+  premium: boolean;                                                                        // tài khoản đã Premium chưa
+  onPremium: () => void;                                                                    // mở màn nâng cấp khi chạm nội dung khóa
 };
 
 /* ============ Khung chung + màn kết quả ============ */
@@ -95,11 +98,12 @@ function resultActions(onNext: (() => void) | undefined, onExit: () => void, nex
 
 /* ============ Thư viện scene/topic: cho bé THẤY tất cả & tự chọn ============ */
 type GalleryItem = { id: string; name: string; sub: string; image?: string; emoji?: string; total: number; counts: Record<Difficulty, number> };
-function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficulty, onDifficulty, onPick, onExit }: {
+function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficulty, onDifficulty, onPick, onExit, premium, onPremium }: {
   emoji: string; title: string; vi: string; intro: string;
   items: GalleryItem[]; prefix: string; topics: Record<string, GameTopicProgress>;
   difficulty?: Difficulty; onDifficulty?: (d: Difficulty) => void;   // vắng cả hai ⇒ ẩn tab độ khó (game ảnh gộp: mỗi lượt trộn đủ mức)
   onPick: (id: string) => void; onExit: () => void;
+  premium: boolean; onPremium: () => void;
 }) {
   const showDiff = !!difficulty && !!onDifficulty;
   return (
@@ -108,33 +112,41 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficult
       {showDiff && <DifficultyBar value={difficulty!} onChange={onDifficulty!} />}
       <div className="scene-gallery">
         {items.map((it) => {
+          const plocked = practiceItemLocked(premium, prefix, it.id);
           const prog = topics[prefix + ":" + it.id] || EMPTY_TOPIC;
           const discovered = Math.min(prog.seen.length, it.total);
           const complete = it.total > 0 && discovered >= it.total;
           const nAtDiff = showDiff ? it.counts[difficulty!] : it.total;
           const empty = showDiff && nAtDiff === 0;
           return (
-            <button key={it.id} disabled={empty}
-              className={`scene-card ${discovered > 0 ? "explored" : ""} ${empty ? "empty" : ""}`}
-              onClick={() => onPick(it.id)}>
+            <button key={it.id} disabled={!plocked && empty}
+              className={`scene-card ${discovered > 0 ? "explored" : ""} ${empty ? "empty" : ""} ${plocked ? "premium-locked" : ""}`}
+              onClick={() => { if (plocked) { onPremium(); return; } onPick(it.id); }}>
               <span className="sc-thumb">
                 {it.image ? <img src={it.image} alt="" /> : <span className="sc-emoji" aria-hidden="true">{it.emoji}</span>}
-                {complete && <span className="sc-check">✓</span>}
+                {complete && !plocked && <span className="sc-check">✓</span>}
+                {plocked && <span className="sc-lock-badge">🔒</span>}
               </span>
               <span className="sc-name">{it.name}</span>
               <span className="sc-sub">{it.sub}</span>
-              {showDiff && (
-                <span className={`sc-count ${difficulty}`}>
-                  {empty ? `Chưa có câu mức ${DIFF_VI[difficulty!]}` : `${DIFF_VI[difficulty!]} · ${nAtDiff} câu`}
-                </span>
+              {plocked ? (
+                <span className="sc-premium">🔒 Chỉ dành cho Premium</span>
+              ) : (
+                <>
+                  {showDiff && (
+                    <span className={`sc-count ${difficulty}`}>
+                      {empty ? `Chưa có câu mức ${DIFF_VI[difficulty!]}` : `${DIFF_VI[difficulty!]} · ${nAtDiff} câu`}
+                    </span>
+                  )}
+                  {/* Game ảnh: nói rõ tổng ngân hàng và độ dài mỗi lượt để không bị hiểu là điểm số. */}
+                  <span className="sc-sub">
+                    {showDiff
+                      ? `Đã mở ${discovered}/${it.total} thử thách${prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}`
+                      : `${discovered > 0 ? `Đã mở ${discovered}/${it.total}` : `${it.total} thử thách`} · Mỗi lượt ${ROUND_SIZE.picdet} câu`}
+                  </span>
+                  {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
+                </>
               )}
-              {/* Game ảnh: nói rõ tổng ngân hàng và độ dài mỗi lượt để không bị hiểu là điểm số. */}
-              <span className="sc-sub">
-                {showDiff
-                  ? `Đã mở ${discovered}/${it.total} thử thách${prog.playCount > 0 ? ` · ${prog.playCount} lượt` : ""}`
-                  : `${discovered > 0 ? `Đã mở ${discovered}/${it.total}` : `${it.total} thử thách`} · Mỗi lượt ${ROUND_SIZE.picdet} câu`}
-              </span>
-              {prog.bestStars > 0 && <span className="sc-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</span>}
             </button>
           );
         })}
@@ -330,7 +342,7 @@ function PictureGame({ sceneId, cb, accent, onExit }: { sceneId?: string; cb: Ga
   if (galleryMode && !chosen) {
     return <GameGallery emoji="🔎" title="Thám tử hình ảnh" vi="Chọn bức tranh để khám phá"
       intro="Chọn một bức tranh — quan sát, suy luận, mô tả rồi nói theo Maple."
-      items={items} prefix="picdet" topics={cb.topics} onPick={setChosen} onExit={onExit} />;
+      items={items} prefix="picdet" topics={cb.topics} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
   }
   return <PictureRound key={`${chosen}-${round}`} sceneId={chosen!} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
@@ -429,7 +441,7 @@ function SentencePuzzle({ setId, cb, onExit }: { setId?: string; cb: GameCallbac
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một chủ đề để luyện trật tự từ."
       items={PUZZLE_SETS.map((s) => ({ id: s.id, name: s.title, sub: PUZZLE_META[s.id]?.[0] || s.title, image: PUZZLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (p) => puzzleDifficulty(p.solution.length, p.difficulty)) }))}
-      prefix="puzzle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
+      prefix="puzzle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
   }
   return <PuzzleRound key={`${chosen}-${difficulty}`} setId={chosen!} difficulty={difficulty} cb={cb}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
@@ -520,7 +532,7 @@ function RiddleGame({ setId, cb, accent, onExit }: { setId?: string; cb: GameCal
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bộ câu đố — đọc/nghe manh mối rồi chọn đáp án."
       items={RIDDLE_SETS.map((s) => ({ id: s.id, name: s.title, sub: RIDDLE_META[s.id]?.[0] || s.title, image: RIDDLE_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-logic.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
-      prefix="riddle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
+      prefix="riddle" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
   }
   return <RiddleRound key={`${chosen}-${difficulty}`} setId={chosen!} difficulty={difficulty} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}
@@ -615,7 +627,7 @@ function ListenChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: Ga
       intro="Chọn mức Dễ / Vừa / Khó rồi chọn một bộ — nghe Maple đọc câu rồi chọn nghĩa đúng."
       items={LISTEN_SETS.map((s) => ({ id: s.id, name: s.title, sub: LISTEN_META[s.id]?.[0] || s.title, image: LISTEN_META[s.id]?.[1] || "/assets/images/gen/practice-topics/topic-listening.webp", total: s.items.length,
         counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
-      prefix="listen" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} />;
+      prefix="listen" topics={cb.topics} difficulty={difficulty} onDifficulty={setDifficulty} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
   }
   return <ListenRound key={`${chosen}-${difficulty}`} setId={chosen!} difficulty={difficulty} cb={cb} accent={accent}
     onExit={galleryMode ? () => setChosen(undefined) : onExit}

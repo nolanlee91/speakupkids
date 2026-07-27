@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   type AppState, type RoundResult, defaultState, loadState, totalStars,
   touchStreak, resetDailyIfNeeded, resetDailyTasks, todayStr, totalLearned,
-  hasSticker, gamesDone, addSticker,
+  hasSticker, gamesDone, addSticker, isPremium,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
   recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
   adventuresDone, isChapterCompleted, adventureOf,
@@ -91,6 +91,8 @@ function App() {
   const stars = totalStars(state);
 
   function goView(v: View) { if (v === "learn") setLearnEntry("map"); setView(v); }
+  // Chạm nội dung khóa Premium → mở màn Tài khoản (khu Gói thành viên).
+  function openPremium() { setMenu(false); setGame(null); setAccount(true); }
   function launch(l: Launch) { setGame(l); }
   // Mở thẳng bài học hiện tại (từ CTA "Hôm nay")
   function openCurrentLesson(lessonId: string) {
@@ -173,9 +175,9 @@ function App() {
         {view === "learn" && <Learn state={state} setState={setState} entry={learnEntry}
           onEcho={() => launch({ kind: "echo", title: "Echo" })}
           onTalk={(sceneId) => launch({ kind: "picdet", refId: sceneId, title: "Thám tử hình ảnh" })}
-          onComplete={completeLearn} />}
+          onComplete={completeLearn} onPremium={openPremium} />}
         {view === "games" && <GamesHub launch={(kind) => launch({ kind, title: "Luyện tập" })} />}
-        {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent} />}
+        {view === "adventure" && <Adventure state={state} setState={setState} accent={state.prefs.accent} onPremium={openPremium} />}
       </div>
 
       <nav className="nav">
@@ -203,7 +205,7 @@ function App() {
       )}
 
       {game && <GamePlay kind={game.kind} refId={game.refId} accent={state.prefs.accent}
-        cb={{ topics: state.games.topics, commit: commitGame, finish: finishGame, echoDone }}
+        cb={{ topics: state.games.topics, commit: commitGame, finish: finishGame, echoDone, premium: isPremium(state), onPremium: openPremium }}
         onExit={() => setGame(null)} />}
 
       {collection && <CollectionPanel state={state} stars={stars} onClose={() => setCollection(false)} />}

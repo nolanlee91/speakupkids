@@ -8,6 +8,7 @@ import {
   type Lesson, type LearningSectionKey, type DifficultyLevel, type MCQ, type CourseUnit, type CourseCollection,
 } from "@/lib/learn";
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
+import { learnLocked } from "@/lib/gating";
 import { PhonicsLesson } from "./phonics";
 import { speak, shuffle } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
@@ -15,13 +16,14 @@ import { AppIcon, type AppIconName } from "./icons";
 const GEN = "/assets/images/gen/";
 type SecView = "overview" | LearningSectionKey | "check";
 
-export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
+export function Learn({ state, setState, entry, onEcho, onTalk, onComplete, onPremium }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   entry: "map" | "lesson";
   onEcho: () => void;
   onTalk: (sceneId?: string) => void;
   onComplete: (lessonId: string, score: number, total: number) => void;
+  onPremium: () => void;
 }) {
   const lesson = learnLessonById(state.learn.currentLesson) || allLearnLessons()[0];
   const diff = state.learn.difficulty;
@@ -32,7 +34,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 
   // Màn chương trình học: chọn Unit trước khi vào bài
   if (screen === "map") {
-    return <CourseMap state={state} onPick={(u) => {
+    return <CourseMap state={state} onPremium={onPremium} onPick={(u) => {
       if (!u.ready) return;
       if (u.phonicsId) { setPhonicsId(u.phonicsId); setScreen("lesson"); return; }
       if (!u.lessonId) return;
@@ -133,32 +135,36 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete }: {
 }
 
 /* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
-function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit) => void }) {
+function CourseMap({ state, onPick, onPremium }: { state: AppState; onPick: (u: CourseUnit) => void; onPremium: () => void }) {
   const [openLevel, setOpenLevel] = useState<string>("");
-  const renderUnit = (u: CourseUnit) => {
+  const renderUnit = (u: CourseUnit, index: number, levelId: string) => {
     const pid = u.lessonId || u.phonicsId;
     const done = pid ? learnLessonDone(state, pid) : false;
     const pct = pid ? lessonPct(state, pid, SECTIONS.length) : 0;
     const check = pid ? state.learn.lessons[pid]?.check : undefined;
+    const plocked = u.ready && learnLocked(state, levelId, index);   // khóa Premium (chỉ khi bài đã sẵn sàng)
     return (
-      <li key={u.id} className={`unit ${u.image ? "visual" : "phonics"} ${u.ready ? "" : "locked"} ${done ? "done" : ""}`}>
-        <button className="unit-btn" onClick={() => onPick(u)} disabled={!u.ready}>
+      <li key={u.id} className={`unit ${u.image ? "visual" : "phonics"} ${u.ready ? "" : "locked"} ${plocked ? "premium-locked" : ""} ${done ? "done" : ""}`}>
+        <button className="unit-btn" disabled={!u.ready}
+          onClick={() => { if (!u.ready) return; if (plocked) { onPremium(); return; } onPick(u); }}>
           <span className={`unit-thumb ${u.image ? "" : "ph"}`} style={u.image ? { backgroundImage: `url('${u.image}')` } : undefined}>
             {!u.image && <span className="unit-thumb-txt" aria-hidden="true">{u.thumb}</span>}
             <span className="unit-n">{u.n}</span>
-            {!u.ready && <span className="unit-badge lock">🔒</span>}
-            {done && <span className="unit-badge ok">✓</span>}
+            {(!u.ready || plocked) && <span className="unit-badge lock">🔒</span>}
+            {done && !plocked && <span className="unit-badge ok">✓</span>}
           </span>
           <span className="unit-body">
             <span className="unit-title">{u.title} <small>· {u.vi}</small></span>
             <span className="unit-focus">{u.focus}</span>
-            {u.ready
-              ? <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
-                  <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
-                </span>
-              : <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>}
+            {!u.ready
+              ? <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>
+              : plocked
+                ? <span className="unit-soon">🔒 Nội dung Premium</span>
+                : <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
+                    <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
+                  </span>}
           </span>
-          <span className="unit-go">{u.ready ? (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸") : "🔒"}</span>
+          <span className="unit-go">{!u.ready ? "🔒" : plocked ? "Premium 🔒" : (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸")}</span>
         </button>
       </li>
     );
@@ -183,10 +189,10 @@ function CourseMap({ state, onPick }: { state: AppState; onPick: (u: CourseUnit)
           ? groups.map((g) => (
               <div key={g.id} className="course-collection">
                 <div className="clh-collection">{g.name} <small>· {g.vi}</small></div>
-                <ol className="unit-list">{g.units.map(renderUnit)}</ol>
+                <ol className="unit-list">{g.units.map((u, i) => renderUnit(u, i, id))}</ol>
               </div>
             ))
-          : <ol className="unit-list">{(units || []).map(renderUnit)}</ol>
+          : <ol className="unit-list">{(units || []).map((u, i) => renderUnit(u, i, id))}</ol>
         )}
       </div>
     );

@@ -17,6 +17,7 @@ import {
   type AdventureSeason, type AdventureChapter, type StoryStep, type ChapterUiState,
 } from "@/lib/adventures";
 import { speak, shuffle, celebrate } from "@/lib/fx";
+import { adventureSeasonLocked } from "@/lib/gating";
 
 const CHAR = "/assets/images/adventure/season-01-lost-maple-compass/characters/";
 const MAPLE_IDLE = CHAR + "maple-map-idle.webp";
@@ -36,10 +37,11 @@ function usePrefersReducedMotion(): boolean {
 }
 
 /* ==================== Component gốc: Home → Map → Chapter player ==================== */
-export function Adventure({ state, setState, accent }: {
+export function Adventure({ state, setState, accent, onPremium }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   accent: "US" | "CA";
+  onPremium: () => void;
 }) {
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
@@ -83,7 +85,7 @@ export function Adventure({ state, setState, accent }: {
   }
 
   if (!season) {
-    return <AdventureHome seasons={SEASONS} state={state} onPick={(id) => setActiveSeasonId(id)} />;
+    return <AdventureHome seasons={SEASONS} state={state} onPick={(id) => setActiveSeasonId(id)} onPremium={onPremium} />;
   }
   return (
     <SeasonMap
@@ -97,8 +99,8 @@ export function Adventure({ state, setState, accent }: {
 }
 
 /* ==================== 1) ADVENTURE HOME — danh sách các mùa ==================== */
-function AdventureHome({ seasons, state, onPick }: {
-  seasons: AdventureSeason[]; state: AppState; onPick: (seasonId: string) => void;
+function AdventureHome({ seasons, state, onPick, onPremium }: {
+  seasons: AdventureSeason[]; state: AppState; onPick: (seasonId: string) => void; onPremium: () => void;
 }) {
   return (
     <section className="adv-home">
@@ -109,31 +111,38 @@ function AdventureHome({ seasons, state, onPick }: {
 
       <div className="season-list">
         {seasons.map((s, i) => (
-          <SeasonCard key={s.id} season={s} index={i} state={state} onStart={() => onPick(s.id)} />
+          <SeasonCard key={s.id} season={s} index={i} state={state}
+            onStart={() => onPick(s.id)} onPremium={onPremium} />
         ))}
       </div>
     </section>
   );
 }
 
-function SeasonCard({ season, index, state, onStart }: {
-  season: AdventureSeason; index: number; state: AppState; onStart: () => void;
+function SeasonCard({ season, index, state, onStart, onPremium }: {
+  season: AdventureSeason; index: number; state: AppState; onStart: () => void; onPremium: () => void;
 }) {
   const prog = adventureOf(state, season.id);
   const doneCount = prog.completedChapterIds.length;
   const total = season.chapters.length;
   const started = doneCount > 0 || !!prog.currentChapterId;
   const cover = season.chapters[0].sceneImage;
+  const locked = adventureSeasonLocked(state, index);
   return (
-    <button className="season-card" onClick={onStart}>
+    <button className={`season-card ${locked ? "premium-locked" : ""}`} onClick={locked ? onPremium : onStart}>
       {cover && <img className="sc-img" src={cover} alt="" />}
+      {locked && <span className="sc-lock-badge">🔒</span>}
       <span className="sc-body">
         <span className="sc-kicker">Season {index + 1} · Chiến dịch</span>
         <span className="sc-title">{season.title}</span>
         <span className="sc-vi">{season.vi}</span>
         <span className="sc-meta">
-          <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
-          <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
+          {locked
+            ? <span className="sc-cta">🔒 Chỉ dành cho Premium</span>
+            : <>
+                <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
+                <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
+              </>}
         </span>
       </span>
     </button>
