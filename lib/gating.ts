@@ -11,7 +11,7 @@ const firstIds = (arr: { id: string }[], n: number) => new Set(arr.slice(0, n).m
 const PICDET_FREE = firstIds(DETECTIVE_SCENES, FREE_N);
 const PUZZLE_FREE = firstIds(PUZZLE_SETS, FREE_N);
 const RIDDLE_FREE = firstIds(RIDDLE_SETS, FREE_N);
-const LISTEN_FREE = firstIds(LISTEN_SETS, FREE_N);
+const LISTEN_FREE = firstIds(LISTEN_SETS, 2);   // Nghe & chọn chỉ có 4 bộ → mở 2
 
 // Learn: khóa theo cấp + vị trí bài trong cấp (L3 tính theo từng collection).
 export function learnLocked(state: AppState, levelId: string, indexInGroup: number): boolean {
