@@ -447,15 +447,15 @@ function CollectionPanel({ state, stars, onClose }: { state: AppState; stars: nu
 
 /* ==================== TÀI KHOẢN + GÓI (từ avatar) ==================== */
 const PLAN_FEATS = {
-  free: ["Cả 6 Unit của Level 1", "Luyện tập & phiêu lưu cơ bản", "Bộ sưu tập sticker"],
-  premium: ["Toàn bộ Level tiếp theo", "Thêm hoạt động luyện tập", "Báo cáo cho phụ huynh"],
-  family: ["Mọi quyền lợi Premium", "Nhiều hồ sơ cho các bé", "Theo dõi từng bé"],
+  free: ["Level 0 Phonics đầy đủ", "3 bài đầu mỗi cấp Learn (L1–L3)", "3 thẻ đầu mỗi trò Luyện tập", "2 mùa Phiêu lưu đầu"],
+  pro: ["Mở khóa TẤT CẢ bài học Learn", "Toàn bộ trò Luyện tập", "Tất cả mùa Phiêu lưu", "Báo cáo tiến độ hằng tuần cho ba mẹ"],
 };
 
 function AccountPanel({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
   const [name, setName] = useState(state.nickname);
   const [parentEmail, setParentEmail] = useState<string | null>(null);
   const p = state.prefs;
+  const pro = isPremium(state);
   useEffect(() => { if (cloudEnabled()) currentUser().then((u) => setParentEmail(u?.email ?? null)); }, []);
   return (
     <div id="account-panel" className="game-overlay">
@@ -501,21 +501,29 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
 
         <div className="section-title"><h2>💎 Gói thành viên</h2></div>
         <div className="card plan current">
-          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}><span className="pname">Miễn phí</span><span className="price">Đang dùng</span></div>
-          <ul>{PLAN_FEATS.free.map((f) => <li key={f}>{f}</li>)}</ul>
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+            <span className="pname">{pro ? "Pro" : "Miễn phí"}</span><span className="price">Đang dùng</span>
+          </div>
+          <ul>{(pro ? PLAN_FEATS.pro : PLAN_FEATS.free).map((f) => <li key={f}>{f}</li>)}</ul>
           <div className="chip" style={{ marginTop: 10 }}>Đang dùng</div>
         </div>
-        {(["premium", "family"] as const).map((pl) => (
-          <div key={pl} className="card plan">
+        {!pro && (
+          <div className="card plan">
             <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
-              <span className="pname">{pl === "premium" ? "Premium" : "Family"}</span>
-              <span className="chip sun">Sắp ra mắt</span>
+              <span className="pname">Pro</span><span className="chip sun">Sắp ra mắt</span>
             </div>
-            <ul>{PLAN_FEATS[pl].map((f) => <li key={f}>{f}</li>)}</ul>
-            <button className="btn ghost sm" disabled style={{ marginTop: 10, opacity: 0.7 }}>Nhận thông báo khi ra mắt</button>
+            <ul>{PLAN_FEATS.pro.map((f) => <li key={f}>{f}</li>)}</ul>
+            <button className="btn ghost sm" disabled style={{ marginTop: 10, opacity: 0.7 }}>Nâng cấp (sắp có)</button>
           </div>
-        ))}
-        <p style={{ fontSize: ".78rem", color: "var(--muted)", textAlign: "center" }}>Premium & Family đang được hoàn thiện — giá và tính năng sẽ công bố khi ra mắt.</p>
+        )}
+        {/* TẠM: bật/tắt Pro để test — thay bằng thanh toán thật sau */}
+        <button className="btn" style={{ marginTop: 8, background: pro ? "#8b7c66" : "#0f8f88" }}
+          onClick={() => setState((s) => ({ ...s, membership: pro ? "free" : "premium" }))}>
+          {pro ? "Tắt Pro (test)" : "🔓 Bật Pro (test)"}
+        </button>
+        <p style={{ fontSize: ".78rem", color: "var(--muted)", textAlign: "center", marginTop: 6 }}>
+          Nút “Bật Pro” chỉ để thử nghiệm — thanh toán thật sẽ thêm sau.
+        </p>
       </div>
     </div>
   );
