@@ -90,16 +90,23 @@ export async function pushState(childId: string, state: AppState) {
 }
 
 // Chọn 1 con để chơi: kéo state cloud về máy; nếu con này CHƯA có state → khởi tạo MỚI (mặc định) rồi đẩy lên.
-export async function activateChild(childId: string): Promise<AppState> {
-  setActiveChildId(childId);
-  const cloud = await pullState(childId);
+// Luôn nạp tên/avatar/tuổi từ hồ sơ đã đăng ký để màn Tài khoản hiển thị đúng (children là nguồn chuẩn).
+export async function activateChild(child: ChildProfile): Promise<AppState> {
+  setActiveChildId(child.id);
+  const cloud = await pullState(child.id);
   if (cloud) {
-    saveState(cloud);
-    return cloud;
+    const merged: AppState = {
+      ...cloud,
+      nickname: cloud.nickname || child.ingame_name,
+      avatar: cloud.avatar || child.avatar,
+      age: cloud.age || child.age,
+    };
+    saveState(merged);
+    return merged;
   }
-  const fresh = defaultState();
+  const fresh: AppState = { ...defaultState(), nickname: child.ingame_name, avatar: child.avatar, age: child.age };
   saveState(fresh);
-  await pushState(childId, fresh);
+  await pushState(child.id, fresh);
   return fresh;
 }
 

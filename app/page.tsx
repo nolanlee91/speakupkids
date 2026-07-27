@@ -22,7 +22,8 @@ import { Adventure } from "./adventure";
 import { celebrate } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
-import { syncSave } from "@/lib/cloud";
+import { syncSave, currentUser, signOut, clearActiveChild } from "@/lib/cloud";
+import { cloudEnabled } from "@/lib/supabase";
 
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
@@ -451,11 +452,26 @@ const PLAN_FEATS = {
 
 function AccountPanel({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
   const [name, setName] = useState(state.nickname);
+  const [parentEmail, setParentEmail] = useState<string | null>(null);
   const p = state.prefs;
+  useEffect(() => { if (cloudEnabled()) currentUser().then((u) => setParentEmail(u?.email ?? null)); }, []);
   return (
     <div id="account-panel" className="game-overlay">
       <div className="game-top"><button className="bk" onClick={onClose}>← Đóng</button><h3>👤 Tài khoản</h3></div>
       <div className="game-body">
+        {cloudEnabled() && (
+          <>
+            <div className="section-title"><h2>Tài khoản ba mẹ</h2></div>
+            <div className="card" style={{ padding: 16 }}>
+              <div className="field"><label>Email đăng nhập</label><div style={{ fontWeight: 700 }}>{parentEmail || "…"}</div></div>
+              <div className="field"><label>Đang xem hồ sơ</label><div style={{ fontWeight: 700 }}>{state.avatar} {state.nickname || "bé"}</div></div>
+              <div className="row" style={{ gap: 10, marginTop: 4 }}>
+                <button className="btn" onClick={() => { clearActiveChild(); location.reload(); }}>Đổi hồ sơ con</button>
+                <button className="btn" style={{ background: "#e2593f" }} onClick={async () => { await signOut(); location.reload(); }}>Đăng xuất</button>
+              </div>
+            </div>
+          </>
+        )}
         <div className="section-title"><h2>Hồ sơ của bé</h2></div>
         <div className="card" style={{ padding: 16 }}>
           <div className="field"><label>Tên / biệt danh</label><input type="text" value={name} placeholder="VD: Mint" onChange={(e) => setName(e.target.value)} /></div>

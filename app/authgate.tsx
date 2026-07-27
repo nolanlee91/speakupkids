@@ -81,18 +81,19 @@ export function AuthGate({ children }: { children: ReactNode }) {
     const list = await listChildren();
     setKids(list);
     const saved = getActiveChildId();
-    if (saved && list.some((k) => k.id === saved)) {
-      await activateChild(saved);
-      setActiveId(saved);
+    const prof = saved ? list.find((k) => k.id === saved) : undefined;
+    if (prof) {
+      await activateChild(prof);
+      setActiveId(prof.id);
       setPhase("ready");
     } else {
       setPhase("picker");
     }
   }
 
-  async function pick(id: string) {
-    await activateChild(id);
-    setActiveId(id);
+  async function pick(child: ChildProfile) {
+    await activateChild(child);
+    setActiveId(child.id);
     setPhase("ready");
   }
 
@@ -194,7 +195,7 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
 /* ───────────── Chọn / thêm hồ sơ con ───────────── */
 function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
   kids: ChildProfile[]; email: string | null;
-  onPick: (id: string) => Promise<void>;
+  onPick: (child: ChildProfile) => Promise<void>;
   onAdded: (k: ChildProfile) => void;
   onSignOut: () => Promise<void>;
 }) {
@@ -216,7 +217,7 @@ function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
       const k = await createChild({ ingame_name: name.trim(), avatar, age });
       if (offerMigrate && migrate) await migrateLocalToChild(k.id);
       onAdded(k);
-      await onPick(k.id); // vào chơi luôn với hồ sơ vừa tạo
+      await onPick(k); // vào chơi luôn với hồ sơ vừa tạo
     } catch (e) { setErr(viError(e)); setBusy(false); }
   }
 
@@ -233,7 +234,7 @@ function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
         {kids.length > 0 && (
           <div style={{ display: "grid", gap: 10, marginBottom: 14 }}>
             {kids.map((k) => (
-              <button key={k.id} type="button" onClick={() => onPick(k.id)}
+              <button key={k.id} type="button" onClick={() => onPick(k)}
                 style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 14,
                   border: "1px solid var(--line,#e8dcc6)", background: "var(--panel,#fdf8ee)", cursor: "pointer", textAlign: "left" }}>
                 <span style={{ fontSize: 30 }}>{k.avatar}</span>
