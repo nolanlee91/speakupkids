@@ -106,12 +106,15 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficult
   premium: boolean; onPremium: () => void;
 }) {
   const showDiff = !!difficulty && !!onDifficulty;
+  // Đưa các card MIỄN PHÍ lên trước, card khóa Pro xuống sau (gallery vốn trộn ngẫu nhiên).
+  const ordered = premium ? items : [...items].sort((a, b) =>
+    Number(practiceItemLocked(false, prefix, a.id)) - Number(practiceItemLocked(false, prefix, b.id)));
   return (
     <GameShell emoji={emoji} title={title} vi={vi} onExit={onExit}>
       <p className="gallery-intro">{intro}</p>
       {showDiff && <DifficultyBar value={difficulty!} onChange={onDifficulty!} />}
       <div className="scene-gallery">
-        {items.map((it) => {
+        {ordered.map((it) => {
           const plocked = practiceItemLocked(premium, prefix, it.id);
           const prog = topics[prefix + ":" + it.id] || EMPTY_TOPIC;
           const discovered = Math.min(prog.seen.length, it.total);
