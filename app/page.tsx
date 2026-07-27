@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  type AppState, type RoundResult, defaultState, loadState, saveState, totalStars,
+  type AppState, type RoundResult, defaultState, loadState, totalStars,
   touchStreak, resetDailyIfNeeded, resetDailyTasks, todayStr, totalLearned,
   hasSticker, gamesDone, addSticker,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
@@ -21,6 +21,8 @@ import { Learn } from "./learn";
 import { Adventure } from "./adventure";
 import { celebrate } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
+import { AuthGate } from "./authgate";
+import { syncSave } from "@/lib/cloud";
 
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
@@ -59,7 +61,7 @@ const NAV: [View, AppIconName, string][] = [
   ["adventure", "adventure", "Adventure"],
 ];
 
-export default function App() {
+function App() {
   const [state, setState] = useState<AppState>(defaultState);
   const [ready, setReady] = useState(false);
   const [view, setView] = useState<View>("home");
@@ -82,7 +84,7 @@ export default function App() {
     setState(s);
     setReady(true);
   }, []);
-  useEffect(() => { if (ready) saveState(state); }, [state, ready]);
+  useEffect(() => { if (ready) syncSave(state); }, [state, ready]);
   useEffect(() => { document.body.classList.toggle("no-motion", state.prefs.motion === false); }, [state.prefs.motion]);
 
   const stars = totalStars(state);
@@ -498,5 +500,15 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
         <p style={{ fontSize: ".78rem", color: "var(--muted)", textAlign: "center" }}>Premium & Family đang được hoàn thiện — giá và tính năng sẽ công bố khi ra mắt.</p>
       </div>
     </div>
+  );
+}
+
+// Cổng đăng nhập bọc ngoài: khi bật cloud thì yêu cầu đăng nhập + chọn hồ sơ con;
+// khi chưa cấu hình cloud thì AuthGate cho qua thẳng, app chạy offline như cũ.
+export default function Page() {
+  return (
+    <AuthGate>
+      <App />
+    </AuthGate>
   );
 }

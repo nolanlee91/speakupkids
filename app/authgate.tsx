@@ -1,0 +1,287 @@
+"use client";
+// Cổng vào app khi đã bật cloud: đăng nhập ba mẹ → chọn hồ sơ con → mới vào app.
+// Nếu CHƯA cấu hình cloud (thiếu key) → bỏ qua cổng, app chạy offline như cũ.
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { supabase, cloudEnabled } from "@/lib/supabase";
+import {
+  signIn, signUp, signOut, sendPasswordReset,
+  listChildren, createChild, activateChild, migrateLocalToChild,
+  getActiveChildId, type ChildProfile,
+} from "@/lib/cloud";
+import { loadState } from "@/lib/state";
+
+const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
+
+function hasLocalProgress(): boolean {
+  const s = loadState();
+  return (s.stickers?.length ?? 0) > 0
+    || Object.keys(s.learn?.lessons ?? {}).length > 0
+    || Object.keys(s.games?.topics ?? {}).length > 0
+    || (s.streak ?? 0) > 0;
+}
+
+function viError(e: unknown): string {
+  const m = (e instanceof Error ? e.message : String(e)) || "";
+  if (/invalid login credentials/i.test(m)) return "Sai email hoặc mật khẩu.";
+  if (/already registered|already exists/i.test(m)) return "Email này đã có tài khoản — hãy đăng nhập.";
+  if (/password should be at least/i.test(m)) return "Mật khẩu cần tối thiểu 6 ký tự.";
+  if (/email not confirmed/i.test(m)) return "Email chưa xác nhận — mở mail bấm liên kết trước đã.";
+  if (/rate limit|too many/i.test(m)) return "Thử lại sau ít phút nhé.";
+  if (/for security purposes/i.test(m)) return "Thao tác hơi nhanh — đợi vài giây rồi thử lại.";
+  return m || "Có lỗi xảy ra, thử lại nhé.";
+}
+
+type Phase = "loading" | "auth" | "picker" | "ready";
+
+const shell: React.CSSProperties = {
+  minHeight: "100vh", display: "grid", placeItems: "center", padding: 20,
+  background: "var(--bg, #f7efe0)", color: "var(--ink, #2b2f3f)",
+  fontFamily: 'ui-rounded,"Segoe UI Rounded","Trebuchet MS",system-ui,sans-serif',
+};
+const card: React.CSSProperties = {
+  width: "min(100%, 420px)", background: "var(--card, #fff)", border: "1px solid var(--line, #e8dcc6)",
+  borderRadius: 20, padding: 24, boxShadow: "0 14px 34px rgba(80,60,30,.13)",
+};
+const input: React.CSSProperties = {
+  width: "100%", padding: "11px 13px", borderRadius: 12, border: "1px solid var(--line, #e8dcc6)",
+  fontSize: 16, marginTop: 6, background: "var(--panel, #fdf8ee)", color: "inherit",
+};
+const label: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "var(--muted, #8b7c66)", marginTop: 12, display: "block" };
+
+export function AuthGate({ children }: { children: ReactNode }) {
+  const [phase, setPhase] = useState<Phase>(cloudEnabled() ? "loading" : "ready");
+  const [email, setEmail] = useState<string | null>(null);
+  const [kids, setKids] = useState<ChildProfile[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!supabase) return; // offline: phase đã là "ready"
+    let alive = true;
+    (async () => {
+      const { data } = await supabase!.auth.getUser();
+      if (!alive) return;
+      if (!data.user) { setPhase("auth"); return; }
+      setEmail(data.user.email ?? null);
+      await enterAfterLogin();
+    })();
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (!session?.user) { setEmail(null); setActiveId(null); setKids([]); setPhase("auth"); }
+    });
+    return () => { alive = false; sub.subscription.unsubscribe(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function enterAfterLogin() {
+    const list = await listChildren();
+    setKids(list);
+    const saved = getActiveChildId();
+    if (saved && list.some((k) => k.id === saved)) {
+      await activateChild(saved);
+      setActiveId(saved);
+      setPhase("ready");
+    } else {
+      setPhase("picker");
+    }
+  }
+
+  async function pick(id: string) {
+    await activateChild(id);
+    setActiveId(id);
+    setPhase("ready");
+  }
+
+  if (phase === "loading") return <div style={shell}><p style={{ color: "var(--muted,#8b7c66)" }}>Đang kết nối…</p></div>;
+  if (phase === "auth") return <AuthForm onLoggedIn={async (e) => { setEmail(e); setPhase("loading"); await enterAfterLogin(); }} />;
+  if (phase === "picker")
+    return <ChildPicker kids={kids} email={email} onPick={pick} onAdded={(k) => setKids((cs) => [...cs, k])}
+      onSignOut={async () => { await signOut(); }} />;
+  // ready — remount App khi đổi hồ sơ con để nạp lại tiến độ
+  return <div key={activeId ?? "offline"} style={{ display: "contents" }}>{children}</div>;
+}
+
+/* ───────────── Đăng nhập / Đăng ký ───────────── */
+function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promise<void> }) {
+  const [mode, setMode] = useState<"in" | "up">("in");
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const [info, setInfo] = useState("");
+
+  async function submit(ev: FormEvent) {
+    ev.preventDefault();
+    setErr(""); setInfo(""); setBusy(true);
+    try {
+      if (mode === "up") {
+        await signUp(email.trim(), pw, name.trim());
+        const { data } = await supabase!.auth.getSession();
+        if (!data.session) { // bật xác minh email
+          setInfo("Đã gửi email xác nhận. Mở mail → bấm liên kết → quay lại đăng nhập.");
+          setMode("in"); setBusy(false); return;
+        }
+        await onLoggedIn(email.trim());
+      } else {
+        await signIn(email.trim(), pw);
+        await onLoggedIn(email.trim());
+      }
+    } catch (e) { setErr(viError(e)); setBusy(false); }
+  }
+  async function forgot() {
+    if (!email.trim()) { setErr("Nhập email trước đã."); return; }
+    setErr(""); setInfo("");
+    try { await sendPasswordReset(email.trim()); setInfo("Đã gửi email đặt lại mật khẩu."); }
+    catch (e) { setErr(viError(e)); }
+  }
+
+  return (
+    <div style={shell}>
+      <form style={card} onSubmit={submit}>
+        <div style={{ fontSize: 30, textAlign: "center" }}>🦫</div>
+        <h1 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>
+          {mode === "in" ? "Đăng nhập ba mẹ" : "Tạo tài khoản ba mẹ"}
+        </h1>
+        <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: 0 }}>
+          Theo dõi tiến độ học của con &amp; nhận báo cáo tuần qua email.
+        </p>
+
+        {mode === "up" && (
+          <label style={label}>Tên ba mẹ (hoặc gọi là gì)
+            <input style={input} value={name} onChange={(e) => setName(e.target.value)} placeholder="Vd: Mẹ Bống" required />
+          </label>
+        )}
+        <label style={label}>Email
+          <input style={input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ba.me@email.com" required />
+        </label>
+        <label style={label}>Mật khẩu
+          <input style={input} type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="tối thiểu 6 ký tự" minLength={6} required />
+        </label>
+
+        {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
+        {info && <p style={{ color: "var(--teal-ink,#0b6a64)", fontSize: 14, marginTop: 12 }}>{info}</p>}
+
+        <button className="btn" type="submit" disabled={busy} style={{ width: "100%", marginTop: 16 }}>
+          {busy ? "Đang xử lý…" : mode === "in" ? "Đăng nhập" : "Tạo tài khoản"}
+        </button>
+
+        <div style={{ textAlign: "center", marginTop: 14, fontSize: 14 }}>
+          {mode === "in" ? (
+            <>
+              <button type="button" onClick={forgot} style={linkBtn}>Quên mật khẩu?</button>
+              <div style={{ marginTop: 8, color: "var(--muted,#8b7c66)" }}>
+                Chưa có tài khoản?{" "}
+                <button type="button" onClick={() => { setMode("up"); setErr(""); setInfo(""); }} style={linkBtn}>Đăng ký</button>
+              </div>
+            </>
+          ) : (
+            <div style={{ color: "var(--muted,#8b7c66)" }}>
+              Đã có tài khoản?{" "}
+              <button type="button" onClick={() => { setMode("in"); setErr(""); setInfo(""); }} style={linkBtn}>Đăng nhập</button>
+            </div>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+}
+
+/* ───────────── Chọn / thêm hồ sơ con ───────────── */
+function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
+  kids: ChildProfile[]; email: string | null;
+  onPick: (id: string) => Promise<void>;
+  onAdded: (k: ChildProfile) => void;
+  onSignOut: () => Promise<void>;
+}) {
+  const [adding, setAdding] = useState(kids.length === 0);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState(AVATARS[0]);
+  const [age, setAge] = useState(10);
+  const [migrate, setMigrate] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const firstEver = kids.length === 0;
+  const offerMigrate = firstEver && hasLocalProgress();
+
+  async function add(ev: FormEvent) {
+    ev.preventDefault();
+    if (!name.trim()) { setErr("Nhập tên in-game của con."); return; }
+    setErr(""); setBusy(true);
+    try {
+      const k = await createChild({ ingame_name: name.trim(), avatar, age });
+      if (offerMigrate && migrate) await migrateLocalToChild(k.id);
+      onAdded(k);
+      await onPick(k.id); // vào chơi luôn với hồ sơ vừa tạo
+    } catch (e) { setErr(viError(e)); setBusy(false); }
+  }
+
+  return (
+    <div style={shell}>
+      <div style={card}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Chọn hồ sơ con</h1>
+          <button type="button" onClick={onSignOut} style={linkBtn}>Đăng xuất</button>
+        </div>
+        {email && <p style={{ color: "var(--muted,#8b7c66)", fontSize: 13, margin: "2px 0 14px" }}>{email}</p>}
+
+        {kids.length > 0 && (
+          <div style={{ display: "grid", gap: 10, marginBottom: 14 }}>
+            {kids.map((k) => (
+              <button key={k.id} type="button" onClick={() => onPick(k.id)}
+                style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 14,
+                  border: "1px solid var(--line,#e8dcc6)", background: "var(--panel,#fdf8ee)", cursor: "pointer", textAlign: "left" }}>
+                <span style={{ fontSize: 30 }}>{k.avatar}</span>
+                <span>
+                  <b style={{ display: "block", fontSize: 16 }}>{k.ingame_name}</b>
+                  <span style={{ color: "var(--muted,#8b7c66)", fontSize: 13 }}>{k.age} tuổi</span>
+                </span>
+                <span style={{ marginLeft: "auto", fontWeight: 700, color: "var(--teal-ink,#0b6a64)" }}>Chơi →</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {adding ? (
+          <form onSubmit={add} style={{ borderTop: kids.length ? "1px solid var(--line,#e8dcc6)" : "none", paddingTop: kids.length ? 14 : 0 }}>
+            <label style={label}>Tên in-game của con
+              <input style={input} value={name} onChange={(e) => setName(e.target.value)} placeholder="Vd: Bống, SuperTom…" required />
+            </label>
+            <label style={label}>Chọn avatar</label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
+              {AVATARS.map((a) => (
+                <button key={a} type="button" onClick={() => setAvatar(a)}
+                  style={{ fontSize: 24, width: 44, height: 44, borderRadius: 12, cursor: "pointer",
+                    border: a === avatar ? "2px solid var(--teal,#0f8f88)" : "1px solid var(--line,#e8dcc6)",
+                    background: a === avatar ? "color-mix(in srgb, var(--teal,#0f8f88) 12%, transparent)" : "var(--panel,#fdf8ee)" }}>
+                  {a}
+                </button>
+              ))}
+            </div>
+            <label style={label}>Tuổi
+              <input style={input} type="number" min={4} max={15} value={age} onChange={(e) => setAge(Number(e.target.value) || 10)} />
+            </label>
+            {offerMigrate && (
+              <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 14 }}>
+                <input type="checkbox" checked={migrate} onChange={(e) => setMigrate(e.target.checked)} />
+                Chuyển tiến độ đang có trên máy này sang hồ sơ bé
+              </label>
+            )}
+            {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
+            <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+              <button className="btn" type="submit" disabled={busy} style={{ flex: 1 }}>
+                {busy ? "Đang tạo…" : "Tạo & chơi"}
+              </button>
+              {kids.length > 0 && <button type="button" onClick={() => setAdding(false)} style={linkBtn}>Huỷ</button>}
+            </div>
+          </form>
+        ) : (
+          <button type="button" className="btn" onClick={() => setAdding(true)} style={{ width: "100%" }}>+ Thêm hồ sơ con</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const linkBtn: React.CSSProperties = {
+  background: "none", border: "none", color: "var(--teal-ink,#0b6a64)", fontWeight: 700,
+  cursor: "pointer", fontSize: 14, padding: 4,
+};

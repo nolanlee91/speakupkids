@@ -1,0 +1,123 @@
+// Lớp đồng bộ cloud cho SpeakUp Kids (Phase 1).
+// Tài khoản ba mẹ (Supabase Auth) → nhiều hồ sơ con → tiến độ (AppState) lưu ở child_state.
+// Thiết kế "an toàn khi chưa cấu hình": mọi hàm không nổ nếu supabase=null; app chạy offline như cũ.
+import { supabase } from "./supabase";
+import { loadState, saveState, defaultState, type AppState } from "./state";
+
+export type ChildProfile = { id: string; ingame_name: string; avatar: string; age: number };
+
+// Ghi nhớ con đang chọn (client-side) để biết đồng bộ vào hồ sơ nào.
+const ACTIVE_KEY = "speakup_active_child";
+export function getActiveChildId(): string | null {
+  return typeof window === "undefined" ? null : localStorage.getItem(ACTIVE_KEY);
+}
+export function setActiveChildId(id: string) {
+  if (typeof window !== "undefined") localStorage.setItem(ACTIVE_KEY, id);
+}
+export function clearActiveChild() {
+  if (typeof window !== "undefined") localStorage.removeItem(ACTIVE_KEY);
+}
+
+/* ═══════════ Auth ═══════════ */
+export async function signUp(email: string, password: string, name: string) {
+  if (!supabase) throw new Error("Cloud chưa được cấu hình.");
+  const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name } } });
+  if (error) throw error;
+  return data.user;
+}
+export async function signIn(email: string, password: string) {
+  if (!supabase) throw new Error("Cloud chưa được cấu hình.");
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data.user;
+}
+export async function signOut() {
+  if (!supabase) return;
+  await supabase.auth.signOut();
+  clearActiveChild();
+}
+export async function currentUser() {
+  if (!supabase) return null;
+  const { data } = await supabase.auth.getUser();
+  return data.user;
+}
+export async function sendPasswordReset(email: string) {
+  if (!supabase) throw new Error("Cloud chưa được cấu hình.");
+  const { error } = await supabase.auth.resetPasswordForEmail(email);
+  if (error) throw error;
+}
+
+/* ═══════════ Hồ sơ con ═══════════ */
+export async function listChildren(): Promise<ChildProfile[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("children")
+    .select("id, ingame_name, avatar, age")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as ChildProfile[];
+}
+export async function createChild(p: { ingame_name: string; avatar?: string; age?: number }): Promise<ChildProfile> {
+  if (!supabase) throw new Error("Cloud chưa được cấu hình.");
+  const user = await currentUser();
+  if (!user) throw new Error("Chưa đăng nhập.");
+  const { data, error } = await supabase
+    .from("children")
+    .insert({ parent_id: user.id, ingame_name: p.ingame_name, avatar: p.avatar ?? "🦊", age: p.age ?? 10 })
+    .select("id, ingame_name, avatar, age")
+    .single();
+  if (error) throw error;
+  return data as ChildProfile;
+}
+
+/* ═══════════ Đồng bộ tiến độ (AppState) ═══════════ */
+export async function pullState(childId: string): Promise<AppState | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("child_state")
+    .select("state")
+    .eq("child_id", childId)
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.state as AppState) ?? null;
+}
+export async function pushState(childId: string, state: AppState) {
+  if (!supabase) return;
+  const { error } = await supabase
+    .from("child_state")
+    .upsert({ child_id: childId, state }, { onConflict: "child_id" });
+  if (error) throw error;
+}
+
+// Chọn 1 con để chơi: kéo state cloud về máy; nếu con này CHƯA có state → khởi tạo MỚI (mặc định) rồi đẩy lên.
+export async function activateChild(childId: string): Promise<AppState> {
+  setActiveChildId(childId);
+  const cloud = await pullState(childId);
+  if (cloud) {
+    saveState(cloud);
+    return cloud;
+  }
+  const fresh = defaultState();
+  saveState(fresh);
+  await pushState(childId, fresh);
+  return fresh;
+}
+
+// Chuyển tiến độ ĐANG CÓ trên máy (localStorage) sang 1 hồ sơ con.
+// Dùng 1 lần cho hồ sơ con ĐẦU TIÊN của người đã lỡ chơi offline trước khi có tài khoản.
+export async function migrateLocalToChild(childId: string): Promise<AppState> {
+  setActiveChildId(childId);
+  const local = loadState();
+  await pushState(childId, local);
+  return local;
+}
+
+// Lưu tiến độ: ghi localStorage NGAY (nhanh, offline-first) + đẩy lên cloud cho con đang chọn (không chặn UI).
+export function syncSave(state: AppState) {
+  saveState(state);
+  const id = getActiveChildId();
+  if (supabase && id) {
+    // fire-and-forget; lỗi mạng không làm hỏng trải nghiệm chơi
+    pushState(id, state).catch(() => {});
+  }
+}
