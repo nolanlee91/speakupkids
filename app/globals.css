@@ -418,6 +418,15 @@
   .riddle-text { font-size: 1.15rem; font-weight: 800; margin: 8px 0 12px; }
   .riddle-vi { font-size: .84rem; color: var(--muted); margin-top: 10px; }
 
+  /* English-first: nút chạm để hiện nghĩa tiếng Việt (ẩn mặc định) */
+  .vi-reveal { display: inline-block; margin: 8px auto 0; font-family: inherit; font-weight: 700;
+    font-size: .82rem; color: var(--brand-d); background: var(--brand-soft); border: 1px dashed var(--brand);
+    border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+  .vi-reveal.shown { color: var(--muted); background: #fff; border-style: solid; border-color: var(--line);
+    font-weight: 600; }
+  .puzzle-instr { font-weight: 800; margin-bottom: 8px; }
+  .puzzle-instr-sp { height: 6px; }
+
   /* picture talk — thử thách mô tả tranh có đáp án */
   .talk-task { background: var(--card); border: 3px solid #fff; border-radius: var(--radius); padding: 16px;
     box-shadow: 0 10px 26px rgba(45,49,66,.10); }

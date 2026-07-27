@@ -96,6 +96,18 @@ function resultActions(onNext: (() => void) | undefined, onExit: () => void, nex
     : { doneLabel: "Tuyệt vời! →", onDone: onExit, secondary: undefined };
 }
 
+// English-first: bé đọc tiếng Anh trước; bản dịch tiếng Việt ẩn, chạm mới hiện.
+// Key theo id câu ở nơi dùng để mỗi câu mới tự thu lại (mặc định ẩn).
+function ViReveal({ vi, label = "👀 Xem nghĩa tiếng Việt" }: { vi?: string; label?: string }) {
+  const [show, setShow] = useState(false);
+  if (!vi) return null;
+  return (
+    <button className={`vi-reveal ${show ? "shown" : ""}`} onClick={() => setShow((s) => !s)}>
+      {show ? vi : label}
+    </button>
+  );
+}
+
 /* ============ Thư viện scene/topic: cho bé THẤY tất cả & tự chọn ============ */
 type GalleryItem = { id: string; name: string; sub: string; image?: string; emoji?: string; total: number; counts: Record<Difficulty, number> };
 function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficulty, onDifficulty, onPick, onExit, premium, onPremium }: {
@@ -277,7 +289,8 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
       <div className="q-progress">Thử thách {i + 1}/{items.length}</div>
       <div className="talk-task">
         <span className="talk-kind">{it.badge}</span>
-        <div className="talk-instr">{it.vi}</div>
+        <div className="talk-instr">{isArrange ? "Put the words in order to describe the picture." : it.q}</div>
+        <ViReveal key={it.id} vi={it.vi} />
 
         {isArrange ? (
           <>
@@ -294,7 +307,6 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
           </>
         ) : (
           <>
-            {it.q && <div className="talk-q">{it.q}</div>}
             <div className={`qopts ${answered ? "answered" : ""}`}>
               {(it.options || []).map((o) => (
                 <button key={o} disabled={answered}
@@ -413,7 +425,9 @@ function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string;
   return (
     <GameShell emoji="🧩" title="Sentence Puzzle" vi={`Xếp câu · ${set.title}`} onExit={exit}>
       <div className="q-progress">Câu {i + 1}/{items.length} <RoundDiff difficulty={difficulty} /></div>
-      <div className="puzzle-hint">💡 {item.vi}</div>
+      <div className="puzzle-instr">Put the words in order to make a sentence.</div>
+      <ViReveal key={item.id} vi={item.vi} label="💡 Gợi ý (tiếng Việt)" />
+      <div className="puzzle-instr-sp" />
       <div className={`puzzle-line ${result === true ? "ok" : result === false ? "no" : ""}`}>
         {placed.length === 0 && <span className="ph">Chạm từ bên dưới để xếp câu…</span>}
         {placed.map((w, k) => <button key={k} className="tile placed" onClick={() => unplace(k)}>{w}</button>)}
@@ -505,7 +519,7 @@ function RiddleRound({ setId, difficulty, cb, accent, onExit, onNext }: {
         <div className="riddle-emoji">{r.hint}</div>
         <div className="riddle-text">{r.text}</div>
         <button className="btn ghost sm" onClick={() => speak(r.text, accent)}>🔊 Nghe câu đố</button>
-        <div className="riddle-vi">{r.vi}</div>
+        <ViReveal key={r.id} vi={r.vi} />
       </div>
       <div className={`qopts ${answered ? "answered" : ""}`}>
         {r.options.map((o) => (
