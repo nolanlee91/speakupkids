@@ -131,20 +131,21 @@ function SeasonCard({ season, index, state, onStart, onPremium }: {
   return (
     <button className={`season-card ${locked ? "premium-locked" : ""}`} onClick={locked ? onPremium : onStart}>
       {cover && <img className="sc-img" src={cover} alt="" />}
-      {locked && <span className="sc-lock-badge">🔒</span>}
       <span className="sc-body">
         <span className="sc-kicker">Season {index + 1} · Chiến dịch</span>
         <span className="sc-title">{season.title}</span>
         <span className="sc-vi">{season.vi}</span>
         <span className="sc-meta">
-          {locked
-            ? <span className="sc-cta">🔒 Chỉ dành cho Pro</span>
-            : <>
-                <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
-                <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
-              </>}
+          <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
+          <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>
         </span>
       </span>
+      {locked && (
+        <span className="sc-lock-overlay">
+          <span className="sc-lock-big">🔒</span>
+          <span className="sc-lock-cta">Chỉ dành cho Pro</span>
+        </span>
+      )}
     </button>
   );
 }

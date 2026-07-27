@@ -1358,5 +1358,10 @@
   padding: 3px 9px; font-size: .74rem; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,.18); }
 
 .season-card.premium-locked { position: relative; }
-.season-card.premium-locked .sc-img { filter: grayscale(.45) brightness(.96); }
-.season-card.premium-locked .sc-cta { color: var(--coral, #e2593f); font-weight: 800; }
+.season-card.premium-locked .sc-img { filter: grayscale(.55) brightness(.7); }
+.sc-lock-overlay { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; border-radius: inherit;
+  background: rgba(43,49,66,.42); color: #fff; }
+.sc-lock-big { font-size: 2rem; }
+.sc-lock-cta { font-weight: 800; font-size: .9rem; background: var(--coral, #e2593f); color: #fff;
+  padding: 7px 16px; border-radius: 999px; box-shadow: 0 3px 10px rgba(0,0,0,.25); }
