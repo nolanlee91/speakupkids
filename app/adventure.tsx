@@ -473,32 +473,36 @@ function ObservationStep({ step, onDone }: {
   );
 }
 
+// Adventure gate tiến độ (đúng mới mở chương sau) → phải trả lời ĐÚNG mới cho qua.
+// Chọn sai: đánh dấu sai (trừ sao), khoá lựa chọn sai đó, cho thử tiếp đến khi đúng.
 function McqStep({ step, accent, onDone }: {
   step: Extract<StoryStep, { kind: "multipleChoice" }>; accent: "US" | "CA"; onDone: (wrong: number) => void;
 }) {
   const [opts] = useState(() => shuffle(step.options));
-  const [picked, setPicked] = useState<string | null>(null);
-  const answered = picked !== null;
-  const correct = picked === step.answer;
+  const [wrongPicks, setWrongPicks] = useState<string[]>([]);
+  const [solved, setSolved] = useState(false);
   return (
     <div className="chap-q">
       <span className="chap-kind">💡 Đọc hiểu</span>
       <div className="chap-prompt">{step.prompt}<div className="chap-prompt-vi">{step.vi}</div></div>
-      <div className={`qopts ${answered ? "answered" : ""}`}>
-        {opts.map((o) => (
-          <button key={o} disabled={answered}
-            className={`qopt ${answered && o === step.answer ? "right" : ""} ${answered && o === picked && o !== step.answer ? "wrong" : ""}`}
-            onClick={() => setPicked(o)}>{o}</button>
-        ))}
+      <div className={`qopts ${solved ? "answered" : ""}`}>
+        {opts.map((o) => {
+          const isWrong = wrongPicks.includes(o);
+          return (
+            <button key={o} disabled={solved || isWrong}
+              className={`qopt ${solved && o === step.answer ? "right" : ""} ${isWrong ? "wrong" : ""}`}
+              onClick={() => { if (o === step.answer) setSolved(true); else setWrongPicks((w) => w.includes(o) ? w : [...w, o]); }}>{o}</button>
+          );
+        })}
       </div>
-      {answered && (
-        <>
-          <div className="qfb">
-            {correct ? <span className="ok">✓ Chính xác!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{step.answer}</b></>}
-            <div className="q-explain">💡 {step.explainVi}</div>
-          </div>
-          <button className="btn qnext" onClick={() => onDone(correct ? 0 : 1)}>Tiếp →</button>
-        </>
+      {(solved || wrongPicks.length > 0) && (
+        <div className="qfb">
+          {solved ? <span className="ok">✓ Chính xác!</span> : <span className="no">✗ Chưa đúng, thử lại nhé!</span>}
+          {solved && <div className="q-explain">💡 {step.explainVi}</div>}
+        </div>
+      )}
+      {solved && (
+        <button className="btn qnext" onClick={() => onDone(wrongPicks.length ? 1 : 0)}>Tiếp →</button>
       )}
     </div>
   );
@@ -510,7 +514,11 @@ function ArrangeStep({ step, accent, onDone }: {
   const [bank, setBank] = useState<string[]>(() => shuffle(step.solution));
   const [placed, setPlaced] = useState<string[]>([]);
   const [result, setResult] = useState<null | boolean>(null);
+  const [wrong, setWrong] = useState(0);
   const target = step.solution.join(" ");
+  const solved = result === true;
+  // Chạm để chỉnh lại → xoá trạng thái "sai" để Kiểm tra lại (không cho qua khi chưa đúng).
+  const rearrange = (fn: () => void) => { if (solved) return; if (result === false) setResult(null); fn(); };
   return (
     <div className="chap-q">
       <span className="chap-kind">🧩 Xếp câu</span>
@@ -518,24 +526,28 @@ function ArrangeStep({ step, accent, onDone }: {
       <div className={`puzzle-line ${result === true ? "ok" : result === false ? "no" : ""}`}>
         {placed.length === 0 && <span className="ph">Chạm từ bên dưới để xếp câu…</span>}
         {placed.map((w, k) => (
-          <button key={k} className="tile placed" onClick={() => { if (result !== null) return; setPlaced((p) => p.filter((_, i) => i !== k)); setBank((b) => [...b, w]); }}>{w}</button>
+          <button key={k} className="tile placed" onClick={() => rearrange(() => { setPlaced((p) => p.filter((_, i) => i !== k)); setBank((b) => [...b, w]); })}>{w}</button>
         ))}
       </div>
       <div className="puzzle-bank">
         {bank.map((w, k) => (
-          <button key={k} className="tile" onClick={() => { if (result !== null) return; setBank((b) => b.filter((_, i) => i !== k)); setPlaced((p) => [...p, w]); }}>{w}</button>
+          <button key={k} className="tile" onClick={() => rearrange(() => { setBank((b) => b.filter((_, i) => i !== k)); setPlaced((p) => [...p, w]); })}>{w}</button>
         ))}
       </div>
-      {result === null ? (
-        <button className="btn" disabled={placed.length !== step.solution.length} onClick={() => setResult(placed.join(" ") === target)}>Kiểm tra</button>
+      {!solved ? (
+        <>
+          {result === false && <div className="qfb"><span className="no">✗ Chưa đúng, thử sắp lại nhé!</span></div>}
+          <button className="btn" disabled={placed.length !== step.solution.length}
+            onClick={() => { const ok = placed.join(" ") === target; setResult(ok); if (!ok) setWrong((w) => w + 1); }}>Kiểm tra</button>
+        </>
       ) : (
         <>
           <div className="qfb">
-            {result ? <span className="ok">✓ Chuẩn luôn!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{target}.</b></>}
+            <span className="ok">✓ Chuẩn luôn!</span>
             {step.explainVi && <div className="q-explain">💡 {step.explainVi}</div>}
           </div>
           <div className="talk-say"><span className="talk-say-en">🗣️ {step.say || target + "."}</span><button className="icbtn" onClick={() => speak(step.say || target, accent)}>🔊 Nghe</button></div>
-          <button className="btn qnext" onClick={() => onDone(result ? 0 : 1)}>Tiếp →</button>
+          <button className="btn qnext" onClick={() => onDone(wrong ? 1 : 0)}>Tiếp →</button>
         </>
       )}
     </div>
