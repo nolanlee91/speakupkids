@@ -53,6 +53,27 @@ const input: React.CSSProperties = {
   fontSize: 16, marginTop: 6, background: "var(--panel, #fdf8ee)", color: "inherit",
 };
 const label: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "var(--muted, #8b7c66)", marginTop: 12, display: "block" };
+const eyeBtn: React.CSSProperties = {
+  position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+  background: "none", border: "none", cursor: "pointer", fontSize: 18, padding: 4, lineHeight: 1,
+};
+
+// Ô mật khẩu có nút con mắt: ấn để hiện/ẩn, phòng khi gõ nhầm.
+function PasswordInput({ value, onChange, placeholder }: {
+  value: string; onChange: (v: string) => void; placeholder?: string;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div style={{ position: "relative", marginTop: 6 }}>
+      <input style={{ ...input, marginTop: 0, paddingRight: 44 }} type={show ? "text" : "password"}
+        value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} minLength={6} required />
+      <button type="button" onClick={() => setShow((s) => !s)} style={eyeBtn}
+        aria-label={show ? "Ẩn mật khẩu" : "Hiện mật khẩu"} title={show ? "Ẩn mật khẩu" : "Hiện mật khẩu"}>
+        {show ? "🙈" : "👁️"}
+      </button>
+    </div>
+  );
+}
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<Phase>(cloudEnabled() ? "loading" : "ready");
@@ -176,7 +197,7 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
           <input style={input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ba.me@email.com" required />
         </label>
         <label style={label}>Mật khẩu
-          <input style={input} type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="tối thiểu 6 ký tự" minLength={6} required />
+          <PasswordInput value={pw} onChange={setPw} placeholder="tối thiểu 6 ký tự" />
         </label>
 
         {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
@@ -236,10 +257,10 @@ function RecoveryForm({ onDone }: { onDone: () => void | Promise<void> }) {
           Nhập mật khẩu mới cho tài khoản ba mẹ.
         </p>
         <label style={label}>Mật khẩu mới
-          <input style={input} type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="tối thiểu 6 ký tự" minLength={6} required />
+          <PasswordInput value={pw} onChange={setPw} placeholder="tối thiểu 6 ký tự" />
         </label>
         <label style={label}>Nhập lại mật khẩu
-          <input style={input} type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} placeholder="gõ lại cho chắc" minLength={6} required />
+          <PasswordInput value={pw2} onChange={setPw2} placeholder="gõ lại cho chắc" />
         </label>
         {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
         <button className="btn" type="submit" disabled={busy} style={{ width: "100%", marginTop: 16 }}>
