@@ -43,7 +43,15 @@ export async function currentUser() {
 }
 export async function sendPasswordReset(email: string) {
   if (!supabase) throw new Error("Cloud chưa được cấu hình.");
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
+  // redirectTo: đưa liên kết đặt lại về đúng app (kèm token recovery ở hash) → mở màn đặt mật khẩu mới.
+  const redirectTo = typeof window !== "undefined" ? window.location.origin + window.location.pathname : undefined;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined);
+  if (error) throw error;
+}
+// Đặt mật khẩu mới sau khi vào từ liên kết recovery (session tạm đã sẵn nhờ token ở URL).
+export async function updatePassword(newPassword: string) {
+  if (!supabase) throw new Error("Cloud chưa được cấu hình.");
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
 }
 

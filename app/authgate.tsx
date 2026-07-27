@@ -4,7 +4,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { supabase, cloudEnabled } from "@/lib/supabase";
 import {
-  signIn, signUp, signOut, sendPasswordReset,
+  signIn, signUp, signOut, sendPasswordReset, updatePassword,
   listChildren, createChild, activateChild, migrateLocalToChild,
   getActiveChildId, type ChildProfile,
 } from "@/lib/cloud";
@@ -31,7 +31,7 @@ function viError(e: unknown): string {
   return m || "Có lỗi xảy ra, thử lại nhé.";
 }
 
-type Phase = "loading" | "auth" | "picker" | "ready";
+type Phase = "loading" | "auth" | "recovery" | "picker" | "ready";
 
 // Nền scenery (giống desktop app) → 2 bên không còn trống; veil kem để chữ/card dễ đọc.
 // Không đặt font-family: kế thừa Nunito từ body cho đồng bộ toàn app.
@@ -63,16 +63,24 @@ export function AuthGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!supabase) return; // offline: phase đã là "ready"
     let alive = true;
+
+    // Vào từ liên kết đặt lại mật khẩu (token ở hash) → hiện màn đặt mật khẩu mới, KHÔNG tự vào app.
+    const isRecovery = typeof window !== "undefined" && /type=recovery/.test(window.location.hash);
+
+    const { data: sub } = supabase.auth.onAuthStateChange((ev, session) => {
+      if (ev === "PASSWORD_RECOVERY") { setPhase("recovery"); return; }
+      if (!session?.user) { setEmail(null); setActiveId(null); setKids([]); setPhase("auth"); }
+    });
+
     (async () => {
+      if (isRecovery) { setPhase("recovery"); return; }
       const { data } = await supabase!.auth.getUser();
       if (!alive) return;
       if (!data.user) { setPhase("auth"); return; }
       setEmail(data.user.email ?? null);
       await enterAfterLogin();
     })();
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (!session?.user) { setEmail(null); setActiveId(null); setKids([]); setPhase("auth"); }
-    });
+
     return () => { alive = false; sub.subscription.unsubscribe(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -98,6 +106,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   if (phase === "loading") return <div style={shell}><p style={{ color: "var(--muted,#8b7c66)" }}>Đang kết nối…</p></div>;
+  if (phase === "recovery")
+    return <RecoveryForm onDone={async () => {
+      const { data } = await supabase!.auth.getUser();
+      setEmail(data.user?.email ?? null);
+      setPhase("loading");
+      await enterAfterLogin();
+    }} />;
   if (phase === "auth") return <AuthForm onLoggedIn={async (e) => { setEmail(e); setPhase("loading"); await enterAfterLogin(); }} />;
   if (phase === "picker")
     return <ChildPicker kids={kids} email={email} onPick={pick} onAdded={(k) => setKids((cs) => [...cs, k])}
@@ -187,6 +202,49 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
             </div>
           )}
         </div>
+      </form>
+    </div>
+  );
+}
+
+/* ───────────── Đặt lại mật khẩu (vào từ liên kết trong email) ───────────── */
+function RecoveryForm({ onDone }: { onDone: () => void | Promise<void> }) {
+  const [pw, setPw] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function submit(ev: FormEvent) {
+    ev.preventDefault();
+    if (pw.length < 6) { setErr("Mật khẩu cần tối thiểu 6 ký tự."); return; }
+    if (pw !== pw2) { setErr("Hai ô mật khẩu chưa khớp."); return; }
+    setErr(""); setBusy(true);
+    try {
+      await updatePassword(pw);
+      // Xoá token recovery khỏi URL cho sạch trước khi vào app.
+      if (typeof window !== "undefined") history.replaceState(null, "", window.location.pathname + window.location.search);
+      await onDone();
+    } catch (e) { setErr(viError(e)); setBusy(false); }
+  }
+
+  return (
+    <div style={shell}>
+      <form style={card} onSubmit={submit}>
+        <img src={MAPLE} alt="Maple" style={{ height: 96, width: "auto", display: "block", margin: "0 auto 6px" }} />
+        <h1 style={{ ...headStyle, fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>Đặt mật khẩu mới</h1>
+        <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: 0 }}>
+          Nhập mật khẩu mới cho tài khoản ba mẹ.
+        </p>
+        <label style={label}>Mật khẩu mới
+          <input style={input} type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="tối thiểu 6 ký tự" minLength={6} required />
+        </label>
+        <label style={label}>Nhập lại mật khẩu
+          <input style={input} type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} placeholder="gõ lại cho chắc" minLength={6} required />
+        </label>
+        {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
+        <button className="btn" type="submit" disabled={busy} style={{ width: "100%", marginTop: 16 }}>
+          {busy ? "Đang lưu…" : "Lưu mật khẩu & vào app"}
+        </button>
       </form>
     </div>
   );
