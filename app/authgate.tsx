@@ -33,11 +33,17 @@ function viError(e: unknown): string {
 
 type Phase = "loading" | "auth" | "picker" | "ready";
 
+// Nền scenery (giống desktop app) → 2 bên không còn trống; veil kem để chữ/card dễ đọc.
+// Không đặt font-family: kế thừa Nunito từ body cho đồng bộ toàn app.
 const shell: React.CSSProperties = {
   minHeight: "100vh", display: "grid", placeItems: "center", padding: 20,
-  background: "var(--bg, #f7efe0)", color: "var(--ink, #2b2f3f)",
-  fontFamily: 'ui-rounded,"Segoe UI Rounded","Trebuchet MS",system-ui,sans-serif',
+  color: "var(--ink, #2b2f3f)",
+  background:
+    "linear-gradient(rgba(250,243,231,.62), rgba(250,243,231,.62)), " +
+    "#cdd8db url('/assets/images/desktop-scenery/desktop-world-backdrop.webp') center top / cover no-repeat fixed",
 };
+const headStyle: React.CSSProperties = { fontFamily: "var(--font-head-stack)", letterSpacing: "-.3px" };
+const MAPLE = "/assets/images/gen/maple-pose-cheer.webp";
 const card: React.CSSProperties = {
   width: "min(100%, 420px)", background: "var(--card, #fff)", border: "1px solid var(--line, #e8dcc6)",
   borderRadius: 20, padding: 24, boxShadow: "0 14px 34px rgba(80,60,30,.13)",
@@ -137,8 +143,8 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
   return (
     <div style={shell}>
       <form style={card} onSubmit={submit}>
-        <div style={{ fontSize: 30, textAlign: "center" }}>🦫</div>
-        <h1 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>
+        <img src={MAPLE} alt="Maple" style={{ height: 96, width: "auto", display: "block", margin: "0 auto 6px" }} />
+        <h1 style={{ ...headStyle, fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>
           {mode === "in" ? "Đăng nhập ba mẹ" : "Tạo tài khoản ba mẹ"}
         </h1>
         <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: 0 }}>
@@ -217,8 +223,9 @@ function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
   return (
     <div style={shell}>
       <div style={card}>
+        <img src={MAPLE} alt="Maple" style={{ height: 64, width: "auto", display: "block", margin: "0 auto 4px" }} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Chọn hồ sơ con</h1>
+          <h1 style={{ ...headStyle, fontSize: 20, fontWeight: 800, margin: 0 }}>Chọn hồ sơ con</h1>
           <button type="button" onClick={onSignOut} style={linkBtn}>Đăng xuất</button>
         </div>
         {email && <p style={{ color: "var(--muted,#8b7c66)", fontSize: 13, margin: "2px 0 14px" }}>{email}</p>}
