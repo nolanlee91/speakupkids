@@ -342,6 +342,40 @@ export const DETECTIVE_SCENES: DetectiveScene[] = [
       { id: "sn10", kind: "sequence", q: "They weigh the choices on the board. What will they decide?", vi: "Họ cân nhắc các lựa chọn trên bảng. Họ sẽ quyết định gì?", options: ["To balance screen time and outdoor play", "To never go outside", "To throw the tablet away"], answer: "To balance screen time and outdoor play", explainVi: "Cân bằng giữa xem màn hình và ra ngoài vận động." },
     ],
   },
+  // Learn Level 2 · Unit 07 — khám phá hộp thời gian trong vườn trường.
+  {
+    id: "timecapsule", title: "The Time Capsule Discovery", vi: "Khám phá hộp thời gian", image: L2 + "level-2-unit-07-time-capsule-discovery.webp",
+    emojis: ["📦", "🕰️", "🗺️", "🪙", "📷", "🚗", "🌳", "🏫", "🖌️", "📓"],
+    questions: [
+      { id: "cap1", kind: "observe", q: "What did the children dig up?", vi: "Các bạn đã đào được thứ gì?", options: ["An old metal box", "A treasure ship", "A new computer"], answer: "An old metal box" },
+      { id: "cap2", kind: "observe", q: "How many children are around the box?", vi: "Có mấy bạn nhỏ quanh chiếc hộp?", options: ["Four", "Two", "Six"], answer: "Four" },
+      { id: "cap3", kind: "observe", q: "What is the girl on the left using to clean the box?", vi: "Bạn nữ bên trái dùng gì để phủi sạch hộp?", options: ["A paintbrush", "A hammer", "A spoon"], answer: "A paintbrush" },
+      { id: "cap4", kind: "observe", q: "What is the boy in the plaid shirt holding?", vi: "Cậu bé áo kẻ đang cầm gì?", options: ["An old black-and-white photo", "A mobile phone", "A kite"], answer: "An old black-and-white photo" },
+      { id: "cap5", kind: "compare", q: "Which child is holding two objects?", vi: "Bạn nào đang cầm hai món đồ?", options: ["The boy in the green hoodie", "The girl with the brush", "The teacher"], answer: "The boy in the green hoodie", explainVi: "Cậu bé áo hoodie xanh cầm một đồng xu và một chiếc ô tô gỗ." },
+      { id: "cap6", kind: "locate", q: "Where can you see a carved tree symbol?", vi: "Có thể thấy hình cái cây khắc ở đâu?", options: ["On the wooden plank", "On the school wall", "On the backpack"], answer: "On the wooden plank" },
+      { id: "cap7", kind: "compare", q: "Which object is round and made of metal?", vi: "Món nào tròn và làm bằng kim loại?", options: ["The coin", "The photo", "The map"], answer: "The coin" },
+      { id: "cap8", kind: "infer", q: "An adult in glasses watches the children and smiles. Who is she most likely?", vi: "Một người lớn đeo kính quan sát và mỉm cười. Có lẽ là ai?", options: ["Their teacher", "A stranger", "A baby"], answer: "Their teacher", explainVi: "Người lớn đeo thẻ tên, đứng hướng dẫn các bạn → là cô giáo." },
+      { id: "cap9", kind: "infer", q: "The photo shows people in front of the school long ago. What does the box tell us?", vi: "Tấm ảnh chụp mọi người trước trường từ lâu. Chiếc hộp cho biết điều gì?", options: ["It is from the past", "It is from the future", "It is empty"], answer: "It is from the past", explainVi: "Hộp và ảnh cũ cho thấy đây là kỷ vật từ quá khứ." },
+      { id: "cap10", kind: "sequence", q: "There is a hole in the ground and the box is now open. What happened?", vi: "Trên đất có một cái hố và hộp đang mở. Chuyện gì đã xảy ra?", options: ["The children dug it up and opened it", "They just bought it", "It fell from the sky"], answer: "The children dug it up and opened it", explainVi: "Có hố trên đất → các bạn đã đào hộp lên rồi mở ra." },
+    ],
+  },
+  // Learn Level 3 · Collection 3 (Solving Problems) · Unit 11 — sân trường ngập khi mưa.
+  {
+    id: "rainycourtyard", title: "The Rainy School Courtyard", vi: "Sân trường ngày mưa", image: L3 + "collection-03-solving-problems/level-3-c03-unit-11-rainy-school-courtyard.webp",
+    emojis: ["🌧️", "☔", "📋", "📏", "💧", "🪑", "🧥", "🌱", "🏫", "🌊"],
+    questions: [
+      { id: "ryc1", kind: "observe", q: "What is the weather like?", vi: "Thời tiết thế nào?", options: ["It is raining", "It is sunny", "It is snowing"], answer: "It is raining" },
+      { id: "ryc2", kind: "observe", q: "What is the girl in the purple coat holding?", vi: "Bạn nữ áo mưa tím đang cầm gì?", options: ["A measuring stick", "A frying pan", "A guitar"], answer: "A measuring stick" },
+      { id: "ryc3", kind: "observe", q: "What is the boy in the blue jacket holding?", vi: "Cậu bé áo khoác xanh đang cầm gì?", options: ["A clipboard", "A kite", "A cup"], answer: "A clipboard" },
+      { id: "ryc4", kind: "locate", q: "Where is the water pouring from?", vi: "Nước đang chảy ra từ đâu?", options: ["From the drainpipe on the wall", "From the bench", "From the door"], answer: "From the drainpipe on the wall" },
+      { id: "ryc5", kind: "locate", q: "Where is the girl in purple crouching?", vi: "Bạn nữ áo tím đang ngồi xổm ở đâu?", options: ["By the drain near the wall", "On the bench", "Up in a tree"], answer: "By the drain near the wall" },
+      { id: "ryc6", kind: "observe", q: "What are the two children in the background holding over the bench?", vi: "Hai bạn phía sau đang căng gì phía trên ghế?", options: ["A big blue sheet", "A flag", "A blanket of leaves"], answer: "A big blue sheet" },
+      { id: "ryc7", kind: "compare", q: "Who is wearing a yellow raincoat?", vi: "Ai đang mặc áo mưa vàng?", options: ["The girl by the bench", "The boy with the clipboard", "The girl measuring the drain"], answer: "The girl by the bench" },
+      { id: "ryc8", kind: "infer", q: "The children measure the water at the drain. What problem are they solving?", vi: "Các bạn đo nước ở miệng cống. Họ đang giải quyết vấn đề gì?", options: ["The courtyard floods when it rains", "The garden has no flowers", "The lights are broken"], answer: "The courtyard floods when it rains", explainVi: "Đo nước ở cống → tìm cách xử lý việc sân bị ngập khi mưa." },
+      { id: "ryc9", kind: "infer", q: "Why are two children covering the bench with a sheet?", vi: "Vì sao hai bạn che ghế bằng tấm bạt?", options: ["To keep it dry in the rain", "To paint it", "To hide it"], answer: "To keep it dry in the rain", explainVi: "Căng tấm bạt để ghế không bị ướt mưa." },
+      { id: "ryc10", kind: "sequence", q: "The drain is full and water keeps pouring. What should they do next?", vi: "Cống đã đầy và nước cứ chảy tràn. Tiếp theo nên làm gì?", options: ["Find a way to drain the water away", "Add more water", "Do nothing"], answer: "Find a way to drain the water away", explainVi: "Cống đầy, nước tràn → cần tìm cách cho nước thoát đi." },
+    ],
+  },
 ];
 
 export const detectiveSceneById = (id: string) => DETECTIVE_SCENES.find((s) => s.id === id);
