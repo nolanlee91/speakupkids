@@ -159,12 +159,12 @@ function CourseMap({ state, onPick, onPremium }: { state: AppState; onPick: (u: 
             {!u.ready
               ? <span className="unit-soon">✏️ Đang biên soạn · sắp mở</span>
               : plocked
-                ? <span className="unit-soon">🔒 Nội dung Premium</span>
+                ? <span className="unit-soon">🔒 Nội dung Pro</span>
                 : <span className="unit-bar"><i style={{ width: `${done ? 100 : pct}%` }} />
                     <span>{check ? `Kiểm tra: ${check.score}/${check.total}` : done ? "Hoàn thành" : pct > 0 ? `${pct}%` : "Bài mới"}</span>
                   </span>}
           </span>
-          <span className="unit-go">{!u.ready ? "🔒" : plocked ? "Premium 🔒" : (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸")}</span>
+          <span className="unit-go">{!u.ready ? "🔒" : plocked ? "Pro 🔒" : (done ? "Ôn lại ▸" : pct > 0 ? "Tiếp tục ▸" : "Bắt đầu ▸")}</span>
         </button>
       </li>
     );

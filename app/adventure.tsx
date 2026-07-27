@@ -138,7 +138,7 @@ function SeasonCard({ season, index, state, onStart, onPremium }: {
         <span className="sc-vi">{season.vi}</span>
         <span className="sc-meta">
           {locked
-            ? <span className="sc-cta">🔒 Chỉ dành cho Premium</span>
+            ? <span className="sc-cta">🔒 Chỉ dành cho Pro</span>
             : <>
                 <span className="sc-progress"><b>{doneCount}</b> / {total} chương</span>
                 <span className="sc-cta">{started ? "Tiếp tục phiêu lưu ▸" : "Bắt đầu phiêu lưu ▸"}</span>

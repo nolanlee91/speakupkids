@@ -130,7 +130,7 @@ function GameGallery({ emoji, title, vi, intro, items, prefix, topics, difficult
               <span className="sc-name">{it.name}</span>
               <span className="sc-sub">{it.sub}</span>
               {plocked ? (
-                <span className="sc-premium">🔒 Chỉ dành cho Premium</span>
+                <span className="sc-premium">🔒 Chỉ dành cho Pro</span>
               ) : (
                 <>
                   {showDiff && (
