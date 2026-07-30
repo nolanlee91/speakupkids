@@ -23,6 +23,48 @@ export function celebrate(motion: boolean) {
   }
 }
 
+// Âm thanh UI rất ngắn, tạo trực tiếp bằng Web Audio nên không cần tải file hay gọi API.
+// Nếu trình duyệt/thiết bị không hỗ trợ thì im lặng, không ảnh hưởng luồng học.
+export function playSuccessSound() {
+  if (typeof window === "undefined") return;
+  const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioCtx) return;
+  const ctx = new AudioCtx();
+  const now = ctx.currentTime;
+  [523.25, 659.25, 783.99].forEach((frequency, index) => {
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+    gain.gain.setValueAtTime(0, now + index * .09);
+    gain.gain.linearRampToValueAtTime(.055, now + index * .09 + .018);
+    gain.gain.exponentialRampToValueAtTime(.001, now + index * .09 + .22);
+    oscillator.connect(gain).connect(ctx.destination);
+    oscillator.start(now + index * .09);
+    oscillator.stop(now + index * .09 + .24);
+  });
+  setTimeout(() => void ctx.close(), 700);
+}
+
+export function playFeedbackSound(correct: boolean) {
+  if (typeof window === "undefined") return;
+  const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioCtx) return;
+  const ctx = new AudioCtx();
+  const oscillator = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const now = ctx.currentTime;
+  oscillator.type = correct ? "sine" : "triangle";
+  oscillator.frequency.setValueAtTime(correct ? 660 : 240, now);
+  oscillator.frequency.linearRampToValueAtTime(correct ? 880 : 190, now + .14);
+  gain.gain.setValueAtTime(.045, now);
+  gain.gain.exponentialRampToValueAtTime(.001, now + .2);
+  oscillator.connect(gain).connect(ctx.destination);
+  oscillator.start(now);
+  oscillator.stop(now + .21);
+  setTimeout(() => void ctx.close(), 450);
+}
+
 export function shuffle<T>(a: T[]): T[] {
   a = a.slice();
   for (let i = a.length - 1; i > 0; i--) {

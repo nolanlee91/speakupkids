@@ -201,6 +201,14 @@
     align-items: center; justify-content: center; padding: 20px; }
   .modal .box { background: #fff; border-radius: 22px; padding: 24px; max-width: 380px; text-align: center; }
   .modal .box h3 { margin: 0 0 6px; }
+  .journey-result { box-shadow: 0 24px 70px rgba(19,31,46,.28); }
+  .result-next { display: flex; flex-direction: column; gap: 2px; margin: 14px 0 12px; padding: 11px 13px;
+    border-radius: 14px; background: linear-gradient(110deg,#eefaf6,#fff8e6); text-align: left; }
+  .rn-kicker { color: var(--teal-d); font-size: .62rem; font-weight: 900; letter-spacing: .1em; }
+  .result-next b { color: var(--navy); font-size: .86rem; }
+  .result-next small { color: var(--muted); font-weight: 700; }
+  .journey-result .btn { width: 100%; }
+  .journey-result .btn + .btn { margin-top: 8px; }
   .confetti { position: fixed; top: -14px; width: 10px; height: 14px; z-index: 999; border-radius: 2px;
     pointer-events: none; animation: fall 1.7s cubic-bezier(.3,.6,.6,1) forwards; }
   @keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 1; }
@@ -388,6 +396,11 @@
   /* game result */
   .game-result { text-align: center; background: var(--card); border: 3px solid #fff; border-radius: var(--radius);
     padding: 30px 24px; box-shadow: 0 10px 26px rgba(45,49,66,.10); }
+  .game-result-maple { width: 126px; height: 126px; margin: -18px auto -6px; object-fit: contain;
+    filter: drop-shadow(0 7px 7px rgba(31,45,67,.15)); animation: mapleResult .55s cubic-bezier(.2,.9,.3,1.2) both; }
+  .maple-says { display: inline-block; margin: 0 auto 10px; padding: 7px 11px; border-radius: 13px;
+    background: #eef9f6; color: var(--teal-d); font-size: .76rem; font-weight: 800; }
+  @keyframes mapleResult { from { opacity: 0; transform: translateY(16px) scale(.78); } to { opacity: 1; transform: none; } }
   .gr-stars { font-size: 2.4rem; letter-spacing: 4px; }
   .gr-stars.sm { font-size: 1.6rem; margin: 4px 0; }
   .game-result h3 { margin: 10px 0 4px; }
@@ -903,6 +916,34 @@
   .today-lead { color: var(--muted); font-weight: 700; margin: 4px 0 0; }
   .today-flag { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: .82rem; color: var(--coral-d);
     background: #fbe6df; border-radius: 999px; padding: 8px 12px; white-space: nowrap; }
+  .daily-journey { position: relative; overflow: hidden; margin: 0 0 16px; padding: 15px 16px 13px;
+    border: 1px solid #d9e8e3; border-radius: 20px; background: linear-gradient(135deg,#f5fffb,#fff9e9);
+    box-shadow: 0 7px 20px rgba(38,91,77,.09); }
+  .daily-journey::after { content: "🍁"; position: absolute; right: 13px; top: -8px; font-size: 2.7rem;
+    opacity: .12; transform: rotate(18deg); pointer-events: none; }
+  .daily-journey header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .daily-journey header > div { display: flex; flex-direction: column; min-width: 0; }
+  .daily-journey header b { color: var(--navy); font-size: .9rem; }
+  .daily-journey header strong { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto;
+    border-radius: 50%; background: #fff; color: var(--teal-d); box-shadow: 0 4px 12px rgba(38,91,77,.12); }
+  .dj-kicker { color: var(--teal-d); font-size: .63rem; font-weight: 900; letter-spacing: .1em; }
+  .dj-track { height: 7px; margin: 12px 3px 10px; overflow: hidden; border-radius: 999px; background: #dfeae6; }
+  .dj-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--teal),#f1bd43);
+    transition: width .45s ease; }
+  .dj-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+  .dj-steps button { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; padding: 6px 4px;
+    border: 0; border-radius: 12px; background: transparent; color: var(--muted); font-family: inherit; cursor: pointer; }
+  .dj-steps button span { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 auto;
+    border-radius: 50%; background: #e5e9e7; color: #7f8986; font-size: .72rem; font-weight: 900; }
+  .dj-steps button small { overflow: hidden; text-overflow: ellipsis; font-size: .67rem; font-weight: 900; white-space: nowrap; }
+  .dj-steps button.done { color: var(--teal-d); }
+  .dj-steps button.done span { background: var(--teal); color: #fff; }
+  .dj-steps button.current { background: #fff; color: var(--navy); box-shadow: 0 3px 10px rgba(40,69,61,.1); }
+  .dj-steps button.current span { background: #fff0c9; color: #a96f0c; animation: journeyPulse 1.5s ease-in-out infinite; }
+  .dj-steps .gift.ready { color: #9a651c; background: #fff5d8; }
+  .dj-steps .gift.ready span { background: #f4bc42; animation: clubhouseGift 1.2s ease-in-out infinite; }
+  .daily-journey.complete { border-color: #edc765; background: linear-gradient(135deg,#fff9dc,#f1fff8); }
+  @keyframes journeyPulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 6px rgba(242,179,61,.14); } }
   /* Card: hiển thị FULL ảnh (không crop) ở trên, chữ + nút nằm DƯỚI ảnh (ngoài ảnh) */
   .next-card { display: flex; flex-direction: column; width: 100%; text-align: left;
     overflow: hidden; cursor: pointer; border: none; border-radius: 22px; padding: 0; font-family: inherit;
@@ -981,6 +1022,19 @@
   .clubhouse-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .clubhouse-glow { position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(circle at 50% 45%,rgba(255,226,149,.12),transparent 42%); }
+  .clubhouse-maple { position: absolute; z-index: 12; left: 3%; bottom: 0; width: 22%; max-width: 205px; padding: 0;
+    border: 0; background: transparent; cursor: pointer; filter: drop-shadow(0 8px 8px rgba(49,32,17,.24));
+    animation: mapleBreathe 3.2s ease-in-out infinite; transform-origin: center bottom; }
+  .clubhouse-maple img { display: block; width: 100%; height: auto; }
+  .clubhouse-maple span { position: absolute; left: 72%; top: 4%; width: max-content; max-width: 190px; padding: 7px 10px;
+    border-radius: 13px 13px 13px 3px; background: rgba(255,255,255,.94); color: #604324; box-shadow: 0 4px 13px rgba(53,37,23,.16);
+    font-family: var(--font-body-stack); font-size: clamp(.56rem,1.3vw,.76rem); font-weight: 800; }
+  .clubhouse-dust { position: absolute; z-index: 11; color: #fff3bd; text-shadow: 0 0 8px #fff; pointer-events: none;
+    animation: dustFloat 3.8s ease-in-out infinite; }
+  .dust-one { left: 31%; top: 22%; }
+  .dust-two { right: 18%; top: 31%; animation-delay: -1.6s; }
+  @keyframes mapleBreathe { 50% { transform: translateY(-4px) rotate(-1deg); } }
+  @keyframes dustFloat { 50% { transform: translateY(-12px) rotate(90deg); opacity: .35; } }
   .clubhouse-item { position: absolute; width: clamp(45px,8vw,92px); aspect-ratio: 1; border: 0; padding: 0;
     display: grid; place-items: center; background: transparent; cursor: pointer; filter: drop-shadow(0 7px 5px rgba(45,28,12,.32));
     transform-origin: center; animation: clubhousePop .45s both; }
@@ -1060,12 +1114,17 @@
   .season-souvenir-copy { color: var(--muted); font-weight: 700; font-size: .84rem; }
 
   @media (max-width: 560px) {
+    .daily-journey { padding: 13px 12px 11px; }
+    .dj-steps button { flex-direction: column; gap: 2px; }
+    .dj-steps button small { max-width: 65px; }
     .chw-preview { width: 76px; }
     .chw-go { display: none; }
     .clubhouse-top { align-items: center; }
     .clubhouse-top p { display: none; }
     .clubhouse-main { padding: 8px 6px 40px; }
     .clubhouse-room { border-width: 2px; border-radius: 14px; }
+    .clubhouse-maple { width: 27%; left: 1%; }
+    .clubhouse-maple span { display: none; }
     .clubhouse-item > i { display: none; }
     .clubhouse-reward, .clubhouse-progress, .clubhouse-inventory { margin-top: 8px; border-radius: 14px; padding: 12px; }
     .clubhouse-progress { align-items: stretch; flex-direction: column; gap: 8px; }
@@ -1077,6 +1136,11 @@
     .journal-group .sticker-slots, .journal-badges, .journal-souvenirs { grid-template-columns: repeat(2,1fr); }
   }
   body.no-motion .gift-ready .chw-preview i,
+  body.no-motion .dj-steps button.current span,
+  body.no-motion .dj-steps .gift.ready span,
+  body.no-motion .game-result-maple,
+  body.no-motion .clubhouse-maple,
+  body.no-motion .clubhouse-dust,
   body.no-motion .clubhouse-item,
   body.no-motion .season-souvenir-art { animation: none; }
 
@@ -1365,6 +1429,7 @@
       display: grid; grid-template-columns: minmax(0, 520px) 300px; gap: 16px 18px; align-items: start; justify-content: center;
       grid-template-areas:
         "greet   greet"
+        "journey journey"
         "cta     stats"
         "cta     prog"
         "modules modules"
@@ -1373,6 +1438,7 @@
         "recent  recent"
         "club    club"; }
     .today > .today-hi      { grid-area: greet; margin: 0 0 2px; }
+    .today > .daily-journey { grid-area: journey; margin: 0; }
     .today > .next-card     { grid-area: cta; align-self: start; }
     .today > .today-stats   { grid-area: stats; margin: 0; }
     .today > .td-progress   { grid-area: prog; }

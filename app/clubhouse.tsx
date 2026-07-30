@@ -9,7 +9,7 @@ import {
 } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
-import { celebrate, speak } from "@/lib/fx";
+import { celebrate, playSuccessSound, speak } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
 
 const ROOM = "/assets/images/clubhouse/maple-clubhouse-room.webp";
@@ -37,6 +37,7 @@ export function Clubhouse({
   function choose(id: string) {
     setState((s) => claimClubhouseItem(s, id));
     celebrate(state.prefs.motion !== false);
+    playSuccessSound();
   }
 
   return (
@@ -61,7 +62,13 @@ export function Clubhouse({
             <section className="clubhouse-room" aria-label="Căn phòng của bé">
               <img className="clubhouse-bg" src={ROOM} alt="Căn phòng Clubhouse nhìn ra Vancouver" />
               <div className="clubhouse-glow" aria-hidden="true" />
-              {roomItems.map((item) => (
+              <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span>
+              <span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
+              <button className="clubhouse-maple" onClick={() => speak("Welcome to our clubhouse!", state.prefs.accent, .86)}>
+                <img src="/assets/images/gen/maple-pose-cheer.webp" alt="Maple trong Clubhouse" />
+                <span>Welcome! Chạm vào đồ vật nhé.</span>
+              </button>
+              {roomItems.map((item, index) => (
                 <button
                   key={item.id}
                   className="clubhouse-item"
@@ -69,6 +76,7 @@ export function Clubhouse({
                     left: `${item.x}%`, top: `${item.y}%`,
                     transform: `translate(-50%, -50%) scale(${item.scale || 1})`,
                     zIndex: item.z || 1,
+                    animationDelay: `${index * 90}ms`,
                   }}
                   onClick={() => speak(item.en, state.prefs.accent, .82)}
                   aria-label={`${item.en} — ${item.vi}. Chạm để nghe.`}

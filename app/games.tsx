@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { speak, shuffle, celebrate } from "@/lib/fx";
+import { speak, shuffle, celebrate, playFeedbackSound, playSuccessSound } from "@/lib/fx";
 import { speechScoringSupported } from "@/lib/speech";
 import { MicCheck } from "./speakcheck";
 import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
@@ -59,9 +59,14 @@ function GameResult({ title, stars, info, doneLabel, onDone, secondary }: {
   title: string; stars?: number; info: FinishInfo | null;
   doneLabel: string; onDone: () => void; secondary?: { label: string; onClick: () => void };
 }) {
-  useEffect(() => { celebrate(!document.body.classList.contains("no-motion")); }, []);
+  useEffect(() => {
+    celebrate(!document.body.classList.contains("no-motion"));
+    playSuccessSound();
+  }, []);
   return (
     <div className="game-result">
+      <img className="game-result-maple" src="/assets/images/gen/maple-pose-cheer.webp" alt="Maple đang chúc mừng" />
+      <span className="maple-says">High five! Mỗi lượt luyện giúp con nhớ lâu hơn.</span>
       {typeof stars === "number" && <div className="gr-stars">{"⭐".repeat(stars)}{"☆".repeat(3 - stars)}</div>}
       <h3>{title}</h3>
       {info && info.total > 0 && (
@@ -266,6 +271,7 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
   function answerMcq(o: string) {
     if (answered) return;
     setPicked(o);
+    playFeedbackSound(o === it.answer);
     setResults((r) => [...r, { id: it.id, correct: o === it.answer }]);
   }
   function place(w: string, idx: number) {
@@ -280,6 +286,7 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
   function check() {
     const ok = placed.join(" ") === (it.solution || []).join(" ");
     setChecked(ok);
+    playFeedbackSound(ok);
     setResults((r) => [...r, { id: it.id, correct: ok }]);
   }
   const sol = it.solution || [];
@@ -421,6 +428,7 @@ function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string;
   function check() {
     const ok = placed.join(" ") === item.solution.join(" ");
     setResult(ok);
+    playFeedbackSound(ok);
     setResults((r) => [...r, { id: item.id, correct: ok }]);
   }
   const target = item.solution.join(" ") + ".";
@@ -512,6 +520,7 @@ function RiddleRound({ setId, difficulty, cb, accent, onExit, onNext }: {
   function answer(o: string) {
     if (answered) return;
     setPicked(o);
+    playFeedbackSound(o === r.answer);
     setResults((x) => [...x, { id: r.id, correct: o === r.answer }]);
   }
   return (
@@ -602,6 +611,7 @@ function ListenRound({ setId, difficulty, cb, accent, onExit, onNext }: {
   function answer(o: string) {
     if (answered) return;
     setPicked(o);
+    playFeedbackSound(o === r.answer);
     setResults((x) => [...x, { id: r.id, correct: o === r.answer }]);
   }
   return (

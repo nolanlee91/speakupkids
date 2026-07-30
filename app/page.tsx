@@ -20,7 +20,7 @@ import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
 import { Clubhouse } from "./clubhouse";
-import { celebrate } from "@/lib/fx";
+import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
 import { syncSave, currentUser, signOut, clearActiveChild } from "@/lib/cloud";
@@ -124,6 +124,7 @@ function App() {
     let { state: ns } = completeLearnLesson(state, lessonId, score, total);
     setState(ns);
     celebrate(state.prefs.motion !== false);
+    playSuccessSound();
     const les = learnLessonById(lessonId) || phonicsUnitById(lessonId);
     const st = score >= total ? 3 : score >= total - 1 ? 2 : 1;
     setReward({
@@ -200,7 +201,7 @@ function App() {
 
       {reward && (
         <div className="modal" onClick={(e) => e.target === e.currentTarget && setReward(null)}>
-          <div className="box">
+          <div className="box journey-result">
             {reward.sticker ? (
               <div className="reward-sticker"><StickerArt id={reward.sticker.id} emoji={reward.sticker.emoji} /></div>
             ) : (
@@ -210,7 +211,13 @@ function App() {
             {typeof reward.stars === "number" && <div className="gr-stars sm">{"⭐".repeat(reward.stars)}{"☆".repeat(3 - reward.stars)}</div>}
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: reward.html }} />
             {reward.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{reward.sticker.name}</b>!</p>}
-            <button className="btn green" onClick={() => setReward(null)}>Tuyệt vời!</button>
+            <div className="result-next">
+              <span className="rn-kicker">BƯỚC TIẾP THEO</span>
+              <b>Luyện một lượt để nhớ lâu hơn</b>
+              <small>Điểm đến tiếp theo trong hành trình hôm nay.</small>
+            </div>
+            <button className="btn green" onClick={() => { setReward(null); setView("games"); }}>Luyện ngay →</button>
+            <button className="btn ghost sm" onClick={() => { setReward(null); setClubhouse(true); }}>Ghé Clubhouse</button>
           </div>
         </div>
       )}
@@ -258,9 +265,11 @@ function Today({ state, go, openLesson, openClubhouse }: {
   const tasks: { ic: AppIconName; label: string; done: boolean; run: () => void }[] = [
     { ic: "learn", label: "Học một chặng", done: daily.learn, run: () => openLesson(lesson.id) },
     { ic: "practice", label: "Luyện tập một lượt", done: daily.practice, run: () => go("games") },
-    { ic: "adventure", label: "Vượt một bước phiêu lưu", done: daily.adventure, run: () => go("adventure") },
+    { ic: "adventure", label: "Khám phá Adventure · tùy chọn", done: daily.adventure, run: () => go("adventure") },
   ];
   const doneToday = tasks.filter((t) => t.done).length;
+  const coreDone = [daily.learn, daily.practice].filter(Boolean).length;
+  const journeyPct = Math.round((coreDone / 2) * 100);
 
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
@@ -281,6 +290,28 @@ function Today({ state, go, openLesson, openClubhouse }: {
         </div>
       </div>
 
+      <section className={`daily-journey ${coreDone === 2 ? "complete" : ""}`} aria-label="Hành trình học hôm nay">
+        <header>
+          <div>
+            <span className="dj-kicker">HÀNH TRÌNH HÔM NAY</span>
+            <b>{coreDone === 2 ? "Xong bài hôm nay — ghé Clubhouse thôi!" : "Học một chặng, luyện một lượt"}</b>
+          </div>
+          <strong>{coreDone}/2</strong>
+        </header>
+        <div className="dj-track"><i style={{ width: `${journeyPct}%` }} /></div>
+        <div className="dj-steps">
+          {tasks.slice(0, 2).map((task, index) => (
+            <button key={task.label} className={task.done ? "done" : index === coreDone ? "current" : ""} onClick={task.run}>
+              <span>{task.done ? "✓" : index + 1}</span>
+              <small>{index === 0 ? "Học" : "Luyện"}</small>
+            </button>
+          ))}
+          <button className={coreDone === 2 ? "gift ready" : "gift"} onClick={openClubhouse}>
+            <span>🏡</span><small>Clubhouse</small>
+          </button>
+        </div>
+      </section>
+
       {/* CTA chính duy nhất */}
       <button className="next-card" onClick={cta.run}>
         {(cta.bg || lesson.sceneImage) && <img className="nc-img" src={cta.bg || lesson.sceneImage} alt="" />}
@@ -293,7 +324,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
       </button>
 
       {/* Ba nhiệm vụ hôm nay */}
-      <h2 className="chapter">Nhiệm vụ hôm nay · {doneToday}/3</h2>
+      <h2 className="chapter">Hoạt động hôm nay · {doneToday}/3</h2>
       <div className="daily-tasks">
         {tasks.map((t) => (
           <button key={t.label} className={`dtask ${t.done ? "done" : ""}`} onClick={t.run}>

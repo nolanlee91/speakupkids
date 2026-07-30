@@ -10,7 +10,7 @@ import {
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { learnLocked } from "@/lib/gating";
 import { PhonicsLesson } from "./phonics";
-import { speak, shuffle } from "@/lib/fx";
+import { playFeedbackSound, speak, shuffle } from "@/lib/fx";
 import { speechScoringSupported } from "@/lib/speech";
 import { MicCheck } from "./speakcheck";
 import { AppIcon, type AppIconName } from "./icons";
@@ -301,7 +301,12 @@ function Quiz({ items, accent, onScore }: { items: MCQ[]; accent: "US" | "CA"; o
   const [score, setScore] = useState(0);
   const q = qs[i];
   const answered = picked !== null;
-  function pick(o: string) { if (answered) return; setPicked(o); if (o === q.answer) setScore((x) => x + 1); }
+  function pick(o: string) {
+    if (answered) return;
+    setPicked(o);
+    playFeedbackSound(o === q.answer);
+    if (o === q.answer) setScore((x) => x + 1);
+  }
   function next() {
     if (i + 1 < qs.length) { setI(i + 1); setPicked(null); }
     else onScore(score);
@@ -414,7 +419,12 @@ function MiniCheckView({ lesson, onFinish, back }: { lesson: Lesson; diff: Diffi
   const opts = useMemo(() => shuffle(t.options), [t]);
   const answered = picked !== null;
 
-  function pick(o: string) { if (picked !== null) return; setPicked(o); if (o === t.answer) setScore((x) => x + 1); }
+  function pick(o: string) {
+    if (picked !== null) return;
+    setPicked(o);
+    playFeedbackSound(o === t.answer);
+    if (o === t.answer) setScore((x) => x + 1);
+  }
   function next() {
     if (i + 1 >= total) { onFinish(score, total); return; }
     setI(i + 1); setPicked(null);
