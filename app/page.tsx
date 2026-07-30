@@ -19,11 +19,15 @@ import { SEASON_LOST_COMPASS, resumeChapter } from "@/lib/adventures";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
+import { Clubhouse } from "./clubhouse";
 import { celebrate } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
 import { syncSave, currentUser, signOut, clearActiveChild } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
+import {
+  CLUBHOUSE_ITEMS, clubhouseActivityTotal, clubhouseRewardReady, nextClubhouseMilestone,
+} from "@/lib/clubhouse";
 
 const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
@@ -70,6 +74,7 @@ function App() {
   const [game, setGame] = useState<Launch | null>(null);
   const [account, setAccount] = useState(false);
   const [collection, setCollection] = useState(false);
+  const [clubhouse, setClubhouse] = useState(false);
   const [menu, setMenu] = useState(false);
   const [reward, setReward] = useState<Reward | null>(null);
   const [showSplash, setShowSplash] = useState(false);
@@ -164,6 +169,7 @@ function App() {
             <div className="avatar-menu">
               <button onClick={() => { setMenu(false); setAccount(true); }}>👤 Hồ sơ của bé</button>
               <button onClick={() => { setMenu(false); setCollection(true); }}>🎁 Bộ sưu tập</button>
+              <button onClick={() => { setMenu(false); setClubhouse(true); }}>🏡 Maple Clubhouse</button>
               <button onClick={() => { setMenu(false); setAccount(true); }}>⚙️ Cài đặt & Gói</button>
             </div>
           </>
@@ -171,7 +177,7 @@ function App() {
       </header>
 
       <div className={`wrap ${view === "home" || view === "adventure" ? "wide" : ""}`}>
-        {view === "home" && <Today state={state} go={goView} openLesson={openCurrentLesson} />}
+        {view === "home" && <Today state={state} go={goView} openLesson={openCurrentLesson} openClubhouse={() => setClubhouse(true)} />}
         {view === "learn" && <Learn state={state} setState={setState} entry={learnEntry}
           onEcho={() => launch({ kind: "echo", title: "Echo" })}
           onTalk={(sceneId) => launch({ kind: "picdet", refId: sceneId, title: "Thám tử hình ảnh" })}
@@ -209,6 +215,7 @@ function App() {
         onExit={() => setGame(null)} />}
 
       {collection && <CollectionPanel state={state} stars={stars} onClose={() => setCollection(false)} />}
+      {clubhouse && <Clubhouse state={state} setState={setState} onClose={() => setClubhouse(false)} />}
       {account && <AccountPanel state={state} setState={setState} onClose={() => setAccount(false)} />}
 
       {reward && (
@@ -232,8 +239,8 @@ function App() {
 }
 
 /* ==================== HÔM NAY — bé nên làm gì tiếp theo? ==================== */
-function Today({ state, go, openLesson }: {
-  state: AppState; go: (v: View) => void; openLesson: (lessonId: string) => void;
+function Today({ state, go, openLesson, openClubhouse }: {
+  state: AppState; go: (v: View) => void; openLesson: (lessonId: string) => void; openClubhouse: () => void;
 }) {
   const name = state.nickname || "bạn nhỏ";
   const lessonId = state.learn.currentLesson;
@@ -278,6 +285,9 @@ function Today({ state, go, openLesson }: {
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
+  const clubhouseReady = clubhouseRewardReady(state);
+  const clubhouseActivity = clubhouseActivityTotal(state);
+  const clubhouseNext = nextClubhouseMilestone(state);
 
   return (
     <section className="today">
@@ -326,6 +336,23 @@ function Today({ state, go, openLesson }: {
           {advDone > 0 && <> · vượt <b>{advDone}</b> nhiệm vụ</>}.
         </div>
       )}
+
+      <button className={`clubhouse-widget ${clubhouseReady ? "gift-ready" : ""}`} onClick={openClubhouse}>
+        <span className="chw-preview">
+          <img src="/assets/images/clubhouse/maple-clubhouse-room.webp" alt="" />
+          <i aria-hidden="true">{clubhouseReady ? "🎁" : "🏡"}</i>
+        </span>
+        <span className="chw-copy">
+          <span className="chw-kicker">MAPLE CLUBHOUSE</span>
+          <b>{clubhouseReady ? "Có món quà mới cho căn phòng!" : "Căn phòng hành trình của bé"}</b>
+          <small>
+            {clubhouseReady
+              ? "Chọn một trong hai món — món còn lại vẫn nhận được sau."
+              : `${state.clubhouse.unlockedItemIds.length}/${CLUBHOUSE_ITEMS.length} món · ${clubhouseNext ? `${clubhouseActivity}/${clubhouseNext} tới quà tiếp theo` : "đã đủ bộ"}`}
+          </small>
+        </span>
+        <span className="chw-go">Vào phòng ▸</span>
+      </button>
 
       {/* ===== Chỉ hiện ở desktop — ẩn trên mobile qua CSS. Cùng dữ liệu, cùng ngôn ngữ card như mobile. ===== */}
       {/* Ba module: mở rộng điều hướng (không dựng hệ thống cổng phức tạp) */}

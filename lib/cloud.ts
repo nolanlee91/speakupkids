@@ -2,7 +2,7 @@
 // Tài khoản ba mẹ (Supabase Auth) → nhiều hồ sơ con → tiến độ (AppState) lưu ở child_state.
 // Thiết kế "an toàn khi chưa cấu hình": mọi hàm không nổ nếu supabase=null; app chạy offline như cũ.
 import { supabase } from "./supabase";
-import { loadState, saveState, defaultState, type AppState } from "./state";
+import { loadState, saveState, defaultState, normalizeState, type AppState } from "./state";
 
 export type ChildProfile = { id: string; ingame_name: string; avatar: string; age: number };
 
@@ -103,11 +103,12 @@ export async function activateChild(child: ChildProfile): Promise<AppState> {
   setActiveChildId(child.id);
   const cloud = await pullState(child.id);
   if (cloud) {
+    const normalized = normalizeState(cloud);
     const merged: AppState = {
-      ...cloud,
-      nickname: cloud.nickname || child.ingame_name,
-      avatar: cloud.avatar || child.avatar,
-      age: cloud.age || child.age,
+      ...normalized,
+      nickname: normalized.nickname || child.ingame_name,
+      avatar: normalized.avatar || child.avatar,
+      age: normalized.age || child.age,
     };
     saveState(merged);
     return merged;

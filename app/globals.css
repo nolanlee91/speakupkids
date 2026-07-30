@@ -944,6 +944,101 @@
   .today-recent { background: rgba(242,179,61,.14); border-radius: 14px; padding: 12px 14px; font-size: .86rem;
     font-weight: 600; color: var(--navy); }
 
+  /* ---------- MAPLE CLUBHOUSE · widget trên Today ---------- */
+  .clubhouse-widget { width: 100%; display: flex; align-items: center; gap: 13px; margin-top: 14px; padding: 10px;
+    border: 1px solid #e5d6bf; border-left: 6px solid #c88445; border-radius: 18px; background: #fff;
+    box-shadow: 0 6px 18px rgba(71,52,34,.1); cursor: pointer; text-align: left; font-family: inherit; color: var(--navy); }
+  .clubhouse-widget:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(71,52,34,.15); }
+  .clubhouse-widget.gift-ready { border-color: #e9a532; background: linear-gradient(100deg,#fff9e7,#fff); }
+  .chw-preview { position: relative; width: 94px; aspect-ratio: 4/3; flex: 0 0 auto; border-radius: 12px; overflow: hidden;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.8); }
+  .chw-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .chw-preview i { position: absolute; right: 5px; bottom: 4px; display: grid; place-items: center; width: 30px; height: 30px;
+    border-radius: 50%; background: rgba(255,255,255,.94); font-style: normal; font-size: 1.05rem; box-shadow: 0 3px 9px rgba(0,0,0,.2); }
+  .gift-ready .chw-preview i { animation: clubhouseGift 1.2s ease-in-out infinite; }
+  .chw-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; }
+  .chw-kicker { color: #9b642f; font-weight: 900; letter-spacing: .08em; font-size: .65rem; }
+  .chw-copy b { font-size: .93rem; }
+  .chw-copy small { color: var(--muted); font-weight: 700; line-height: 1.35; }
+  .chw-go { color: #9b642f; font-size: .76rem; font-weight: 900; white-space: nowrap; padding-right: 6px; }
+  @keyframes clubhouseGift { 0%,100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(5deg) scale(1.12); } }
+
+  /* ---------- MAPLE CLUBHOUSE · màn 2.5D ---------- */
+  .clubhouse-overlay { position: fixed; inset: 0; z-index: 180; overflow-y: auto;
+    background: linear-gradient(180deg,#f8eedc,#e7d5b9); color: var(--navy); }
+  .clubhouse-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
+    max-width: 1040px; margin: 0 auto; padding: 12px 16px; background: rgba(250,244,233,.94);
+    border-bottom: 1px solid rgba(122,91,53,.18); backdrop-filter: blur(12px); }
+  .clubhouse-top .bk { border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; background: #fff;
+    color: var(--navy); font-family: inherit; font-weight: 800; cursor: pointer; }
+  .clubhouse-top h2 { margin: 0; font-family: var(--font-head-stack); font-size: 1.2rem; }
+  .clubhouse-top p { margin: 1px 0 0; color: var(--muted); font-size: .75rem; font-weight: 700; }
+  .clubhouse-count { margin-left: auto; border-radius: 999px; padding: 7px 11px; background: #fff3d2;
+    color: #8b5b22; font-size: .74rem; font-weight: 900; white-space: nowrap; }
+  .clubhouse-main { max-width: 1040px; margin: 0 auto; padding: 14px 14px 54px; }
+  .clubhouse-room { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 22px;
+    background: #ad8159; border: 4px solid rgba(255,255,255,.9); box-shadow: 0 18px 42px rgba(72,48,27,.24); }
+  .clubhouse-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .clubhouse-glow { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 45%,rgba(255,226,149,.12),transparent 42%); }
+  .clubhouse-item { position: absolute; width: clamp(45px,8vw,92px); aspect-ratio: 1; border: 0; padding: 0;
+    display: grid; place-items: center; background: transparent; cursor: pointer; filter: drop-shadow(0 7px 5px rgba(45,28,12,.32));
+    transform-origin: center; animation: clubhousePop .45s both; }
+  .clubhouse-item > span { font-size: clamp(2rem,6vw,4.8rem); line-height: 1; }
+  .clubhouse-item > i { position: absolute; left: 50%; bottom: -19px; transform: translateX(-50%); opacity: 0;
+    padding: 4px 8px; border-radius: 999px; background: rgba(32,37,51,.9); color: #fff; font-size: .62rem;
+    font-style: normal; font-weight: 800; white-space: nowrap; transition: opacity .15s; }
+  .clubhouse-item:hover > i, .clubhouse-item:focus-visible > i { opacity: 1; }
+  .clubhouse-item:hover { filter: drop-shadow(0 8px 6px rgba(45,28,12,.36)) brightness(1.08); }
+  @keyframes clubhousePop { from { opacity: 0; margin-top: 12px; } to { opacity: 1; margin-top: 0; } }
+  .clubhouse-empty { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); width: min(88%,430px);
+    padding: 10px 14px; border-radius: 14px; background: rgba(255,250,238,.9); box-shadow: 0 5px 16px rgba(53,37,23,.18);
+    display: flex; flex-direction: column; text-align: center; color: #604324; font-size: .78rem; }
+  .clubhouse-empty b { font-size: .9rem; }
+
+  .clubhouse-reward, .clubhouse-progress, .clubhouse-inventory { margin-top: 14px; border: 1px solid rgba(128,91,48,.17);
+    border-radius: 18px; padding: 16px; background: rgba(255,255,255,.94); box-shadow: 0 7px 20px rgba(76,52,30,.1); }
+  .clubhouse-reward { text-align: center; background: linear-gradient(150deg,#fff8dc,#fff); }
+  .cr-kicker { font-size: .68rem; color: #a56d17; letter-spacing: .1em; font-weight: 900; }
+  .clubhouse-reward h3 { margin: 3px 0 2px; font-family: var(--font-head-stack); }
+  .clubhouse-reward > p { margin: 0 0 12px; color: var(--muted); font-size: .78rem; font-weight: 700; }
+  .clubhouse-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .clubhouse-choices button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 8px;
+    border: 2px solid #ead9bb; border-radius: 16px; background: #fff; color: var(--navy); font-family: inherit; cursor: pointer; }
+  .clubhouse-choices button:hover { border-color: #e5a239; transform: translateY(-2px); }
+  .cc-art { font-size: 3rem; filter: drop-shadow(0 5px 4px rgba(55,39,20,.18)); }
+  .clubhouse-choices b { font-size: .92rem; }
+  .clubhouse-choices small { color: var(--muted); font-weight: 700; }
+  .clubhouse-choices em { color: #9b642f; font-size: .65rem; font-style: normal; font-weight: 800; margin: 4px 0; }
+  .clubhouse-choices strong { border-radius: 999px; padding: 6px 11px; background: var(--coral); color: #fff; font-size: .7rem; }
+  .clubhouse-progress { display: flex; align-items: center; gap: 16px; }
+  .clubhouse-progress > div:first-child { display: flex; flex-direction: column; min-width: 180px; }
+  .clubhouse-progress span { color: var(--muted); font-size: .75rem; font-weight: 700; }
+  .chp-bar { flex: 1; height: 11px; border-radius: 999px; overflow: hidden; background: #eadfcf; }
+  .chp-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#e9a73b,#ef765d); }
+  .clubhouse-inventory h3 { margin: 0 0 10px; font-size: 1rem; }
+  .clubhouse-inventory > div { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; }
+  .clubhouse-inventory button { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    border: 1px dashed #d7cab7; border-radius: 12px; padding: 8px 4px; background: #f4efe7; color: var(--muted); font-family: inherit; }
+  .clubhouse-inventory button.on { border-style: solid; border-color: #dfc99f; background: #fff9e9; color: var(--navy); cursor: pointer; }
+  .clubhouse-inventory button span { font-size: 1.7rem; }
+  .clubhouse-inventory button small { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .62rem; font-weight: 800; }
+
+  @media (max-width: 560px) {
+    .chw-preview { width: 76px; }
+    .chw-go { display: none; }
+    .clubhouse-top { align-items: center; }
+    .clubhouse-top p { display: none; }
+    .clubhouse-main { padding: 8px 6px 40px; }
+    .clubhouse-room { border-width: 2px; border-radius: 14px; }
+    .clubhouse-item > i { display: none; }
+    .clubhouse-reward, .clubhouse-progress, .clubhouse-inventory { margin-top: 8px; border-radius: 14px; padding: 12px; }
+    .clubhouse-progress { align-items: stretch; flex-direction: column; gap: 8px; }
+    .clubhouse-inventory > div { grid-template-columns: repeat(4,1fr); }
+  }
+  body.no-motion .gift-ready .chw-preview i,
+  body.no-motion .clubhouse-item { animation: none; }
+
   /* ============ PHIÊU LƯU: Adventure Home ============ */
   /* wrap.wide bỏ padding-top → tự chừa chỗ cho HUD (position:absolute) + lề ngang cho mobile. */
   .adv-home { max-width: 760px; margin: 0 auto; padding: 58px 16px 8px; }
@@ -1234,7 +1329,8 @@
         "modules modules"
         "tashd   tashd"
         "tasks   tasks"
-        "recent  recent"; }
+        "recent  recent"
+        "club    club"; }
     .today > .today-hi      { grid-area: greet; margin: 0 0 2px; }
     .today > .next-card     { grid-area: cta; align-self: start; }
     .today > .today-stats   { grid-area: stats; margin: 0; }
@@ -1243,6 +1339,7 @@
     .today > .chapter       { grid-area: tashd; margin: 8px 2px 6px; font-size: 1.1rem; }
     .today > .daily-tasks   { grid-area: tasks; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .today > .today-recent  { grid-area: recent; margin-top: 4px; }
+    .today > .clubhouse-widget { grid-area: club; margin-top: 0; }
 
     /* Ba module — cùng ngôn ngữ card như mobile (đặc, viền trái màu, không glass) */
     .today-portals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }

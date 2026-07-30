@@ -36,6 +36,13 @@ export type AdventureState = {
   seasons: Record<string, AdventureSeasonProgress>; // key = seasonId
 };
 
+// Maple Clubhouse: phần thưởng meta-game dùng chung cho Learn / Practice / Adventure.
+// `claimedMilestones` là số mốc đã nhận quà; item không chọn vẫn ở lại pool cho mốc sau.
+export type ClubhouseState = {
+  unlockedItemIds: string[];
+  claimedMilestones: number;
+};
+
 export type AppState = {
   nickname: string;
   avatar: string;
@@ -57,6 +64,7 @@ export type AppState = {
   games: GamesState;
   daily: DailyTasks;
   adventure: AdventureState;
+  clubhouse: ClubhouseState;
 };
 
 export const KEY = "speakup_state_v1";
@@ -83,26 +91,45 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0 },
   };
 }
 
 export function loadState(): AppState {
   if (typeof window === "undefined") return defaultState();
   try {
-    const s = JSON.parse(localStorage.getItem(KEY) || "{}");
-    const d = defaultState();
-    // Gộp an toàn: dữ liệu cũ không có `learn`/`prefs` sẽ nhận mặc định
-    return {
-      ...d, ...s,
-      prefs: { ...d.prefs, ...(s.prefs || {}) },
-      learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
-      games: migrateGames(s.games),
-      daily: { ...d.daily, ...(s.daily || {}) },
-      adventure: migrateAdventure(s.adventure),
-    };
+    return normalizeState(JSON.parse(localStorage.getItem(KEY) || "{}"));
   } catch {
     return defaultState();
   }
+}
+
+// Chuẩn hóa cả localStorage lẫn state cũ kéo từ cloud về schema hiện tại.
+// Mỗi module mới phải đi qua đây để tài khoản đã tồn tại không bị lỗi trắng.
+export function normalizeState(input: unknown): AppState {
+  const s = (input || {}) as Partial<AppState>;
+  const d = defaultState();
+  return {
+    ...d, ...s,
+    prefs: { ...d.prefs, ...(s.prefs || {}) },
+    learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
+    games: migrateGames(s.games),
+    daily: { ...d.daily, ...(s.daily || {}) },
+    adventure: migrateAdventure(s.adventure),
+    clubhouse: migrateClubhouse(s.clubhouse),
+  };
+}
+
+function migrateClubhouse(c: unknown): ClubhouseState {
+  const src = (c || {}) as Partial<ClubhouseState>;
+  return {
+    unlockedItemIds: Array.isArray(src.unlockedItemIds)
+      ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
+      : [],
+    claimedMilestones: Number.isFinite(src.claimedMilestones)
+      ? Math.max(0, Math.floor(src.claimedMilestones || 0))
+      : 0,
+  };
 }
 
 // Chuyển GamesState cũ ({seen,best}) hoặc bản mới ({topics}) về schema topics; không mất dữ liệu.
@@ -372,6 +399,18 @@ export function completeChapter(
 // Tổng số chương đã hoàn thành (mọi mùa) — dùng cho huy hiệu "Nhà phiêu lưu".
 export function adventuresDone(s: AppState): number {
   return Object.values(s.adventure.seasons).reduce((a, p) => a + p.completedChapterIds.length, 0);
+}
+
+/* ---------- Maple Clubhouse (meta-game phần thưởng) ---------- */
+export function claimClubhouseItem(s: AppState, itemId: string): AppState {
+  if (!itemId || s.clubhouse.unlockedItemIds.includes(itemId)) return s;
+  return {
+    ...s,
+    clubhouse: {
+      unlockedItemIds: [...s.clubhouse.unlockedItemIds, itemId],
+      claimedMilestones: s.clubhouse.claimedMilestones + 1,
+    },
+  };
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
 // seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.
