@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { speak, shuffle, celebrate } from "@/lib/fx";
+import { speechScoringSupported } from "@/lib/speech";
+import { MicCheck } from "./speakcheck";
 import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
 import { DETECTIVE_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scenes";
 import { practiceItemLocked } from "@/lib/gating";
@@ -651,33 +653,39 @@ function ListenChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: Ga
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }
 
-/* ============ Echo Challenge (luyện nói tùy chọn, KHÔNG chấm điểm) ============ */
+/* ============ Echo Challenge (luyện nói, chấm sao tuỳ chọn bằng Web Speech API) ============ */
 function EchoChallenge({ accent, onExit, cb }: { accent: "US" | "CA"; onExit: () => void; cb: GameCallbacks }) {
   const phrases = ECHO;
   const [i, setI] = useState(0);
   const [fin, setFin] = useState(false);
+  // Sao tốt nhất của từng câu (thử lại chỉ nâng, không cộng trùng).
+  const [starMap, setStarMap] = useState<Record<number, number>>({});
+  const stars = Object.values(starMap).reduce((a, b) => a + b, 0);
   const p = phrases[i];
+  const canScore = speechScoringSupported();
 
   useEffect(() => { if (!fin && p) speak(p.en, accent); }, [i, fin, p, accent]);
   useEffect(() => { if (fin) cb.echoDone(); }, [fin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (fin) {
     return <GameShell emoji="🎤" title="Echo with Maple" vi="Nói theo Maple" onExit={onExit}>
-      <GameResult title="Giọng nói tuyệt vời! 🎤" info={{ newly: 0, explored: 0, total: 0 }}
+      <GameResult title={stars > 0 ? `Giọng nói tuyệt vời! Bạn gom được ${stars} ⭐ 🎤` : "Giọng nói tuyệt vời! 🎤"}
+        info={{ newly: 0, explored: 0, total: 0 }}
         doneLabel="Xong →" onDone={onExit} />
-      <p className="echo-note">Đây là luyện nói cho vui — không tính điểm.</p>
+      <p className="echo-note">Sao chỉ để cho vui — nói được là giỏi rồi!</p>
     </GameShell>;
   }
   return (
     <GameShell emoji="🎤" title="Echo with Maple" vi="Nói theo Maple" onExit={onExit}>
-      <div className="q-progress">Câu {i + 1}/{phrases.length}</div>
+      <div className="q-progress">Câu {i + 1}/{phrases.length}{stars > 0 && <span> · ⭐ {stars}</span>}</div>
       <div className="echo-card">
         <div className="echo-step">1️⃣ Nghe Maple đọc</div>
         <div className="echo-en">{p.en}</div>
         <div className="echo-vi">{p.vi}</div>
         <button className="btn" onClick={() => speak(p.en, accent)}>🔊 Nghe lại</button>
         <button className="btn ghost sm" onClick={() => speak(p.en, accent, 0.55)}>🐢 Nghe chậm</button>
-        <div className="echo-step">2️⃣ Bạn nói theo, rồi bấm nút bên dưới</div>
+        <div className="echo-step">{canScore ? "2️⃣ Bấm micro, nói theo — Maple chấm sao cho bạn" : "2️⃣ Bạn nói theo, rồi bấm nút bên dưới"}</div>
+        {canScore && <MicCheck target={p.en} accent={accent} size="lg" onScore={(s) => setStarMap((m) => ({ ...m, [i]: Math.max(m[i] || 0, s.stars) }))} />}
       </div>
       <button className="btn green" onClick={() => { if (i + 1 < phrases.length) setI(i + 1); else setFin(true); }}>
         {i + 1 < phrases.length ? "✓ Mình nói xong — câu tiếp" : "✓ Mình nói xong — hoàn thành"}

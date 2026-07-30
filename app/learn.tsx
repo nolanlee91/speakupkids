@@ -11,6 +11,8 @@ import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { learnLocked } from "@/lib/gating";
 import { PhonicsLesson } from "./phonics";
 import { speak, shuffle } from "@/lib/fx";
+import { speechScoringSupported } from "@/lib/speech";
+import { MicCheck } from "./speakcheck";
 import { AppIcon, type AppIconName } from "./icons";
 
 const GEN = "/assets/images/gen/";
@@ -352,16 +354,19 @@ function ListeningView({ lesson, diff, accent, onDone, back }: { lesson: Lesson;
   );
 }
 
-/* ---------- LISTEN & REPEAT (hoạt động phụ, KHÔNG chấm điểm) ---------- */
+/* ---------- LISTEN & REPEAT (chấm nói tuỳ chọn bằng Web Speech API) ---------- */
 function SpeakingView({ lesson, diff, accent, onEcho, onTalk, onDone, back }: {
   lesson: Lesson; diff: DifficultyLevel; accent: "US" | "CA"; onEcho: () => void; onTalk: (sceneId?: string) => void; onDone: () => void; back: () => void;
 }) {
   const S = lesson.speaking;
   const vis = showVi(diff);
   const prompts = showPrompts(diff);
+  const canScore = speechScoringSupported();
   return (
     <Page icon="speak" title="Listen & Repeat" vi="Nghe & nói theo" back={back}>
-      <Bubble>Nghe Maple đọc rồi nói theo cho quen miệng. <b>Không chấm điểm</b> đâu — cứ thoải mái nhé! 🎶</Bubble>
+      <Bubble>{canScore
+        ? <>Nghe Maple đọc rồi nói theo. Muốn thử sức thì bấm <b>🎤 Nói & lấy sao</b> — chỉ để vui thôi, không có điểm kém đâu! 🎶</>
+        : <>Nghe Maple đọc rồi nói theo cho quen miệng. <b>Không chấm điểm</b> đâu — cứ thoải mái nhé! 🎶</>}</Bubble>
 
       <div className="speak-block">
         <div className="sb-h">Nghe & nói theo</div>
@@ -372,6 +377,7 @@ function SpeakingView({ lesson, diff, accent, onEcho, onTalk, onDone, back }: {
               <button className="icbtn" onClick={() => speak(r.en, accent)}>🔊 Maple đọc</button>
               <button className="icbtn" onClick={() => speak(r.en, accent, 0.6)}>🐢 Chậm</button>
             </div>
+            <MicCheck target={r.en} accent={accent} />
           </div>
         ))}
         <div className="sb-line">
