@@ -18,6 +18,7 @@ import {
 } from "@/lib/adventures";
 import { speak, shuffle, celebrate } from "@/lib/fx";
 import { adventureSeasonLocked } from "@/lib/gating";
+import { seasonSouvenirBySeason } from "@/lib/clubhouse";
 
 const CHAR = "/assets/images/adventure/season-01-lost-maple-compass/characters/";
 const MAPLE_IDLE = CHAR + "maple-map-idle.webp";
@@ -46,6 +47,7 @@ export function Adventure({ state, setState, accent, onPremium }: {
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
   const [travelFrom, setTravelFrom] = useState<string | null>(null); // chương vừa xong → Maple đi tiếp
+  const [seasonRewardId, setSeasonRewardId] = useState<string | null>(null);
 
   const reduce = usePrefersReducedMotion();
   const animate = state.prefs.motion !== false && !reduce;
@@ -62,9 +64,12 @@ export function Adventure({ state, setState, accent, onPremium }: {
   function finishChapter(ch: AdventureChapter, _stars: number) {
     if (!season) return;
     const wasNew = !isChapterCompleted(state, season.id, ch.id);
+    const completesSeason = wasNew && season.chapters.filter(chapterPlayable)
+      .every((candidate) => candidate.id === ch.id || isChapterCompleted(state, season.id, candidate.id));
     setState((s) => completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId }).state);
     if (wasNew) celebrate(animate);
     setPlaying(null);
+    if (completesSeason) setSeasonRewardId(season.id);
     // Chỉ diễn hoạt cảnh Maple đi sang node mới khi vừa hoàn thành lần đầu và còn chương kế.
     setTravelFrom(wasNew && ch.nextChapterId ? ch.id : null);
   }
@@ -87,14 +92,29 @@ export function Adventure({ state, setState, accent, onPremium }: {
   if (!season) {
     return <AdventureHome seasons={SEASONS} state={state} onPick={(id) => setActiveSeasonId(id)} onPremium={onPremium} />;
   }
+  const seasonReward = seasonRewardId ? seasonSouvenirBySeason(seasonRewardId) : undefined;
   return (
-    <SeasonMap
-      season={season} state={state} animate={animate}
-      travelFrom={travelFrom} onTravelDone={() => setTravelFrom(null)}
-      onBack={() => setActiveSeasonId(null)}
-      onOpen={openChapter}
-      onReset={() => setState((s) => resetAdventure(s, season.id))}
-    />
+    <>
+      <SeasonMap
+        season={season} state={state} animate={animate}
+        travelFrom={travelFrom} onTravelDone={() => setTravelFrom(null)}
+        onBack={() => setActiveSeasonId(null)}
+        onOpen={openChapter}
+        onReset={() => setState((s) => resetAdventure(s, season.id))}
+      />
+      {seasonReward && (
+        <div className="modal season-souvenir-modal">
+          <div className="box">
+            <div className="season-souvenir-art">{seasonReward.emoji}</div>
+            <div className="cr-kicker">ADVENTURE SOUVENIR</div>
+            <h3>{seasonReward.en}</h3>
+            <p><b>{seasonReward.vi}</b></p>
+            <p className="season-souvenir-copy">Bạn đã hoàn thành cả season. Kỷ vật này đã được đưa về Maple Clubhouse.</p>
+            <button className="btn green" onClick={() => setSeasonRewardId(null)}>Xem trên bản đồ</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -586,7 +606,7 @@ function ChapterResult({ season, chapter, stars, firstTime, showItem, scoredCoun
         <div className={`cr-reward ${showItem ? "new" : "have"}`}>
           <span className="cr-item" aria-hidden="true">{item ? (item.image ? <img src={item.image} alt="" /> : item.emoji) : "🔦"}</span>
           <div>
-            <div className="cr-reward-t">{showItem ? "Vật phẩm mới!" : "Manh mối"} · {chapter.reward.clueTitle}</div>
+            <div className="cr-reward-t">{showItem ? "Đạo cụ cốt truyện mới!" : "Manh mối cốt truyện"} · {chapter.reward.clueTitle}</div>
             <div className="cr-reward-d">{chapter.reward.clueVi}</div>
           </div>
         </div>

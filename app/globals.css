@@ -497,8 +497,8 @@
   .wrap.wide { max-width: 100%; padding: 0 0 40px; }
   .wrap { padding-top: 64px; }
   .wrap.wide { padding-top: 0; }
-  .home, .worldmap, .playground, .stage, .journal { padding-bottom: 8px; }
-  .playground, .stage, .journal { max-width: 920px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+  .home, .worldmap, .playground, .stage { padding-bottom: 8px; }
+  .playground, .stage { max-width: 920px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
 
   /* chapter headings — kiểu sách tranh, không phải label dashboard */
   .chapter { font-size: 1.28rem; font-weight: 800; color: var(--ink); margin: 22px 2px 12px;
@@ -661,14 +661,7 @@
   .film-ttl { display: block; font-weight: 800; font-size: .9rem; margin-top: 6px; }
   .film-meta { display: block; font-size: .74rem; color: var(--muted); }
 
-  /* ---------- COLLECTION — sổ tay & kệ ---------- */
-  .journal-head { display: flex; align-items: center; gap: 12px; margin: 4px 0 6px; }
-  .journal-maple { width: 62px; height: 62px; object-fit: contain; flex: 0 0 auto; }
-  .journal-sub { font-size: .84rem; color: var(--muted); margin: 2px 0 0; }
-  .sticker-page { position: relative; border-radius: 22px; padding: 16px 16px 14px; margin-bottom: 16px;
-    background: repeating-linear-gradient(transparent 0 29px, rgba(120,90,60,.07) 29px 30px), linear-gradient(160deg, #fffdf6, #fbf2e1);
-    box-shadow: 0 8px 22px rgba(45,49,66,.1), inset 0 0 0 2px rgba(255,255,255,.6); }
-  .sp-title { font-weight: 800; margin-bottom: 12px; color: #7a5b3a; }
+  /* ---------- Sticker page trong Clubhouse Journal ---------- */
   .sticker-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 12px; }
   .slot { text-align: center; border-radius: 16px; padding: 12px 6px; border: 2px dashed #d9c5a5; }
   .slot.filled { border-style: solid; border-color: transparent; background: #fff; transform: rotate(-2deg);
@@ -678,22 +671,6 @@
   .slot:not(.filled) .slot-art { opacity: .3; }
   .slot-name { font-size: .72rem; font-weight: 700; color: var(--muted); margin-top: 2px; display: block; }
   .slot.filled .slot-name { color: var(--ink); }
-  .stamps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  .stamp { font-size: .78rem; color: #7a5b3a; border: 2px dashed #cbb189; border-radius: 12px; padding: 4px 11px; }
-  .stamp b { color: var(--ink); margin-right: 3px; }
-  .shelf { background: linear-gradient(180deg, #e9d7bd, #dcc39f); border-radius: 22px; padding: 14px 14px 18px;
-    box-shadow: 0 8px 22px rgba(45,49,66,.12); }
-  .shelf-title { font-weight: 800; color: #6b4e2e; margin-bottom: 10px; }
-  .shelf-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; }
-  .trophy { text-align: center; background: rgba(255,255,255,.5); border-radius: 14px; padding: 10px 6px;
-    box-shadow: inset 0 -3px 6px rgba(0,0,0,.06); }
-  .trophy img { width: 52px; height: 52px; object-fit: contain; border-radius: 50%; filter: grayscale(1); opacity: .4;
-    transition: filter .2s, transform .2s; }
-  .trophy.on { background: #fff; box-shadow: 0 5px 13px rgba(0,0,0,.1); }
-  .trophy.on img { filter: none; opacity: 1; }
-  .trophy.on:hover img { transform: scale(1.08); }
-  .trophy span { display: block; font-size: .7rem; font-weight: 700; margin-top: 5px; }
-
   /* softer bottom nav */
   .nav { background: rgba(255,255,255,.93); backdrop-filter: blur(8px); border-top: none;
     border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(45,49,66,.1); }
@@ -916,8 +893,8 @@
   /* ============================================================
      REFACTOR: Hôm nay · Luyện tập · Phiêu lưu (đồng bộ landing)
      ============================================================ */
-  .wtag.collect { border: none; cursor: pointer; font-family: inherit; font-weight: 800; }
-  .wtag.collect:hover { transform: translateY(-1px); }
+  .wtag.clubhouse { border: none; cursor: pointer; font-family: inherit; font-weight: 800; }
+  .wtag.clubhouse:hover { transform: translateY(-1px); }
 
   /* ---------- HÔM NAY ---------- */
   /* padding-top chừa chỗ cho HUD (position:absolute, cao ~70px) — giống .adv-home, tránh HUD đè lời chào */
@@ -994,6 +971,11 @@
   .clubhouse-count { margin-left: auto; border-radius: 999px; padding: 7px 11px; background: #fff3d2;
     color: #8b5b22; font-size: .74rem; font-weight: 900; white-space: nowrap; }
   .clubhouse-main { max-width: 1040px; margin: 0 auto; padding: 14px 14px 54px; }
+  .clubhouse-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 430px; margin: 0 auto 12px;
+    padding: 5px; border-radius: 999px; background: rgba(117,80,45,.1); }
+  .clubhouse-tabs button { border: 0; border-radius: 999px; padding: 9px 15px; background: transparent; color: #76583c;
+    font-family: inherit; font-weight: 900; cursor: pointer; }
+  .clubhouse-tabs button.on { background: #fff; color: var(--navy); box-shadow: 0 4px 12px rgba(71,52,34,.12); }
   .clubhouse-room { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 22px;
     background: #ad8159; border: 4px solid rgba(255,255,255,.9); box-shadow: 0 18px 42px rgba(72,48,27,.24); }
   .clubhouse-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -1042,6 +1024,41 @@
   .clubhouse-inventory button span { font-size: 1.7rem; }
   .clubhouse-inventory button small { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .62rem; font-weight: 800; }
 
+  /* Journal nằm trong Clubhouse — một nơi duy nhất cho mọi kỷ vật dài hạn. */
+  .keepsake-journal { display: flex; flex-direction: column; gap: 14px; }
+  .keepsake-journal > header { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    border-radius: 18px; padding: 14px 16px; background: linear-gradient(120deg,#fff9e8,#fff);
+    border: 1px solid #ead8b7; box-shadow: 0 7px 20px rgba(76,52,30,.09); }
+  .keepsake-journal > header > div { display: flex; align-items: center; gap: 10px; }
+  .keepsake-journal > header > div > span { font-size: 2rem; }
+  .keepsake-journal h3 { margin: 0; font-family: var(--font-head-stack); }
+  .keepsake-journal header p { margin: 2px 0 0; color: var(--muted); font-size: .75rem; font-weight: 700; }
+  .keepsake-journal header > strong { border-radius: 999px; padding: 7px 11px; background: #fff0c9; color: #8b5b22; font-size: .75rem; white-space: nowrap; }
+  .journal-group { border: 1px solid rgba(128,91,48,.17); border-radius: 18px; padding: 15px;
+    background: rgba(255,255,255,.94); box-shadow: 0 7px 20px rgba(76,52,30,.08); }
+  .jg-head { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 9px; margin-bottom: 12px; }
+  .jg-head b { color: var(--navy); }
+  .jg-head span { color: var(--muted); font-size: .72rem; font-weight: 700; }
+  .jg-head em { border-radius: 999px; padding: 3px 8px; background: #f3eadc; color: #896645; font-size: .68rem; font-style: normal; font-weight: 900; }
+  .journal-group .sticker-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+  .journal-badges { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+  .journal-badges > div { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px;
+    border-radius: 13px; background: #f1eee8; color: var(--muted); text-align: center; }
+  .journal-badges > div.on { background: #fff8e5; color: var(--navy); box-shadow: inset 0 0 0 1px #ead29d; }
+  .journal-badges img { width: 52px; height: 52px; object-fit: contain; filter: grayscale(1); opacity: .35; }
+  .journal-badges .on img { filter: none; opacity: 1; }
+  .journal-badges b { font-size: .7rem; }
+  .journal-badges small { color: var(--muted); font-size: .59rem; line-height: 1.25; }
+  .journal-souvenirs { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+  .journal-souvenirs button { display: flex; flex-direction: column; align-items: center; gap: 2px; border: 1px dashed #d7cab7;
+    border-radius: 13px; padding: 10px 5px; background: #f1eee8; color: var(--muted); font-family: inherit; }
+  .journal-souvenirs button.on { border-style: solid; border-color: #dfc99f; background: #fff9e9; color: var(--navy); cursor: pointer; }
+  .journal-souvenirs span { font-size: 2rem; }
+  .journal-souvenirs b { font-size: .7rem; }
+  .journal-souvenirs small { font-size: .6rem; color: var(--muted); }
+  .season-souvenir-art { font-size: 5rem; line-height: 1; filter: drop-shadow(0 7px 7px rgba(55,39,20,.2)); animation: pop .5s ease; }
+  .season-souvenir-copy { color: var(--muted); font-weight: 700; font-size: .84rem; }
+
   @media (max-width: 560px) {
     .chw-preview { width: 76px; }
     .chw-go { display: none; }
@@ -1053,9 +1070,15 @@
     .clubhouse-reward, .clubhouse-progress, .clubhouse-inventory { margin-top: 8px; border-radius: 14px; padding: 12px; }
     .clubhouse-progress { align-items: stretch; flex-direction: column; gap: 8px; }
     .clubhouse-inventory > div { grid-template-columns: repeat(4,1fr); }
+    .keepsake-journal > header { align-items: flex-start; }
+    .keepsake-journal header p { display: none; }
+    .jg-head { grid-template-columns: 1fr auto; }
+    .jg-head span { grid-column: 1 / -1; grid-row: 2; }
+    .journal-group .sticker-slots, .journal-badges, .journal-souvenirs { grid-template-columns: repeat(2,1fr); }
   }
   body.no-motion .gift-ready .chw-preview i,
-  body.no-motion .clubhouse-item { animation: none; }
+  body.no-motion .clubhouse-item,
+  body.no-motion .season-souvenir-art { animation: none; }
 
   /* ============ PHIÊU LƯU: Adventure Home ============ */
   /* wrap.wide bỏ padding-top → tự chừa chỗ cho HUD (position:absolute) + lề ngang cho mobile. */

@@ -226,7 +226,7 @@ export function ensureProg(s: AppState, id: string): AppState {
   if (!p.learned) p.learned = [];
   return { ...s, progress: { ...s.progress, [id]: p } };
 }
-// Bộ sưu tập sticker
+// Sticker Practice — hiển thị cùng các kỷ vật khác trong Clubhouse Journal
 export function hasSticker(s: AppState, id: string): boolean {
   return (s.stickers || []).includes(id);
 }

@@ -41,6 +41,15 @@ export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 export const STICKER_FOR_GAME: Record<GameKind, string> = {
   picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star",
 };
+
+// Bốn sticker còn lại cũng thuộc Practice, mở theo tổng số lượt chơi.
+// Nếu một lượt đồng thời hoàn tất topic, sticker theo game được ưu tiên; sticker mốc chờ lượt sau.
+export const PRACTICE_MILESTONE_STICKERS = [
+  { plays: 5, id: "st-mic" },
+  { plays: 10, id: "st-map" },
+  { plays: 20, id: "st-maple" },
+  { plays: 30, id: "st-crown" },
+];
 // Số câu/task mỗi lượt theo game. picdet gộp 2 hoạt động nên lấy 6 câu/lượt.
 export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5 };
 

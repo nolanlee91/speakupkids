@@ -4,7 +4,7 @@ export type AppIconName =
   | "home" | "learn" | "practice" | "adventure"
   | "phonics" | "everyday" | "story" | "opinion"
   | "words" | "sentence" | "listen" | "speak" | "check"
-  | "lock" | "play" | "volume" | "streak" | "star" | "reward";
+  | "lock" | "play" | "volume" | "streak" | "star" | "reward" | "clubhouse";
 
 type IconProps = SVGProps<SVGSVGElement> & { name: AppIconName };
 
@@ -60,5 +60,7 @@ export function AppIcon({ name, className, ...props }: IconProps) {
       return <svg {...common}><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" /></svg>;
     case "reward":
       return <svg {...common}><path d="M4 10h16v10H4zM3 7h18v4H3zM12 7v13" /><path d="M12 7H8.5C6 7 5.2 3.7 7.6 3.2 9.2 2.8 10.8 4.6 12 7ZM12 7h3.5c2.5 0 3.3-3.3.9-3.8C14.8 2.8 13.2 4.6 12 7Z" /></svg>;
+    case "clubhouse":
+      return <svg {...common}><path d="m3.5 10.5 8.5-7 8.5 7" /><path d="M5.5 9.2v10.3h13V9.2M9.2 19.5v-5.3h5.6v5.3" /><path d="m17.8 3.4.6 1.2 1.3.2-.9.9.2 1.3-1.2-.6-1.2.6.2-1.3-.9-.9 1.3-.2z" /></svg>;
   }
 }

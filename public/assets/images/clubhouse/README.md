@@ -9,13 +9,19 @@
 
 ## MVP rules
 
-- One room, 12 unlockable items, fixed slots.
+- One room, six Learn decoration milestones plus eight Adventure season
+  souvenirs, all using fixed slots.
 - The background contains permanent structural furniture only.
 - Unlockable items are separate overlay layers; no drag/drop in MVP.
 - Clicking an unlocked item reads its English name.
-- Reward cadence is based on total completed Learn lessons, Practice rounds
-  and Adventure chapters.
-- A rejected choice returns to the reward pool; it is never lost forever.
+- Learn milestones unlock a choice of room decoration.
+- Practice completion unlocks stickers in My Journal.
+- Adventure chapter items remain inside their story; completing a whole season
+  unlocks one Clubhouse souvenir.
+- Badges are derived from major account milestones.
+- Stars and streak are indicators, not collectible inventory.
+- A rejected decoration choice returns to the Learn reward pool; it is never
+  lost forever.
 
 ## Visual direction
 

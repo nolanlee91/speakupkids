@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import {
   type AppState, type RoundResult, defaultState, loadState, totalStars,
-  touchStreak, resetDailyIfNeeded, resetDailyTasks, todayStr, totalLearned,
+  touchStreak, resetDailyIfNeeded, resetDailyTasks, todayStr,
   hasSticker, gamesDone, addSticker, isPremium,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
   recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
   adventuresDone, isChapterCompleted, adventureOf,
 } from "@/lib/state";
 import {
-  GAMES, STICKERS, stickerById, STICKER_FOR_GAME,
+  GAMES, stickerById, STICKER_FOR_GAME, PRACTICE_MILESTONE_STICKERS,
   type StopKind, type GameKind,
 } from "@/lib/games";
 import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS } from "@/lib/learn";
@@ -26,30 +26,13 @@ import { AuthGate } from "./authgate";
 import { syncSave, currentUser, signOut, clearActiveChild } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
 import {
-  CLUBHOUSE_ITEMS, clubhouseActivityTotal, clubhouseRewardReady, nextClubhouseMilestone,
+  CLUBHOUSE_MILESTONES, clubhouseLearnTotal,
+  clubhouseRewardReady, nextClubhouseMilestone,
 } from "@/lib/clubhouse";
+import { keepsakeCount } from "@/lib/rewards";
+import { StickerArt } from "./reward-art";
 
-const BDG = "/assets/images/badges/";
 const GEN = "/assets/images/gen/";
-const STK = "/assets/images/stickers/";
-
-// Ảnh sticker thật; nếu thiếu file thì fallback về emoji
-function StickerArt({ id, emoji }: { id: string; emoji: string }) {
-  const [err, setErr] = useState(false);
-  return err ? <span className="sticker-emoji">{emoji}</span>
-    : <img className="sticker-img" src={`${STK}${id}.webp`} alt="" onError={() => setErr(true)} />;
-}
-
-const BADGES: { img: string; nm: string; has: (s: AppState) => boolean }[] = [
-  { img: "badge-star.webp", nm: "Bài đầu tiên", has: (s) => learnLessonsDone(s) >= 1 },
-  { img: "badge-streak.webp", nm: "3 ngày liên tiếp", has: (s) => s.streak >= 3 },
-  { img: "badge-speaking.webp", nm: "Luyện 3 lượt", has: (s) => gamesDone(s) >= 3 },
-  { img: "badge-pronunciation.webp", nm: "Thuộc 15 câu", has: (s) => totalLearned(s) >= 15 },
-  { img: "badge-listening.webp", nm: "Học 3 Unit", has: (s) => learnLessonsDone(s) >= 3 },
-  { img: "badge-trophy.webp", nm: "10 sao", has: (s) => totalStars(s) >= 10 },
-  { img: "badge-explorer.webp", nm: "Nhà phiêu lưu", has: (s) => adventuresDone(s) >= 1 },
-  { img: "badge-vancouver.webp", nm: "Đủ 5 sticker", has: (s) => (s.stickers || []).length >= 5 },
-];
 
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
 // Tổng số Unit của cả 3 Level (dùng cho thanh tiến độ ở dashboard Home desktop).
@@ -73,7 +56,6 @@ function App() {
   const [learnEntry, setLearnEntry] = useState<"map" | "lesson">("map");
   const [game, setGame] = useState<Launch | null>(null);
   const [account, setAccount] = useState(false);
-  const [collection, setCollection] = useState(false);
   const [clubhouse, setClubhouse] = useState(false);
   const [menu, setMenu] = useState(false);
   const [reward, setReward] = useState<Reward | null>(null);
@@ -119,14 +101,19 @@ function App() {
     const fully = topicTotal > 0 && explored.size >= topicTotal;
     const gameType = key.split(":")[0] as GameKind;
     const stId = STICKER_FOR_GAME[gameType];
-    const award = fully && !!stId && !hasSticker(state, stId);
+    const topicSticker = fully && !!stId && !hasSticker(state, stId) ? stId : undefined;
+    const projectedPlays = gamesDone(state) + 1;
+    const milestoneSticker = !topicSticker
+      ? PRACTICE_MILESTONE_STICKERS.find((m) => projectedPlays >= m.plays && !hasSticker(state, m.id))?.id
+      : undefined;
+    const awardId = topicSticker || milestoneSticker;
     setState((s) => {
       let ns = recordGameAnswers(s, key, results);
       ns = finishGameRound(ns, key, stars, todayStr());
-      if (award && stId) ns = addSticker(ns, stId);
+      if (awardId) ns = addSticker(ns, awardId);
       return ns;
     });
-    const sk = award && stId ? stickerById(stId) : undefined;
+    const sk = awardId ? stickerById(awardId) : undefined;
     return { newly, explored: explored.size, total: topicTotal, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
   }
   // Echo (luyện nói tùy chọn): chỉ đánh dấu đã luyện Practice hôm nay.
@@ -134,25 +121,20 @@ function App() {
 
   // Hoàn thành bài Learn (sau Mini Check)
   function completeLearn(lessonId: string, score: number, total: number) {
-    const firstMap = !hasSticker(state, "st-map");
     let { state: ns } = completeLearnLesson(state, lessonId, score, total);
-    if (firstMap) ns = addSticker(ns, "st-map");
     setState(ns);
     celebrate(state.prefs.motion !== false);
     const les = learnLessonById(lessonId) || phonicsUnitById(lessonId);
-    const sk = firstMap ? stickerById("st-map") : null;
     const st = score >= total ? 3 : score >= total - 1 ? 2 : 1;
     setReward({
       title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
       html: `Bạn hoàn thành Unit <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Học tiếp Unit sau hoặc luyện tập cho nhớ lâu nhé!`,
       stars: st,
-      sticker: sk ? { id: sk.id, emoji: sk.emoji, name: sk.name } : null,
+      sticker: null,
     });
   }
 
   if (!ready) return <div style={{ padding: 40, color: "#7a8194" }}>Đang tải…</div>;
-
-  const got = state.stickers || [];
 
   return (
     <div id="app">
@@ -161,14 +143,13 @@ function App() {
         <div className="hud-tokens">
           <span className="wtag fire">🔥 {state.streak}</span>
           <span className="wtag star">⭐ {stars}</span>
-          <button className="wtag collect" onClick={() => setCollection(true)} aria-label="Bộ sưu tập">🎁 {got.length}</button>
+          <button className="wtag clubhouse" onClick={() => setClubhouse(true)} aria-label="Maple Clubhouse">🏡 {keepsakeCount(state)}</button>
         </div>
         {menu && (
           <>
             <div className="menu-back" onClick={() => setMenu(false)} />
             <div className="avatar-menu">
               <button onClick={() => { setMenu(false); setAccount(true); }}>👤 Hồ sơ của bé</button>
-              <button onClick={() => { setMenu(false); setCollection(true); }}>🎁 Bộ sưu tập</button>
               <button onClick={() => { setMenu(false); setClubhouse(true); }}>🏡 Maple Clubhouse</button>
               <button onClick={() => { setMenu(false); setAccount(true); }}>⚙️ Cài đặt & Gói</button>
             </div>
@@ -214,7 +195,6 @@ function App() {
         cb={{ topics: state.games.topics, commit: commitGame, finish: finishGame, echoDone, premium: isPremium(state), onPremium: openPremium }}
         onExit={() => setGame(null)} />}
 
-      {collection && <CollectionPanel state={state} stars={stars} onClose={() => setCollection(false)} />}
       {clubhouse && <Clubhouse state={state} setState={setState} onClose={() => setClubhouse(false)} />}
       {account && <AccountPanel state={state} setState={setState} onClose={() => setAccount(false)} />}
 
@@ -286,8 +266,10 @@ function Today({ state, go, openLesson, openClubhouse }: {
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
   const clubhouseReady = clubhouseRewardReady(state);
-  const clubhouseActivity = clubhouseActivityTotal(state);
+  const clubhouseLearned = clubhouseLearnTotal(state);
   const clubhouseNext = nextClubhouseMilestone(state);
+  const roomKeepsakes = state.clubhouse.unlockedItemIds.length;
+  const roomTarget = CLUBHOUSE_MILESTONES.length;
 
   return (
     <section className="today">
@@ -326,7 +308,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
       <div className="today-stats">
         <span className="ts"><b><AppIcon name="streak" />{state.streak}</b>chuỗi ngày</span>
         <span className="ts"><b><AppIcon name="star" />{totalStars(state)}</b>tổng sao</span>
-        <span className="ts"><b><AppIcon name="reward" />{(state.stickers || []).length}</b>sticker</span>
+        <span className="ts"><b><AppIcon name="clubhouse" />{keepsakeCount(state)}</b>kỷ vật</span>
       </div>
 
       {/* Thành quả gần nhất */}
@@ -348,7 +330,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
           <small>
             {clubhouseReady
               ? "Chọn một trong hai món — món còn lại vẫn nhận được sau."
-              : `${state.clubhouse.unlockedItemIds.length}/${CLUBHOUSE_ITEMS.length} món · ${clubhouseNext ? `${clubhouseActivity}/${clubhouseNext} tới quà tiếp theo` : "đã đủ bộ"}`}
+              : `${roomKeepsakes}/${roomTarget} kỷ vật phòng · ${clubhouseNext ? `${clubhouseLearned}/${clubhouseNext} Unit tới quà Learn` : "đã đủ mốc Learn"}`}
           </small>
         </span>
         <span className="chw-go">Vào phòng ▸</span>
@@ -413,62 +395,6 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
         ))}
       </div>
     </section>
-  );
-}
-
-/* ==================== BỘ SƯU TẬP (mở từ header) ==================== */
-function CollectionPanel({ state, stars, onClose }: { state: AppState; stars: number; onClose: () => void }) {
-  const got = new Set(state.stickers || []);
-  const stamps: [string, number, string][] = [
-    ["🔥", state.streak, "ngày"],
-    ["⭐", stars, "sao"],
-    ["📖", learnLessonsDone(state), "bài học"],
-    ["🗺️", adventuresDone(state), "nhiệm vụ"],
-  ];
-  return (
-    <div className="game-overlay">
-      <div className="game-top"><button className="bk" onClick={onClose}>← Đóng</button><h3>🎁 Bộ sưu tập</h3></div>
-      <div className="game-body">
-        <section className="journal">
-          <div className="journal-head">
-            <img className="journal-maple" src={`${GEN}mascot-book.webp`} alt="" />
-            <div>
-              <h2 className="chapter">Sổ tay phiêu lưu</h2>
-              <p className="journal-sub">Sticker & huy hiệu bạn sưu tầm được cùng Maple</p>
-            </div>
-          </div>
-
-          <div className="sticker-page">
-            <div className="sp-title">Sticker · {got.size}/{STICKERS.length}</div>
-            <div className="sticker-slots">
-              {STICKERS.map((s) => (
-                <div key={s.id} className={`slot ${got.has(s.id) ? "filled" : ""}`}>
-                  <span className="slot-art">{got.has(s.id) ? <StickerArt id={s.id} emoji={s.emoji} /> : "?"}</span>
-                  <span className="slot-name">{got.has(s.id) ? s.name : "Chưa mở"}</span>
-                </div>
-              ))}
-            </div>
-            <div className="stamps">
-              {stamps.map(([ic, n, l]) => (
-                <span key={l} className="stamp"><b>{ic} {n}</b>{l}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className="shelf">
-            <div className="shelf-title">Huy hiệu</div>
-            <div className="shelf-row">
-              {BADGES.map((b) => (
-                <div key={b.img} className={`trophy ${b.has(state) ? "on" : ""}`}>
-                  <img src={`${BDG}${b.img}`} alt="" />
-                  <span>{b.nm}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
   );
 }
 
