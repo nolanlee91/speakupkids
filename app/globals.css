@@ -910,6 +910,8 @@
      ============================================================ */
   .wtag.clubhouse { border: none; cursor: pointer; font-family: inherit; font-weight: 800; }
   .wtag.clubhouse:hover { transform: translateY(-1px); }
+  .hud .coin-hud { cursor: default; }
+  .hud .coin-hud:hover { transform: none; }
 
   /* ---------- HÔM NAY ---------- */
   /* padding-top chừa chỗ cho HUD (position:absolute, cao ~70px) — giống .adv-home, tránh HUD đè lời chào */

@@ -43,7 +43,7 @@ const NAV: [NavTarget, AppIconName, string][] = [
   ["learn", "learn", "Learn"],
   ["games", "practice", "Practice"],
   ["adventure", "adventure", "Adventure"],
-  ["clubhouse", "clubhouse", "Nhà Maple"],
+  ["clubhouse", "clubhouse", "Maple House"],
 ];
 
 function App() {
@@ -161,14 +161,13 @@ function App() {
         <div className="hud-tokens">
           <span className="wtag fire">🔥 {state.streak}</span>
           <span className="wtag star">⭐ {stars}</span>
-          <button className="wtag clubhouse coin-hud" onClick={() => setClubhouse(true)} aria-label="Maple Coins"><i>◆</i> {state.clubhouse.coins}</button>
+          <span className="wtag clubhouse coin-hud" aria-label={`${state.clubhouse.coins} Maple Coins`}><i>◆</i> {state.clubhouse.coins}</span>
         </div>
         {menu && (
           <>
             <div className="menu-back" onClick={() => setMenu(false)} />
             <div className="avatar-menu">
               <button onClick={() => { setMenu(false); setAccount(true); }}>👤 Hồ sơ của bé</button>
-              <button onClick={() => { setMenu(false); setClubhouse(true); }}>🏡 Maple Clubhouse</button>
               <button onClick={() => { setMenu(false); setAccount(true); }}>⚙️ Cài đặt & Gói</button>
             </div>
           </>
