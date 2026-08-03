@@ -24,7 +24,7 @@ import { Clubhouse } from "./clubhouse";
 import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
-import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership, redeemCode, claimGifts, getActiveChildId } from "@/lib/cloud";
+import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership, redeemCode, claimGifts, getActiveChildId, getWeeklyEmailPref, setWeeklyEmailPref } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
 import { StickerArt } from "./reward-art";
 
@@ -486,9 +486,18 @@ const PLAN_FEATS = {
 function AccountPanel({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
   const [name, setName] = useState(state.nickname);
   const [parentEmail, setParentEmail] = useState<string | null>(null);
+  const [weeklyMail, setWeeklyMail] = useState<boolean | null>(null);
   const p = state.prefs;
   const pro = isPremium(state);
-  useEffect(() => { if (cloudEnabled()) currentUser().then((u) => setParentEmail(u?.email ?? null)); }, []);
+  useEffect(() => {
+    if (!cloudEnabled()) return;
+    currentUser().then((u) => setParentEmail(u?.email ?? null));
+    getWeeklyEmailPref().then(setWeeklyMail);
+  }, []);
+  function toggleWeeklyMail(on: boolean) {
+    setWeeklyMail(on);                        // optimistic — pref phụ, lỗi mạng không nghiêm trọng
+    setWeeklyEmailPref(on).catch(() => {});
+  }
   return (
     <div id="account-panel" className="game-overlay">
       <div className="game-top"><button className="bk" onClick={onClose}>← Đóng</button><h3>👤 Tài khoản</h3></div>
@@ -499,6 +508,13 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
             <div className="card" style={{ padding: 16 }}>
               <div className="field"><label>Email đăng nhập</label><div style={{ fontWeight: 700 }}>{parentEmail || "…"}</div></div>
               <div className="field"><label>Đang xem hồ sơ</label><div style={{ fontWeight: 700 }}>{state.avatar} {state.nickname || "bé"}</div></div>
+              {weeklyMail !== null && (
+                <div className="row" style={{ marginTop: 2 }}>
+                  <label className={`toggle ${weeklyMail ? "on" : ""}`}>
+                    <input type="checkbox" checked={weeklyMail} onChange={(e) => toggleWeeklyMail(e.target.checked)} /> Nhận báo cáo tuần qua email
+                  </label>
+                </div>
+              )}
               <div className="row" style={{ gap: 10, marginTop: 4 }}>
                 <button className="btn" onClick={() => { clearActiveChild(); location.reload(); }}>Đổi hồ sơ con</button>
                 <button className="btn" style={{ background: "#e2593f" }} onClick={async () => { await signOut(); location.reload(); }}>Đăng xuất</button>

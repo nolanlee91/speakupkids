@@ -113,6 +113,25 @@ export async function claimGifts(childId: string): Promise<{ coins: number; cash
   }
 }
 
+/* ═══════════ Báo cáo tuần (parents.weekly_email) ═══════════ */
+export async function getWeeklyEmailPref(): Promise<boolean> {
+  if (!supabase) return true;
+  try {
+    const user = await currentUser();
+    if (!user) return true;
+    const { data } = await supabase.from("parents").select("weekly_email").eq("id", user.id).maybeSingle();
+    return data?.weekly_email ?? true;
+  } catch {
+    return true;
+  }
+}
+export async function setWeeklyEmailPref(on: boolean) {
+  if (!supabase) return;
+  const user = await currentUser();
+  if (!user) return;
+  await supabase.from("parents").update({ weekly_email: on }).eq("id", user.id);
+}
+
 /* ═══════════ Hồ sơ con ═══════════ */
 export async function listChildren(): Promise<ChildProfile[]> {
   if (!supabase) return [];
