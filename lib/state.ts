@@ -48,6 +48,8 @@ export type ClubhouseState = {
   equippedItemIds: string[];
   rewardedKeys: string[];
   itemPositions: Record<string, { x: number; y: number }>;
+  itemRoomIds: Record<string, string>;
+  activeRoomId: string;
 };
 
 export type AppState = {
@@ -98,7 +100,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {} },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge" },
   };
 }
 
@@ -151,6 +153,8 @@ function migrateClubhouse(c: unknown): ClubhouseState {
     equippedItemIds: Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
     rewardedKeys: Array.isArray(src.rewardedKeys) ? [...new Set(src.rewardedKeys)] : [],
     itemPositions: src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
+    itemRoomIds: src.itemRoomIds && typeof src.itemRoomIds === "object" ? src.itemRoomIds : {},
+    activeRoomId: typeof src.activeRoomId === "string" ? src.activeRoomId : "lounge",
   };
 }
 
@@ -451,7 +455,7 @@ export function awardCoinsOnce(s: AppState, key: string, amount: number): { stat
   };
 }
 
-export function buyClubhouseItem(s: AppState, itemId: string, price: number): AppState {
+export function buyClubhouseItem(s: AppState, itemId: string, price: number, roomId = "lounge"): AppState {
   if (!itemId || price < 0 || s.clubhouse.purchasedItemIds.includes(itemId) || s.clubhouse.coins < price) return s;
   return {
     ...s,
@@ -460,6 +464,7 @@ export function buyClubhouseItem(s: AppState, itemId: string, price: number): Ap
       coins: s.clubhouse.coins - price,
       purchasedItemIds: [...s.clubhouse.purchasedItemIds, itemId],
       equippedItemIds: [...s.clubhouse.equippedItemIds, itemId],
+      itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
     },
   };
 }
@@ -478,16 +483,28 @@ export function toggleClubhouseItem(s: AppState, itemId: string): AppState {
   };
 }
 
-export function moveClubhouseItem(s: AppState, itemId: string, x: number, y: number): AppState {
+export function moveClubhouseItem(s: AppState, itemId: string, roomId: string, x: number, y: number): AppState {
   if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
   const position = { x: Math.max(4, Math.min(96, x)), y: Math.max(12, Math.min(90, y)) };
   return {
     ...s,
     clubhouse: {
       ...s.clubhouse,
-      itemPositions: { ...s.clubhouse.itemPositions, [itemId]: position },
+      itemPositions: { ...s.clubhouse.itemPositions, [`${roomId}:${itemId}`]: position },
+      itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
     },
   };
+}
+
+export function setClubhouseRoom(s: AppState, roomId: string): AppState {
+  return { ...s, clubhouse: { ...s.clubhouse, activeRoomId: roomId } };
+}
+
+export function placeClubhouseItem(s: AppState, itemId: string, roomId: string): AppState {
+  if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
+  const equippedItemIds = s.clubhouse.equippedItemIds.includes(itemId)
+    ? s.clubhouse.equippedItemIds : [...s.clubhouse.equippedItemIds, itemId];
+  return { ...s, clubhouse: { ...s.clubhouse, equippedItemIds, itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId } } };
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
 // seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.

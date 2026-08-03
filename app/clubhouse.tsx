@@ -2,14 +2,18 @@
 
 import { useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { buyClubhouseItem, moveClubhouseItem, toggleClubhouseItem } from "@/lib/state";
+import { buyClubhouseItem, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem } from "@/lib/state";
 import { CLUBHOUSE_SHOP, SEASON_SOUVENIRS, earnedSeasonSouvenirs, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
 import { celebrate, playSuccessSound, speak } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
 
-const ROOM = "/assets/images/clubhouse/maple-clubhouse-room-v2.webp";
+const ROOMS = [
+  { id: "lounge", name: "Phòng sinh hoạt", icon: "⌂", image: "/assets/images/clubhouse/maple-clubhouse-room-v2.webp" },
+  { id: "study", name: "Góc học tập", icon: "✎", image: "/assets/images/clubhouse/maple-house-study.webp" },
+  { id: "rooftop", name: "Sân thượng", icon: "✦", image: "/assets/images/clubhouse/maple-house-rooftop.webp" },
+] as const;
 const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png"];
 const BDG = "/assets/images/badges/";
 
@@ -27,7 +31,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const roomRef = useRef<HTMLElement>(null);
   const purchased = new Set(state.clubhouse.purchasedItemIds);
   const equipped = new Set(state.clubhouse.equippedItemIds);
-  const displayed = CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id));
+  const room = ROOMS.find((r) => r.id === state.clubhouse.activeRoomId) || ROOMS[0];
+  const displayed = CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
   const souvenirs = earnedSeasonSouvenirs(state);
   const souvenirIds = new Set(souvenirs.map((item) => item.id));
   const gotStickers = new Set(state.stickers || []);
@@ -35,7 +40,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
 
   function buy(item: ShopItem) {
     if (purchased.has(item.id) || state.clubhouse.coins < item.price) return;
-    setState((s) => buyClubhouseItem(s, item.id, item.price));
+    setState((s) => buyClubhouseItem(s, item.id, item.price, room.id));
     setDelivery(item); celebrate(state.prefs.motion !== false); playSuccessSound();
   }
 
@@ -54,7 +59,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
 
     <main className="clubhouse-main">
       <section ref={roomRef} className={`clubhouse-room game-room clubhouse-stage ${editing ? "is-editing" : ""}`} aria-label="Căn phòng của con">
-        <img className="clubhouse-bg" src={ROOM} alt="Clubhouse nhìn ra Vancouver" />
+        <img className="clubhouse-bg" src={room.image} alt={`${room.name} của Maple nhìn ra Vancouver`} />
         <div className="clubhouse-glow" aria-hidden="true" /><div className="clubhouse-edit-grid" aria-hidden="true" />
         <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span><span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
         <button className="clubhouse-maple" onClick={() => speak("Welcome to our clubhouse!", state.prefs.accent, .86)}>
@@ -62,13 +67,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <span>{editing ? "Drag things anywhere you like!" : displayed.length ? "This place looks amazing!" : "Let’s build something awesome."}</span>
         </button>
         {displayed.map((item, index) => {
-          const saved = state.clubhouse.itemPositions[item.id];
+          const saved = state.clubhouse.itemPositions[`${room.id}:${item.id}`] || (room.id === "lounge" ? state.clubhouse.itemPositions[item.id] : undefined);
           const pos = drag?.id === item.id ? drag : saved || item;
           return <button key={item.id} className={`room-shop-item slot-${item.slot} item-${item.id} ${drag?.id === item.id ? "dragging" : ""}`}
             style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: `translate(-50%,-50%) scale(${item.scale})`, zIndex: drag?.id === item.id ? 30 : item.z, animationDelay: `${index * 80}ms` }}
             onPointerDown={(e) => { if (!editing) return; e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
-            onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, drag.x, drag.y)); setDrag(null); }}
+            onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
             onClick={() => { if (!editing) speak(item.en, state.prefs.accent, .82); }} aria-label={`${item.en} — ${item.vi}`}>
             <ShopArt item={item} /><i>{editing ? "Kéo để đặt" : item.en}</i>
           </button>;
@@ -80,9 +85,10 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button className={panel === "shop" ? "on" : ""} onClick={() => { setPanel(panel === "shop" ? "none" : "shop"); setEditing(false); }}>◆ <span>Shop</span></button>
           <button className={panel === "journal" ? "on" : ""} onClick={() => { setPanel(panel === "journal" ? "none" : "journal"); setEditing(false); }}>▣ <span>Hành trình</span></button>
         </nav>
+        <nav className="clubhouse-rooms" aria-label="Các phòng trong Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
       </section>
 
-      {editing && <section className="clubhouse-inventory"><div><b>Kho đồ</b><small>Chạm để trưng bày hoặc cất đi</small></div>{CLUBHOUSE_SHOP.filter((item) => purchased.has(item.id)).map((item) => <button key={item.id} className={equipped.has(item.id) ? "equipped" : ""} onClick={() => setState((s) => toggleClubhouseItem(s, item.id))}><ShopArt item={item} /><span>{equipped.has(item.id) ? "✓" : "+"}</span></button>)}{!state.clubhouse.purchasedItemIds.length && <p>Chưa có nội thất — mở Shop để chọn món đầu tiên.</p>}</section>}
+      {editing && <section className="clubhouse-inventory"><div><b>Kho đồ · {room.name}</b><small>Chạm để đặt vào phòng; chạm món đang ở đây để cất</small></div>{CLUBHOUSE_SHOP.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => setState((s) => here ? toggleClubhouseItem(s, item.id) : placeClubhouseItem(s, item.id, room.id))}><ShopArt item={item} /><span>{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>Chưa có nội thất — mở Shop để chọn món đầu tiên.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET</span><h3>Chọn phong cách của con</h3><p>Hai bộ sưu tập · mua một lần, sở hữu mãi.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>

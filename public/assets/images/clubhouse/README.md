@@ -3,11 +3,14 @@
 ## Production assets
 
 - `maple-clubhouse-room-v2.webp` — active premium 2.5D game-room background.
+- `maple-house-study.webp` — Study Studio room background.
+- `maple-house-rooftop.webp` — Rooftop Conservatory room background.
 - `maple-clubhouse-room.webp` — legacy room kept for rollback.
 - `clubhouse-shop-sprites.png` — transparent 4×2 sprite sheet for eight Shop items.
 - `clubhouse-shop-sprites-02.png` — transparent 4×2 Cosmic Club collection (eight more items).
 - Runtime item definitions, prices and default coordinates live in `lib/clubhouse.ts`.
-- Player placement is stored as percentage coordinates in `clubhouse.itemPositions`; dragging only writes on pointer release.
+- The house has `lounge`, `study`, and `rooftop` rooms. `clubhouse.itemRoomIds` assigns each item to one room.
+- Player placement is stored per room as percentage coordinates in `clubhouse.itemPositions`; dragging only writes on pointer release.
 
 The room uses one fixed perspective with a responsive crop. New items need safe default coordinates, but players can reposition owned items in Edit mode.
 
