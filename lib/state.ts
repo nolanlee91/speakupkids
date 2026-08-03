@@ -50,6 +50,7 @@ export type ClubhouseState = {
   itemPositions: Record<string, { x: number; y: number }>;
   itemRoomIds: Record<string, string>;
   activeRoomId: string;
+  itemTransforms: Record<string, { scale: number; rotation: number }>;
 };
 
 export type AppState = {
@@ -100,7 +101,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge" },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {} },
   };
 }
 
@@ -155,6 +156,7 @@ function migrateClubhouse(c: unknown): ClubhouseState {
     itemPositions: src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
     itemRoomIds: src.itemRoomIds && typeof src.itemRoomIds === "object" ? src.itemRoomIds : {},
     activeRoomId: typeof src.activeRoomId === "string" ? src.activeRoomId : "lounge",
+    itemTransforms: src.itemTransforms && typeof src.itemTransforms === "object" ? src.itemTransforms : {},
   };
 }
 
@@ -505,6 +507,15 @@ export function placeClubhouseItem(s: AppState, itemId: string, roomId: string):
   const equippedItemIds = s.clubhouse.equippedItemIds.includes(itemId)
     ? s.clubhouse.equippedItemIds : [...s.clubhouse.equippedItemIds, itemId];
   return { ...s, clubhouse: { ...s.clubhouse, equippedItemIds, itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId } } };
+}
+
+export function transformClubhouseItem(s: AppState, itemId: string, roomId: string, scale: number, rotation: number): AppState {
+  if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
+  const key = `${roomId}:${itemId}`;
+  return { ...s, clubhouse: { ...s.clubhouse, itemTransforms: {
+    ...s.clubhouse.itemTransforms,
+    [key]: { scale: Math.max(.55, Math.min(1.65, scale)), rotation: Math.max(-180, Math.min(180, rotation)) },
+  } } };
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
 // seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.
