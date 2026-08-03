@@ -64,8 +64,8 @@ function App() {
     s = touchStreak(s);
     s = resetDailyIfNeeded(s);
     s = resetDailyTasks(s);
-    // TEST MODE: luôn hiện màn chào sau mỗi lần tải app.
-    // Khi production, đổi lại điều kiện `s.splashDate !== todayStr()`.
+    // CHỦ ĐÍCH (chốt 2026-08-03): splash Maple hiện MỖI LẦN mở app, bé bấm
+    // "Let's go" một chạm — không phải chế độ test, ĐỪNG đổi sang theo ngày.
     setShowSplash(true);
     setState(s);
     setReady(true);
