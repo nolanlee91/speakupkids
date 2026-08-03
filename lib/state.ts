@@ -47,6 +47,7 @@ export type ClubhouseState = {
   purchasedItemIds: string[];
   equippedItemIds: string[];
   rewardedKeys: string[];
+  itemPositions: Record<string, { x: number; y: number }>;
 };
 
 export type AppState = {
@@ -97,7 +98,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [] },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {} },
   };
 }
 
@@ -149,6 +150,7 @@ function migrateClubhouse(c: unknown): ClubhouseState {
     purchasedItemIds: Array.isArray(src.purchasedItemIds) ? [...new Set(src.purchasedItemIds)] : [],
     equippedItemIds: Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
     rewardedKeys: Array.isArray(src.rewardedKeys) ? [...new Set(src.rewardedKeys)] : [],
+    itemPositions: src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
   };
 }
 
@@ -472,6 +474,18 @@ export function toggleClubhouseItem(s: AppState, itemId: string): AppState {
       equippedItemIds: on
         ? s.clubhouse.equippedItemIds.filter((id) => id !== itemId)
         : [...s.clubhouse.equippedItemIds, itemId],
+    },
+  };
+}
+
+export function moveClubhouseItem(s: AppState, itemId: string, x: number, y: number): AppState {
+  if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
+  const position = { x: Math.max(4, Math.min(96, x)), y: Math.max(12, Math.min(90, y)) };
+  return {
+    ...s,
+    clubhouse: {
+      ...s.clubhouse,
+      itemPositions: { ...s.clubhouse.itemPositions, [itemId]: position },
     },
   };
 }

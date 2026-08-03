@@ -19,6 +19,8 @@ export type SeasonSouvenir = ClubhouseItem & { seasonId: string };
 export type ShopItem = {
   id: string; en: string; vi: string; price: number; sprite: number;
   x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
+  sheet?: 1 | 2;
+  collection?: "trail" | "cosmic";
 };
 
 export const CLUBHOUSE_SHOP: ShopItem[] = [
@@ -30,6 +32,14 @@ export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-bonsai", en: "Maple Bonsai", vi: "Cây phong bonsai", price: 70, sprite: 5, x: 28, y: 54, scale: .78, z: 5, slot: "desk" },
   { id: "shop-neon", en: "Maple Neon", vi: "Đèn neon lá phong", price: 95, sprite: 6, x: 83, y: 36, scale: .82, z: 4, slot: "wall" },
   { id: "shop-beanbag", en: "Game Beanbag", vi: "Ghế lười", price: 60, sprite: 7, x: 79, y: 75, scale: 1.0, z: 5, slot: "floor" },
+  { id: "shop-moon-clock", en: "Moon Clock", vi: "Đồng hồ tuần trăng", price: 75, sprite: 0, sheet: 2, collection: "cosmic", x: 23, y: 30, scale: .72, z: 4, slot: "wall" },
+  { id: "shop-planet-lamp", en: "Planet Lamp", vi: "Đèn hành tinh", price: 85, sprite: 1, sheet: 2, collection: "cosmic", x: 73, y: 51, scale: .68, z: 5, slot: "desk" },
+  { id: "shop-astro-chair", en: "Astro Chair", vi: "Ghế phi hành gia", price: 110, sprite: 2, sheet: 2, collection: "cosmic", x: 73, y: 73, scale: .92, z: 5, slot: "floor" },
+  { id: "shop-lunar-rover", en: "Lunar Rover", vi: "Xe thám hiểm Mặt Trăng", price: 125, sprite: 3, sheet: 2, collection: "cosmic", x: 38, y: 74, scale: .72, z: 6, slot: "floor" },
+  { id: "shop-game-console", en: "Game Console", vi: "Máy chơi game", price: 90, sprite: 4, sheet: 2, collection: "cosmic", x: 82, y: 55, scale: .67, z: 6, slot: "desk" },
+  { id: "shop-hanging-plant", en: "Hanging Plant", vi: "Chậu cây treo", price: 65, sprite: 5, sheet: 2, collection: "cosmic", x: 13, y: 35, scale: .72, z: 5, slot: "wall" },
+  { id: "shop-adventure-books", en: "Adventure Books", vi: "Sách phiêu lưu", price: 55, sprite: 6, sheet: 2, collection: "cosmic", x: 31, y: 55, scale: .66, z: 5, slot: "desk" },
+  { id: "shop-lava-lamp", en: "Lava Lamp", vi: "Đèn dung nham", price: 70, sprite: 7, sheet: 2, collection: "cosmic", x: 85, y: 48, scale: .63, z: 6, slot: "desk" },
 ];
 
 // Đồ trang trí nhận từ Learn. Thứ tự cũng là reward pool:

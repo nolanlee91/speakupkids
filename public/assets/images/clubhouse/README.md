@@ -5,9 +5,11 @@
 - `maple-clubhouse-room-v2.webp` — active premium 2.5D game-room background.
 - `maple-clubhouse-room.webp` — legacy room kept for rollback.
 - `clubhouse-shop-sprites.png` — transparent 4×2 sprite sheet for eight Shop items.
-- Runtime item definitions, prices and fixed coordinates live in `lib/clubhouse.ts`.
+- `clubhouse-shop-sprites-02.png` — transparent 4×2 Cosmic Club collection (eight more items).
+- Runtime item definitions, prices and default coordinates live in `lib/clubhouse.ts`.
+- Player placement is stored as percentage coordinates in `clubhouse.itemPositions`; dragging only writes on pointer release.
 
-The room uses one fixed 4:3 perspective. Recheck every coordinate on mobile and desktop before changing its crop.
+The room uses one fixed perspective with a responsive crop. New items need safe default coordinates, but players can reposition owned items in Edit mode.
 
 ## Economy rules
 
