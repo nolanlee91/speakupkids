@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.8",
@@ -14,9 +16,13 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "typescript": "^5"
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.0",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

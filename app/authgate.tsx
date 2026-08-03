@@ -103,7 +103,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
     })();
 
     return () => { alive = false; sub.subscription.unsubscribe(); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function enterAfterLogin() {

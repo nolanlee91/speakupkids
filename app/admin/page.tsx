@@ -25,7 +25,7 @@ export default function AdminPage() {
 
   // Dữ liệu dùng chung giữa các tab
   const [parents, setParents] = useState<AdminParent[]>([]);
-  const [children, setChildren] = useState<AdminChild[]>([]);
+  const [kids, setKids] = useState<AdminChild[]>([]);
   const [ents, setEnts] = useState<AdminEntitlement[]>([]);
   const [agents, setAgents] = useState<AdminAgent[]>([]);
   const [codes, setCodes] = useState<AdminCode[]>([]);
@@ -35,7 +35,7 @@ export default function AdminPage() {
     const [p, c, e, a, co, g] = await Promise.all([
       listParents(), listAllChildren(), listEntitlements(), listAgents(), listCodes(), listGifts(),
     ]);
-    setParents(p); setChildren(c); setEnts(e); setAgents(a); setCodes(co); setGifts(g);
+    setParents(p); setKids(c); setEnts(e); setAgents(a); setCodes(co); setGifts(g);
   }
 
   useEffect(() => {
@@ -94,21 +94,21 @@ export default function AdminPage() {
         ))}</nav>
         <button className="adm-out" onClick={async () => { await signOut(); location.reload(); }}>Đăng xuất</button>
       </header>
-      {tab === "overview" && <Overview parents={parents} children={children} ents={ents} agents={agents} codes={codes} />}
+      {tab === "overview" && <Overview parents={parents} kids={kids} ents={ents} agents={agents} codes={codes} />}
       {tab === "agents" && <Agents agents={agents} codes={codes} onChange={refresh} />}
-      {tab === "accounts" && <Accounts parents={parents} children={children} ents={ents} onChange={refresh} />}
-      {tab === "gifts" && <Gifts parents={parents} children={children} gifts={gifts} onChange={refresh} />}
-      {tab === "email" && <EmailReport parents={parents} children={children} />}
+      {tab === "accounts" && <Accounts parents={parents} kids={kids} ents={ents} onChange={refresh} />}
+      {tab === "gifts" && <Gifts parents={parents} kids={kids} gifts={gifts} onChange={refresh} />}
+      {tab === "email" && <EmailReport parents={parents} kids={kids} />}
     </div>
   );
 }
 
 /* ═══════════ Email báo cáo tuần ═══════════ */
-function EmailReport({ parents, children }: { parents: AdminParent[]; children: AdminChild[] }) {
+function EmailReport({ parents, kids }: { parents: AdminParent[]; kids: AdminChild[] }) {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ReportResult | null>(null);
   const [log, setLog] = useState<string[]>([]);
-  const kidsOf = (pid: string) => children.filter((c) => c.parent_id === pid).map((c) => `${c.avatar} ${c.ingame_name}`).join(", ") || "—";
+  const kidsOf = (pid: string) => kids.filter((c) => c.parent_id === pid).map((c) => `${c.avatar} ${c.ingame_name}`).join(", ") || "—";
 
   async function run(opts: { dry?: boolean; only?: string }, label: string) {
     setBusy(true);
@@ -166,8 +166,8 @@ function EmailReport({ parents, children }: { parents: AdminParent[]; children: 
 }
 
 /* ═══════════ Tổng quan ═══════════ */
-function Overview({ parents, children, ents, agents, codes }: {
-  parents: AdminParent[]; children: AdminChild[]; ents: AdminEntitlement[]; agents: AdminAgent[]; codes: AdminCode[];
+function Overview({ parents, kids, ents, agents, codes }: {
+  parents: AdminParent[]; kids: AdminChild[]; ents: AdminEntitlement[]; agents: AdminAgent[]; codes: AdminCode[];
 }) {
   const pro = ents.filter((e) => e.plan === "pro").length;
   const family = ents.filter((e) => e.plan === "family").length;
@@ -180,7 +180,7 @@ function Overview({ parents, children, ents, agents, codes }: {
     <section className="adm-body">
       <div className="adm-stats">
         <div className="adm-stat"><b>{parents.length}</b><span>tài khoản ba mẹ</span></div>
-        <div className="adm-stat"><b>{children.length}</b><span>hồ sơ bé</span></div>
+        <div className="adm-stat"><b>{kids.length}</b><span>hồ sơ bé</span></div>
         <div className="adm-stat hi"><b>{pro}</b><span>gói Pro</span></div>
         <div className="adm-stat hi"><b>{family}</b><span>gói Family</span></div>
         <div className="adm-stat"><b>{redeemed}/{codes.length}</b><span>mã đã bán / đã phát hành</span></div>
@@ -269,16 +269,16 @@ function Agents({ agents, codes, onChange }: { agents: AdminAgent[]; codes: Admi
 }
 
 /* ═══════════ Tài khoản & gói ═══════════ */
-function Accounts({ parents, children, ents, onChange }: {
-  parents: AdminParent[]; children: AdminChild[]; ents: AdminEntitlement[]; onChange: () => Promise<void>;
+function Accounts({ parents, kids, ents, onChange }: {
+  parents: AdminParent[]; kids: AdminChild[]; ents: AdminEntitlement[]; onChange: () => Promise<void>;
 }) {
   const [busy, setBusy] = useState("");
   const entOf = useMemo(() => new Map(ents.map((e) => [e.parent_id, e])), [ents]);
   const kidsOf = useMemo(() => {
     const m = new Map<string, AdminChild[]>();
-    for (const c of children) { const arr = m.get(c.parent_id) || []; arr.push(c); m.set(c.parent_id, arr); }
+    for (const c of kids) { const arr = m.get(c.parent_id) || []; arr.push(c); m.set(c.parent_id, arr); }
     return m;
-  }, [children]);
+  }, [kids]);
   async function act(parentId: string, fn: () => Promise<void>) {
     setBusy(parentId);
     try { await fn(); await onChange(); } catch { alert("Thao tác thất bại."); }
@@ -313,8 +313,8 @@ function Accounts({ parents, children, ents, onChange }: {
 }
 
 /* ═══════════ Tặng Coins/Cash ═══════════ */
-function Gifts({ parents, children, gifts, onChange }: {
-  parents: AdminParent[]; children: AdminChild[]; gifts: AdminGift[]; onChange: () => Promise<void>;
+function Gifts({ parents, kids, gifts, onChange }: {
+  parents: AdminParent[]; kids: AdminChild[]; gifts: AdminGift[]; onChange: () => Promise<void>;
 }) {
   const [childId, setChildId] = useState("");
   const [coins, setCoins] = useState(50);
@@ -323,7 +323,7 @@ function Gifts({ parents, children, gifts, onChange }: {
   const [busy, setBusy] = useState(false);
   const emailOf = useMemo(() => new Map(parents.map((p) => [p.id, p.email])), [parents]);
   const nameOfChild = (id: string) => {
-    const c = children.find((x) => x.id === id);
+    const c = kids.find((x) => x.id === id);
     return c ? `${c.avatar} ${c.ingame_name} (${emailOf.get(c.parent_id) || "?"})` : id.slice(0, 8);
   };
   async function send() {
@@ -339,7 +339,7 @@ function Gifts({ parents, children, gifts, onChange }: {
       <div className="adm-form">
         <select value={childId} onChange={(e) => setChildId(e.target.value)}>
           <option value="">— Chọn bé —</option>
-          {children.map((c) => <option key={c.id} value={c.id}>{c.avatar} {c.ingame_name} · {emailOf.get(c.parent_id) || "?"}</option>)}
+          {kids.map((c) => <option key={c.id} value={c.id}>{c.avatar} {c.ingame_name} · {emailOf.get(c.parent_id) || "?"}</option>)}
         </select>
         <label>◆ Coins <input type="number" min={0} value={coins} onChange={(e) => setCoins(+e.target.value || 0)} style={{ width: 90 }} /></label>
         <label>💵 Cash <input type="number" min={0} value={cash} onChange={(e) => setCash(+e.target.value || 0)} style={{ width: 90 }} /></label>

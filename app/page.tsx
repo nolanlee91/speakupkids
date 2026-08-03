@@ -157,7 +157,9 @@ function App() {
 
   // Hoàn thành bài Learn (sau Mini Check)
   function completeLearn(lessonId: string, score: number, total: number) {
-    let { state: ns, newly } = completeLearnLesson(state, lessonId, score, total);
+    const done = completeLearnLesson(state, lessonId, score, total);
+    const newly = done.newly;
+    let ns = done.state;
     const coinReward = newly ? awardCoinsOnce(ns, `learn:${lessonId}`, 20) : { state: ns, awarded: 0 };
     ns = coinReward.state;
     const cashReward = newly ? awardCashOnce(ns, `learn:${lessonId}`, 1) : { state: ns, awarded: 0 };
