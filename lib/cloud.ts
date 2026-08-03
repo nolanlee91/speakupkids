@@ -61,7 +61,11 @@ export async function updatePassword(newPassword: string) {
 export async function fetchMembership(): Promise<Membership> {
   if (!supabase) return "free";
   try {
-    const { data, error } = await supabase.from("entitlements").select("plan").maybeSingle();
+    // Lọc tường minh theo user hiện tại: tài khoản ADMIN có quyền đọc mọi dòng
+    // (policy entitlements_admin) nên nếu chỉ dựa vào RLS sẽ dính gói của người khác.
+    const user = await currentUser();
+    if (!user) return "free";
+    const { data, error } = await supabase.from("entitlements").select("plan").eq("parent_id", user.id).maybeSingle();
     if (error || !data) return "free";
     return data.plan === "family" ? "family" : data.plan === "pro" ? "pro" : "free";
   } catch {
@@ -112,9 +116,14 @@ export async function claimGifts(childId: string): Promise<{ coins: number; cash
 /* ═══════════ Hồ sơ con ═══════════ */
 export async function listChildren(): Promise<ChildProfile[]> {
   if (!supabase) return [];
+  // Lọc tường minh "con CỦA TÔI": tài khoản admin đọc được children của mọi nhà
+  // (policy children_admin_read cho trang /admin) — không lọc thì app hiện cả bé người khác.
+  const user = await currentUser();
+  if (!user) return [];
   const { data, error } = await supabase
     .from("children")
     .select("id, ingame_name, avatar, age")
+    .eq("parent_id", user.id)
     .order("created_at", { ascending: true });
   if (error) throw error;
   return (data ?? []) as ChildProfile[];
