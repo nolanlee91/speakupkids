@@ -689,7 +689,9 @@ function WriteRound({ setId, cb, accent, onExit, onNext }: {
     const set = writeSetById(setId) || WRITE_SETS[0];
     const key = "write:" + set.id;
     const prog = cb.topics[key] || EMPTY_TOPIC;
-    const items = selectRound(set.items, prog, ROUND_SIZE.write, (t) => t.difficulty || "medium");
+    // Bộ đoạn văn (L3) nặng hơn → mỗi lượt 3 bài thay vì 4.
+    const size = set.items.some((t) => t.minSentences) ? 3 : ROUND_SIZE.write;
+    const items = selectRound(set.items, prog, size, (t) => t.difficulty || "medium");
     return { set, key, items, total: set.items.length };
   });
   const { set, key, items, total } = session;
@@ -728,8 +730,8 @@ function WriteRound({ setId, cb, accent, onExit, onNext }: {
       <div className="qcard write-card">
         <div className="write-req">✍️ {t.vi}</div>
         <div className="write-frame">Khung gợi ý: <b>{t.frame}</b></div>
-        <textarea className="write-input" value={text} rows={3}
-          placeholder="Viết câu tiếng Anh của con vào đây…"
+        <textarea className="write-input" value={text} rows={t.minSentences ? 5 : 3}
+          placeholder={t.minSentences ? `Viết đoạn ${t.minSentences}–4 câu tiếng Anh của con…` : "Viết câu tiếng Anh của con vào đây…"}
           autoCapitalize="off" autoCorrect="off" spellCheck={false}
           disabled={!!score && score.stars === 3}
           onChange={(e) => { setText(e.target.value); }} />

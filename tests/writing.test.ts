@@ -57,12 +57,41 @@ describe("scoreWriting", () => {
   });
 });
 
+describe("đoạn văn L3 (minSentences)", () => {
+  const para = WRITE_SETS.find((s) => s.id === "w-para-me")!.items[0]; // 3 câu: tên/tuổi/sở thích
+
+  it("viết đủ ý nhưng dồn 1 câu → tối đa 2 sao, tiêu chí số câu ✗", () => {
+    const r = scoreWriting(para, "My name is Nam and I am eleven years old and I like football.");
+    expect(r.missing).toEqual([]);
+    expect(r.stars).toBe(2);
+    expect(r.checks.find((c) => c.label.includes("đoạn"))!.ok).toBe(false);
+  });
+
+  it("đoạn 3 câu chuẩn → 3 sao, đếm đúng số câu", () => {
+    const r = scoreWriting(para, "My name is Nam. I am eleven years old. I like playing football.");
+    expect(r.stars).toBe(3);
+    const sc = r.checks.find((c) => c.label.includes("đoạn"))!;
+    expect(sc.ok).toBe(true);
+    expect(sc.note).toContain("3 câu");
+  });
+});
+
 describe("dữ liệu WRITE_SETS", () => {
-  it("6 bộ × 5 bài, id không trùng", () => {
-    expect(WRITE_SETS.length).toBe(6);
+  it("8 bộ × 5 bài (6 bộ câu + 2 bộ đoạn văn L3), id không trùng", () => {
+    expect(WRITE_SETS.length).toBe(8);
     const ids = WRITE_SETS.flatMap((s) => s.items.map((t) => t.id));
     expect(new Set(ids).size).toBe(ids.length);
     for (const s of WRITE_SETS) expect(s.items.length).toBe(5);
+  });
+
+  it("2 bộ đoạn văn: mọi bài đều yêu cầu ≥3 câu và thuộc mức hard", () => {
+    for (const sid of ["w-para-me", "w-para-world"]) {
+      const s = WRITE_SETS.find((x) => x.id === sid)!;
+      for (const t of s.items) {
+        expect(t.minSentences, t.id).toBeGreaterThanOrEqual(3);
+        expect(t.difficulty, t.id).toBe("hard");
+      }
+    }
   });
 
   it("câu mẫu của MỌI bài phải tự đạt 3 sao (model không được rớt chính máy chấm)", () => {

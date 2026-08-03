@@ -13,6 +13,7 @@ export type WriteTask = {
   maxWords: number;
   model: string;         // câu mẫu (xem sau khi chấm)
   difficulty?: Difficulty;
+  minSentences?: number; // bài ĐOẠN VĂN (L3): số câu tối thiểu — thêm tiêu chí đếm câu
 };
 export type WriteSet = { id: string; title: string; vi: string; items: WriteTask[] };
 
@@ -77,6 +78,47 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wt5", vi: "Viết 2 câu: nơi em sống + nơi em thích nhất ở đó", frame: "I live in ___. My favorite place is ___.", keywords: [["live"], ["favorite", "favourite"], ["place"]], minWords: 8, maxWords: 16, model: "I live in a small town. My favorite place is the old market.", difficulty: "hard" },
     ],
   },
+  // ── Hai bộ ĐOẠN VĂN cho nhóm L3 (lớp 6–7): 3–4 câu theo dàn ý, toàn bộ mức hard ──
+  {
+    id: "w-para-me", title: "Paragraph · My World", vi: "Đoạn văn: thế giới của em (L3)",
+    items: [
+      { id: "wp1", vi: "Giới thiệu bản thân bằng 3 câu: tên · tuổi · sở thích", frame: "My name is ___. I am ___ years old. I like ___.",
+        keywords: [["name"], ["is"], ["am"], ["years"], ["old"], ["like"]], minWords: 12, maxWords: 30, minSentences: 3,
+        model: "My name is Linh. I am eleven years old. I like drawing comics.", difficulty: "hard" },
+      { id: "wp2", vi: "Viết 3 câu về bạn thân: tên · tính cách · hoạt động cùng nhau", frame: "My best friend is ___. He/She is ___. We often ___ together.",
+        keywords: [["best"], ["friend"], ["is"], ["we"], ["together"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "My best friend is Minh. He is tall and funny. We often play chess together.", difficulty: "hard" },
+      { id: "wp3", vi: "Viết 3 câu về ước mơ: nghề gì · vì sao · em sẽ làm gì", frame: "I want to be a ___. I like ___. I will ___.",
+        keywords: [["i"], ["want"], ["be"], ["will"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "I want to be a doctor. I like helping people. I will study hard every day.", difficulty: "hard" },
+      { id: "wp4", vi: "Viết 3 câu về ngày em thích nhất trong tuần: ngày nào · làm gì · cảm xúc", frame: "My favorite day is ___. On that day, I ___. I feel ___.",
+        keywords: [["favorite", "favourite"], ["day"], ["is"], ["i"], ["feel"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "My favorite day is Sunday. On that day, I go swimming with my dad. I feel very happy.", difficulty: "hard" },
+      { id: "wp5", vi: "Viết 3 câu về người em ngưỡng mộ: ai · vì sao · em muốn giống điều gì", frame: "I admire my ___. She/He is ___. I want to ___ like her/him.",
+        keywords: [["admire"], ["is"], ["want"], ["like"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "I admire my mother. She is kind and works very hard. I want to be patient like her.", difficulty: "hard" },
+    ],
+  },
+  {
+    id: "w-para-world", title: "Paragraph · Around Me", vi: "Đoạn văn: quanh em (L3)",
+    items: [
+      { id: "wq1", vi: "Tả căn phòng của em bằng 3 câu: có gì · màu sắc · em thích nhất thứ gì", frame: "My room has ___. The walls are ___. I love my ___ best.",
+        keywords: [["room"], ["has"], ["are"], ["love"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "My room has a bed and a desk. The walls are light blue. I love my bookshelf best.", difficulty: "hard" },
+      { id: "wq2", vi: "Viết 3 câu về món quà đáng nhớ: quà gì · ai tặng · vì sao em quý", frame: "My best gift is ___. ___ gave it to me. I love it because ___.",
+        keywords: [["gift"], ["gave"], ["because"]], minWords: 12, maxWords: 38, minSentences: 3,
+        model: "My best gift is a red bicycle. My father gave it to me. I love it because we ride together on weekends.", difficulty: "hard" },
+      { id: "wq3", vi: "Kể 3 câu về một chuyến đi: đi đâu · với ai · điều tuyệt nhất", frame: "Last summer, I went to ___. I went with ___. The best part was ___.",
+        keywords: [["went"], ["to"], ["with"], ["best"], ["was"]], minWords: 13, maxWords: 38, minSentences: 3,
+        model: "Last summer, I went to Da Nang. I went with my family. The best part was swimming in the sea.", difficulty: "hard" },
+      { id: "wq4", vi: "Viết 3 câu về mùa em thích: mùa nào · thời tiết · em thường làm gì", frame: "My favorite season is ___. The weather is ___. I often ___.",
+        keywords: [["favorite", "favourite"], ["season"], ["weather"], ["often"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "My favorite season is autumn. The weather is cool and windy. I often fly kites with my brother.", difficulty: "hard" },
+      { id: "wq5", vi: "Viết 3 câu về bảo vệ Trái Đất: vấn đề · em làm gì mỗi ngày · lời kêu gọi", frame: "Our planet needs help. I ___ every day. Let's ___ together.",
+        keywords: [["planet", "earth"], ["i"], ["every"], ["let's", "lets"]], minWords: 12, maxWords: 35, minSentences: 3,
+        model: "Our planet needs help. I recycle bottles and save water every day. Let's protect the Earth together.", difficulty: "hard" },
+    ],
+  },
 ];
 
 export const writeSetById = (id: string) => WRITE_SETS.find((s) => s.id === id);
@@ -126,6 +168,9 @@ export function scoreWriting(task: WriteTask, text: string): WriteScore {
   const capOk = /^[A-Z]/.test(raw);
   const punctOk = /[.!?]$/.test(raw);
   const lenOk = words.length >= task.minWords && words.length <= task.maxWords;
+  // Đoạn văn (L3): đếm số câu theo dấu kết câu.
+  const sentCount = raw.split(/[.!?]+/).map((s) => s.trim()).filter(Boolean).length;
+  const sentOk = !task.minSentences || sentCount >= task.minSentences;
 
   const checks: WriteCheck[] = [
     { label: "Đủ ý chính của khung câu", ok: kwOk, note: missing.length ? `còn thiếu: ${missing.join(", ")}` : undefined },
@@ -134,12 +179,15 @@ export function scoreWriting(task: WriteTask, text: string): WriteScore {
     { label: "Kết thúc bằng dấu . ! hoặc ?", ok: punctOk },
     { label: `Độ dài phù hợp (${task.minWords}–${task.maxWords} từ)`, ok: lenOk, note: words.length ? `bài của con: ${words.length} từ` : undefined },
   ];
+  if (task.minSentences) {
+    checks.push({ label: `Viết thành đoạn ≥ ${task.minSentences} câu`, ok: sentOk, note: `bài của con: ${sentCount} câu` });
+  }
 
   const mech = [capOk, punctOk, lenOk].filter(Boolean).length;
   // Nội dung nặng hơn trình bày: đủ TẤT CẢ ý chính là tối thiểu 2 sao,
-  // 3 sao khi vừa đủ ý, đúng thứ tự, vừa sạch cả 3 quy tắc trình bày.
+  // 3 sao khi đủ ý + đúng thứ tự + sạch trình bày (+ đủ số câu nếu là bài đoạn văn).
   const stars: 0 | 1 | 2 | 3 =
-    kwOk && orderOk && mech === 3 ? 3
+    kwOk && orderOk && mech === 3 && sentOk ? 3
     : kwOk ? 2
     : hit >= Math.ceil(task.keywords.length * 0.6) && mech >= 2 ? 2
     : hit > 0 ? 1 : 0;
