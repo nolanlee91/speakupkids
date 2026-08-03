@@ -272,7 +272,34 @@ create policy entitlements_admin on public.entitlements
   for all using (public.is_admin()) with check (public.is_admin());
 
 -- ────────────────────────────────────────────────────────────
--- 8. Tiện ích: tự cập nhật updated_at khi ghi child_state
+-- 8. Chống ghi đè tiến độ (optimistic concurrency)
+--    Mỗi bản ghi child_state mang `version`; client ghi qua RPC kèm version gốc.
+--    Version lệch (máy khác đã ghi) → trả -1, KHÔNG ghi đè; client tự phân xử.
+-- ────────────────────────────────────────────────────────────
+alter table public.child_state add column if not exists version bigint not null default 0;
+
+-- SECURITY INVOKER (mặc định): chạy dưới quyền người gọi → RLS child_state_own vẫn áp dụng,
+-- ba mẹ chỉ ghi được state của con mình.
+create or replace function public.push_child_state(p_child uuid, p_state jsonb, p_base bigint)
+returns bigint language plpgsql as $$
+declare
+  newv bigint;
+begin
+  insert into public.child_state (child_id, state, version)
+  values (p_child, p_state, 1)
+  on conflict (child_id) do nothing;
+  if found then return 1; end if;
+
+  update public.child_state
+     set state = p_state, version = version + 1
+   where child_id = p_child and version = p_base
+   returning version into newv;
+  if newv is null then return -1; end if;   -- xung đột: bản khác đã ghi trước
+  return newv;
+end; $$;
+
+-- ────────────────────────────────────────────────────────────
+-- 9. Tiện ích: tự cập nhật updated_at khi ghi child_state
 -- ────────────────────────────────────────────────────────────
 create or replace function public.touch_updated_at()
 returns trigger language plpgsql as $$

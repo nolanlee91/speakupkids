@@ -24,7 +24,7 @@ import { Clubhouse } from "./clubhouse";
 import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
-import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership, redeemCode, claimGifts, getActiveChildId, getWeeklyEmailPref, setWeeklyEmailPref } from "@/lib/cloud";
+import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership, redeemCode, claimGifts, getActiveChildId, getWeeklyEmailPref, setWeeklyEmailPref, onRemoteStateAdopted } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
 import { StickerArt } from "./reward-art";
 
@@ -90,6 +90,8 @@ function App() {
     }
   }, []);
   useEffect(() => { if (ready) syncSave(state); }, [state, ready]);
+  // Thua xung đột đồng bộ (máy khác học nhiều hơn) → nhận bản server để không đè mất tiến độ.
+  useEffect(() => { onRemoteStateAdopted((s) => setState(s)); }, []);
   useEffect(() => { document.body.classList.toggle("no-motion", state.prefs.motion === false); }, [state.prefs.motion]);
 
   const stars = totalStars(state);

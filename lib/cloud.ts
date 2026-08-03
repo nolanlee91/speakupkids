@@ -160,23 +160,76 @@ export async function createChild(p: { ingame_name: string; avatar?: string; age
   return data as ChildProfile;
 }
 
-/* ═══════════ Đồng bộ tiến độ (AppState) ═══════════ */
+/* ═══════════ Đồng bộ tiến độ (AppState) — có chống ghi đè ═══════════ */
+// Mỗi bản ghi child_state có cột `version`; ghi qua RPC push_child_state chỉ thành công
+// khi version phía client khớp server (optimistic concurrency). Thiết bị cầm bản CŨ
+// push sẽ bị từ chối thay vì đè mất tiến độ mới của thiết bị khác.
+const verKey = (childId: string) => `speakup_ver_${childId}`;
+function getVer(childId: string): number {
+  if (typeof window === "undefined") return 0;
+  return parseInt(localStorage.getItem(verKey(childId)) || "0", 10) || 0;
+}
+function setVer(childId: string, v: number) {
+  if (typeof window !== "undefined") localStorage.setItem(verKey(childId), String(v));
+}
+
+// App (page.tsx) đăng ký để nhận state mới khi thua xung đột — React cần setState theo.
+let remoteAdoptedCb: ((s: AppState) => void) | null = null;
+export function onRemoteStateAdopted(cb: (s: AppState) => void) { remoteAdoptedCb = cb; }
+
+// Điểm "tiến độ" thô để phân xử xung đột: bản nào bé học được nhiều hơn thì thắng.
+function progressScore(s: AppState): number {
+  const lessons = Object.values(s.learn?.lessons || {}).filter((l) => l?.done).length;
+  const seen = Object.values(s.games?.topics || {}).reduce((a, t) => a + (t?.seen?.length || 0), 0);
+  const adv = Object.values(s.adventure?.seasons || {}).reduce((a, p) => a + (p?.completedChapterIds?.length || 0), 0);
+  return lessons * 10 + adv * 5 + seen + (s.clubhouse?.rewardedKeys?.length || 0);
+}
+
 export async function pullState(childId: string): Promise<AppState | null> {
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("child_state")
-    .select("state")
+    .select("state, version")
     .eq("child_id", childId)
     .maybeSingle();
   if (error) throw error;
+  if (data) setVer(childId, (data as { version?: number }).version || 0);
   return (data?.state as AppState) ?? null;
 }
+
+// Ghi có kiểm tra version. Trả version mới (>=0) hoặc -1 nếu thua xung đột.
+// Fallback: schema chưa có RPC (chưa chạy SQL mới) → upsert kiểu cũ để không gãy sync.
+async function pushVersioned(childId: string, state: AppState, base: number): Promise<number> {
+  const { data, error } = await supabase!.rpc("push_child_state", {
+    p_child: childId, p_state: state, p_base: base,
+  });
+  if (error) {
+    if (/push_child_state/.test(error.message || "")) {   // function chưa tồn tại
+      await supabase!.from("child_state").upsert({ child_id: childId, state }, { onConflict: "child_id" });
+      return base;
+    }
+    throw error;
+  }
+  return typeof data === "number" ? data : -1;
+}
+
 export async function pushState(childId: string, state: AppState) {
   if (!supabase) return;
-  const { error } = await supabase
-    .from("child_state")
-    .upsert({ child_id: childId, state }, { onConflict: "child_id" });
-  if (error) throw error;
+  const v = await pushVersioned(childId, state, getVer(childId));
+  if (v >= 0) { setVer(childId, v); return; }
+
+  // Thua xung đột: máy khác đã ghi bản mới hơn. Kéo bản server về để phân xử.
+  const remote = await pullState(childId);              // đồng thời cập nhật version mới
+  if (remote && progressScore(remote) > progressScore(state)) {
+    // Server nhiều tiến độ hơn → nhận bản server, báo app cập nhật màn hình.
+    const normalized = normalizeState(remote);
+    saveState(normalized);
+    remoteAdoptedCb?.(normalized);
+    return;
+  }
+  // Bản local nhiều tiến độ hơn (hoặc ngang) → đẩy lại với version vừa kéo.
+  const v2 = await pushVersioned(childId, state, getVer(childId));
+  if (v2 >= 0) setVer(childId, v2);
 }
 
 // Chọn 1 con để chơi: kéo state cloud về máy; nếu con này CHƯA có state → khởi tạo MỚI (mặc định) rồi đẩy lên.
@@ -222,14 +275,26 @@ export function syncSave(state: AppState) {
     queuedCloudState = state;
     queuedChildId = id;
     if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
-    cloudSaveTimer = setTimeout(() => {
-      const nextState = queuedCloudState;
-      const nextChildId = queuedChildId;
-      cloudSaveTimer = null;
-      queuedCloudState = null;
-      queuedChildId = null;
-      // Gộp các thao tác kéo/thả liên tiếp thành một lần ghi cloud.
-      if (nextState && nextChildId) pushState(nextChildId, nextState).catch(() => {});
-    }, 900);
+    cloudSaveTimer = setTimeout(flushCloudSave, 900);
   }
+}
+
+// Đẩy ngay phần đang chờ debounce (dùng khi đóng tab/ẩn app để không rơi lần ghi cuối).
+function flushCloudSave() {
+  const nextState = queuedCloudState;
+  const nextChildId = queuedChildId;
+  if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = null;
+  queuedCloudState = null;
+  queuedChildId = null;
+  if (nextState && nextChildId) pushState(nextChildId, nextState).catch(() => {});
+}
+
+// Bé đóng tab / chuyển app trong vòng 900ms sau thao tác cuối → flush kẻo mất lần ghi đó.
+// localStorage vẫn luôn có bản mới nhất nên cùng lắm chỉ chậm sync, không mất dữ liệu máy này.
+if (typeof window !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushCloudSave();
+  });
+  window.addEventListener("pagehide", flushCloudSave);
 }
