@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { buyClubhouseItem, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem } from "@/lib/state";
 import { CLUBHOUSE_SHOP, SEASON_SOUVENIRS, earnedSeasonSouvenirs, type ShopItem } from "@/lib/clubhouse";
@@ -10,9 +10,9 @@ import { celebrate, playSuccessSound, speak } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
 
 const ROOMS = [
-  { id: "lounge", name: "Phòng sinh hoạt", icon: "⌂", image: "/assets/images/clubhouse/maple-clubhouse-room-v2.webp" },
-  { id: "study", name: "Góc học tập", icon: "✎", image: "/assets/images/clubhouse/maple-house-study.webp" },
-  { id: "rooftop", name: "Sân thượng", icon: "✦", image: "/assets/images/clubhouse/maple-house-rooftop.webp" },
+  { id: "lounge", name: "Phòng sinh hoạt", en: "lounge", icon: "⌂", image: "/assets/images/clubhouse/maple-clubhouse-room-v2.webp", maple: { x: 14, y: 91 }, line: "Welcome to our cozy lounge! Where should we put the next treasure?" },
+  { id: "study", name: "Góc học tập", en: "study", icon: "✎", image: "/assets/images/clubhouse/maple-house-study.webp", maple: { x: 15, y: 91 }, line: "This is our study. A great idea deserves a great space!" },
+  { id: "rooftop", name: "Sân thượng", en: "rooftop garden", icon: "✦", image: "/assets/images/clubhouse/maple-house-rooftop.webp", maple: { x: 18, y: 91 }, line: "Look at the view from our rooftop garden!" },
 ] as const;
 const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png"];
 const BDG = "/assets/images/badges/";
@@ -29,6 +29,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [drag, setDrag] = useState<{ id: string; x: number; y: number } | null>(null);
   const [delivery, setDelivery] = useState<ShopItem | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [maplePos, setMaplePos] = useState({ x: 14, y: 91 });
+  const [mapleWalking, setMapleWalking] = useState(false);
   const roomRef = useRef<HTMLElement>(null);
   const purchased = new Set(state.clubhouse.purchasedItemIds);
   const equipped = new Set(state.clubhouse.equippedItemIds);
@@ -39,6 +41,14 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const gotStickers = new Set(state.stickers || []);
   const badges = earnedBadges(state);
   const selectedItem = displayed.find((item) => item.id === selectedId);
+
+  useEffect(() => { setMaplePos(room.maple); setMapleWalking(false); }, [room.id, room.maple]);
+
+  function moveMaple(x: number, y: number) {
+    setMaplePos({ x: Math.max(9, Math.min(91, x)), y: Math.max(62, Math.min(93, y)) });
+    setMapleWalking(true);
+    window.setTimeout(() => setMapleWalking(false), 760);
+  }
 
   function adjustSelected(scaleDelta: number, rotationDelta: number) {
     if (!selectedItem) return;
@@ -52,7 +62,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     setDelivery(item); celebrate(state.prefs.motion !== false); playSuccessSound();
   }
 
-  function point(e: React.PointerEvent) {
+  function point(e: { clientX: number; clientY: number }) {
     const rect = roomRef.current?.getBoundingClientRect();
     if (!rect) return null;
     return { x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100 };
@@ -66,11 +76,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     </header>
 
     <main className="clubhouse-main">
-      <section ref={roomRef} className={`clubhouse-room game-room clubhouse-stage ${editing ? "is-editing" : ""}`} aria-label="Căn phòng của con">
+      <section ref={roomRef} className={`clubhouse-room game-room clubhouse-stage ${editing ? "is-editing" : ""}`} aria-label="Căn phòng của con"
+        onClick={(e) => { if (editing || panel !== "none" || (e.target as HTMLElement).closest("button,nav")) return; const p = point(e); if (p) moveMaple(p.x, p.y); }}>
         <img className="clubhouse-bg" src={room.image} alt={`${room.name} của Maple nhìn ra Vancouver`} />
         <div className="clubhouse-glow" aria-hidden="true" /><div className="clubhouse-edit-grid" aria-hidden="true" />
         <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span><span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
-        <button className="clubhouse-maple" onClick={() => speak("Welcome to our clubhouse!", state.prefs.accent, .86)}>
+        <button className={`clubhouse-maple ${mapleWalking ? "walking" : ""}`} style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%` }}
+          onClick={(e) => { e.stopPropagation(); speak(room.line, state.prefs.accent, .86); }}>
           <img src="/assets/images/gen/maple-pose-cheer.webp" alt="Maple trong Clubhouse" />
           <span>{editing ? "Drag things anywhere you like!" : displayed.length ? "This place looks amazing!" : "Let’s build something awesome."}</span>
         </button>
@@ -83,7 +95,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
             onPointerDown={(e) => { if (!editing) return; setSelectedId(item.id); e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
-            onClick={() => { if (!editing) speak(item.en, state.prefs.accent, .82); }} aria-label={`${item.en} — ${item.vi}`}>
+            onClick={(e) => { e.stopPropagation(); if (!editing) { moveMaple(pos.x > 55 ? pos.x - 10 : pos.x + 10, Math.max(68, pos.y + 7)); speak(`The ${item.en} looks great in our ${room.en}!`, state.prefs.accent, .84); } }} aria-label={`${item.en} — ${item.vi}`}>
             <ShopArt item={item} /><i>{editing ? "Kéo để đặt" : item.en}</i>
           </button>;
         })}
