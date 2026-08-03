@@ -468,6 +468,8 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
 
 /* ==================== TÀI KHOẢN + GÓI (từ avatar) ==================== */
 // Mô tả gói phải khớp lib/gating.ts — sửa gating thì sửa cả đây.
+// Giá lifetime đã chốt 2026-08-03: Pro 360k (1 bé) · Family 480k (4 bé).
+const PLAN_PRICE = { pro: "360.000đ", family: "480.000đ" };
 const PLAN_FEATS = {
   free: [
     "Level 0 Phonics đầy đủ",
@@ -479,6 +481,12 @@ const PLAN_FEATS = {
     "Mở khóa TẤT CẢ bài học Learn",
     "Toàn bộ trò Luyện tập",
     "Tất cả 8 mùa Phiêu lưu",
+    "Mua một lần · dùng trọn đời",
+  ],
+  family: [
+    "Mọi quyền lợi của gói Pro",
+    "Tối đa 4 hồ sơ bé — tiến độ riêng từng bé",
+    "Chung một tài khoản ba mẹ",
     "Mua một lần · dùng trọn đời",
   ],
 };
@@ -553,19 +561,34 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
             <span className="pname">{state.membership === "family" ? "Family" : pro ? "Pro" : "Miễn phí"}</span>
             <span className="price">{pro ? "Trọn đời" : "Đang dùng"}</span>
           </div>
-          <ul>{(pro ? PLAN_FEATS.pro : PLAN_FEATS.free).map((f) => <li key={f}>{f}</li>)}</ul>
+          <ul>{(state.membership === "family" ? PLAN_FEATS.family : pro ? PLAN_FEATS.pro : PLAN_FEATS.free).map((f) => <li key={f}>{f}</li>)}</ul>
           <div className="chip" style={{ marginTop: 10 }}>Đang dùng</div>
         </div>
         {!pro && (
           <div className="card plan">
             <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
-              <span className="pname">Pro</span><span className="chip sun">Sắp mở bán</span>
+              <span className="pname">Pro · 1 bé</span><span className="price">{PLAN_PRICE.pro} <small>trọn đời</small></span>
             </div>
             <ul>{PLAN_FEATS.pro.map((f) => <li key={f}>{f}</li>)}</ul>
-            <button className="btn ghost sm" disabled style={{ marginTop: 10, opacity: 0.7 }}>Nâng cấp (sắp có)</button>
           </div>
         )}
-        {!pro && cloudEnabled() && <RedeemBox onActivated={(plan) => setState((s) => ({ ...s, membership: plan }))} />}
+        {state.membership !== "family" && (
+          <div className="card plan">
+            <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+              <span className="pname">Family · 4 bé</span>
+              <span className="price">{pro ? "+120.000đ nâng cấp" : <>{PLAN_PRICE.family} <small>trọn đời</small></>}</span>
+            </div>
+            <ul>{PLAN_FEATS.family.map((f) => <li key={f}>{f}</li>)}</ul>
+          </div>
+        )}
+        {state.membership !== "family" && cloudEnabled() && (
+          <>
+            <p style={{ fontSize: ".84rem", color: "var(--muted)", margin: "10px 2px 6px" }}>
+              Cách mua: liên hệ đại lý SpeakUp Kids để nhận <b>mã kích hoạt</b>, nhập vào ô dưới — gói mở ngay lập tức. Thanh toán QR trực tiếp sẽ sớm có.
+            </p>
+            <RedeemBox onActivated={(plan) => setState((s) => ({ ...s, membership: plan }))} />
+          </>
+        )}
       </div>
     </div>
   );
@@ -587,7 +610,7 @@ function RedeemBox({ onActivated }: { onActivated: (plan: "pro" | "family") => v
       setMsg({ ok: true, text: `🎉 Kích hoạt thành công gói ${plan === "family" ? "Family" : "Pro"} trọn đời!` });
     } else if (r === "invalid") setMsg({ ok: false, text: "Mã không đúng — kiểm tra lại nhé." });
     else if (r === "used") setMsg({ ok: false, text: "Mã này đã được sử dụng." });
-    else if (r === "already") setMsg({ ok: false, text: "Tài khoản đã có gói rồi." });
+    else if (r === "already") setMsg({ ok: false, text: "Tài khoản đã có gói này (hoặc cao hơn) rồi." });
     else setMsg({ ok: false, text: "Có lỗi mạng — thử lại sau nhé." });
   }
   return (

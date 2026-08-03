@@ -203,21 +203,29 @@ create policy codes_admin on public.codes
 -- Người dùng thường KHÔNG đọc được bảng codes — đổi mã chỉ qua RPC bên dưới.
 
 -- RPC đổi mã kích hoạt: chạy với quyền owner (bỏ qua RLS) nhưng tự kiểm soát chặt.
+-- Cho phép NÂNG CẤP pro → family bằng mã family (bán chênh 120k); chặn trùng/hạ gói.
 -- Trả: 'ok:pro' | 'ok:family' | 'invalid' | 'used' | 'already' | 'unauthenticated'
 create or replace function public.redeem_code(p_code text)
 returns text language plpgsql security definer set search_path = public as $$
 declare
   c record;
+  cur_plan text;
 begin
   if auth.uid() is null then return 'unauthenticated'; end if;
   select * into c from public.codes where code = upper(trim(p_code));
   if not found then return 'invalid'; end if;
   if c.redeemed_by is not null then return 'used'; end if;
-  if exists (select 1 from public.entitlements where parent_id = auth.uid()) then
-    return 'already';
+  select plan into cur_plan from public.entitlements where parent_id = auth.uid();
+  if cur_plan is not null then
+    if cur_plan = 'family' or c.plan = cur_plan then return 'already'; end if;
+    -- còn lại đúng một trường hợp: đang pro, mã family → nâng cấp
+    update public.entitlements
+      set plan = c.plan, order_ref = 'code:' || c.code, purchased_at = now()
+      where parent_id = auth.uid();
+  else
+    insert into public.entitlements (parent_id, plan, order_ref)
+    values (auth.uid(), c.plan, 'code:' || c.code);
   end if;
-  insert into public.entitlements (parent_id, plan, order_ref)
-  values (auth.uid(), c.plan, 'code:' || c.code);
   update public.codes set redeemed_by = auth.uid(), redeemed_at = now() where code = c.code;
   return 'ok:' || c.plan;
 end; $$;
