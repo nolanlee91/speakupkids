@@ -19,8 +19,8 @@ export type SeasonSouvenir = ClubhouseItem & { seasonId: string };
 export type ShopItem = {
   id: string; en: string; vi: string; price: number; sprite: number;
   x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
-  sheet?: 1 | 2;
-  collection?: "trail" | "cosmic";
+  sheet?: 1 | 2 | 3;
+  collection?: "trail" | "cosmic" | "studio";
 };
 
 export const CLUBHOUSE_SHOP: ShopItem[] = [
@@ -40,6 +40,14 @@ export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-hanging-plant", en: "Hanging Plant", vi: "Chậu cây treo", price: 65, sprite: 5, sheet: 2, collection: "cosmic", x: 13, y: 35, scale: .72, z: 5, slot: "wall" },
   { id: "shop-adventure-books", en: "Adventure Books", vi: "Sách phiêu lưu", price: 55, sprite: 6, sheet: 2, collection: "cosmic", x: 31, y: 55, scale: .66, z: 5, slot: "desk" },
   { id: "shop-lava-lamp", en: "Lava Lamp", vi: "Đèn dung nham", price: 70, sprite: 7, sheet: 2, collection: "cosmic", x: 85, y: 48, scale: .63, z: 6, slot: "desk" },
+  { id: "shop-canopy-bed", en: "Dream Canopy", vi: "Giường màn ước mơ", price: 150, sprite: 0, sheet: 3, collection: "studio", x: 70, y: 70, scale: 1.05, z: 5, slot: "floor" },
+  { id: "shop-aurora-projector", en: "Aurora Projector", vi: "Máy chiếu cực quang", price: 105, sprite: 1, sheet: 3, collection: "studio", x: 25, y: 58, scale: .72, z: 6, slot: "desk" },
+  { id: "shop-maple-bookshelf", en: "Maple Bookshelf", vi: "Kệ sách lá phong", price: 135, sprite: 2, sheet: 3, collection: "studio", x: 72, y: 55, scale: .92, z: 5, slot: "floor" },
+  { id: "shop-music-keyboard", en: "Music Keyboard", vi: "Đàn keyboard", price: 145, sprite: 3, sheet: 3, collection: "studio", x: 66, y: 70, scale: 1, z: 6, slot: "floor" },
+  { id: "shop-gaming-corner", en: "Gaming Corner", vi: "Góc chơi game", price: 175, sprite: 4, sheet: 3, collection: "studio", x: 35, y: 72, scale: 1.08, z: 6, slot: "floor" },
+  { id: "shop-art-easel", en: "Mountain Easel", vi: "Giá vẽ núi", price: 95, sprite: 5, sheet: 3, collection: "studio", x: 35, y: 68, scale: .86, z: 6, slot: "floor" },
+  { id: "shop-skate-rack", en: "Skate Rack", vi: "Giá ván skateboard", price: 115, sprite: 6, sheet: 3, collection: "studio", x: 78, y: 61, scale: .9, z: 5, slot: "floor" },
+  { id: "shop-cloud-cushion", en: "Cloud Cushion", vi: "Ghế mây êm", price: 85, sprite: 7, sheet: 3, collection: "studio", x: 55, y: 79, scale: 1, z: 5, slot: "floor" },
 ];
 
 // Đồ trang trí nhận từ Learn. Thứ tự cũng là reward pool:

@@ -1696,8 +1696,8 @@
   .clubhouse-v2 .clubhouse-main{height:calc(100dvh - 120px);padding:7px 7px 116px;overflow:hidden}
   .clubhouse-v2 .clubhouse-stage{height:100%;overflow:visible;border-radius:18px}.clubhouse-v2 .clubhouse-stage>.clubhouse-bg{border-radius:18px;clip-path:inset(0 round 18px)}
   .clubhouse-v2 .clubhouse-glow,.clubhouse-v2 .clubhouse-edit-grid{border-radius:18px;clip-path:inset(0 round 18px)}
-  .clubhouse-v2 .clubhouse-rooms{left:0;right:0;bottom:-54px;height:47px;padding:5px;border-radius:14px;justify-content:stretch}
-  .clubhouse-v2 .clubhouse-rooms button{flex:1;justify-content:center;padding:6px}.clubhouse-v2 .clubhouse-rooms button span{display:inline;font-size:.68rem}.clubhouse-v2 .clubhouse-rooms button i{font-size:15px}.clubhouse-v2 .clubhouse-rooms button small{display:none}
+  .clubhouse-v2 .clubhouse-rooms{left:0;right:0;bottom:-54px;height:47px;padding:5px;border-radius:14px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
+  .clubhouse-v2 .clubhouse-rooms::-webkit-scrollbar{display:none}.clubhouse-v2 .clubhouse-rooms button{flex:0 0 105px;justify-content:center;padding:6px}.clubhouse-v2 .clubhouse-rooms button span{display:inline;font-size:.68rem;white-space:nowrap}.clubhouse-v2 .clubhouse-rooms button i{font-size:15px}.clubhouse-v2 .clubhouse-rooms button small{display:none}
   .clubhouse-v2 .clubhouse-actions{left:0;right:0;top:auto;bottom:-108px;height:47px;padding:5px;border-radius:14px;justify-content:stretch}
   .clubhouse-v2 .clubhouse-actions button{flex:1;justify-content:center;padding:7px}.clubhouse-v2 .clubhouse-actions button span{display:inline;font-size:.7rem}
   .clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-rooms{display:none}.clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-actions{left:auto;right:8px;top:8px;bottom:auto;width:auto;height:auto}.clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-actions button:not(:first-child){display:none}
@@ -1708,3 +1708,11 @@
 }
 @media (hover:none),(pointer:coarse){.clubhouse-v2 .clubhouse-shop article:hover{transform:none;box-shadow:none}.clubhouse-v2 .clubhouse-shop .shop-grid{-webkit-overflow-scrolling:touch}.clubhouse-v2 .shop-grid button{position:relative;z-index:3;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:rgba(84,217,203,.25)}}
 @media (pointer:coarse) and (min-width:601px) and (max-width:1024px){.clubhouse-v2 .shop-grid button{min-height:50px;font-size:.84rem}.clubhouse-v2 .clubhouse-shop .shop-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.clubhouse-v2 .drawer-close{width:48px;height:48px}}
+
+/* Shop purchase confirmation */
+.purchase-confirm-backdrop{position:fixed;z-index:120;inset:0;display:grid;place-items:center;padding:18px;background:#020b13c9;backdrop-filter:blur(10px)}
+.purchase-confirm{position:relative;width:min(430px,100%);padding:24px;text-align:center;color:#eefcff;border:1px solid #6df3e5;border-radius:26px;background:linear-gradient(155deg,#112b3d,#071724 70%);box-shadow:0 30px 90px #000b,0 0 36px #39d6c43d}
+.purchase-confirm .shop-art{display:block;width:180px;max-width:52vw;aspect-ratio:1;margin:0 auto -4px}.purchase-confirm h3{margin:4px 0;font:900 1.35rem/1.15 var(--font-head-stack)}.purchase-confirm p{margin:8px 0 16px;color:#b9cdd4;font-weight:700}.purchase-confirm-close{position:absolute;right:12px;top:12px;width:38px;height:38px;border:1px solid #ffffff2c;border-radius:50%;background:#ffffff0d;color:#fff;font:800 24px/1 inherit;cursor:pointer}
+.purchase-balance{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px;border:1px solid #ffffff1d;border-radius:15px;background:#ffffff09;font-size:.86rem}.purchase-balance span{display:grid;gap:2px;color:#a9bdc7}.purchase-balance b{color:#ffd46b;font-size:1rem}.purchase-balance i{color:#67e8dc;font-style:normal;font-weight:900}
+.purchase-confirm-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:10px;margin-top:16px}.purchase-confirm-actions button{min-height:48px;border:1px solid #ffffff2c;border-radius:14px;background:#ffffff0c;color:#e9f7f8;font:900 .9rem/1 inherit;cursor:pointer}.purchase-confirm-actions .confirm-buy{border-color:#66f0df;background:linear-gradient(135deg,#49ddd0,#2eb5aa);color:#062a33;box-shadow:0 10px 25px #1fc6b43d}
+@media(max-width:520px){.purchase-confirm{padding:20px 16px}.purchase-confirm .shop-art{width:145px}.purchase-confirm-actions{grid-template-columns:1fr}.purchase-confirm-actions .confirm-buy{grid-row:1}}
