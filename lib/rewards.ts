@@ -29,7 +29,6 @@ export function earnedBadges(state: AppState): Badge[] {
 // Sao và streak là chỉ số, Adventure chapter item là đạo cụ cốt truyện nên không tính.
 export function keepsakeCount(state: AppState): number {
   return state.clubhouse.purchasedItemIds.length
-    + state.clubhouse.unlockedItemIds.length
     + earnedSeasonSouvenirs(state).length
     + (state.stickers || []).length
     + earnedBadges(state).length;

@@ -192,11 +192,25 @@ export async function migrateLocalToChild(childId: string): Promise<AppState> {
 }
 
 // Lưu tiến độ: ghi localStorage NGAY (nhanh, offline-first) + đẩy lên cloud cho con đang chọn (không chặn UI).
+let cloudSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let queuedCloudState: AppState | null = null;
+let queuedChildId: string | null = null;
+
 export function syncSave(state: AppState) {
   saveState(state);
   const id = getActiveChildId();
   if (supabase && id) {
-    // fire-and-forget; lỗi mạng không làm hỏng trải nghiệm chơi
-    pushState(id, state).catch(() => {});
+    queuedCloudState = state;
+    queuedChildId = id;
+    if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(() => {
+      const nextState = queuedCloudState;
+      const nextChildId = queuedChildId;
+      cloudSaveTimer = null;
+      queuedCloudState = null;
+      queuedChildId = null;
+      // Gộp các thao tác kéo/thả liên tiếp thành một lần ghi cloud.
+      if (nextState && nextChildId) pushState(nextChildId, nextState).catch(() => {});
+    }, 900);
   }
 }

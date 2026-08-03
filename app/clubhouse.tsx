@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { adjustMapleNeeds, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit } from "@/lib/state";
-import { CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
+import { adjustMapleNeeds, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, claimClubhouseItem, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit } from "@/lib/state";
+import { ALL_CLUBHOUSE_FURNITURE, CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, clubhouseChoices, clubhouseLearnTotal, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
 import { celebrate, playSuccessSound, speak } from "@/lib/fx";
@@ -52,7 +52,7 @@ const ROOMS = [
   { id: "loft", name: "Dream Loft", en: "dream loft", icon: "☾", image: "/assets/images/clubhouse/maple-house-dream-loft.webp", maple: { x: 16, y: 91 }, line: "Welcome to the dream loft. Let's make it cozy!" },
   { id: "maker", name: "Maker Den", en: "maker den", icon: "✹", image: "/assets/images/clubhouse/maple-house-maker-den.webp", maple: { x: 17, y: 91 }, line: "This is our maker den. What will we create today?" },
 ] as const;
-const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png", "/assets/images/clubhouse/clubhouse-shop-sprites-03.png"];
+const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png", "/assets/images/clubhouse/clubhouse-shop-sprites-03.png", "/assets/images/clubhouse/clubhouse-learn-rewards.png"];
 const BDG = "/assets/images/badges/";
 
 function ShopArt({ item, className = "" }: { item: ShopItem; className?: string }) {
@@ -75,13 +75,17 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [maplePose, setMaplePose] = useState<MaplePose>("cheer");
   const [mapleLine, setMapleLine] = useState("Tap a favourite thing and I’ll try it!");
   const [careNotice, setCareNotice] = useState("");
+  const [rewardDismissed, setRewardDismissed] = useState(false);
   const roomRef = useRef<HTMLElement>(null);
   const interactionTimer = useRef<number | null>(null);
   const idleTimer = useRef<number | null>(null);
+  const walkTimer = useRef<number | null>(null);
+  const noticeTimer = useRef<number | null>(null);
+  const interactionCooldown = useRef<Record<string, number>>({});
   const purchased = new Set(state.clubhouse.purchasedItemIds);
   const equipped = new Set(state.clubhouse.equippedItemIds);
   const room = ROOMS.find((r) => r.id === state.clubhouse.activeRoomId) || ROOMS[0];
-  const displayed = CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
+  const displayed = ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
   const souvenirs = earnedSeasonSouvenirs(state);
   const souvenirIds = new Set(souvenirs.map((item) => item.id));
   const gotStickers = new Set(state.stickers || []);
@@ -89,29 +93,42 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const selectedItem = displayed.find((item) => item.id === selectedId);
   const activeOutfit = MAPLE_OUTFITS.find((outfit) => outfit.id === state.clubhouse.activeOutfitId) || MAPLE_OUTFITS[0];
   const ownedOutfits = new Set(state.clubhouse.ownedOutfitIds);
+  const rewardChoices = rewardDismissed ? [] : clubhouseChoices(state);
 
   useEffect(() => {
     setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer");
     setMapleLine(room.line);
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (walkTimer.current) window.clearTimeout(walkTimer.current);
   }, [room.id, room.maple, room.line]);
 
   useEffect(() => () => {
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (walkTimer.current) window.clearTimeout(walkTimer.current);
+    if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
   }, []);
+
+  useEffect(() => {
+    const decay = window.setInterval(() => setState((s) => adjustMapleNeeds(s, { hunger: -1, energy: -1 })), 120000);
+    return () => window.clearInterval(decay);
+  }, [setState]);
 
   function moveMaple(x: number, y: number) {
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (walkTimer.current) window.clearTimeout(walkTimer.current);
     setMaplePose("cheer");
     setMaplePos({ x: Math.max(9, Math.min(91, x)), y: Math.max(62, Math.min(93, y)) });
     setMapleWalking(true);
-    window.setTimeout(() => setMapleWalking(false), 760);
+    walkTimer.current = window.setTimeout(() => setMapleWalking(false), 760);
   }
 
-  function useFurniture(item: ShopItem, pos: { x: number; y: number }) {
+  function interactWithFurniture(item: ShopItem, pos: { x: number; y: number }) {
+    const now = Date.now();
+    if ((interactionCooldown.current[item.id] || 0) > now) { showCareNotice("Maple is still enjoying that. Try another item!", 1800); return; }
+    interactionCooldown.current[item.id] = now + 8000;
     const action = INTERACTIONS[item.id] || { pose: "cheer" as MaplePose, lines: [`I have an idea for the ${item.en}.`, `The ${item.en} makes this room feel like ours.`], needs: { energy: -2, hunger: -2, happiness: 5 } };
     const line = action.lines[Math.floor(Math.random() * action.lines.length)];
     moveMaple(pos.x + (action.xOffset ?? (pos.x > 55 ? -9 : 9)), Math.max(66, pos.y + (action.yOffset ?? 6)));
@@ -124,18 +141,30 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     }, 720);
   }
 
+  function showCareNotice(message: string, duration = 2400) {
+    if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
+    setCareNotice(message);
+    noticeTimer.current = window.setTimeout(() => setCareNotice(""), duration);
+  }
+
+  function claimLearnReward(item: ShopItem) {
+    setState((s) => claimClubhouseItem(s, item.id, room.id));
+    setRewardDismissed(true); setDelivery(item); setMaplePose("cheer");
+    setMapleLine(`${item.en} is a special reward for learning!`);
+    celebrate(state.prefs.motion !== false); playSuccessSound();
+  }
+
   function giveSnack() {
-    if (state.clubhouse.needs.hunger >= 100) { setCareNotice("Maple is full and happy!"); return; }
-    if (state.clubhouse.coins < 5) { setCareNotice("You need 5 Coins for a snack."); return; }
+    if (state.clubhouse.needs.hunger >= 100) { showCareNotice("Maple is full and happy!"); return; }
+    if (state.clubhouse.coins < 5) { showCareNotice("You need 5 Coins for a snack."); return; }
     setState((s) => buyMapleSnack(s, 5));
-    setMaplePose("sit"); setMapleLine("Yum! That hit the spot."); setCareNotice("+25 Hunger · +4 Happiness");
+    setMaplePose("sit"); setMapleLine("Yum! That hit the spot."); showCareNotice("+25 Hunger · +4 Happiness");
     speak("Yum! That hit the spot.", state.prefs.accent, .84);
-    window.setTimeout(() => setCareNotice(""), 2400);
   }
 
   function chooseOutfit(outfit: MapleOutfit) {
     if (ownedOutfits.has(outfit.id)) { setState((s) => wearClubhouseOutfit(s, outfit.id)); setMapleLine(`This ${outfit.en} look feels perfect!`); return; }
-    if (state.clubhouse.cash < outfit.price) { setCareNotice(`You need ${outfit.price - state.clubhouse.cash} more Maple Cash.`); return; }
+    if (state.clubhouse.cash < outfit.price) { showCareNotice(`You need ${outfit.price - state.clubhouse.cash} more Maple Cash.`); return; }
     setPendingOutfit(outfit);
   }
 
@@ -211,7 +240,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
             onPointerDown={(e) => { if (!editing) return; setSelectedId(item.id); e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
-            onClick={(e) => { e.stopPropagation(); if (!editing) useFurniture(item, pos); }} aria-label={`Use ${item.en} — ${item.vi}`}>
+            onClick={(e) => { e.stopPropagation(); if (!editing) interactWithFurniture(item, pos); }} aria-label={`Use ${item.en} — ${item.vi}`}>
             <ShopArt item={item} /><i>{editing ? "Drag to place" : item.en}</i>
           </button>;
         })}
@@ -227,10 +256,10 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button className={panel === "wardrobe" ? "on" : ""} onClick={() => { setPanel(panel === "wardrobe" ? "none" : "wardrobe"); setEditing(false); }}>♢ <span>Closet</span></button>
           <button className={panel === "journal" ? "on" : ""} onClick={() => { setPanel(panel === "journal" ? "none" : "journal"); setEditing(false); }}>▣ <span>Journey</span></button>
         </nav>
-        <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
+        <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
       </section>
 
-      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap to place; select an item in the room to adjust it</small></div>{CLUBHOUSE_SHOP.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
+      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap to place; select an item in the room to adjust it</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Three collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
@@ -250,6 +279,21 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <div className="journal-group"><div className="jg-head"><b>Adventure Exclusives</b><em>{souvenirs.length}/{SEASON_SOUVENIRS.length}</em></div><div className="journal-souvenirs">{SEASON_SOUVENIRS.map((item) => <button key={item.id} className={souvenirIds.has(item.id) ? "on" : ""} disabled={!souvenirIds.has(item.id)} onClick={() => speak(item.en, state.prefs.accent, .82)}><span>{souvenirIds.has(item.id) ? item.emoji : "?"}</span><b>{souvenirIds.has(item.id) ? item.en : `Season ${Number(item.seasonId.slice(1))}`}</b></button>)}</div></div>
       </section>}
     </main>
+
+    {rewardChoices.length > 0 && !delivery && !pendingPurchase && !pendingOutfit && <div className="purchase-confirm-backdrop learn-reward-backdrop" role="presentation">
+      <section className="learn-reward-modal" role="dialog" aria-modal="true" aria-labelledby="learn-reward-title">
+        <span className="rl-kicker">LEARNING MILESTONE</span>
+        <h3 id="learn-reward-title">Your learning unlocked a house reward!</h3>
+        <p><b>{clubhouseLearnTotal(state)} lessons completed.</b> Choose one exclusive keepsake. These cannot be bought with Coins.</p>
+        <div className="learn-reward-choices">
+          {rewardChoices.map((item) => <button key={item.id} type="button" onClick={() => claimLearnReward(item)}>
+            <ShopArt item={item} className="large" />
+            <strong>{item.en}</strong><small>{item.vi}</small><span>Choose this reward</span>
+          </button>)}
+        </div>
+        <button type="button" className="learn-reward-later" onClick={() => setRewardDismissed(true)}>Choose later</button>
+      </section>
+    </div>}
 
     {pendingPurchase && <div className="purchase-confirm-backdrop" role="presentation" onClick={() => setPendingPurchase(null)}>
       <section className="purchase-confirm" role="alertdialog" aria-modal="true" aria-labelledby="purchase-title" aria-describedby="purchase-copy" onClick={(e) => e.stopPropagation()}>

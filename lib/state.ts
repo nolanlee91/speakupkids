@@ -452,14 +452,19 @@ export function adventuresDone(s: AppState): number {
 }
 
 /* ---------- Maple Clubhouse (meta-game phần thưởng) ---------- */
-export function claimClubhouseItem(s: AppState, itemId: string): AppState {
+export function claimClubhouseItem(s: AppState, itemId: string, roomId = "lounge"): AppState {
   if (!itemId || s.clubhouse.unlockedItemIds.includes(itemId)) return s;
+  const purchasedItemIds = s.clubhouse.purchasedItemIds.includes(itemId) ? s.clubhouse.purchasedItemIds : [...s.clubhouse.purchasedItemIds, itemId];
+  const equippedItemIds = s.clubhouse.equippedItemIds.includes(itemId) ? s.clubhouse.equippedItemIds : [...s.clubhouse.equippedItemIds, itemId];
   return {
     ...s,
     clubhouse: {
       ...s.clubhouse,
       unlockedItemIds: [...s.clubhouse.unlockedItemIds, itemId],
       claimedMilestones: s.clubhouse.claimedMilestones + 1,
+      purchasedItemIds,
+      equippedItemIds,
+      itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
     },
   };
 }

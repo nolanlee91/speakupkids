@@ -19,8 +19,8 @@ export type SeasonSouvenir = ClubhouseItem & { seasonId: string };
 export type ShopItem = {
   id: string; en: string; vi: string; price: number; sprite: number;
   x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
-  sheet?: 1 | 2 | 3;
-  collection?: "trail" | "cosmic" | "studio";
+  sheet?: 1 | 2 | 3 | 4;
+  collection?: "trail" | "cosmic" | "studio" | "learn";
 };
 
 export type MapleOutfit = { id: string; en: string; vi: string; price: number; sheet?: string; collection: string };
@@ -59,22 +59,20 @@ export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-cloud-cushion", en: "Cloud Cushion", vi: "Ghế mây êm", price: 85, sprite: 7, sheet: 3, collection: "studio", x: 55, y: 79, scale: 1, z: 5, slot: "floor" },
 ];
 
-// Đồ trang trí nhận từ Learn. Thứ tự cũng là reward pool:
-// món không chọn vẫn đứng đầu pool ở mốc kế tiếp.
-export const CLUBHOUSE_ITEMS: ClubhouseItem[] = [
-  { id: "reading-lamp", en: "Reading lamp", vi: "Đèn đọc sách", emoji: "💡", source: "Learn · Everyday English", x: 74, y: 53, scale: .9 },
-  { id: "book-stack", en: "Book stack", vi: "Chồng sách", emoji: "📚", source: "Learn · Stories", x: 68, y: 57, scale: .92 },
-  { id: "indoor-plant", en: "Indoor plant", vi: "Cây trong nhà", emoji: "🪴", source: "Learn · Nature", x: 12, y: 66, scale: 1.08 },
-  { id: "world-globe", en: "World globe", vi: "Quả địa cầu", emoji: "🌍", source: "Learn · Places", x: 85, y: 53, scale: .9 },
-  { id: "map-poster", en: "World map", vi: "Bản đồ thế giới", emoji: "🗺️", source: "Learn · Travel", x: 21, y: 38, scale: 1.12 },
-  { id: "soft-cushion", en: "Soft cushion", vi: "Gối tựa mềm", emoji: "🛋️", source: "Learn · Home", x: 27, y: 72, scale: 1.05 },
-  { id: "mini-telescope", en: "Telescope", vi: "Kính thiên văn", emoji: "🔭", source: "Learn · Science", x: 57, y: 59, scale: 1.12, z: 2 },
-  { id: "gold-trophy", en: "Gold trophy", vi: "Cúp vàng", emoji: "🏆", source: "Learn milestone", x: 14, y: 52, scale: .84 },
-  { id: "camp-lantern", en: "Camp lantern", vi: "Đèn cắm trại", emoji: "🏮", source: "Learn · Camping", x: 41, y: 58, scale: .9 },
-  { id: "art-kit", en: "Art kit", vi: "Bộ mỹ thuật", emoji: "🎨", source: "Learn · Creativity", x: 79, y: 67, scale: .9 },
-  { id: "maple-compass", en: "Compass", vi: "La bàn", emoji: "🧭", source: "Learn · Directions", x: 21, y: 53, scale: .82 },
-  { id: "moon-model", en: "Moon model", vi: "Mô hình Mặt Trăng", emoji: "🌙", source: "Learn · Space", x: 42, y: 30, scale: .9 },
+// Phần thưởng độc quyền từ Learn, có sprite thật và không bán trong Shop.
+// Thứ tự là reward pool; món chưa chọn tiếp tục xuất hiện ở mốc kế tiếp.
+export const CLUBHOUSE_ITEMS: ShopItem[] = [
+  { id: "learn-word-orbit", en: "Word Orbit", vi: "Quỹ đạo từ vựng", price: 0, sprite: 0, sheet: 4, collection: "learn", x: 72, y: 56, scale: .78, z: 6, slot: "desk" },
+  { id: "learn-story-tent", en: "Story Tent", vi: "Lều đọc truyện", price: 0, sprite: 1, sheet: 4, collection: "learn", x: 72, y: 72, scale: 1.05, z: 5, slot: "floor" },
+  { id: "learn-world-globe", en: "Explorer Globe", vi: "Quả địa cầu khám phá", price: 0, sprite: 2, sheet: 4, collection: "learn", x: 30, y: 58, scale: .8, z: 6, slot: "desk" },
+  { id: "learn-terrarium", en: "Science Terrarium", vi: "Hệ sinh thái thu nhỏ", price: 0, sprite: 3, sheet: 4, collection: "learn", x: 75, y: 58, scale: .78, z: 6, slot: "desk" },
+  { id: "learn-grammar-gears", en: "Grammar Gears", vi: "Bánh răng ngữ pháp", price: 0, sprite: 4, sheet: 4, collection: "learn", x: 24, y: 37, scale: .82, z: 4, slot: "wall" },
+  { id: "learn-book-chair", en: "Book Chair", vi: "Ghế sách", price: 0, sprite: 5, sheet: 4, collection: "learn", x: 72, y: 74, scale: .92, z: 5, slot: "floor" },
+  { id: "learn-star-shelf", en: "Achievement Shelf", vi: "Kệ thành tích", price: 0, sprite: 6, sheet: 4, collection: "learn", x: 78, y: 38, scale: .8, z: 4, slot: "wall" },
+  { id: "learn-culture-case", en: "Culture Case", vi: "Va-li văn hóa", price: 0, sprite: 7, sheet: 4, collection: "learn", x: 28, y: 72, scale: .88, z: 5, slot: "floor" },
 ];
+
+export const ALL_CLUBHOUSE_FURNITURE: ShopItem[] = [...CLUBHOUSE_SHOP, ...CLUBHOUSE_ITEMS];
 
 // Một souvenir toàn app cho mỗi Season hoàn thành.
 // Item/manh mối từng chapter vẫn chỉ nằm trong Adventure.
@@ -107,7 +105,7 @@ export function clubhouseRewardReady(state: AppState): boolean {
     && state.clubhouse.unlockedItemIds.length < CLUBHOUSE_ITEMS.length;
 }
 
-export function clubhouseChoices(state: AppState): ClubhouseItem[] {
+export function clubhouseChoices(state: AppState): ShopItem[] {
   if (!clubhouseRewardReady(state)) return [];
   const got = new Set(state.clubhouse.unlockedItemIds);
   return CLUBHOUSE_ITEMS.filter((item) => !got.has(item.id)).slice(0, 2);

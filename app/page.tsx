@@ -319,7 +319,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
     const playable = season.chapters.filter(chapterPlayable);
     return playable.length > 0 && playable.every((chapter) => isChapterCompleted(state, season.id, chapter.id));
   }).length;
-  const roomOwned = state.clubhouse.purchasedItemIds.length;
+  const roomOwned = CLUBHOUSE_SHOP.filter((item) => state.clubhouse.purchasedItemIds.includes(item.id)).length;
 
   return (
     <section className="today">
