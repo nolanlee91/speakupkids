@@ -144,7 +144,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
 /* ───────────── Đăng nhập / Đăng ký ───────────── */
 function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promise<void> }) {
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const [mode, setMode] = useState<"in" | "up" | "forgot">("in");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [name, setName] = useState("");
@@ -152,10 +152,17 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
   const [err, setErr] = useState("");
   const [info, setInfo] = useState("");
 
+  function switchMode(m: "in" | "up" | "forgot") { setMode(m); setErr(""); setInfo(""); }
+
   async function submit(ev: FormEvent) {
     ev.preventDefault();
     setErr(""); setInfo(""); setBusy(true);
     try {
+      if (mode === "forgot") {
+        await sendPasswordReset(email.trim());
+        setInfo("Đã gửi! Mở email, bấm liên kết trong thư để đặt mật khẩu mới. Không thấy thì kiểm tra mục Spam nhé.");
+        setBusy(false); return;
+      }
       if (mode === "up") {
         await signUp(email.trim(), pw, name.trim());
         const { data } = await supabase!.auth.getSession();
@@ -170,23 +177,18 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
       }
     } catch (e) { setErr(viError(e)); setBusy(false); }
   }
-  async function forgot() {
-    if (!email.trim()) { setErr("Nhập email trước đã."); return; }
-    setErr(""); setInfo("");
-    try { await sendPasswordReset(email.trim()); setInfo("Đã gửi email đặt lại mật khẩu."); }
-    catch (e) { setErr(viError(e)); }
-  }
+
+  const title = mode === "in" ? "Đăng nhập ba mẹ" : mode === "up" ? "Tạo tài khoản ba mẹ" : "Quên mật khẩu";
+  const sub = mode === "forgot"
+    ? "Nhập email tài khoản — chúng tôi sẽ gửi liên kết để đặt mật khẩu mới."
+    : "Theo dõi tiến độ học của con & nhận báo cáo tuần qua email.";
 
   return (
     <div style={shell}>
       <form style={card} onSubmit={submit}>
         <img src={MAPLE} alt="Maple" style={{ height: 96, width: "auto", display: "block", margin: "0 auto 6px" }} />
-        <h1 style={{ ...headStyle, fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>
-          {mode === "in" ? "Đăng nhập ba mẹ" : "Tạo tài khoản ba mẹ"}
-        </h1>
-        <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: 0 }}>
-          Theo dõi tiến độ học của con &amp; nhận báo cáo tuần qua email.
-        </p>
+        <h1 style={{ ...headStyle, fontSize: 22, fontWeight: 800, textAlign: "center", margin: "4px 0 2px" }}>{title}</h1>
+        <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: 0 }}>{sub}</p>
 
         {mode === "up" && (
           <label style={label}>Tên ba mẹ (hoặc gọi là gì)
@@ -196,31 +198,37 @@ function AuthForm({ onLoggedIn }: { onLoggedIn: (email: string) => void | Promis
         <label style={label}>Email
           <input style={input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ba.me@email.com" required />
         </label>
-        <label style={label}>Mật khẩu
-          <PasswordInput value={pw} onChange={setPw} placeholder="tối thiểu 6 ký tự" />
-        </label>
+        {mode !== "forgot" && (
+          <label style={label}>Mật khẩu
+            <PasswordInput value={pw} onChange={setPw} placeholder="tối thiểu 6 ký tự" />
+          </label>
+        )}
 
         {err && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, marginTop: 12 }}>{err}</p>}
         {info && <p style={{ color: "var(--teal-ink,#0b6a64)", fontSize: 14, marginTop: 12 }}>{info}</p>}
 
         <button className="btn" type="submit" disabled={busy} style={{ width: "100%", marginTop: 16 }}>
-          {busy ? "Đang xử lý…" : mode === "in" ? "Đăng nhập" : "Tạo tài khoản"}
+          {busy ? "Đang xử lý…" : mode === "in" ? "Đăng nhập" : mode === "up" ? "Tạo tài khoản" : "Gửi email đặt lại mật khẩu"}
         </button>
 
         <div style={{ textAlign: "center", marginTop: 14, fontSize: 14 }}>
-          {mode === "in" ? (
+          {mode === "in" && (
             <>
-              <button type="button" onClick={forgot} style={linkBtn}>Quên mật khẩu?</button>
+              <button type="button" onClick={() => switchMode("forgot")} style={linkBtn}>Quên mật khẩu?</button>
               <div style={{ marginTop: 8, color: "var(--muted,#8b7c66)" }}>
                 Chưa có tài khoản?{" "}
-                <button type="button" onClick={() => { setMode("up"); setErr(""); setInfo(""); }} style={linkBtn}>Đăng ký</button>
+                <button type="button" onClick={() => switchMode("up")} style={linkBtn}>Đăng ký</button>
               </div>
             </>
-          ) : (
+          )}
+          {mode === "up" && (
             <div style={{ color: "var(--muted,#8b7c66)" }}>
               Đã có tài khoản?{" "}
-              <button type="button" onClick={() => { setMode("in"); setErr(""); setInfo(""); }} style={linkBtn}>Đăng nhập</button>
+              <button type="button" onClick={() => switchMode("in")} style={linkBtn}>Đăng nhập</button>
             </div>
+          )}
+          {mode === "forgot" && (
+            <button type="button" onClick={() => switchMode("in")} style={linkBtn}>← Quay lại đăng nhập</button>
           )}
         </div>
       </form>
