@@ -1718,7 +1718,7 @@
 @media(max-width:520px){.purchase-confirm{padding:20px 16px}.purchase-confirm .shop-art{width:145px}.purchase-confirm-actions{grid-template-columns:1fr}.purchase-confirm-actions .confirm-buy{grid-row:1}}
 
 /* Maple Market uses a scrollable catalogue instead of shrinking all items into one view. */
-.clubhouse-v2 .clubhouse-shop .shop-grid{overflow-y:auto;align-content:start;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(320px,auto);gap:18px;padding:18px 22px 34px}
-.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar{width:12px}.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar-track{background:#07192d}.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar-thumb{border:3px solid #07192d;border-radius:999px;background:#54d9cb}.clubhouse-v2 .clubhouse-shop .shop-art.large{width:min(100%,220px)}
+.clubhouse-v2 .clubhouse-shop .shop-grid{overflow-y:auto;align-content:start;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(350px,auto);gap:18px;padding:18px 22px 34px}
+.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar{width:12px}.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar-track{background:#07192d}.clubhouse-v2 .clubhouse-shop .shop-grid::-webkit-scrollbar-thumb{border:3px solid #07192d;border-radius:999px;background:#54d9cb}.clubhouse-v2 .clubhouse-shop .shop-art.large{width:min(100%,190px)}.clubhouse-v2 .clubhouse-shop article>button{margin-top:10px}
 @media(max-width:1024px){.clubhouse-v2 .clubhouse-shop .shop-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(285px,auto);gap:14px;padding:12px}}
-@media(max-width:430px){.clubhouse-v2 .clubhouse-shop .shop-grid{grid-template-columns:1fr;grid-auto-rows:minmax(305px,auto)}.clubhouse-v2 .clubhouse-shop .shop-art.large{width:210px}}
+@media(max-width:430px){.clubhouse-v2 .clubhouse-shop .shop-grid{grid-template-columns:1fr;grid-auto-rows:minmax(325px,auto)}.clubhouse-v2 .clubhouse-shop .shop-art.large{width:185px}}
