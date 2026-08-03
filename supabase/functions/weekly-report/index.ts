@@ -90,8 +90,11 @@ Deno.serve(async (req) => {
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
   const ws = weekStart();
 
+  // Toàn bộ việc nặng nằm trong process() để chế độ cron có thể chạy NỀN:
+  // pg_net chỉ chờ tối đa 5s, nên với cron ta trả 202 ngay rồi gửi tiếp phía sau.
+  async function process(): Promise<{ sent: number; skipped: number; preview: Record<string, unknown>[] }> {
   const { data: parents, error: pErr } = await db.from("parents").select("id, email, name, weekly_email").eq("weekly_email", true);
-  if (pErr) return Response.json({ error: pErr.message }, { status: 500 });
+  if (pErr) throw new Error(pErr.message);
 
   let sent = 0, skipped = 0;
   const preview: Record<string, unknown>[] = [];
@@ -157,5 +160,21 @@ Deno.serve(async (req) => {
     if (rs.ok) sent++; else skipped++;
   }
 
-  return Response.json({ ok: true, week_start: ws, sent, skipped, ...(dry ? { preview } : {}) });
+  return { sent, skipped, preview };
+  }
+
+  // Chế độ cron (không dry, không only): trả lời ngay trong <5s của pg_net,
+  // phần gửi email chạy nền qua EdgeRuntime.waitUntil.
+  const runtime = (globalThis as Record<string, any>).EdgeRuntime;
+  if (!dry && !only && runtime?.waitUntil) {
+    runtime.waitUntil(process().catch((e: unknown) => console.error("weekly-report:", e)));
+    return Response.json({ ok: true, started: true, week_start: ws });
+  }
+  // Chế độ test tay (dry/only): chờ xong để xem kết quả thật.
+  try {
+    const r = await process();
+    return Response.json({ ok: true, week_start: ws, sent: r.sent, skipped: r.skipped, ...(dry ? { preview: r.preview } : {}) });
+  } catch (e) {
+    return Response.json({ error: String(e) }, { status: 500 });
+  }
 });
