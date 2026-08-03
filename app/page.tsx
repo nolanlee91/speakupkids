@@ -209,7 +209,7 @@ function App() {
       <nav className="nav">
         {NAV.map(([v, i, label, mobileLabel]) => (
           <button key={v} className={(v === "clubhouse" ? clubhouse : view === v && !clubhouse) ? "on" : ""}
-            onClick={() => v === "clubhouse" ? setClubhouse(true) : goView(v)}>
+            onClick={() => { if (v === "clubhouse") { setClubhouse(true); return; } setClubhouse(false); goView(v); }}>
             <span className="i"><AppIcon name={i} /></span><span className={`nav-label ${mobileLabel ? "has-short" : ""}`}><span>{label}</span>{mobileLabel && <i>{mobileLabel}</i>}</span>
           </button>
         ))}
