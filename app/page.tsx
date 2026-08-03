@@ -23,7 +23,7 @@ import { Clubhouse } from "./clubhouse";
 import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
-import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership } from "@/lib/cloud";
+import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership, redeemCode, claimGifts, getActiveChildId } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
 import { StickerArt } from "./reward-art";
 
@@ -72,6 +72,20 @@ function App() {
     // Giá trị trong state/localStorage chỉ là cache — mỗi lần mở app ghi đè lại từ server.
     if (cloudEnabled()) {
       fetchMembership().then((m) => setState((cur) => (cur.membership === m ? cur : { ...cur, membership: m })));
+      // Quà Coins/Cash admin tặng (bảng gifts): nhận một lần rồi cộng vào ví của bé.
+      const childId = getActiveChildId();
+      if (childId) claimGifts(childId).then((g) => {
+        if (g.coins > 0 || g.cash > 0) {
+          setState((cur) => ({ ...cur, clubhouse: { ...cur.clubhouse, coins: cur.clubhouse.coins + g.coins, cash: cur.clubhouse.cash + g.cash } }));
+          setReward({
+            title: "Quà từ SpeakUp! 🎁",
+            html: "Bạn được tặng" + (g.coins ? ` <b>${g.coins}</b> Maple Coins` : "") + (g.coins && g.cash ? " và" : "") + (g.cash ? ` <b>${g.cash}</b> Maple Cash` : "") + " — vào Clubhouse tiêu ngay nhé!",
+            coins: g.coins || undefined,
+            cash: g.cash || undefined,
+            sticker: null,
+          });
+        }
+      });
     }
   }, []);
   useEffect(() => { if (ready) syncSave(state); }, [state, ready]);
@@ -530,7 +544,41 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
             <button className="btn ghost sm" disabled style={{ marginTop: 10, opacity: 0.7 }}>Nâng cấp (sắp có)</button>
           </div>
         )}
+        {!pro && cloudEnabled() && <RedeemBox onActivated={(plan) => setState((s) => ({ ...s, membership: plan }))} />}
       </div>
+    </div>
+  );
+}
+
+// Nhập mã kích hoạt mua từ đại lý → RPC redeem_code phía server cấp gói lifetime.
+function RedeemBox({ onActivated }: { onActivated: (plan: "pro" | "family") => void }) {
+  const [code, setCode] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  async function go() {
+    if (!code.trim() || busy) return;
+    setBusy(true); setMsg(null);
+    const r = await redeemCode(code);
+    setBusy(false);
+    if (r === "ok:pro" || r === "ok:family") {
+      const plan = r === "ok:family" ? "family" as const : "pro" as const;
+      onActivated(plan);
+      setMsg({ ok: true, text: `🎉 Kích hoạt thành công gói ${plan === "family" ? "Family" : "Pro"} trọn đời!` });
+    } else if (r === "invalid") setMsg({ ok: false, text: "Mã không đúng — kiểm tra lại nhé." });
+    else if (r === "used") setMsg({ ok: false, text: "Mã này đã được sử dụng." });
+    else if (r === "already") setMsg({ ok: false, text: "Tài khoản đã có gói rồi." });
+    else setMsg({ ok: false, text: "Có lỗi mạng — thử lại sau nhé." });
+  }
+  return (
+    <div className="card" style={{ padding: 16, marginTop: 10 }}>
+      <div className="field"><label>Có mã kích hoạt? (mua từ đại lý)</label>
+        <div className="row" style={{ gap: 8 }}>
+          <input type="text" placeholder="SPK-XXXX-XXXX" value={code} style={{ flex: 1, textTransform: "uppercase" }}
+            onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} />
+          <button className="btn" disabled={busy || !code.trim()} onClick={go}>{busy ? "…" : "Kích hoạt"}</button>
+        </div>
+      </div>
+      {msg && <p style={{ margin: "6px 0 0", fontWeight: 700, fontSize: ".85rem", color: msg.ok ? "var(--green)" : "#e03131" }}>{msg.text}</p>}
     </div>
   );
 }

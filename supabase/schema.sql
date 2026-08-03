@@ -148,7 +148,123 @@ create trigger children_limit
   for each row execute function public.enforce_child_limit();
 
 -- ────────────────────────────────────────────────────────────
--- 7. Tiện ích: tự cập nhật updated_at khi ghi child_state
+-- 7. QUẢN TRỊ: admins + đại lý + mã kích hoạt + quà tặng (trang /admin)
+--    Bootstrap admin đầu tiên (chạy tay 1 lần, thay email của bạn):
+--      insert into public.admins (user_id, note)
+--      select id, 'chủ dự án' from auth.users where email = 'you@example.com';
+-- ────────────────────────────────────────────────────────────
+create table if not exists public.admins (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  note       text,
+  created_at timestamptz not null default now()
+);
+alter table public.admins enable row level security;
+
+-- Người dùng chỉ đọc được DÒNG CỦA MÌNH (để app biết "tôi có phải admin không").
+-- Không có policy ghi → thêm/bớt admin chỉ qua SQL Editor/service role.
+drop policy if exists admins_self_read on public.admins;
+create policy admins_self_read on public.admins
+  for select using (user_id = auth.uid());
+
+-- Helper dùng trong policy: security definer nên bỏ qua RLS của admins.
+create or replace function public.is_admin()
+returns boolean language sql stable security definer set search_path = public as
+$$ select exists (select 1 from public.admins where user_id = auth.uid()) $$;
+
+-- Đại lý bán hàng
+create table if not exists public.agents (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  phone      text,
+  note       text,
+  created_at timestamptz not null default now()
+);
+alter table public.agents enable row level security;
+drop policy if exists agents_admin on public.agents;
+create policy agents_admin on public.agents
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- Mã kích hoạt (đại lý bán mã → phụ huynh nhập mã trong app → tự thành Pro/Family).
+-- Doanh số đại lý = số mã đã redeemed theo agent_id.
+create table if not exists public.codes (
+  code        text primary key,               -- vd SPK-AB3D-9F2K (lưu UPPERCASE)
+  plan        text not null check (plan in ('pro', 'family')),
+  agent_id    uuid references public.agents(id) on delete set null,
+  note        text,
+  created_at  timestamptz not null default now(),
+  redeemed_by uuid references auth.users(id) on delete set null,
+  redeemed_at timestamptz
+);
+create index if not exists codes_agent_idx on public.codes(agent_id);
+alter table public.codes enable row level security;
+drop policy if exists codes_admin on public.codes;
+create policy codes_admin on public.codes
+  for all using (public.is_admin()) with check (public.is_admin());
+-- Người dùng thường KHÔNG đọc được bảng codes — đổi mã chỉ qua RPC bên dưới.
+
+-- RPC đổi mã kích hoạt: chạy với quyền owner (bỏ qua RLS) nhưng tự kiểm soát chặt.
+-- Trả: 'ok:pro' | 'ok:family' | 'invalid' | 'used' | 'already' | 'unauthenticated'
+create or replace function public.redeem_code(p_code text)
+returns text language plpgsql security definer set search_path = public as $$
+declare
+  c record;
+begin
+  if auth.uid() is null then return 'unauthenticated'; end if;
+  select * into c from public.codes where code = upper(trim(p_code));
+  if not found then return 'invalid'; end if;
+  if c.redeemed_by is not null then return 'used'; end if;
+  if exists (select 1 from public.entitlements where parent_id = auth.uid()) then
+    return 'already';
+  end if;
+  insert into public.entitlements (parent_id, plan, order_ref)
+  values (auth.uid(), c.plan, 'code:' || c.code);
+  update public.codes set redeemed_by = auth.uid(), redeemed_at = now() where code = c.code;
+  return 'ok:' || c.plan;
+end; $$;
+
+-- Quà tặng Maple Coins/Cash (admin tặng để test/chăm sóc; app tự nhận lần mở sau).
+-- KHÔNG sửa trực tiếp child_state.jsonb để tránh ghi đè tiến độ đang chơi.
+create table if not exists public.gifts (
+  id         uuid primary key default gen_random_uuid(),
+  child_id   uuid not null references public.children(id) on delete cascade,
+  coins      int not null default 0 check (coins >= 0),
+  cash       int not null default 0 check (cash >= 0),
+  note       text,
+  created_at timestamptz not null default now(),
+  claimed_at timestamptz
+);
+create index if not exists gifts_child_idx on public.gifts(child_id);
+alter table public.gifts enable row level security;
+drop policy if exists gifts_admin on public.gifts;
+create policy gifts_admin on public.gifts
+  for all using (public.is_admin()) with check (public.is_admin());
+-- Ba mẹ đọc + đánh dấu đã nhận quà của con mình (không tự tạo quà được).
+drop policy if exists gifts_parent_read on public.gifts;
+create policy gifts_parent_read on public.gifts
+  for select using (
+    exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
+  );
+drop policy if exists gifts_parent_claim on public.gifts;
+create policy gifts_parent_claim on public.gifts
+  for update using (
+    exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
+  ) with check (
+    exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
+  );
+
+-- Admin xem được danh sách tài khoản/hồ sơ/gói (chỉ ĐỌC; cấp gói ghi qua entitlements).
+drop policy if exists parents_admin_read on public.parents;
+create policy parents_admin_read on public.parents
+  for select using (public.is_admin());
+drop policy if exists children_admin_read on public.children;
+create policy children_admin_read on public.children
+  for select using (public.is_admin());
+drop policy if exists entitlements_admin on public.entitlements;
+create policy entitlements_admin on public.entitlements
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- ────────────────────────────────────────────────────────────
+-- 8. Tiện ích: tự cập nhật updated_at khi ghi child_state
 -- ────────────────────────────────────────────────────────────
 create or replace function public.touch_updated_at()
 returns trigger language plpgsql as $$

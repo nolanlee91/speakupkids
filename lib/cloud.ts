@@ -69,6 +69,46 @@ export async function fetchMembership(): Promise<Membership> {
   }
 }
 
+// Đổi mã kích hoạt (đại lý bán). Trả kết quả từ RPC redeem_code:
+// 'ok:pro' | 'ok:family' | 'invalid' | 'used' | 'already' | 'unauthenticated' | 'error'
+export async function redeemCode(code: string): Promise<string> {
+  if (!supabase) return "error";
+  try {
+    const { data, error } = await supabase.rpc("redeem_code", { p_code: code });
+    if (error) return "error";
+    return typeof data === "string" ? data : "error";
+  } catch {
+    return "error";
+  }
+}
+
+// Nhận quà Maple Coins/Cash admin tặng cho bé (nếu có): đọc quà chưa nhận,
+// đánh dấu đã nhận rồi trả tổng để cộng vào state. Lỗi/offline → {0,0}, không nổ.
+export async function claimGifts(childId: string): Promise<{ coins: number; cash: number }> {
+  if (!supabase || !childId) return { coins: 0, cash: 0 };
+  try {
+    const { data, error } = await supabase
+      .from("gifts")
+      .select("id, coins, cash")
+      .eq("child_id", childId)
+      .is("claimed_at", null);
+    if (error || !data || data.length === 0) return { coins: 0, cash: 0 };
+    const ids = data.map((g) => g.id);
+    const { error: upErr } = await supabase
+      .from("gifts")
+      .update({ claimed_at: new Date().toISOString() })
+      .in("id", ids)
+      .is("claimed_at", null);   // chống nhận đúp khi mở 2 tab
+    if (upErr) return { coins: 0, cash: 0 };
+    return {
+      coins: data.reduce((a, g) => a + (g.coins || 0), 0),
+      cash: data.reduce((a, g) => a + (g.cash || 0), 0),
+    };
+  } catch {
+    return { coins: 0, cash: 0 };
+  }
+}
+
 /* ═══════════ Hồ sơ con ═══════════ */
 export async function listChildren(): Promise<ChildProfile[]> {
   if (!supabase) return [];
