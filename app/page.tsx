@@ -17,10 +17,15 @@ import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIO
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { SEASONS, SEASON_LOST_COMPASS, chapterPlayable, resumeChapter } from "@/lib/adventures";
 import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
-import { GamePlay } from "./games";
-import { Learn } from "./learn";
-import { Adventure } from "./adventure";
-import { Clubhouse } from "./clubhouse";
+import dynamic from "next/dynamic";
+
+// Các khu lớn tách khỏi bundle màn đầu (dynamic import): mỗi khu kéo theo cả trăm KB
+// dữ liệu bài học/câu hỏi (banks, scenes, learn content) — chỉ tải khi bé bấm vào.
+const chunkLoading = () => <div style={{ padding: 40, textAlign: "center", color: "#7a8194" }}>Đang tải…</div>;
+const GamePlay = dynamic(() => import("./games").then((m) => m.GamePlay), { ssr: false, loading: chunkLoading });
+const Learn = dynamic(() => import("./learn").then((m) => m.Learn), { ssr: false, loading: chunkLoading });
+const Adventure = dynamic(() => import("./adventure").then((m) => m.Adventure), { ssr: false, loading: chunkLoading });
+const Clubhouse = dynamic(() => import("./clubhouse").then((m) => m.Clubhouse), { ssr: false, loading: chunkLoading });
 import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
