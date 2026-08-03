@@ -1,11 +1,50 @@
 // Helper dùng chung phía client: đọc từ, pháo giấy, trộn mảng.
+// Maple là nhân vật nữ: Web Speech không có thuộc tính gender nên phải ưu tiên
+// các voice nữ phổ biến theo tên, sau đó mới fallback sang voice English bất kỳ.
+let speakRequest = 0;
+const FEMALE_VOICE_HINTS = [
+  "jenny", "aria", "zira", "samantha", "ava", "allison", "susan", "victoria",
+  "karen", "moira", "tessa", "libby", "sonia", "female", "woman", "tpf",
+];
+const MALE_VOICE_HINTS = ["david", "mark", "guy", "george", "daniel", "male", "man"];
+
+function mapleVoice(voices: SpeechSynthesisVoice[], lang: string): SpeechSynthesisVoice | undefined {
+  const score = (voice: SpeechSynthesisVoice) => {
+    const name = voice.name.toLowerCase();
+    const locale = voice.lang.toLowerCase();
+    let points = locale === lang.toLowerCase() ? 60 : locale.startsWith("en-") ? 20 : -100;
+    if (FEMALE_VOICE_HINTS.some((hint) => name.includes(hint))) points += 100;
+    if (MALE_VOICE_HINTS.some((hint) => name.includes(hint))) points -= 100;
+    if (voice.localService) points += 2;
+    return points;
+  };
+  return voices.filter((voice) => voice.lang.toLowerCase().startsWith("en"))
+    .sort((a, b) => score(b) - score(a))[0];
+}
+
 export function speak(text: string, accent: "US" | "CA" = "US", rate = 0.9) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = accent === "CA" ? "en-CA" : "en-US";
-  u.rate = rate;
-  window.speechSynthesis.speak(u);
+  const synth = window.speechSynthesis;
+  const request = ++speakRequest;
+  const lang = accent === "CA" ? "en-CA" : "en-US";
+  let played = false;
+  const play = () => {
+    if (played || request !== speakRequest) return;
+    played = true;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = rate;
+    u.pitch = 1.06;
+    const voice = mapleVoice(synth.getVoices(), lang);
+    if (voice) { u.voice = voice; u.lang = voice.lang; }
+    synth.speak(u);
+  };
+  if (synth.getVoices().length) play();
+  else {
+    synth.addEventListener("voiceschanged", play, { once: true });
+    window.setTimeout(play, 350);
+  }
 }
 
 export function celebrate(motion: boolean) {
