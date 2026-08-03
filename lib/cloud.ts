@@ -2,7 +2,7 @@
 // Tài khoản ba mẹ (Supabase Auth) → nhiều hồ sơ con → tiến độ (AppState) lưu ở child_state.
 // Thiết kế "an toàn khi chưa cấu hình": mọi hàm không nổ nếu supabase=null; app chạy offline như cũ.
 import { supabase } from "./supabase";
-import { loadState, saveState, defaultState, normalizeState, type AppState } from "./state";
+import { loadState, saveState, defaultState, normalizeState, type AppState, type Membership } from "./state";
 
 export type ChildProfile = { id: string; ingame_name: string; avatar: string; age: number };
 
@@ -53,6 +53,20 @@ export async function updatePassword(newPassword: string) {
   if (!supabase) throw new Error("Cloud chưa được cấu hình.");
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
+}
+
+/* ═══════════ Gói thành viên (entitlements — lifetime) ═══════════ */
+// Đọc gói từ bảng entitlements (nguồn chuẩn phía server, client không ghi được).
+// Chưa mua / offline / lỗi mạng → "free" (không nổ, không chặn app).
+export async function fetchMembership(): Promise<Membership> {
+  if (!supabase) return "free";
+  try {
+    const { data, error } = await supabase.from("entitlements").select("plan").maybeSingle();
+    if (error || !data) return "free";
+    return data.plan === "family" ? "family" : data.plan === "pro" ? "pro" : "free";
+  } catch {
+    return "free";
+  }
 }
 
 /* ═══════════ Hồ sơ con ═══════════ */

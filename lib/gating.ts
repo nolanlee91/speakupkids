@@ -1,6 +1,7 @@
 // Freemium gating: quy định nội dung nào MIỄN PHÍ, còn lại cần Pro.
 // Free-tier: L0 mở hết · L1/L2 3 bài đầu · L3 3 bài đầu mỗi collection ·
-//            Practice: mỗi game 3 card đầu · Adventure: chỉ Season 1.
+//            Practice: mỗi game 3 card đầu (Nghe & chọn: 2) · Adventure: 2 Season đầu.
+// Quyền Pro/Family: nguồn chuẩn là bảng entitlements phía server (xem lib/cloud.ts).
 import { isPremium, type AppState } from "./state";
 import { DETECTIVE_SCENES } from "./scenes";
 import { PUZZLE_SETS, RIDDLE_SETS, LISTEN_SETS } from "./banks";

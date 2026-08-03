@@ -438,9 +438,20 @@ function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
 }
 
 /* ==================== TÀI KHOẢN + GÓI (từ avatar) ==================== */
+// Mô tả gói phải khớp lib/gating.ts — sửa gating thì sửa cả đây.
 const PLAN_FEATS = {
-  free: ["Level 0 Phonics đầy đủ", "3 bài đầu mỗi cấp Learn (L1–L3)", "3 thẻ đầu mỗi trò Luyện tập", "2 mùa Phiêu lưu đầu"],
-  pro: ["Mở khóa TẤT CẢ bài học Learn", "Toàn bộ trò Luyện tập", "Tất cả mùa Phiêu lưu", "Báo cáo tiến độ hằng tuần cho ba mẹ"],
+  free: [
+    "Level 0 Phonics đầy đủ",
+    "3 bài đầu mỗi cấp L1·L2 · 3 bài đầu mỗi collection L3",
+    "3 bộ đầu mỗi trò Luyện tập (Nghe & chọn: 2 bộ)",
+    "2 mùa Phiêu lưu đầu",
+  ],
+  pro: [
+    "Mở khóa TẤT CẢ bài học Learn",
+    "Toàn bộ trò Luyện tập",
+    "Tất cả 8 mùa Phiêu lưu",
+    "Mua một lần · dùng trọn đời",
+  ],
 };
 
 function AccountPanel({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
@@ -494,7 +505,8 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
         <div className="section-title"><h2>💎 Gói thành viên</h2></div>
         <div className="card plan current">
           <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
-            <span className="pname">{pro ? "Pro" : "Miễn phí"}</span><span className="price">Đang dùng</span>
+            <span className="pname">{state.membership === "family" ? "Family" : pro ? "Pro" : "Miễn phí"}</span>
+            <span className="price">{pro ? "Trọn đời" : "Đang dùng"}</span>
           </div>
           <ul>{(pro ? PLAN_FEATS.pro : PLAN_FEATS.free).map((f) => <li key={f}>{f}</li>)}</ul>
           <div className="chip" style={{ marginTop: 10 }}>Đang dùng</div>
@@ -502,20 +514,12 @@ function AccountPanel({ state, setState, onClose }: { state: AppState; setState:
         {!pro && (
           <div className="card plan">
             <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
-              <span className="pname">Pro</span><span className="chip sun">Sắp ra mắt</span>
+              <span className="pname">Pro</span><span className="chip sun">Sắp mở bán</span>
             </div>
             <ul>{PLAN_FEATS.pro.map((f) => <li key={f}>{f}</li>)}</ul>
             <button className="btn ghost sm" disabled style={{ marginTop: 10, opacity: 0.7 }}>Nâng cấp (sắp có)</button>
           </div>
         )}
-        {/* TẠM: bật/tắt Pro để test — thay bằng thanh toán thật sau */}
-        <button className="btn" style={{ marginTop: 8, background: pro ? "#8b7c66" : "#0f8f88" }}
-          onClick={() => setState((s) => ({ ...s, membership: pro ? "free" : "premium" }))}>
-          {pro ? "Tắt Pro (test)" : "🔓 Bật Pro (test)"}
-        </button>
-        <p style={{ fontSize: ".78rem", color: "var(--muted)", textAlign: "center", marginTop: 6 }}>
-          Nút “Bật Pro” chỉ để thử nghiệm — thanh toán thật sẽ thêm sau.
-        </p>
       </div>
     </div>
   );

@@ -105,7 +105,50 @@ create policy snapshots_read on public.weekly_snapshots
   );
 
 -- ────────────────────────────────────────────────────────────
--- 6. Tiện ích: tự cập nhật updated_at khi ghi child_state
+-- 6. entitlements: gói đã mua (LIFETIME — mua một lần, không hết hạn)
+--    Nguồn chuẩn duy nhất về quyền Pro/Family. Client CHỈ ĐỌC;
+--    ghi bằng service role (webhook thanh toán / dashboard), không có policy ghi cho client.
+-- ────────────────────────────────────────────────────────────
+create table if not exists public.entitlements (
+  parent_id    uuid primary key references auth.users(id) on delete cascade,
+  plan         text not null check (plan in ('pro', 'family')),
+  purchased_at timestamptz not null default now(),
+  order_ref    text,   -- mã đơn/nội dung chuyển khoản (đối soát PayOS/VietQR)
+  note         text
+);
+
+alter table public.entitlements enable row level security;
+
+-- Ba mẹ chỉ ĐỌC entitlement của chính mình. KHÔNG có policy insert/update/delete
+-- → anon key không thể tự cấp Pro; chỉ service role (bỏ qua RLS) ghi được.
+drop policy if exists entitlements_read on public.entitlements;
+create policy entitlements_read on public.entitlements
+  for select using (parent_id = auth.uid());
+
+-- Giới hạn hồ sơ con kiểm tra Ở SERVER: Free/Pro tối đa 1 bé · Family tối đa 4 bé.
+create or replace function public.enforce_child_limit()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  cur_plan text;
+  max_children int;
+  cnt int;
+begin
+  select plan into cur_plan from public.entitlements where parent_id = new.parent_id;
+  max_children := case when cur_plan = 'family' then 4 else 1 end;
+  select count(*) into cnt from public.children where parent_id = new.parent_id;
+  if cnt >= max_children then
+    raise exception 'CHILD_LIMIT: gói hiện tại chỉ cho phép % hồ sơ bé', max_children;
+  end if;
+  return new;
+end; $$;
+
+drop trigger if exists children_limit on public.children;
+create trigger children_limit
+  before insert on public.children
+  for each row execute function public.enforce_child_limit();
+
+-- ────────────────────────────────────────────────────────────
+-- 7. Tiện ích: tự cập nhật updated_at khi ghi child_state
 -- ────────────────────────────────────────────────────────────
 create or replace function public.touch_updated_at()
 returns trigger language plpgsql as $$
