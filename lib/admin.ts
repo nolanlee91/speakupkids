@@ -87,6 +87,20 @@ export async function generateCodes(agentId: string | null, plan: "pro" | "famil
   return rows.map((r) => r.code);
 }
 
+/* ═══════════ Email báo cáo tuần (gọi Edge Function bằng JWT admin) ═══════════ */
+export type ReportResult = {
+  ok?: boolean; week_start?: string; sent?: number; skipped?: number;
+  preview?: { to: string; kids: string }[]; error?: string;
+};
+// dry=true: chỉ xem danh sách sẽ gửi, không gửi thật. only: gửi thật cho 1 email.
+export async function runWeeklyReport(opts: { dry?: boolean; only?: string }): Promise<ReportResult> {
+  const { data, error } = await need().functions.invoke("weekly-report", {
+    body: { dry: !!opts.dry, only: opts.only || null },
+  });
+  if (error) throw error;
+  return data as ReportResult;
+}
+
 /* ═══════════ Quà tặng Coins/Cash ═══════════ */
 export async function sendGift(childId: string, coins: number, cash: number, note?: string) {
   const { error } = await need().from("gifts")

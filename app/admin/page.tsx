@@ -7,13 +7,13 @@ import { cloudEnabled } from "@/lib/supabase";
 import { signIn, signOut, currentUser } from "@/lib/cloud";
 import {
   isAdminUser, listParents, listAllChildren, listEntitlements, grantPlan, revokePlan,
-  listAgents, createAgent, listCodes, generateCodes, sendGift, listGifts,
-  type AdminParent, type AdminChild, type AdminEntitlement, type AdminAgent, type AdminCode, type AdminGift,
+  listAgents, createAgent, listCodes, generateCodes, sendGift, listGifts, runWeeklyReport,
+  type AdminParent, type AdminChild, type AdminEntitlement, type AdminAgent, type AdminCode, type AdminGift, type ReportResult,
 } from "@/lib/admin";
 
-type Tab = "overview" | "agents" | "accounts" | "gifts";
+type Tab = "overview" | "agents" | "accounts" | "gifts" | "email";
 const TABS: [Tab, string][] = [
-  ["overview", "📊 Tổng quan"], ["agents", "🏷️ Đại lý & mã"], ["accounts", "👨‍👩‍👧 Tài khoản"], ["gifts", "🎁 Tặng quà"],
+  ["overview", "📊 Tổng quan"], ["agents", "🏷️ Đại lý & mã"], ["accounts", "👨‍👩‍👧 Tài khoản"], ["gifts", "🎁 Tặng quà"], ["email", "📧 Email tuần"],
 ];
 
 export default function AdminPage() {
@@ -98,7 +98,70 @@ export default function AdminPage() {
       {tab === "agents" && <Agents agents={agents} codes={codes} onChange={refresh} />}
       {tab === "accounts" && <Accounts parents={parents} children={children} ents={ents} onChange={refresh} />}
       {tab === "gifts" && <Gifts parents={parents} children={children} gifts={gifts} onChange={refresh} />}
+      {tab === "email" && <EmailReport parents={parents} children={children} />}
     </div>
+  );
+}
+
+/* ═══════════ Email báo cáo tuần ═══════════ */
+function EmailReport({ parents, children }: { parents: AdminParent[]; children: AdminChild[] }) {
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<ReportResult | null>(null);
+  const [log, setLog] = useState<string[]>([]);
+  const kidsOf = (pid: string) => children.filter((c) => c.parent_id === pid).map((c) => `${c.avatar} ${c.ingame_name}`).join(", ") || "—";
+
+  async function run(opts: { dry?: boolean; only?: string }, label: string) {
+    setBusy(true);
+    try {
+      const r = await runWeeklyReport(opts);
+      setResult(r);
+      setLog((l) => [`${new Date().toLocaleTimeString("vi-VN")} · ${label} → gửi ${r.sent ?? 0}, bỏ qua ${r.skipped ?? 0}`, ...l].slice(0, 10));
+    } catch {
+      setLog((l) => [`${new Date().toLocaleTimeString("vi-VN")} · ${label} → LỖI gọi function`, ...l].slice(0, 10));
+    }
+    setBusy(false);
+  }
+
+  return (
+    <section className="adm-body">
+      <h2>Email báo cáo tuần — chạy tay để test</h2>
+      <div className="adm-form">
+        <button className="adm-btn" disabled={busy} onClick={() => run({ dry: true }, "Chạy thử (dry)")}>🔍 Chạy thử — xem ai sẽ nhận (không gửi)</button>
+        <button className="adm-btn" style={{ background: "#e2593f" }} disabled={busy}
+          onClick={() => confirm(`Gửi email THẬT cho tất cả phụ huynh đang bật nhận báo cáo?`) && run({}, "Gửi tất cả")}>
+          🚀 Gửi thật cho TẤT CẢ
+        </button>
+      </div>
+
+      {result?.preview && (
+        <>
+          <h2>Kết quả chạy thử (tuần bắt đầu {result.week_start}) — {result.sent ?? 0} người sẽ nhận</h2>
+          <table className="adm-table">
+            <thead><tr><th>Email nhận</th><th>Các bé trong báo cáo</th></tr></thead>
+            <tbody>{result.preview.map((p) => <tr key={p.to}><td>{p.to}</td><td>{p.kids}</td></tr>)}</tbody>
+          </table>
+        </>
+      )}
+
+      <h2>Gửi thật cho từng người (kiểm tra hộp thư)</h2>
+      <table className="adm-table">
+        <thead><tr><th>Email</th><th>Bé</th><th></th></tr></thead>
+        <tbody>{parents.map((p) => (
+          <tr key={p.id}>
+            <td>{p.email}</td><td>{kidsOf(p.id)}</td>
+            <td className="adm-acts"><button disabled={busy} onClick={() => run({ only: p.email }, `Gửi ${p.email}`)}>📨 Gửi thật</button></td>
+          </tr>
+        ))}</tbody>
+      </table>
+
+      {log.length > 0 && (
+        <>
+          <h2>Nhật ký phiên này</h2>
+          <div className="adm-fresh"><pre>{log.join("\n")}</pre></div>
+        </>
+      )}
+      <p className="adm-empty" style={{ marginTop: 14 }}>Lịch tự động: 8h sáng thứ Bảy (cron trên Supabase). Phụ huynh tắt nhận trong app → không có trong danh sách.</p>
+    </section>
   );
 }
 

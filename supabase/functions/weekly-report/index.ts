@@ -76,18 +76,43 @@ function childBlock(name: string, avatar: string, m: Metrics, d: { lessons: numb
   </div>`;
 }
 
+// CORS: trang /admin (app.speakupkids.net) gọi từ trình duyệt nên cần preflight + header.
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const url = new URL(req.url);
-  const secret = Deno.env.get("REPORT_SECRET");
-  if (secret && url.searchParams.get("key") !== secret) {
-    return new Response("forbidden", { status: 403 });
-  }
-  const dry = url.searchParams.get("dry") === "1";
-  const only = url.searchParams.get("only");
-  const resendKey = Deno.env.get("RESEND_API_KEY");
-  if (!dry && !resendKey) return Response.json({ error: "RESEND_API_KEY chưa được set" }, { status: 500 });
+  const body = req.method === "POST" ? await req.json().catch(() => ({} as Record<string, unknown>)) : {} as Record<string, unknown>;
+  const dry = url.searchParams.get("dry") === "1" || body.dry === true;
+  const only = url.searchParams.get("only") || (typeof body.only === "string" && body.only) || null;
 
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+  // Hai đường vào hợp lệ: (1) cron với ?key=REPORT_SECRET, (2) admin đăng nhập (JWT
+  // thuộc bảng admins) — trang /admin dùng đường này, không cần nhúng secret vào client.
+  const secret = Deno.env.get("REPORT_SECRET");
+  const keyOk = !secret || url.searchParams.get("key") === secret;
+  let authOk = keyOk;
+  if (!authOk) {
+    const authHdr = req.headers.get("Authorization") || "";
+    if (authHdr.startsWith("Bearer ")) {
+      const userClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHdr } } });
+      const { data } = await userClient.auth.getUser();
+      if (data?.user) {
+        const { data: adm } = await db.from("admins").select("user_id").eq("user_id", data.user.id).maybeSingle();
+        if (adm) authOk = true;
+      }
+    }
+  }
+  if (!authOk) return new Response("forbidden", { status: 403, headers: CORS });
+
+  const resendKey = Deno.env.get("RESEND_API_KEY");
+  if (!dry && !resendKey) return Response.json({ error: "RESEND_API_KEY chưa được set" }, { status: 500, headers: CORS });
+
   const ws = weekStart();
 
   // Toàn bộ việc nặng nằm trong process() để chế độ cron có thể chạy NỀN:
@@ -163,18 +188,19 @@ Deno.serve(async (req) => {
   return { sent, skipped, preview };
   }
 
-  // Chế độ cron (không dry, không only): trả lời ngay trong <5s của pg_net,
-  // phần gửi email chạy nền qua EdgeRuntime.waitUntil.
+  // Chế độ cron (gọi bằng key, không dry/only): trả lời ngay trong <5s của pg_net,
+  // phần gửi email chạy nền qua EdgeRuntime.waitUntil. Admin gọi từ /admin thì chạy
+  // đồng bộ để xem được kết quả sent/skipped.
   const runtime = (globalThis as Record<string, any>).EdgeRuntime;
-  if (!dry && !only && runtime?.waitUntil) {
+  const fromCron = keyOk && req.method === "GET";
+  if (fromCron && !dry && !only && runtime?.waitUntil) {
     runtime.waitUntil(process().catch((e: unknown) => console.error("weekly-report:", e)));
-    return Response.json({ ok: true, started: true, week_start: ws });
+    return Response.json({ ok: true, started: true, week_start: ws }, { headers: CORS });
   }
-  // Chế độ test tay (dry/only): chờ xong để xem kết quả thật.
   try {
     const r = await process();
-    return Response.json({ ok: true, week_start: ws, sent: r.sent, skipped: r.skipped, ...(dry ? { preview: r.preview } : {}) });
+    return Response.json({ ok: true, week_start: ws, sent: r.sent, skipped: r.skipped, ...(dry ? { preview: r.preview } : {}) }, { headers: CORS });
   } catch (e) {
-    return Response.json({ error: String(e) }, { status: 500 });
+    return Response.json({ error: String(e) }, { status: 500, headers: CORS });
   }
 });
