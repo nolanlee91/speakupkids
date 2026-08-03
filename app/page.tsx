@@ -15,7 +15,8 @@ import {
 } from "@/lib/games";
 import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS } from "@/lib/learn";
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
-import { SEASON_LOST_COMPASS, resumeChapter } from "@/lib/adventures";
+import { SEASONS, SEASON_LOST_COMPASS, chapterPlayable, resumeChapter } from "@/lib/adventures";
+import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
 import { GamePlay } from "./games";
 import { Learn } from "./learn";
 import { Adventure } from "./adventure";
@@ -314,6 +315,10 @@ function Today({ state, go, openLesson, openClubhouse }: {
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
+  const journeysDone = SEASONS.filter((season) => {
+    const playable = season.chapters.filter(chapterPlayable);
+    return playable.length > 0 && playable.every((chapter) => isChapterCompleted(state, season.id, chapter.id));
+  }).length;
   const roomOwned = state.clubhouse.purchasedItemIds.length;
 
   return (
@@ -382,7 +387,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
       {(learnedUnits > 0 || advDone > 0) && (
         <div className="today-recent">
           🎉 Gần đây: đã học xong <b>{learnedUnits}</b> Unit
-          {advDone > 0 && <> · vượt <b>{advDone}</b> nhiệm vụ</>}.
+          {advDone > 0 && <> · vượt <b>{advDone}</b> chương phiêu lưu</>}.
         </div>
       )}
 
@@ -394,7 +399,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
         <span className="chw-copy">
           <span className="chw-kicker">MAPLE CLUBHOUSE</span>
           <b>{coreDone === 2 ? "Đã xong Học + Luyện — vào nâng cấp phòng!" : "Xây Clubhouse theo phong cách của con"}</b>
-          <small>{state.clubhouse.coins} Coins · {roomOwned}/8 món nội thất đã sở hữu</small>
+          <small>{state.clubhouse.coins} Coins · {roomOwned}/{CLUBHOUSE_SHOP.length} món nội thất đã sở hữu</small>
         </span>
         <span className="chw-go">Vào phòng ▸</span>
       </button>
@@ -414,7 +419,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
         </button>
         <button className="tp-card tp-adv" onClick={() => go("adventure")}>
           <span className="tp-ic" aria-hidden="true"><AppIcon name="adventure" /></span>
-          <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone}/{advSeason.chapters.length} chương</span></span>
+          <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone} chương · {journeysDone}/{SEASONS.length} bản đồ</span></span>
           <span className="tp-go">▸</span>
         </button>
       </nav>
