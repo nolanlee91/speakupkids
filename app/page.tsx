@@ -38,12 +38,12 @@ type NavTarget = View | "clubhouse";
 type Launch = { kind: StopKind; refId?: string; title: string };
 type Reward = { title: string; html: string; stars?: number; coins?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
-const NAV: [NavTarget, AppIconName, string][] = [
+const NAV: [NavTarget, AppIconName, string, string?][] = [
   ["home", "home", "Today"],
   ["learn", "learn", "Learn"],
   ["games", "practice", "Practice"],
   ["adventure", "adventure", "Adventure"],
-  ["clubhouse", "clubhouse", "Maple House"],
+  ["clubhouse", "clubhouse", "Maple House", "House"],
 ];
 
 function App() {
@@ -185,10 +185,10 @@ function App() {
       </div>
 
       <nav className="nav">
-        {NAV.map(([v, i, label]) => (
+        {NAV.map(([v, i, label, mobileLabel]) => (
           <button key={v} className={(v === "clubhouse" ? clubhouse : view === v && !clubhouse) ? "on" : ""}
             onClick={() => v === "clubhouse" ? setClubhouse(true) : goView(v)}>
-            <span className="i"><AppIcon name={i} /></span>{label}
+            <span className="i"><AppIcon name={i} /></span><span className={`nav-label ${mobileLabel ? "has-short" : ""}`}><span>{label}</span>{mobileLabel && <i>{mobileLabel}</i>}</span>
           </button>
         ))}
       </nav>

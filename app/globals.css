@@ -137,7 +137,9 @@
   .nav button { border: none; background: none; cursor: pointer; color: var(--muted); font-size: .68rem;
     font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 8px; flex: 1; }
   .nav button { min-width: 0; white-space: nowrap; }
+  .nav-label>i{display:none;font-style:normal}
   @media (max-width: 480px) { .nav button { padding-inline: 2px; font-size: .62rem; } .nav button .i { width: 31px; } }
+  @media (max-width: 480px) { .nav-label>i{display:inline}.nav-label.has-short>span{display:none} }
   .app-icon { display: block; width: 1em; height: 1em; }
   .nav button .i {
     display: grid; place-items: center; width: 34px; height: 30px; border-radius: 11px;
@@ -1683,3 +1685,21 @@
 .item-shop-player .shop-art{animation:musicBob 2.2s ease-in-out infinite}.item-shop-neon .shop-art,.item-shop-planet-lamp .shop-art,.item-shop-lava-lamp .shop-art{animation:itemGlow 2.4s ease-in-out infinite}.item-shop-hanging-plant .shop-art{transform-origin:50% 5%;animation:plantSway 3.4s ease-in-out infinite}@keyframes musicBob{50%{transform:translateY(-3px) rotate(-1deg)}}@keyframes itemGlow{50%{filter:drop-shadow(0 0 15px #ffd762)}}@keyframes plantSway{50%{transform:rotate(2deg)}}
 .clubhouse-v2 .clubhouse-maple{bottom:auto;width:clamp(100px,16%,190px);transform:translate(-50%,-100%);transform-origin:center bottom;transition:left .72s cubic-bezier(.2,.8,.25,1),top .72s cubic-bezier(.2,.8,.25,1);animation:mapleHouseIdle 3.2s ease-in-out infinite}.clubhouse-v2 .clubhouse-maple.walking{animation:mapleHouseWalk .36s ease-in-out infinite}@keyframes mapleHouseIdle{0%,100%{transform:translate(-50%,-100%)}50%{transform:translate(-50%,calc(-100% - 4px)) rotate(-1deg)}}@keyframes mapleHouseWalk{0%,100%{transform:translate(-50%,-100%) rotate(-2deg)}50%{transform:translate(-50%,calc(-100% - 10px)) rotate(2deg)}}
 @media(max-width:900px){.clubhouse-v2 .clubhouse-main{height:calc(100dvh - 62px);padding:8px}.clubhouse-v2 .clubhouse-stage{height:100%;min-height:0;aspect-ratio:auto;border-radius:20px}.clubhouse-actions{top:auto;right:14px;bottom:14px;transform:none}.clubhouse-actions button{padding:10px}.clubhouse-actions button span{display:none}.clubhouse-rooms{left:12px;right:12px;bottom:72px;justify-content:center}.clubhouse-rooms button{padding:8px 10px}.clubhouse-rooms button span{display:none}.clubhouse-inventory{bottom:126px;width:calc(100% - 24px)}.clubhouse-inventory>div{min-width:135px}.item-transform-controls{top:68px;right:10px;left:10px;justify-content:center}.item-transform-controls b{display:none}.item-transform-controls button{width:36px;height:36px}.clubhouse-drawer{left:8px;right:8px;top:68px;bottom:8px;max-height:none;border-radius:22px}.clubhouse-v2 .clubhouse-shop .shop-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}.clubhouse-v2 .clubhouse-maple{width:clamp(82px,22%,120px)}}
+
+/* Maple House mobile is a composed screen, not a shrunken desktop overlay. */
+@media(max-width:600px){
+  .clubhouse-overlay.clubhouse-v2{bottom:64px;overflow:hidden;z-index:40}
+  .clubhouse-v2 .clubhouse-top{height:56px;padding:7px 10px}.clubhouse-v2 .clubhouse-top .bk{display:none}.clubhouse-v2 .clubhouse-top h2{font-size:1rem}.clubhouse-v2 .clubhouse-coins{padding:6px 10px}
+  .clubhouse-v2 .clubhouse-main{height:calc(100dvh - 120px);padding:7px 7px 116px;overflow:hidden}
+  .clubhouse-v2 .clubhouse-stage{height:100%;overflow:visible;border-radius:18px}.clubhouse-v2 .clubhouse-stage>.clubhouse-bg{border-radius:18px;clip-path:inset(0 round 18px)}
+  .clubhouse-v2 .clubhouse-glow,.clubhouse-v2 .clubhouse-edit-grid{border-radius:18px;clip-path:inset(0 round 18px)}
+  .clubhouse-v2 .clubhouse-rooms{left:0;right:0;bottom:-54px;height:47px;padding:5px;border-radius:14px;justify-content:stretch}
+  .clubhouse-v2 .clubhouse-rooms button{flex:1;justify-content:center;padding:6px}.clubhouse-v2 .clubhouse-rooms button span{display:inline;font-size:.68rem}.clubhouse-v2 .clubhouse-rooms button i{font-size:15px}.clubhouse-v2 .clubhouse-rooms button small{display:none}
+  .clubhouse-v2 .clubhouse-actions{left:0;right:0;top:auto;bottom:-108px;height:47px;padding:5px;border-radius:14px;justify-content:stretch}
+  .clubhouse-v2 .clubhouse-actions button{flex:1;justify-content:center;padding:7px}.clubhouse-v2 .clubhouse-actions button span{display:inline;font-size:.7rem}
+  .clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-rooms{display:none}.clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-actions{left:auto;right:8px;top:8px;bottom:auto;width:auto;height:auto}.clubhouse-v2 .clubhouse-stage.is-editing .clubhouse-actions button:not(:first-child){display:none}
+  .clubhouse-v2 .clubhouse-inventory{position:fixed;left:7px;right:7px;bottom:70px;width:auto;height:104px;transform:none;padding:8px;z-index:70;border-radius:17px}.clubhouse-v2 .clubhouse-inventory>div{min-width:112px}.clubhouse-v2 .clubhouse-inventory small{font-size:.58rem}.clubhouse-v2 .clubhouse-inventory>button{flex-basis:64px;width:64px;min-width:64px;height:64px}.clubhouse-v2 .clubhouse-inventory .shop-art{width:58px!important;height:58px!important}
+  .clubhouse-v2 .item-transform-controls{top:auto;bottom:112px;left:8px;right:8px;z-index:72;padding:6px}.clubhouse-v2 .item-transform-controls .store-item{padding-inline:9px}
+  .clubhouse-v2 .clubhouse-drawer{top:60px;bottom:70px;left:7px;right:7px}
+  .clubhouse-v2 .clubhouse-maple span{display:none}
+}
