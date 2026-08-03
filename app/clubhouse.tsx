@@ -2,12 +2,48 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { buyClubhouseItem, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem } from "@/lib/state";
-import { CLUBHOUSE_SHOP, SEASON_SOUVENIRS, earnedSeasonSouvenirs, type ShopItem } from "@/lib/clubhouse";
+import { adjustMapleNeeds, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit } from "@/lib/state";
+import { CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
 import { celebrate, playSuccessSound, speak } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
+
+type MaplePose = "cheer" | "think" | "sit" | "sleep" | "create" | "play";
+type FurnitureInteraction = { pose: MaplePose; lines: string[]; xOffset?: number; yOffset?: number; needs?: Partial<Record<"hunger" | "energy" | "happiness", number>> };
+
+const POSE_IMAGE: Record<MaplePose, string> = {
+  cheer: "/assets/images/gen/maple-pose-cheer.webp",
+  think: "/assets/images/gen/maple-pose-think.webp",
+  sit: "/assets/images/gen/maple-pose-sit.webp",
+  sleep: "/assets/images/gen/maple-pose-sleep.webp",
+  create: "/assets/images/gen/maple-pose-create.webp",
+  play: "/assets/images/gen/maple-pose-play.webp",
+};
+const POSE_INDEX: Record<MaplePose, number> = { cheer: 0, think: 1, sit: 2, sleep: 3, create: 4, play: 5 };
+
+function MapleArt({ pose, outfit, alt = "" }: { pose: MaplePose; outfit: MapleOutfit; alt?: string }) {
+  if (!outfit.sheet) return <img src={POSE_IMAGE[pose]} alt={alt} />;
+  const index = POSE_INDEX[pose], col = index % 3, row = Math.floor(index / 3);
+  return <span role={alt ? "img" : undefined} aria-label={alt || undefined} className="maple-outfit-sprite" style={{ backgroundImage: `url(${outfit.sheet})`, backgroundPosition: `${col * 50}% ${row * 100}%` }} />;
+}
+
+const INTERACTIONS: Record<string, FurnitureInteraction> = {
+  "shop-canopy-bed": { pose: "sleep", lines: ["A quick nap will recharge my ideas.", "This bed is seriously cozy."], xOffset: 0, yOffset: 2, needs: { energy: 35, hunger: -3, happiness: 5 } },
+  "shop-beanbag": { pose: "sit", lines: ["Perfect reading spot.", "I could sit here all afternoon."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 4 } },
+  "shop-astro-chair": { pose: "sit", lines: ["Captain Maple is ready for launch!", "This chair feels like a spaceship."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 5 } },
+  "shop-cloud-cushion": { pose: "sit", lines: ["It feels like sitting on a cloud.", "Soft, comfy, and totally mine."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 4 } },
+  "shop-music-keyboard": { pose: "play", lines: ["Let’s make a brand-new tune!", "One, two, three — music time!"], xOffset: -2, needs: { energy: -8, hunger: -5, happiness: 14 } },
+  "shop-player": { pose: "play", lines: ["This beat makes my tail dance.", "Great choice — turn it up!"], xOffset: 6, needs: { energy: -6, hunger: -4, happiness: 12 } },
+  "shop-game-console": { pose: "play", lines: ["Challenge accepted!", "Just one more level."], xOffset: 5, needs: { energy: -8, hunger: -6, happiness: 14 } },
+  "shop-gaming-corner": { pose: "play", lines: ["Ready, player Maple!", "Let’s beat our high score."], xOffset: 0, needs: { energy: -8, hunger: -6, happiness: 14 } },
+  "shop-art-easel": { pose: "create", lines: ["I’m painting the mountains at sunset.", "Every picture starts with one idea."], xOffset: 4, needs: { energy: -6, hunger: -4, happiness: 12 } },
+  "shop-adventure-books": { pose: "create", lines: ["This chapter looks mysterious.", "Stories can take us anywhere."], xOffset: 5 },
+  "shop-maple-bookshelf": { pose: "create", lines: ["Which book should I read first?", "I found a new adventure!"], xOffset: 5 },
+  "shop-telescope": { pose: "think", lines: ["I can see something near the moon!", "The sky is full of clues."], xOffset: 7 },
+  "shop-aurora-projector": { pose: "think", lines: ["The colours look like northern lights.", "What makes an aurora glow?"], xOffset: 6 },
+  "shop-map": { pose: "think", lines: ["Where should we explore next?", "I found Vancouver on the map."], xOffset: 7 },
+};
 
 const ROOMS = [
   { id: "lounge", name: "Phòng sinh hoạt", en: "lounge", icon: "⌂", image: "/assets/images/clubhouse/maple-clubhouse-room-v2.webp", maple: { x: 14, y: 91 }, line: "Welcome to our cozy lounge! Where should we put the next treasure?" },
@@ -26,7 +62,7 @@ function ShopArt({ item, className = "" }: { item: ShopItem; className?: string 
 }
 
 export function Clubhouse({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
-  const [panel, setPanel] = useState<"none" | "shop" | "journal">("none");
+  const [panel, setPanel] = useState<"none" | "shop" | "wardrobe" | "journal">("none");
   const [editing, setEditing] = useState(false);
   const [drag, setDrag] = useState<{ id: string; x: number; y: number } | null>(null);
   const [delivery, setDelivery] = useState<ShopItem | null>(null);
@@ -35,7 +71,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [mapleWalking, setMapleWalking] = useState(false);
   const [shopMessage, setShopMessage] = useState("");
   const [pendingPurchase, setPendingPurchase] = useState<ShopItem | null>(null);
+  const [pendingOutfit, setPendingOutfit] = useState<MapleOutfit | null>(null);
+  const [maplePose, setMaplePose] = useState<MaplePose>("cheer");
+  const [mapleLine, setMapleLine] = useState("Tap a favourite thing and I’ll try it!");
+  const [careNotice, setCareNotice] = useState("");
   const roomRef = useRef<HTMLElement>(null);
+  const interactionTimer = useRef<number | null>(null);
+  const idleTimer = useRef<number | null>(null);
   const purchased = new Set(state.clubhouse.purchasedItemIds);
   const equipped = new Set(state.clubhouse.equippedItemIds);
   const room = ROOMS.find((r) => r.id === state.clubhouse.activeRoomId) || ROOMS[0];
@@ -45,13 +87,63 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const gotStickers = new Set(state.stickers || []);
   const badges = earnedBadges(state);
   const selectedItem = displayed.find((item) => item.id === selectedId);
+  const activeOutfit = MAPLE_OUTFITS.find((outfit) => outfit.id === state.clubhouse.activeOutfitId) || MAPLE_OUTFITS[0];
+  const ownedOutfits = new Set(state.clubhouse.ownedOutfitIds);
 
-  useEffect(() => { setMaplePos(room.maple); setMapleWalking(false); }, [room.id, room.maple]);
+  useEffect(() => {
+    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer");
+    setMapleLine(room.line);
+    if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
+    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+  }, [room.id, room.maple, room.line]);
+
+  useEffect(() => () => {
+    if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
+    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+  }, []);
 
   function moveMaple(x: number, y: number) {
+    if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
+    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    setMaplePose("cheer");
     setMaplePos({ x: Math.max(9, Math.min(91, x)), y: Math.max(62, Math.min(93, y)) });
     setMapleWalking(true);
     window.setTimeout(() => setMapleWalking(false), 760);
+  }
+
+  function useFurniture(item: ShopItem, pos: { x: number; y: number }) {
+    const action = INTERACTIONS[item.id] || { pose: "cheer" as MaplePose, lines: [`I have an idea for the ${item.en}.`, `The ${item.en} makes this room feel like ours.`], needs: { energy: -2, hunger: -2, happiness: 5 } };
+    const line = action.lines[Math.floor(Math.random() * action.lines.length)];
+    moveMaple(pos.x + (action.xOffset ?? (pos.x > 55 ? -9 : 9)), Math.max(66, pos.y + (action.yOffset ?? 6)));
+    setMapleLine("On my way…");
+    interactionTimer.current = window.setTimeout(() => {
+      setMapleWalking(false); setMaplePose(action.pose); setMapleLine(line);
+      setState((s) => adjustMapleNeeds(s, action.needs || ({ energy: -3, hunger: -2, happiness: 6 })));
+      speak(line, state.prefs.accent, .84);
+      idleTimer.current = window.setTimeout(() => { setMaplePose("cheer"); setMapleLine("What should I try next?"); }, 8500);
+    }, 720);
+  }
+
+  function giveSnack() {
+    if (state.clubhouse.needs.hunger >= 100) { setCareNotice("Maple is full and happy!"); return; }
+    if (state.clubhouse.coins < 5) { setCareNotice("Cần 5 Coins để mua snack."); return; }
+    setState((s) => buyMapleSnack(s, 5));
+    setMaplePose("sit"); setMapleLine("Yum! That hit the spot."); setCareNotice("+25 Hunger · +4 Happiness");
+    speak("Yum! That hit the spot.", state.prefs.accent, .84);
+    window.setTimeout(() => setCareNotice(""), 2400);
+  }
+
+  function chooseOutfit(outfit: MapleOutfit) {
+    if (ownedOutfits.has(outfit.id)) { setState((s) => wearClubhouseOutfit(s, outfit.id)); setMapleLine(`This ${outfit.en} look feels perfect!`); return; }
+    if (state.clubhouse.cash < outfit.price) { setCareNotice(`Cần thêm ${outfit.price - state.clubhouse.cash} Maple Cash.`); return; }
+    setPendingOutfit(outfit);
+  }
+
+  function confirmOutfit() {
+    if (!pendingOutfit) return;
+    setState((s) => buyClubhouseOutfit(s, pendingOutfit.id, pendingOutfit.price));
+    setMaplePose("cheer"); setMapleLine(`New outfit unlocked: ${pendingOutfit.en}!`);
+    celebrate(state.prefs.motion !== false); playSuccessSound(); setPendingOutfit(null);
   }
 
   function adjustSelected(scaleDelta: number, rotationDelta: number) {
@@ -89,7 +181,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     <header className="clubhouse-top">
       <button className="bk" onClick={onClose}>← Đóng</button>
       <div><h2>Maple Clubhouse</h2><p>Căn phòng lớn lên cùng hành trình của con</p></div>
-      <span className="clubhouse-coins"><i>◆</i>{state.clubhouse.coins}</span>
+      <div className="clubhouse-wallet"><span className="clubhouse-coins"><i>◆</i>{state.clubhouse.coins}</span><span className="clubhouse-cash"><i>✦</i>{state.clubhouse.cash}</span></div>
     </header>
 
     <main className="clubhouse-main">
@@ -98,10 +190,17 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <img className="clubhouse-bg" src={room.image} alt={`${room.name} của Maple nhìn ra Vancouver`} />
         <div className="clubhouse-glow" aria-hidden="true" /><div className="clubhouse-edit-grid" aria-hidden="true" />
         <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span><span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
-        <button className={`clubhouse-maple ${mapleWalking ? "walking" : ""}`} style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%` }}
-          onClick={(e) => { e.stopPropagation(); speak(room.line, state.prefs.accent, .86); }}>
-          <img src="/assets/images/gen/maple-pose-cheer.webp" alt="Maple trong Clubhouse" />
-          <span>{editing ? "Drag things anywhere you like!" : displayed.length ? "This place looks amazing!" : "Let’s build something awesome."}</span>
+        <aside className="maple-needs" aria-label="Trạng thái của Maple">
+          <div className="need-row energy"><span>⚡ Energy</span><b>{Math.round(state.clubhouse.needs.energy)}</b><i><em style={{ width: `${state.clubhouse.needs.energy}%` }} /></i></div>
+          <div className="need-row hunger"><span>● Hunger</span><b>{Math.round(state.clubhouse.needs.hunger)}</b><i><em style={{ width: `${state.clubhouse.needs.hunger}%` }} /></i></div>
+          <div className="need-row happiness"><span>♥ Happiness</span><b>{Math.round(state.clubhouse.needs.happiness)}</b><i><em style={{ width: `${state.clubhouse.needs.happiness}%` }} /></i></div>
+          <button type="button" onClick={giveSnack} disabled={state.clubhouse.needs.hunger >= 100}>Snack <small>◆ 5</small></button>
+          {careNotice && <p role="status">{careNotice}</p>}
+        </aside>
+        <button className={`clubhouse-maple pose-${maplePose} ${mapleWalking ? "walking" : ""}`} style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%` }}
+          onClick={(e) => { e.stopPropagation(); speak(editing ? "Drag things anywhere you like!" : mapleLine, state.prefs.accent, .86); }}>
+          <MapleArt pose={maplePose} outfit={activeOutfit} alt={`Maple đang ${maplePose}`} />
+          <span className="maple-speech">{editing ? "Drag things anywhere you like!" : mapleLine}</span>
         </button>
         {displayed.map((item, index) => {
           const saved = state.clubhouse.itemPositions[`${room.id}:${item.id}`] || (room.id === "lounge" ? state.clubhouse.itemPositions[item.id] : undefined);
@@ -112,7 +211,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
             onPointerDown={(e) => { if (!editing) return; setSelectedId(item.id); e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
-            onClick={(e) => { e.stopPropagation(); if (!editing) { moveMaple(pos.x > 55 ? pos.x - 10 : pos.x + 10, Math.max(68, pos.y + 7)); speak(`The ${item.en} looks great in our ${room.en}!`, state.prefs.accent, .84); } }} aria-label={`${item.en} — ${item.vi}`}>
+            onClick={(e) => { e.stopPropagation(); if (!editing) useFurniture(item, pos); }} aria-label={`Dùng ${item.en} — ${item.vi}`}>
             <ShopArt item={item} /><i>{editing ? "Kéo để đặt" : item.en}</i>
           </button>;
         })}
@@ -125,6 +224,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <nav className="clubhouse-actions" aria-label="Điều khiển Clubhouse">
           <button className={editing ? "on" : ""} onClick={() => { setEditing((v) => !v); setSelectedId(null); setPanel("none"); }}>✦ <span>{editing ? "Xong" : "Sắp xếp"}</span></button>
           <button className={panel === "shop" ? "on" : ""} onClick={() => { setPanel(panel === "shop" ? "none" : "shop"); setEditing(false); }}>◆ <span>Shop</span></button>
+          <button className={panel === "wardrobe" ? "on" : ""} onClick={() => { setPanel(panel === "wardrobe" ? "none" : "wardrobe"); setEditing(false); }}>♢ <span>Closet</span></button>
           <button className={panel === "journal" ? "on" : ""} onClick={() => { setPanel(panel === "journal" ? "none" : "journal"); setEditing(false); }}>▣ <span>Hành trình</span></button>
         </nav>
         <nav className="clubhouse-rooms" aria-label="Các phòng trong Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{CLUBHOUSE_SHOP.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
@@ -136,6 +236,11 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Chọn phong cách của con</h3><p>Ba bộ sưu tập · mua một lần, sở hữu mãi · cuộn để xem tất cả.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
         {shopMessage && <div className="shop-message" role="status">◆ {shopMessage}</div>}
         <div className="shop-grid">{CLUBHOUSE_SHOP.map((item) => { const owned = purchased.has(item.id); const canBuy = state.clubhouse.coins >= item.price; return <article key={item.id} role="button" tabIndex={owned ? -1 : 0} aria-disabled={owned} aria-label={`${owned ? "Đã sở hữu" : "Mua"} ${item.en}, ${item.price} Coins`} className={`${owned ? "owned" : ""} ${!owned && !canBuy ? "needs-coins" : ""}`} onClick={() => buy(item)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); buy(item); } }}><span className={`shop-card-badge ${owned ? "is-owned" : ""}`}>{owned ? "OWNED ✓" : <>◆ {item.price}</>}</span><ShopArt item={item} className="large" /><div><small>{item.collection === "cosmic" ? "COSMIC CLUB" : item.collection === "studio" ? "STUDIO CLUB" : "TRAIL CLUB"}</small><h4>{item.en}</h4><p>{item.vi}</p></div><button type="button" disabled={owned} tabIndex={-1} onClick={(e) => { e.stopPropagation(); buy(item); }}>{owned ? "Đã có trong kho" : canBuy ? "Mua vật phẩm" : `Thiếu ${item.price - state.clubhouse.coins} Coins`}</button></article>; })}</div>
+      </section>}
+
+      {panel === "wardrobe" && <section className="clubhouse-drawer clubhouse-wardrobe">
+        <header><div><span className="rl-kicker">MAPLE CLOSET · {MAPLE_OUTFITS.length} LOOKS</span><h3>Chọn phong cách của Maple</h3><p>Trang phục đã mua được giữ mãi và dùng trong mọi pose.</p></div><strong className="cash-balance">✦ {state.clubhouse.cash}</strong><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
+        <div className="wardrobe-grid">{MAPLE_OUTFITS.map((outfit) => { const owned = ownedOutfits.has(outfit.id), wearing = activeOutfit.id === outfit.id; return <article key={outfit.id} className={`${owned ? "owned" : ""} ${wearing ? "wearing" : ""}`}><span className="wardrobe-preview"><MapleArt pose="cheer" outfit={outfit} alt={outfit.en} /></span><small>{outfit.collection}</small><h4>{outfit.en}</h4><p>{outfit.vi}</p><button type="button" disabled={wearing} onClick={() => chooseOutfit(outfit)}>{wearing ? "Đang mặc ✓" : owned ? "Mặc bộ này" : `Mở khóa · ✦ ${outfit.price}`}</button></article>; })}</div>
       </section>}
 
       {panel === "journal" && <section className="clubhouse-drawer keepsake-journal">
@@ -155,6 +260,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <div className="purchase-confirm-actions"><button type="button" onClick={() => setPendingPurchase(null)}>Để sau</button><button type="button" className="confirm-buy" autoFocus onClick={confirmPurchase}>Mua · ◆ {pendingPurchase.price}</button></div>
       </section>
     </div>}
+
+    {pendingOutfit && <div className="purchase-confirm-backdrop" role="presentation" onClick={() => setPendingOutfit(null)}><section className="purchase-confirm outfit-confirm" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}><button className="purchase-confirm-close" aria-label="Hủy mua" onClick={() => setPendingOutfit(null)}>×</button><span className="rl-kicker">MỞ KHÓA TRANG PHỤC</span><span className="outfit-confirm-preview"><MapleArt pose="cheer" outfit={pendingOutfit} alt={pendingOutfit.en} /></span><h3>{pendingOutfit.en}</h3><p>{pendingOutfit.vi} sẽ dùng được trong mọi phòng và mọi pose.</p><div className="purchase-balance"><span>Hiện có <b>✦ {state.clubhouse.cash}</b></span><i>→</i><span>Còn lại <b>✦ {state.clubhouse.cash - pendingOutfit.price}</b></span></div><div className="purchase-confirm-actions"><button onClick={() => setPendingOutfit(null)}>Để sau</button><button className="confirm-buy" autoFocus onClick={confirmOutfit}>Mở khóa · ✦ {pendingOutfit.price}</button></div></section></div>}
 
     {delivery && <div className="clubhouse-delivery" role="status"><div className="delivery-rays" /><span className="rl-kicker">NEW ITEM!</span><ShopArt item={delivery} className="large" /><h3>{delivery.en}</h3><p>{delivery.vi} đã được đặt vào phòng.</p><button className="btn green" onClick={() => { setDelivery(null); setPanel("none"); setEditing(true); }}>Đặt vào phòng</button></div>}
   </div>;

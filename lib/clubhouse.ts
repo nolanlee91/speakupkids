@@ -23,6 +23,15 @@ export type ShopItem = {
   collection?: "trail" | "cosmic" | "studio";
 };
 
+export type MapleOutfit = { id: string; en: string; vi: string; price: number; sheet?: string; collection: string };
+
+export const MAPLE_OUTFITS: MapleOutfit[] = [
+  { id: "default", en: "Maple Original", vi: "Bộ đồ quen thuộc", price: 0, collection: "ORIGINAL" },
+  { id: "explorer", en: "Trail Explorer", vi: "Nhà thám hiểm", price: 10, sheet: "/assets/images/clubhouse/maple-outfit-explorer.webp", collection: "TRAIL" },
+  { id: "creative", en: "Creative Studio", vi: "Nghệ sĩ sáng tạo", price: 16, sheet: "/assets/images/clubhouse/maple-outfit-creative.webp", collection: "STUDIO" },
+  { id: "cosmic", en: "Cosmic Dreamer", vi: "Giấc mơ vũ trụ", price: 24, sheet: "/assets/images/clubhouse/maple-outfit-cosmic.webp", collection: "COSMIC" },
+];
+
 export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-lamp", en: "Explorer Lamp", vi: "Đèn thám hiểm", price: 35, sprite: 0, x: 76, y: 58, scale: .75, z: 5, slot: "desk" },
   { id: "shop-map", en: "Vancouver Map", vi: "Bản đồ Vancouver", price: 55, sprite: 1, x: 18, y: 39, scale: 1.05, z: 3, slot: "wall" },

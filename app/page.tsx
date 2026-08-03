@@ -7,7 +7,7 @@ import {
   hasSticker, gamesDone, addSticker, isPremium,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
   recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
-  adventuresDone, isChapterCompleted, adventureOf, awardCoinsOnce,
+  adventuresDone, isChapterCompleted, adventureOf, awardCashOnce, awardCoinsOnce,
 } from "@/lib/state";
 import {
   GAMES, stickerById, STICKER_FOR_GAME, PRACTICE_MILESTONE_STICKERS,
@@ -36,7 +36,7 @@ const TOTAL_UNITS = LEVEL0_UNITS.length + LEVEL1_UNITS.length + LEVEL2_UNITS.len
 type View = "home" | "learn" | "adventure" | "games";
 type NavTarget = View | "clubhouse";
 type Launch = { kind: StopKind; refId?: string; title: string };
-type Reward = { title: string; html: string; stars?: number; coins?: number; sticker?: { id: string; emoji: string; name: string } | null };
+type Reward = { title: string; html: string; stars?: number; coins?: number; cash?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
 const NAV: [NavTarget, AppIconName, string, string?][] = [
   ["home", "home", "Today"],
@@ -119,8 +119,10 @@ function App() {
       ns = finishGameRound(ns, key, stars, todayStr());
       const roundReward = awardCoinsOnce(ns, roundKey, 10);
       ns = roundReward.state;
+      ns = awardCashOnce(ns, roundKey, 1).state;
       if (ns.daily.learn && ns.daily.practice) {
         ns = awardCoinsOnce(ns, dailyKey, 15).state;
+        ns = awardCashOnce(ns, dailyKey, 2).state;
       }
       if (awardId) ns = addSticker(ns, awardId);
       return ns;
@@ -136,8 +138,12 @@ function App() {
     let { state: ns, newly } = completeLearnLesson(state, lessonId, score, total);
     const coinReward = newly ? awardCoinsOnce(ns, `learn:${lessonId}`, 20) : { state: ns, awarded: 0 };
     ns = coinReward.state;
+    const cashReward = newly ? awardCashOnce(ns, `learn:${lessonId}`, 1) : { state: ns, awarded: 0 };
+    ns = cashReward.state;
     const dailyReward = ns.daily.practice ? awardCoinsOnce(ns, `daily-core:${todayStr()}`, 15) : { state: ns, awarded: 0 };
     ns = dailyReward.state;
+    const dailyCash = ns.daily.practice ? awardCashOnce(ns, `daily-core:${todayStr()}`, 2) : { state: ns, awarded: 0 };
+    ns = dailyCash.state;
     setState(ns);
     celebrate(state.prefs.motion !== false);
     playSuccessSound();
@@ -148,6 +154,7 @@ function App() {
       html: `Bạn hoàn thành Unit <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Học tiếp Unit sau hoặc luyện tập cho nhớ lâu nhé!`,
       stars: st,
       coins: coinReward.awarded + dailyReward.awarded,
+      cash: cashReward.awarded + dailyCash.awarded,
       sticker: null,
     });
   }
@@ -161,7 +168,7 @@ function App() {
         <div className="hud-tokens">
           <span className="wtag fire">🔥 {state.streak}</span>
           <span className="wtag star">⭐ {stars}</span>
-          <span className="wtag clubhouse coin-hud" aria-label={`${state.clubhouse.coins} Maple Coins`}><i>◆</i> {state.clubhouse.coins}</span>
+          <span className="wtag clubhouse coin-hud" aria-label={`${state.clubhouse.coins} Maple Coins`}><i>◆</i> {state.clubhouse.coins}</span><span className="wtag cash-hud" aria-label={`${state.clubhouse.cash} Maple Cash`}><i>✦</i> {state.clubhouse.cash}</span>
         </div>
         {menu && (
           <>
@@ -227,6 +234,7 @@ function App() {
             <h3>{reward.title}</h3>
             {typeof reward.stars === "number" && <div className="gr-stars sm">{"⭐".repeat(reward.stars)}{"☆".repeat(3 - reward.stars)}</div>}
             {!!reward.coins && <div className="coin-reward"><span>◆</span> +{reward.coins} Maple Coins</div>}
+            {!!reward.cash && <div className="cash-reward"><span>✦</span> +{reward.cash} Maple Cash</div>}
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: reward.html }} />
             {reward.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{reward.sticker.name}</b>!</p>}
             <div className="result-next">

@@ -11,6 +11,7 @@
 - `clubhouse-shop-sprites.png` — transparent 4×2 sprite sheet for eight Shop items.
 - `clubhouse-shop-sprites-02.png` — transparent 4×2 Cosmic Club collection (eight more items).
 - `clubhouse-shop-sprites-03.png` — transparent 4×2 Studio Club collection (eight more items).
+- `maple-outfit-explorer.webp`, `maple-outfit-creative.webp`, `maple-outfit-cosmic.webp` — transparent 3×2 pose sheets used by Maple Closet.
 - Runtime item definitions, prices and default coordinates live in `lib/clubhouse.ts`.
 - The house has `lounge`, `study`, `rooftop`, `loft`, and `maker` rooms. `clubhouse.itemRoomIds` assigns each item to one room.
 - Player placement is stored per room as percentage coordinates in `clubhouse.itemPositions`; dragging only writes on pointer release.

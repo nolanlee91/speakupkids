@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
 import {
   adventureOf, isChapterCompleted, hasAdventureItem,
-  completeChapter, setCurrentChapter, resetAdventure, awardCoinsOnce,
+  completeChapter, setCurrentChapter, resetAdventure, awardCashOnce, awardCoinsOnce,
 } from "@/lib/state";
 import {
   SEASONS, seasonById, chapterById, itemById, chapterStatesFor, chapterPlayable, resumeChapter,
@@ -68,9 +68,9 @@ export function Adventure({ state, setState, accent, onPremium }: {
       .every((candidate) => candidate.id === ch.id || isChapterCompleted(state, season.id, candidate.id));
     setState((s) => {
       const completed = completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId });
-      return completed.newly
-        ? awardCoinsOnce(completed.state, `chapter:${season.id}:${ch.id}`, 20).state
-        : completed.state;
+      if (!completed.newly) return completed.state;
+      const withCoins = awardCoinsOnce(completed.state, `chapter:${season.id}:${ch.id}`, 20).state;
+      return awardCashOnce(withCoins, `chapter:${season.id}:${ch.id}`, 1).state;
     });
     if (wasNew) celebrate(animate);
     setPlaying(null);

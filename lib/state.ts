@@ -44,13 +44,18 @@ export type ClubhouseState = {
   unlockedItemIds: string[];
   claimedMilestones: number;
   coins: number;
+  cash: number;
   purchasedItemIds: string[];
   equippedItemIds: string[];
   rewardedKeys: string[];
+  cashRewardedKeys: string[];
+  ownedOutfitIds: string[];
+  activeOutfitId: string;
   itemPositions: Record<string, { x: number; y: number }>;
   itemRoomIds: Record<string, string>;
   activeRoomId: string;
   itemTransforms: Record<string, { scale: number; rotation: number }>;
+  needs: { hunger: number; energy: number; happiness: number; lastCareDay: string };
 };
 
 export type AppState = {
@@ -101,7 +106,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {} },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, cash: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" } },
   };
 }
 
@@ -140,6 +145,13 @@ function migrateMembership(m: unknown): Membership {
 
 function migrateClubhouse(c: unknown): ClubhouseState {
   const src = (c || {}) as Partial<ClubhouseState>;
+  const ownedOutfitIds = Array.isArray(src.ownedOutfitIds) && src.ownedOutfitIds.length ? [...new Set(["default", ...src.ownedOutfitIds])] : ["default"];
+  const oldNeeds = src.needs || { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" };
+  const isNewDay = oldNeeds.lastCareDay !== todayStr();
+  const careValue = (value: unknown, fallback: number, dailyFloor: number) => {
+    const safe = Number.isFinite(value) ? Number(value) : fallback;
+    return Math.max(0, Math.min(100, isNewDay ? Math.max(safe, dailyFloor) : safe));
+  };
   const legacy = Array.isArray(src.unlockedItemIds)
     ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
     : [];
@@ -150,13 +162,23 @@ function migrateClubhouse(c: unknown): ClubhouseState {
       : 0,
     // Tài khoản cũ và người mới nhận một khoản khởi đầu để Shop có giá trị ngay lần đầu mở.
     coins: Number.isFinite(src.coins) ? Math.max(0, Math.floor(src.coins || 0)) : 40,
+    cash: Number.isFinite(src.cash) ? Math.max(0, Math.floor(src.cash || 0)) : 10,
     purchasedItemIds: Array.isArray(src.purchasedItemIds) ? [...new Set(src.purchasedItemIds)] : [],
     equippedItemIds: Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
     rewardedKeys: Array.isArray(src.rewardedKeys) ? [...new Set(src.rewardedKeys)] : [],
+    cashRewardedKeys: Array.isArray(src.cashRewardedKeys) ? [...new Set(src.cashRewardedKeys)] : [],
+    ownedOutfitIds,
+    activeOutfitId: typeof src.activeOutfitId === "string" && ownedOutfitIds.includes(src.activeOutfitId) ? src.activeOutfitId : "default",
     itemPositions: src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
     itemRoomIds: src.itemRoomIds && typeof src.itemRoomIds === "object" ? src.itemRoomIds : {},
     activeRoomId: typeof src.activeRoomId === "string" ? src.activeRoomId : "lounge",
     itemTransforms: src.itemTransforms && typeof src.itemTransforms === "object" ? src.itemTransforms : {},
+    needs: {
+      hunger: careValue(oldNeeds.hunger, 85, 75),
+      energy: careValue(oldNeeds.energy, 90, 85),
+      happiness: careValue(oldNeeds.happiness, 90, 75),
+      lastCareDay: todayStr(),
+    },
   };
 }
 
@@ -457,6 +479,27 @@ export function awardCoinsOnce(s: AppState, key: string, amount: number): { stat
   };
 }
 
+export function awardCashOnce(s: AppState, key: string, amount: number): { state: AppState; awarded: number } {
+  if (!key || amount <= 0 || s.clubhouse.cashRewardedKeys.includes(key)) return { state: s, awarded: 0 };
+  return { awarded: amount, state: { ...s, clubhouse: {
+    ...s.clubhouse, cash: s.clubhouse.cash + amount, cashRewardedKeys: [...s.clubhouse.cashRewardedKeys, key],
+  } } };
+}
+
+export function buyClubhouseOutfit(s: AppState, outfitId: string, price: number): AppState {
+  if (!outfitId || price < 0 || s.clubhouse.ownedOutfitIds.includes(outfitId) || s.clubhouse.cash < price) return s;
+  return { ...s, clubhouse: { ...s.clubhouse,
+    cash: s.clubhouse.cash - price,
+    ownedOutfitIds: [...s.clubhouse.ownedOutfitIds, outfitId],
+    activeOutfitId: outfitId,
+  } };
+}
+
+export function wearClubhouseOutfit(s: AppState, outfitId: string): AppState {
+  if (!s.clubhouse.ownedOutfitIds.includes(outfitId)) return s;
+  return { ...s, clubhouse: { ...s.clubhouse, activeOutfitId: outfitId } };
+}
+
 export function buyClubhouseItem(s: AppState, itemId: string, price: number, roomId = "lounge"): AppState {
   if (!itemId || price < 0 || s.clubhouse.purchasedItemIds.includes(itemId) || s.clubhouse.coins < price) return s;
   return {
@@ -516,6 +559,20 @@ export function transformClubhouseItem(s: AppState, itemId: string, roomId: stri
     ...s.clubhouse.itemTransforms,
     [key]: { scale: Math.max(.55, Math.min(1.65, scale)), rotation: Math.max(-180, Math.min(180, rotation)) },
   } } };
+}
+
+export function adjustMapleNeeds(s: AppState, change: Partial<Record<"hunger" | "energy" | "happiness", number>>): AppState {
+  const current = s.clubhouse.needs;
+  const apply = (key: "hunger" | "energy" | "happiness") => Math.max(0, Math.min(100, current[key] + (change[key] || 0)));
+  return { ...s, clubhouse: { ...s.clubhouse, needs: {
+    hunger: apply("hunger"), energy: apply("energy"), happiness: apply("happiness"), lastCareDay: todayStr(),
+  } } };
+}
+
+export function buyMapleSnack(s: AppState, price = 5): AppState {
+  if (s.clubhouse.coins < price || s.clubhouse.needs.hunger >= 100) return s;
+  const fed = adjustMapleNeeds(s, { hunger: 25, happiness: 4 });
+  return { ...fed, clubhouse: { ...fed.clubhouse, coins: fed.clubhouse.coins - price } };
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
 // seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.
