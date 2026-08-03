@@ -7,7 +7,7 @@ import {
   hasSticker, gamesDone, addSticker, isPremium,
   completeLearnLesson, learnLessonDone, learnLessonsDone,
   recordGameAnswers, finishGameRound, markPracticeDone, topicOf, sectionDone,
-  adventuresDone, isChapterCompleted, adventureOf,
+  adventuresDone, isChapterCompleted, adventureOf, awardCoinsOnce,
 } from "@/lib/state";
 import {
   GAMES, stickerById, STICKER_FOR_GAME, PRACTICE_MILESTONE_STICKERS,
@@ -23,13 +23,8 @@ import { Clubhouse } from "./clubhouse";
 import { celebrate, playSuccessSound } from "@/lib/fx";
 import { AppIcon, type AppIconName } from "./icons";
 import { AuthGate } from "./authgate";
-import { syncSave, currentUser, signOut, clearActiveChild } from "@/lib/cloud";
+import { syncSave, currentUser, signOut, clearActiveChild, fetchMembership } from "@/lib/cloud";
 import { cloudEnabled } from "@/lib/supabase";
-import {
-  CLUBHOUSE_MILESTONES, clubhouseLearnTotal,
-  clubhouseRewardReady, nextClubhouseMilestone,
-} from "@/lib/clubhouse";
-import { keepsakeCount } from "@/lib/rewards";
 import { StickerArt } from "./reward-art";
 
 const GEN = "/assets/images/gen/";
@@ -40,7 +35,7 @@ const TOTAL_UNITS = LEVEL0_UNITS.length + LEVEL1_UNITS.length + LEVEL2_UNITS.len
 
 type View = "home" | "learn" | "adventure" | "games";
 type Launch = { kind: StopKind; refId?: string; title: string };
-type Reward = { title: string; html: string; stars?: number; sticker?: { id: string; emoji: string; name: string } | null };
+type Reward = { title: string; html: string; stars?: number; coins?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
 const NAV: [View, AppIconName, string][] = [
   ["home", "home", "Today"],
@@ -71,6 +66,11 @@ function App() {
     setShowSplash(true);
     setState(s);
     setReady(true);
+    // Gói thành viên: nguồn chuẩn là bảng entitlements phía server (client chỉ đọc).
+    // Giá trị trong state/localStorage chỉ là cache — mỗi lần mở app ghi đè lại từ server.
+    if (cloudEnabled()) {
+      fetchMembership().then((m) => setState((cur) => (cur.membership === m ? cur : { ...cur, membership: m })));
+    }
   }, []);
   useEffect(() => { if (ready) syncSave(state); }, [state, ready]);
   useEffect(() => { document.body.classList.toggle("no-motion", state.prefs.motion === false); }, [state.prefs.motion]);
@@ -107,21 +107,35 @@ function App() {
       ? PRACTICE_MILESTONE_STICKERS.find((m) => projectedPlays >= m.plays && !hasSticker(state, m.id))?.id
       : undefined;
     const awardId = topicSticker || milestoneSticker;
+    const roundKey = `practice:${key}`;
+    const dailyKey = `daily-core:${todayStr()}`;
+    const roundCoins = state.clubhouse.rewardedKeys.includes(roundKey) ? 0 : 10;
+    const dailyCoins = state.daily.learn && !state.clubhouse.rewardedKeys.includes(dailyKey) ? 15 : 0;
+    const coinsAwarded = roundCoins + dailyCoins;
     setState((s) => {
       let ns = recordGameAnswers(s, key, results);
       ns = finishGameRound(ns, key, stars, todayStr());
+      const roundReward = awardCoinsOnce(ns, roundKey, 10);
+      ns = roundReward.state;
+      if (ns.daily.learn && ns.daily.practice) {
+        ns = awardCoinsOnce(ns, dailyKey, 15).state;
+      }
       if (awardId) ns = addSticker(ns, awardId);
       return ns;
     });
     const sk = awardId ? stickerById(awardId) : undefined;
-    return { newly, explored: explored.size, total: topicTotal, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
+    return { newly, explored: explored.size, total: topicTotal, coins: coinsAwarded, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
   }
   // Echo (luyện nói tùy chọn): chỉ đánh dấu đã luyện Practice hôm nay.
   function echoDone() { setState((s) => markPracticeDone(s)); }
 
   // Hoàn thành bài Learn (sau Mini Check)
   function completeLearn(lessonId: string, score: number, total: number) {
-    let { state: ns } = completeLearnLesson(state, lessonId, score, total);
+    let { state: ns, newly } = completeLearnLesson(state, lessonId, score, total);
+    const coinReward = newly ? awardCoinsOnce(ns, `learn:${lessonId}`, 20) : { state: ns, awarded: 0 };
+    ns = coinReward.state;
+    const dailyReward = ns.daily.practice ? awardCoinsOnce(ns, `daily-core:${todayStr()}`, 15) : { state: ns, awarded: 0 };
+    ns = dailyReward.state;
     setState(ns);
     celebrate(state.prefs.motion !== false);
     playSuccessSound();
@@ -131,6 +145,7 @@ function App() {
       title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
       html: `Bạn hoàn thành Unit <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Học tiếp Unit sau hoặc luyện tập cho nhớ lâu nhé!`,
       stars: st,
+      coins: coinReward.awarded + dailyReward.awarded,
       sticker: null,
     });
   }
@@ -144,7 +159,7 @@ function App() {
         <div className="hud-tokens">
           <span className="wtag fire">🔥 {state.streak}</span>
           <span className="wtag star">⭐ {stars}</span>
-          <button className="wtag clubhouse" onClick={() => setClubhouse(true)} aria-label="Maple Clubhouse">🏡 {keepsakeCount(state)}</button>
+          <button className="wtag clubhouse coin-hud" onClick={() => setClubhouse(true)} aria-label="Maple Coins"><i>◆</i> {state.clubhouse.coins}</button>
         </div>
         {menu && (
           <>
@@ -209,6 +224,7 @@ function App() {
             )}
             <h3>{reward.title}</h3>
             {typeof reward.stars === "number" && <div className="gr-stars sm">{"⭐".repeat(reward.stars)}{"☆".repeat(3 - reward.stars)}</div>}
+            {!!reward.coins && <div className="coin-reward"><span>◆</span> +{reward.coins} Maple Coins</div>}
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: reward.html }} />
             {reward.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{reward.sticker.name}</b>!</p>}
             <div className="result-next">
@@ -274,11 +290,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
-  const clubhouseReady = clubhouseRewardReady(state);
-  const clubhouseLearned = clubhouseLearnTotal(state);
-  const clubhouseNext = nextClubhouseMilestone(state);
-  const roomKeepsakes = state.clubhouse.unlockedItemIds.length;
-  const roomTarget = CLUBHOUSE_MILESTONES.length;
+  const roomOwned = state.clubhouse.purchasedItemIds.length;
 
   return (
     <section className="today">
@@ -339,7 +351,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
       <div className="today-stats">
         <span className="ts"><b><AppIcon name="streak" />{state.streak}</b>chuỗi ngày</span>
         <span className="ts"><b><AppIcon name="star" />{totalStars(state)}</b>tổng sao</span>
-        <span className="ts"><b><AppIcon name="clubhouse" />{keepsakeCount(state)}</b>kỷ vật</span>
+        <span className="ts"><b><span className="coin-gem">◆</span>{state.clubhouse.coins}</b>Maple Coins</span>
       </div>
 
       {/* Thành quả gần nhất */}
@@ -350,19 +362,15 @@ function Today({ state, go, openLesson, openClubhouse }: {
         </div>
       )}
 
-      <button className={`clubhouse-widget ${clubhouseReady ? "gift-ready" : ""}`} onClick={openClubhouse}>
+      <button className={`clubhouse-widget ${coreDone === 2 ? "gift-ready" : ""}`} onClick={openClubhouse}>
         <span className="chw-preview">
-          <img src="/assets/images/clubhouse/maple-clubhouse-room.webp" alt="" />
-          <i aria-hidden="true">{clubhouseReady ? "🎁" : "🏡"}</i>
+          <img src="/assets/images/clubhouse/maple-clubhouse-room-v2.webp" alt="" />
+          <i aria-hidden="true">◆</i>
         </span>
         <span className="chw-copy">
           <span className="chw-kicker">MAPLE CLUBHOUSE</span>
-          <b>{clubhouseReady ? "Có món quà mới cho căn phòng!" : "Căn phòng hành trình của bé"}</b>
-          <small>
-            {clubhouseReady
-              ? "Chọn một trong hai món — món còn lại vẫn nhận được sau."
-              : `${roomKeepsakes}/${roomTarget} kỷ vật phòng · ${clubhouseNext ? `${clubhouseLearned}/${clubhouseNext} Unit tới quà Learn` : "đã đủ mốc Learn"}`}
-          </small>
+          <b>{coreDone === 2 ? "Đã xong Học + Luyện — vào nâng cấp phòng!" : "Xây Clubhouse theo phong cách của con"}</b>
+          <small>{state.clubhouse.coins} Coins · {roomOwned}/8 món nội thất đã sở hữu</small>
         </span>
         <span className="chw-go">Vào phòng ▸</span>
       </button>

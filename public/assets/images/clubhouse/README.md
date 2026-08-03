@@ -1,61 +1,43 @@
-# Maple Clubhouse 2.5D — MVP asset contract
+# Maple Clubhouse Economy — asset contract
 
-## Production asset
+## Production assets
 
-- `maple-clubhouse-room.webp` — background room, 1440×1080, WebP.
-- Runtime item overlays are defined in `lib/clubhouse.ts`.
-- The room uses one fixed 4:3 perspective. Do not crop or replace it without
-  rechecking every item coordinate on mobile and desktop.
+- `maple-clubhouse-room-v2.webp` — active premium 2.5D game-room background.
+- `maple-clubhouse-room.webp` — legacy room kept for rollback.
+- `clubhouse-shop-sprites.png` — transparent 4×2 sprite sheet for eight Shop items.
+- Runtime item definitions, prices and fixed coordinates live in `lib/clubhouse.ts`.
 
-## MVP rules
+The room uses one fixed 4:3 perspective. Recheck every coordinate on mobile and desktop before changing its crop.
 
-- One room, six Learn decoration milestones plus eight Adventure season
-  souvenirs, all using fixed slots.
-- The background contains permanent structural furniture only.
-- Unlockable items are separate overlay layers; no drag/drop in MVP.
-- Clicking an unlocked item reads its English name.
-- Learn milestones unlock a choice of room decoration.
-- Practice completion unlocks stickers in My Journal.
-- Adventure chapter items remain inside their story; completing a whole season
-  unlocks one Clubhouse souvenir.
-- Badges are derived from major account milestones.
-- Stars and streak are indicators, not collectible inventory.
-- A rejected decoration choice returns to the Learn reward pool; it is never
-  lost forever.
+## Economy rules
+
+- Maple Coins are virtual soft currency with no cash value.
+- Learn Unit first completion: 20 Coins.
+- First completion of each Practice topic: 10 Coins.
+- Completing Learn + Practice in one day: 15 Coins.
+- First completion of an Adventure chapter: 20 Coins.
+- Every award uses a stable reward key. Replays cannot farm the same reward.
+- Shop prices are fixed. No loot boxes, random rolls or paid coin packs in MVP.
+- Purchased furniture is owned permanently and can be equipped/stored without paying again.
+- Legacy/new local accounts receive a small starter balance so the Shop is understandable immediately.
+
+## Reward roles
+
+- Maple Coins buy room furniture.
+- Practice can also unlock stickers in Journey Book.
+- Badges represent major achievements.
+- Adventure chapter props stay inside their story.
+- Completing a whole Adventure Season unlocks one exclusive souvenir that Coins cannot buy.
+- Stars and streak are progress indicators, not inventory.
 
 ## Visual direction
 
-- Premium soft 2.5D animated storybook illustration.
-- Ages 9–12: intelligent, adventurous, not a dollhouse or preschool room.
-- Warm natural wood and cinematic daylight.
-- Teal, coral and warm-gold accents.
-- Vancouver mountains/city may appear outside, but no embedded text.
-- Future raster item layers must match this exact camera perspective and
-  lighting. Keep Maple fully animal-like if she is added later.
+- Polished stylized 3D/2.5D indie-game environment for ages 9–12.
+- Deep teal, navy, maple orange, warm amber and tactile walnut materials.
+- Cinematic depth, lighting and motion; avoid preschool pastels, emoji furniture and dollhouse styling.
+- Maple remains fully animal-like.
+- New raster overlays must match the room camera and golden-right-side lighting.
 
-## Original background prompt
+## Generation notes
 
-```text
-Use case: stylized-concept
-Asset type: SpeakUp Kids Maple Clubhouse 2.5D interactive room background,
-landscape 4:3
-
-Create a polished empty youth clubhouse interior for learners age 9–12,
-designed as the background layer for unlockable decorative items that will be
-overlaid later. Show a cozy Canadian rooftop/attic clubhouse in Vancouver with
-warm natural wood, a large window showing distant mountains and a soft city
-skyline, and subtle autumn maple colours outside. Include permanent structural
-furniture only: one simple desk, one low empty display shelf, one wall shelf,
-an empty pinboard with no writing, and generous uncluttered floor space.
-
-Premium soft 2.5D animated storybook illustration, rounded but believable
-materials, rich environmental detail, warm cinematic daylight, controlled
-teal–coral–gold accents, intelligent and adventurous rather than preschool-like.
-Use a straight-on wide room view with a stable perspective suitable for
-fixed-position HTML overlays.
-
-Background layer only. No children, mascot, animals, loose decorative reward
-objects, words, letters, captions, labels, UI, frame or watermark. Avoid
-photorealism, anime, flat vector art, glossy plastic toy rendering, toddler
-styling, extreme perspective, clutter and dark grading.
-```
+The v2 room was generated as a non-destructive sibling using the legacy room as a composition reference. The Shop sprite sheet was generated on a flat magenta chroma background, then converted locally to alpha. Source generation outputs remain outside the repository.

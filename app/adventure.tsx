@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
 import {
   adventureOf, isChapterCompleted, hasAdventureItem,
-  completeChapter, setCurrentChapter, resetAdventure,
+  completeChapter, setCurrentChapter, resetAdventure, awardCoinsOnce,
 } from "@/lib/state";
 import {
   SEASONS, seasonById, chapterById, itemById, chapterStatesFor, chapterPlayable, resumeChapter,
@@ -66,7 +66,12 @@ export function Adventure({ state, setState, accent, onPremium }: {
     const wasNew = !isChapterCompleted(state, season.id, ch.id);
     const completesSeason = wasNew && season.chapters.filter(chapterPlayable)
       .every((candidate) => candidate.id === ch.id || isChapterCompleted(state, season.id, candidate.id));
-    setState((s) => completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId }).state);
+    setState((s) => {
+      const completed = completeChapter(s, season.id, ch.id, { itemId: ch.reward?.itemId, extraItemIds: ch.reward?.extraItemIds, nextChapterId: ch.nextChapterId });
+      return completed.newly
+        ? awardCoinsOnce(completed.state, `chapter:${season.id}:${ch.id}`, 20).state
+        : completed.state;
+    });
     if (wasNew) celebrate(animate);
     setPlaying(null);
     if (completesSeason) setSeasonRewardId(season.id);
@@ -600,6 +605,7 @@ function ChapterResult({ season, chapter, stars, firstTime, showItem, scoredCoun
     <div className="chap-result">
       <div className="cr-stars">{"★★★".slice(0, stars)}<span className="cr-dim">{"★★★".slice(stars)}</span></div>
       <h2 className="cr-title">{firstTime ? "Hoàn thành chương! 🎉" : "Chơi lại xong! 👍"}</h2>
+      {firstTime && <div className="coin-reward"><span>◆</span> +20 Maple Coins</div>}
       <p className="cr-line">Bạn trả lời đúng <b>{correct}/{scoredCount}</b> thử thách ngôn ngữ.</p>
 
       {chapter.reward && (

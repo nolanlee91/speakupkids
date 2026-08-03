@@ -33,7 +33,7 @@ function RoundDiff({ difficulty }: { difficulty: Difficulty }) {
 }
 
 /* Thông tin trả về sau khi hoàn thành một lượt — dùng để hiển thị màn kết quả. */
-export type FinishInfo = { newly: number; explored: number; total: number; sticker?: { id: string; name: string; emoji: string } };
+export type FinishInfo = { newly: number; explored: number; total: number; coins?: number; sticker?: { id: string; name: string; emoji: string } };
 /* Cầu nối state ↔ game: tiến độ topic + ghi câu trả lời + hoàn thành lượt + Echo. */
 export type GameCallbacks = {
   topics: Record<string, GameTopicProgress>;
@@ -73,6 +73,7 @@ function GameResult({ title, stars, info, doneLabel, onDone, secondary }: {
         <p className="gr-explore">Đã mở <b>{info.explored}/{info.total}</b> thử thách của bộ này{info.newly > 0 ? <> · <b>+{info.newly}</b> câu mới</> : ""}.</p>
       )}
       {info?.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{info.sticker.name}</b>!</p>}
+      {!!info?.coins && <div className="coin-reward"><span>◆</span> +{info.coins} Maple Coins</div>}
       <button className="btn green" onClick={onDone}>{doneLabel}</button>
       {secondary && <button className="btn ghost sm" onClick={secondary.onClick}>{secondary.label}</button>}
     </div>

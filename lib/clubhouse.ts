@@ -16,6 +16,22 @@ export type ClubhouseItem = {
 
 export type SeasonSouvenir = ClubhouseItem & { seasonId: string };
 
+export type ShopItem = {
+  id: string; en: string; vi: string; price: number; sprite: number;
+  x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
+};
+
+export const CLUBHOUSE_SHOP: ShopItem[] = [
+  { id: "shop-lamp", en: "Explorer Lamp", vi: "Đèn thám hiểm", price: 35, sprite: 0, x: 76, y: 58, scale: .75, z: 5, slot: "desk" },
+  { id: "shop-map", en: "Vancouver Map", vi: "Bản đồ Vancouver", price: 55, sprite: 1, x: 18, y: 39, scale: 1.05, z: 3, slot: "wall" },
+  { id: "shop-rug", en: "Trail Rug", vi: "Thảm đường mòn", price: 45, sprite: 2, x: 51, y: 82, scale: 1.35, z: 2, slot: "floor" },
+  { id: "shop-telescope", en: "Night Telescope", vi: "Kính thiên văn", price: 80, sprite: 3, x: 67, y: 61, scale: .9, z: 5, slot: "floor" },
+  { id: "shop-player", en: "Record Player", vi: "Máy nghe nhạc", price: 65, sprite: 4, x: 29, y: 67, scale: .82, z: 5, slot: "desk" },
+  { id: "shop-bonsai", en: "Maple Bonsai", vi: "Cây phong bonsai", price: 70, sprite: 5, x: 28, y: 54, scale: .78, z: 5, slot: "desk" },
+  { id: "shop-neon", en: "Maple Neon", vi: "Đèn neon lá phong", price: 95, sprite: 6, x: 83, y: 36, scale: .82, z: 4, slot: "wall" },
+  { id: "shop-beanbag", en: "Game Beanbag", vi: "Ghế lười", price: 60, sprite: 7, x: 79, y: 75, scale: 1.0, z: 5, slot: "floor" },
+];
+
 // Đồ trang trí nhận từ Learn. Thứ tự cũng là reward pool:
 // món không chọn vẫn đứng đầu pool ở mốc kế tiếp.
 export const CLUBHOUSE_ITEMS: ClubhouseItem[] = [

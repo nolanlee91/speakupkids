@@ -7,7 +7,9 @@ export type { GameTopicProgress, RoundResult };
 
 export type Prefs = { ipa: boolean; vi: boolean; accent: "US" | "CA"; motion: boolean };
 export type Progress = { done: boolean; stars: number; learned: number[] };
-export type Membership = "free" | "premium" | "family";
+// Gói lifetime: free · pro (1 bé) · family (tối đa 4 bé). Nguồn chuẩn là bảng
+// entitlements phía server (client chỉ đọc rồi ghi vào đây làm cache hiển thị).
+export type Membership = "free" | "pro" | "family";
 
 // Tiến độ học của MỘT bài trong khu Learn
 export type LearnLessonState = { sections: LearningSectionKey[]; done: boolean; check?: { score: number; total: number } };
@@ -41,6 +43,10 @@ export type AdventureState = {
 export type ClubhouseState = {
   unlockedItemIds: string[];
   claimedMilestones: number;
+  coins: number;
+  purchasedItemIds: string[];
+  equippedItemIds: string[];
+  rewardedKeys: string[];
 };
 
 export type AppState = {
@@ -91,7 +97,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0 },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [] },
   };
 }
 
@@ -111,6 +117,7 @@ export function normalizeState(input: unknown): AppState {
   const d = defaultState();
   return {
     ...d, ...s,
+    membership: migrateMembership(s.membership),
     prefs: { ...d.prefs, ...(s.prefs || {}) },
     learn: { ...d.learn, ...(s.learn || {}), lessons: { ...(s.learn?.lessons || {}) } },
     games: migrateGames(s.games),
@@ -120,15 +127,28 @@ export function normalizeState(input: unknown): AppState {
   };
 }
 
+// State cũ lưu "premium" (tên nội bộ trước đây của gói Pro) → quy về "pro".
+function migrateMembership(m: unknown): Membership {
+  if (m === "premium" || m === "pro") return "pro";
+  if (m === "family") return "family";
+  return "free";
+}
+
 function migrateClubhouse(c: unknown): ClubhouseState {
   const src = (c || {}) as Partial<ClubhouseState>;
+  const legacy = Array.isArray(src.unlockedItemIds)
+    ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
+    : [];
   return {
-    unlockedItemIds: Array.isArray(src.unlockedItemIds)
-      ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
-      : [],
+    unlockedItemIds: legacy,
     claimedMilestones: Number.isFinite(src.claimedMilestones)
       ? Math.max(0, Math.floor(src.claimedMilestones || 0))
       : 0,
+    // Tài khoản cũ và người mới nhận một khoản khởi đầu để Shop có giá trị ngay lần đầu mở.
+    coins: Number.isFinite(src.coins) ? Math.max(0, Math.floor(src.coins || 0)) : 40,
+    purchasedItemIds: Array.isArray(src.purchasedItemIds) ? [...new Set(src.purchasedItemIds)] : [],
+    equippedItemIds: Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
+    rewardedKeys: Array.isArray(src.rewardedKeys) ? [...new Set(src.rewardedKeys)] : [],
   };
 }
 
@@ -200,7 +220,7 @@ export function totalLearned(s: AppState): number {
   return Object.values(s.progress).reduce((a, x) => a + (x.learned || []).length, 0);
 }
 export function isPremium(s: AppState): boolean {
-  return s.membership === "premium" || s.membership === "family";
+  return s.membership === "pro" || s.membership === "family";
 }
 export function canOpen(s: AppState, les: Lesson): boolean {
   return les.free || isPremium(s);
@@ -407,8 +427,51 @@ export function claimClubhouseItem(s: AppState, itemId: string): AppState {
   return {
     ...s,
     clubhouse: {
+      ...s.clubhouse,
       unlockedItemIds: [...s.clubhouse.unlockedItemIds, itemId],
       claimedMilestones: s.clubhouse.claimedMilestones + 1,
+    },
+  };
+}
+
+export function awardCoinsOnce(s: AppState, key: string, amount: number): { state: AppState; awarded: number } {
+  if (!key || amount <= 0 || s.clubhouse.rewardedKeys.includes(key)) return { state: s, awarded: 0 };
+  return {
+    awarded: amount,
+    state: {
+      ...s,
+      clubhouse: {
+        ...s.clubhouse,
+        coins: s.clubhouse.coins + amount,
+        rewardedKeys: [...s.clubhouse.rewardedKeys, key],
+      },
+    },
+  };
+}
+
+export function buyClubhouseItem(s: AppState, itemId: string, price: number): AppState {
+  if (!itemId || price < 0 || s.clubhouse.purchasedItemIds.includes(itemId) || s.clubhouse.coins < price) return s;
+  return {
+    ...s,
+    clubhouse: {
+      ...s.clubhouse,
+      coins: s.clubhouse.coins - price,
+      purchasedItemIds: [...s.clubhouse.purchasedItemIds, itemId],
+      equippedItemIds: [...s.clubhouse.equippedItemIds, itemId],
+    },
+  };
+}
+
+export function toggleClubhouseItem(s: AppState, itemId: string): AppState {
+  if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
+  const on = s.clubhouse.equippedItemIds.includes(itemId);
+  return {
+    ...s,
+    clubhouse: {
+      ...s.clubhouse,
+      equippedItemIds: on
+        ? s.clubhouse.equippedItemIds.filter((id) => id !== itemId)
+        : [...s.clubhouse.equippedItemIds, itemId],
     },
   };
 }
