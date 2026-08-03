@@ -8,6 +8,7 @@ import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
 import { DETECTIVE_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scenes";
 import { practiceItemLocked } from "@/lib/gating";
 import { PUZZLE_SETS, RIDDLE_SETS, LISTEN_SETS, puzzleSetById, riddleSetById, listenSetById } from "@/lib/banks";
+import { WRITE_SETS, writeSetById, scoreWriting, type WriteScore } from "@/lib/writing";
 import {
   EMPTY_TOPIC, selectRound, countByDifficulty, starsFor, picdetDifficulty, talkDifficulty, puzzleDifficulty,
   type GameTopicProgress, type RoundResult, type Difficulty,
@@ -664,6 +665,106 @@ function ListenChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: Ga
     onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
 }
 
+/* ============ Writing Coach (luyện viết câu có cấu trúc, máy chấm rule-based) ============ */
+function WriteChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void }) {
+  const initial = setId && writeSetById(setId) ? setId : undefined;
+  const galleryMode = !initial;
+  const [chosen, setChosen] = useState<string | undefined>(initial);
+  if (galleryMode && !chosen) {
+    return <GameGallery emoji="✍️" title="Writing Coach" vi="Chọn một bộ luyện viết"
+      intro="Đọc yêu cầu, viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí và cho xem câu mẫu."
+      items={WRITE_SETS.map((s) => ({ id: s.id, name: s.title, sub: s.vi, emoji: "✍️", total: s.items.length,
+        counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
+      prefix="write" topics={cb.topics} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
+  }
+  return <WriteRound key={chosen} setId={chosen!} cb={cb} accent={accent}
+    onExit={galleryMode ? () => setChosen(undefined) : onExit}
+    onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
+}
+
+function WriteRound({ setId, cb, accent, onExit, onNext }: {
+  setId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
+}) {
+  const [session] = useState(() => {
+    const set = writeSetById(setId) || WRITE_SETS[0];
+    const key = "write:" + set.id;
+    const prog = cb.topics[key] || EMPTY_TOPIC;
+    const items = selectRound(set.items, prog, ROUND_SIZE.write, (t) => t.difficulty || "medium");
+    return { set, key, items, total: set.items.length };
+  });
+  const { set, key, items, total } = session;
+  const [i, setI] = useState(0);
+  const [text, setText] = useState("");
+  const [score, setScore] = useState<WriteScore | null>(null);
+  const [results, setResults] = useState<RoundResult[]>([]);
+  const [fin, setFin] = useState(false);
+  const t = items[i];
+  const nCorrect = results.filter((x) => x.correct).length;
+  const stars = starsFor(nCorrect, items.length);
+  const info = useFinish(fin, () => cb.finish(key, results, stars, total));
+  const exit = () => { cb.commit(key, results); onExit(); };
+
+  function grade() {
+    if (!text.trim()) return;
+    setScore(scoreWriting(t, text));
+  }
+  function next() {
+    const r = [...results, { id: t.id, correct: (score?.stars ?? 0) >= 2 }];
+    setResults(r);
+    if (i + 1 < items.length) { setI(i + 1); setText(""); setScore(null); }
+    else setFin(true);
+  }
+
+  if (fin) {
+    const a = resultActions(onNext, onExit, "Bộ khác →");
+    return <GameShell emoji="✍️" title="Writing Coach" vi={`Viết · ${set.title}`} onExit={onExit}>
+      <GameResult title={`Con viết tốt ${nCorrect}/${items.length} bài! ✍️`} stars={stars} info={info}
+        doneLabel={a.doneLabel} onDone={a.onDone} secondary={a.secondary} />
+    </GameShell>;
+  }
+  return (
+    <GameShell emoji="✍️" title="Writing Coach" vi={`Viết · ${set.title}`} onExit={exit}>
+      <div className="q-progress">Bài {i + 1}/{items.length}</div>
+      <div className="qcard write-card">
+        <div className="write-req">✍️ {t.vi}</div>
+        <div className="write-frame">Khung gợi ý: <b>{t.frame}</b></div>
+        <textarea className="write-input" value={text} rows={3}
+          placeholder="Viết câu tiếng Anh của con vào đây…"
+          autoCapitalize="off" autoCorrect="off" spellCheck={false}
+          disabled={!!score && score.stars === 3}
+          onChange={(e) => { setText(e.target.value); }} />
+        {!score && <button className="btn" disabled={!text.trim()} onClick={grade}>Chấm bài ✓</button>}
+
+        {score && (
+          <div className="write-fb">
+            <div className="write-stars">{score.stars > 0 ? "⭐".repeat(score.stars) : "💪"} {
+              score.stars === 3 ? "Tuyệt vời! Câu hoàn chỉnh!"
+              : score.stars === 2 ? "Tốt lắm! Chỉnh chút nữa là hoàn hảo."
+              : score.stars === 1 ? "Khởi đầu tốt — xem gợi ý bên dưới nhé."
+              : "Thử lại nhé — nhìn khung gợi ý và câu mẫu."
+            }</div>
+            <ul className="write-checks">
+              {score.checks.map((c) => (
+                <li key={c.label} className={c.ok ? "ok" : "no"}>
+                  {c.ok ? "✓" : "✗"} {c.label}{!c.ok && c.note ? <em> — {c.note}</em> : null}
+                </li>
+              ))}
+            </ul>
+            <div className="write-model">
+              <span>Câu mẫu:</span> <b>{t.model}</b>
+              <button className="icbtn" onClick={() => speak(t.model, accent)}>🔊 Nghe</button>
+            </div>
+            <div className="write-actions">
+              {score.stars < 3 && <button className="btn ghost sm" onClick={() => setScore(null)}>✏️ Sửa lại bài</button>}
+              <button className="btn green" onClick={next}>{i + 1 < items.length ? "Bài tiếp →" : "Xem kết quả →"}</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </GameShell>
+  );
+}
+
 /* ============ Echo Challenge (luyện nói, chấm sao tuỳ chọn bằng Web Speech API) ============ */
 function EchoChallenge({ accent, onExit, cb }: { accent: "US" | "CA"; onExit: () => void; cb: GameCallbacks }) {
   const phrases = ECHO;
@@ -713,6 +814,7 @@ export function GamePlay({ kind, refId, accent, cb, onExit }: {
   if (kind === "puzzle") return <SentencePuzzle setId={refId} cb={cb} onExit={onExit} />;
   if (kind === "riddle") return <RiddleGame setId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "listen") return <ListenChallenge setId={refId} cb={cb} accent={accent} onExit={onExit} />;
+  if (kind === "write") return <WriteChallenge setId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "echo") return <EchoChallenge accent={accent} onExit={onExit} cb={cb} />;
   return null;
 }

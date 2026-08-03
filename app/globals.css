@@ -1774,3 +1774,23 @@
 .adm-fresh{background:#e6fcf0;border:2px solid #b7ecd0;border-radius:12px;padding:12px 14px;margin-top:10px}
 .adm-fresh pre{margin:8px 0;font-size:.95rem;line-height:1.5}
 .adm-empty{color:#8b8578}
+
+/* Writing Coach — luyện viết câu, máy chấm theo tiêu chí */
+.write-card { text-align: left; }
+.write-req { font-weight: 800; font-size: 1.02rem; margin-bottom: 6px; }
+.write-frame { background: #fff7ec; border: 2px dashed #f2d9b4; border-radius: 12px; padding: 9px 12px;
+  font-size: .92rem; margin-bottom: 10px; }
+.write-input { width: 100%; border: 2px solid var(--line, #e3ded2); border-radius: 12px; padding: 11px 13px;
+  font-size: 1.02rem; font-family: inherit; resize: vertical; margin-bottom: 10px; }
+.write-input:focus { outline: none; border-color: var(--brand, #17a2a2); }
+.write-fb { margin-top: 4px; }
+.write-stars { font-weight: 800; font-size: 1rem; margin-bottom: 8px; }
+.write-checks { list-style: none; margin: 0 0 10px; padding: 10px 12px; background: #f7f9fc; border-radius: 12px; }
+.write-checks li { font-size: .88rem; padding: 2px 0; font-weight: 600; }
+.write-checks li.ok { color: #1b8a4b; }
+.write-checks li.no { color: #c9741a; }
+.write-checks li em { font-style: normal; font-weight: 500; color: var(--muted, #8b7c66); }
+.write-model { background: #e6fcf0; border: 2px solid #b7ecd0; border-radius: 12px; padding: 9px 12px;
+  font-size: .94rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.write-model span { color: var(--muted, #8b7c66); font-size: .82rem; font-weight: 700; }
+.write-actions { display: flex; gap: 8px; flex-wrap: wrap; }

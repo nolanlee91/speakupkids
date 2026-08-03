@@ -14,11 +14,12 @@ export const STICKERS: Sticker[] = [
   { id: "st-map", emoji: "🗺️", name: "Nhà thám hiểm" },
   { id: "st-maple", emoji: "🍁", name: "Bạn của Maple" },
   { id: "st-crown", emoji: "👑", name: "Vua từ vựng" },
+  { id: "st-pencil", emoji: "✍️", name: "Cây bút nhí" },
 ];
 export const stickerById = (id: string) => STICKERS.find((s) => s.id === id);
 
 /* ---------- GAME: danh mục khu Practice ---------- */
-export type GameKind = "picdet" | "puzzle" | "riddle" | "listen";
+export type GameKind = "picdet" | "puzzle" | "riddle" | "listen" | "write";
 // Loại phiên chơi do GamePlay điều phối: các game chính + Echo (luyện nói tùy chọn).
 export type StopKind = GameKind | "echo";
 
@@ -34,12 +35,14 @@ export const GAMES: GameInfo[] = [
     blurb: "Đọc/nghe manh mối rồi chọn đáp án, luyện đọc hiểu.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "listen", name: "Listen & Choose", vi: "Nghe & chọn", emoji: "🎧", image: "/assets/images/gen/game-listen.webp", tint: "#eaf3ff",
     blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Thumbnail 4:3 · 800×600" },
+  { id: "write", name: "Writing Coach", vi: "Luyện viết câu", emoji: "✍️", tint: "#fff1e2",
+    blurb: "Viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí.", assetNote: "Thumbnail 4:3 · 800×600 (chưa có, dùng emoji)" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
 // Sticker theo game-type (MVP): tặng MỘT LẦN khi khám phá hết câu/task của một topic bất kỳ thuộc game đó.
 export const STICKER_FOR_GAME: Record<GameKind, string> = {
-  picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star",
+  picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star", write: "st-pencil",
 };
 
 // Bốn sticker còn lại cũng thuộc Practice, mở theo tổng số lượt chơi.
@@ -51,7 +54,8 @@ export const PRACTICE_MILESTONE_STICKERS = [
   { plays: 30, id: "st-crown" },
 ];
 // Số câu/task mỗi lượt theo game. picdet gộp 2 hoạt động nên lấy 6 câu/lượt.
-export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5 };
+// Viết tốn sức hơn trắc nghiệm nên mỗi lượt chỉ 4 bài.
+export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5, write: 4 };
 
 /* ---------- Kiểu dữ liệu ngân hàng chữ (dùng bởi lib/banks.ts) ---------- */
 export type Puzzle = { id: string; solution: string[]; vi: string; difficulty?: Difficulty; grammarFocus?: string };
