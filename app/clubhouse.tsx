@@ -31,6 +31,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [maplePos, setMaplePos] = useState({ x: 14, y: 91 });
   const [mapleWalking, setMapleWalking] = useState(false);
+  const [shopMessage, setShopMessage] = useState("");
   const roomRef = useRef<HTMLElement>(null);
   const purchased = new Set(state.clubhouse.purchasedItemIds);
   const equipped = new Set(state.clubhouse.equippedItemIds);
@@ -57,8 +58,14 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   }
 
   function buy(item: ShopItem) {
-    if (purchased.has(item.id) || state.clubhouse.coins < item.price) return;
+    if (purchased.has(item.id)) return;
+    if (state.clubhouse.coins < item.price) {
+      setShopMessage(`Cần thêm ${item.price - state.clubhouse.coins} Coins. Hoàn thành Learn, Practice hoặc Adventure để nhận Coins nhé!`);
+      return;
+    }
+    setShopMessage("");
     setState((s) => buyClubhouseItem(s, item.id, item.price, room.id));
+    setShopMessage(`Đã mua ${item.en}! Món đồ đã được đặt vào ${room.name}.`);
     setDelivery(item); celebrate(state.prefs.motion !== false); playSuccessSound();
   }
 
@@ -117,7 +124,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET</span><h3>Chọn phong cách của con</h3><p>Hai bộ sưu tập · mua một lần, sở hữu mãi.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
-        <div className="shop-grid">{CLUBHOUSE_SHOP.map((item) => { const owned = purchased.has(item.id); const canBuy = state.clubhouse.coins >= item.price; return <article key={item.id} className={owned ? "owned" : ""}><ShopArt item={item} className="large" /><div><small>{item.collection === "cosmic" ? "COSMIC CLUB" : "TRAIL CLUB"}</small><h4>{item.en}</h4><p>{item.vi}</p></div><button disabled={owned || !canBuy} onClick={() => buy(item)}>{owned ? "Đã sở hữu" : <><span>◆</span>{item.price}</>}</button></article>; })}</div>
+        {shopMessage && <div className="shop-message" role="status">◆ {shopMessage}</div>}
+        <div className="shop-grid">{CLUBHOUSE_SHOP.map((item) => { const owned = purchased.has(item.id); const canBuy = state.clubhouse.coins >= item.price; return <article key={item.id} role="button" tabIndex={owned ? -1 : 0} aria-disabled={owned} aria-label={`${owned ? "Đã sở hữu" : "Mua"} ${item.en}, ${item.price} Coins`} className={`${owned ? "owned" : ""} ${!owned && !canBuy ? "needs-coins" : ""}`} onClick={() => buy(item)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); buy(item); } }}><ShopArt item={item} className="large" /><div><small>{item.collection === "cosmic" ? "COSMIC CLUB" : "TRAIL CLUB"}</small><h4>{item.en}</h4><p>{item.vi}</p></div><button type="button" disabled={owned} tabIndex={-1} onClick={(e) => { e.stopPropagation(); buy(item); }}>{owned ? "Đã sở hữu" : canBuy ? <><span>◆</span>{item.price}</> : <>Thiếu {item.price - state.clubhouse.coins} ◆</>}</button></article>; })}</div>
       </section>}
 
       {panel === "journal" && <section className="clubhouse-drawer keepsake-journal">
