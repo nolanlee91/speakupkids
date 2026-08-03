@@ -34,14 +34,16 @@ const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄",
 const TOTAL_UNITS = LEVEL0_UNITS.length + LEVEL1_UNITS.length + LEVEL2_UNITS.length + LEVEL3_COLLECTIONS.reduce((a, c) => a + c.units.length, 0);
 
 type View = "home" | "learn" | "adventure" | "games";
+type NavTarget = View | "clubhouse";
 type Launch = { kind: StopKind; refId?: string; title: string };
 type Reward = { title: string; html: string; stars?: number; coins?: number; sticker?: { id: string; emoji: string; name: string } | null };
 
-const NAV: [View, AppIconName, string][] = [
+const NAV: [NavTarget, AppIconName, string][] = [
   ["home", "home", "Today"],
   ["learn", "learn", "Learn"],
   ["games", "practice", "Practice"],
   ["adventure", "adventure", "Adventure"],
+  ["clubhouse", "clubhouse", "Nhà Maple"],
 ];
 
 function App() {
@@ -185,7 +187,8 @@ function App() {
 
       <nav className="nav">
         {NAV.map(([v, i, label]) => (
-          <button key={v} className={view === v ? "on" : ""} onClick={() => goView(v)}>
+          <button key={v} className={(v === "clubhouse" ? clubhouse : view === v && !clubhouse) ? "on" : ""}
+            onClick={() => v === "clubhouse" ? setClubhouse(true) : goView(v)}>
             <span className="i"><AppIcon name={i} /></span>{label}
           </button>
         ))}
