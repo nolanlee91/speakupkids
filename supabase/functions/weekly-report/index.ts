@@ -70,6 +70,7 @@ const TIP: Record<string, string> = {
 };
 
 // Câu gợi chuyện dự phòng — xoay vòng theo số tuần khi không bắt được chủ đề bé vừa luyện.
+// 30 câu ≈ 7 tháng mới lặp lại một vòng.
 const TALK_IDEAS = [
   "What did you eat today? — đố bé kể bữa ăn hôm nay bằng tiếng Anh",
   "What's your favorite animal? — và hỏi thêm Why do you like it?",
@@ -79,6 +80,28 @@ const TALK_IDEAS = [
   "Can you count from 1 to 20 in English? — thi đếm nhanh cùng bé",
   "What color is your shirt? — chỉ đồ vật quanh nhà, đố bé nói màu",
   "Who is your best friend? — để bé kể về bạn thân bằng 2 câu tiếng Anh",
+  "What makes you happy? — nghe bé kể những điều làm bé vui",
+  "What did you learn at school today? — để bé khoe bài học hôm nay",
+  "What's your favorite toy? — và hỏi thêm Where did you get it?",
+  "Can you name 5 fruits in English? — thi kể tên trái cây cùng bé",
+  "What time do you get up? — hỏi giờ giấc một ngày của bé",
+  "What's in your schoolbag? — để bé lôi cặp ra kể từng món",
+  "Do you like rainy days or sunny days? — và hỏi Why?",
+  "What animal can fly? What animal can swim? — đố qua đố lại với bé",
+  "What's your favorite song? — rồi nghe bé hát thử một câu",
+  "If you had a pet dragon, what would you name it? — cho bé tưởng tượng thoải mái",
+  "What do you want for your birthday? — nghe điều ước sinh nhật của bé",
+  "Can you name 3 things in the kitchen? — chơi ngay trong bếp nhà mình",
+  "What's your teacher like? — để bé tả thầy cô bằng tiếng Anh",
+  "What did you play with your friends today? — chuyện giờ ra chơi của bé",
+  "Which do you like: cats or dogs? — và hỏi thêm Why?",
+  "What can you see out the window? — nhìn ra cửa sổ và kể cùng bé",
+  "What's your favorite ice cream flavor? — chuyện kem thì bé nào cũng hào hứng",
+  "How many people are in our family? — để bé đếm và kể từng người",
+  "What do you do before bed? — nghe bé kể thói quen buổi tối",
+  "If you could fly, where would you go? — cho bé mơ mộng bằng tiếng Anh",
+  "What sport do you like? — và rủ bé Let's play together!",
+  "Can you say something nice to Mom/Dad in English? — để bé nói một câu yêu thương",
 ];
 
 // Câu gợi chuyện THEO CHỦ ĐỀ bé vừa luyện — trùng kiến thức đang nóng để bé trả lời được ngay.
