@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { speak, shuffle, celebrate, playFeedbackSound, playSuccessSound } from "@/lib/fx";
 import { speechScoringSupported } from "@/lib/speech";
 import { MicCheck } from "./speakcheck";
@@ -9,6 +9,7 @@ import { DETECTIVE_SCENES, detectiveSceneById, talkSceneById } from "@/lib/scene
 import { practiceItemLocked } from "@/lib/gating";
 import { PUZZLE_SETS, RIDDLE_SETS, LISTEN_SETS, puzzleSetById, riddleSetById, listenSetById } from "@/lib/banks";
 import { WRITE_SETS, writeSetById, scoreWriting, type WriteScore } from "@/lib/writing";
+import { GRAMMAR_TRACKS, GRAMMAR_UNITS, grammarUnitById, checkFill, type GrammarDrill } from "@/lib/grammar";
 import {
   EMPTY_TOPIC, selectRound, countByDifficulty, starsFor, picdetDifficulty, talkDifficulty, puzzleDifficulty,
   type GameTopicProgress, type RoundResult, type Difficulty,
@@ -767,6 +768,158 @@ function WriteRound({ setId, cb, accent, onExit, onNext }: {
   );
 }
 
+/* ============ Grammar Path (trục ngữ pháp: quy tắc → luyện, có hệ thống) ============ */
+function GrammarChallenge({ unitId, cb, accent, onExit }: { unitId?: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void }) {
+  const initial = unitId && grammarUnitById(unitId) ? unitId : undefined;
+  const galleryMode = !initial;
+  const [chosen, setChosen] = useState<string | undefined>(initial);
+
+  if (!chosen) {
+    return (
+      <GameShell emoji="🧭" title="Grammar Path" vi="Trục ngữ pháp — học theo thứ tự" onExit={onExit}>
+        <p className="gallery-intro">Mỗi chặng: đọc quy tắc ngắn rồi luyện ngay. Đi lần lượt ba trục để ôn thi cấp 2: <b>Các thì → Câu hỏi → So sánh</b>.</p>
+        {GRAMMAR_TRACKS.map((track) => (
+          <div key={track.id} className="gpath-track">
+            <div className="gpath-track-name">{track.name}</div>
+            <div className="gpath-units">
+              {track.units.map((u) => {
+                const locked = practiceItemLocked(cb.premium, "grammar", u.id);
+                const prog = cb.topics["grammar:" + u.id] || EMPTY_TOPIC;
+                const done = prog.seen.length >= u.drills.length;
+                const num = GRAMMAR_UNITS.findIndex((x) => x.id === u.id) + 1;
+                return (
+                  <button key={u.id} className={`gpath-unit ${done ? "done" : ""} ${locked ? "premium-locked" : ""}`}
+                    onClick={() => { if (locked) { cb.onPremium(); return; } setChosen(u.id); }}>
+                    <span className="gpath-num">{done ? "✓" : num}</span>
+                    <span className="gpath-txt">
+                      <b>{u.title}</b><small>{u.vi}</small>
+                      {locked ? <em className="sc-premium">🔒 Chỉ dành cho Pro</em>
+                        : prog.bestStars > 0 ? <em className="gpath-stars">{"⭐".repeat(prog.bestStars)}{"☆".repeat(3 - prog.bestStars)}</em>
+                        : <em className="gpath-hint">{u.drills.length} câu luyện</em>}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </GameShell>
+    );
+  }
+  return <GrammarUnitView key={chosen} unitId={chosen} cb={cb} accent={accent}
+    onExit={galleryMode ? () => setChosen(undefined) : onExit}
+    onNext={galleryMode ? () => setChosen(undefined) : undefined} />;
+}
+
+function GrammarUnitView({ unitId, cb, accent, onExit, onNext }: {
+  unitId: string; cb: GameCallbacks; accent: "US" | "CA"; onExit: () => void; onNext?: () => void;
+}) {
+  const unit = grammarUnitById(unitId)!;
+  const key = "grammar:" + unit.id;
+  const [mode, setMode] = useState<"theory" | "drill">("theory");
+
+  if (mode === "theory") {
+    return (
+      <GameShell emoji="🧭" title={unit.title} vi={unit.vi} onExit={onExit}>
+        <div className="qcard gpath-theory">
+          <div className="gpath-rule">💡 {unit.rule}</div>
+          <ul className="gpath-forms">{unit.forms.map((f) => <li key={f}>{f}</li>)}</ul>
+          <div className="gpath-examples">
+            {unit.examples.map((ex) => (
+              <div key={ex.en} className="gpath-ex">
+                <b>{ex.en}</b>
+                <button className="icbtn" onClick={() => speak(ex.en, accent)}>🔊</button>
+                <ViReveal vi={ex.vi} label="👀 nghĩa" />
+              </div>
+            ))}
+          </div>
+          <button className="btn green" onClick={() => setMode("drill")}>Luyện tập ({ROUND_SIZE.grammar} câu) →</button>
+        </div>
+      </GameShell>
+    );
+  }
+  return <GrammarRound unit={unit} keyName={key} cb={cb} onExit={onExit} onNext={onNext} onTheory={() => setMode("theory")} />;
+}
+
+function GrammarRound({ unit, keyName, cb, onExit, onNext, onTheory }: {
+  unit: ReturnType<typeof grammarUnitById> & object; keyName: string; cb: GameCallbacks;
+  onExit: () => void; onNext?: () => void; onTheory: () => void;
+}) {
+  const u = unit as NonNullable<ReturnType<typeof grammarUnitById>>;
+  const [items] = useState<GrammarDrill[]>(() => {
+    const prog = cb.topics[keyName] || EMPTY_TOPIC;
+    return selectRound(u.drills, prog, ROUND_SIZE.grammar, () => "medium");
+  });
+  const [i, setI] = useState(0);
+  const [picked, setPicked] = useState<string | null>(null);   // mcq: lựa chọn · fill: chuỗi đã gõ
+  const [fillOk, setFillOk] = useState<boolean | null>(null);
+  const [text, setText] = useState("");
+  const [results, setResults] = useState<RoundResult[]>([]);
+  const [fin, setFin] = useState(false);
+  const d = items[i];
+  const opts = useMemo(() => (d.type === "mcq" ? shuffle(d.options!) : []), [d]);
+  const answered = picked !== null;
+  const correct = d.type === "mcq" ? picked === d.answer : fillOk === true;
+  const nCorrect = results.filter((x) => x.correct).length;
+  const stars = starsFor(nCorrect, items.length);
+  const info = useFinish(fin, () => cb.finish(keyName, results, stars, u.drills.length));
+  const exit = () => { cb.commit(keyName, results); onExit(); };
+
+  function answerMcq(o: string) { if (!answered) setPicked(o); }
+  function answerFill() {
+    if (answered || !text.trim()) return;
+    setPicked(text); setFillOk(checkFill(d, text));
+  }
+  function next() {
+    const r = [...results, { id: d.id, correct }];
+    setResults(r);
+    if (i + 1 < items.length) { setI(i + 1); setPicked(null); setFillOk(null); setText(""); }
+    else setFin(true);
+  }
+
+  if (fin) {
+    const a = resultActions(onNext, onExit, "Chặng khác →");
+    return <GameShell emoji="🧭" title={u.title} vi={u.vi} onExit={onExit}>
+      <GameResult title={`Đúng ${nCorrect}/${items.length} câu ngữ pháp! 🧭`} stars={stars} info={info}
+        doneLabel={a.doneLabel} onDone={a.onDone} secondary={a.secondary} />
+    </GameShell>;
+  }
+  return (
+    <GameShell emoji="🧭" title={u.title} vi={u.vi} onExit={exit}>
+      <div className="q-progress">
+        <span className="q-badge">{d.type === "mcq" ? "Chọn đáp án" : "Tự viết dạng đúng"}</span> {i + 1}/{items.length}
+        <button className="linklike" style={{ marginLeft: "auto" }} onClick={onTheory}>📖 Xem lại quy tắc</button>
+      </div>
+      <div className="qcard">
+        <div className="qtext">{d.q}</div>
+        {d.type === "mcq" ? (
+          <div className={`qopts ${answered ? "answered" : ""}`}>
+            {opts.map((o) => (
+              <button key={o} disabled={answered}
+                className={`qopt ${answered && o === d.answer ? "right" : ""} ${answered && o === picked && o !== d.answer ? "wrong" : ""}`}
+                onClick={() => answerMcq(o)}>{o}</button>
+            ))}
+          </div>
+        ) : (
+          <div className="gpath-fill">
+            <input type="text" value={text} disabled={answered} placeholder="Gõ dạng đúng…"
+              autoCapitalize="off" autoCorrect="off" spellCheck={false}
+              onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && answerFill()} />
+            {!answered && <button className="btn" disabled={!text.trim()} onClick={answerFill}>Kiểm tra ✓</button>}
+          </div>
+        )}
+        {answered && (
+          <div className="qfb">
+            {correct ? <span className="ok">✓ Chính xác!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{d.answer}</b></>}
+            <div className="q-explain">💡 {d.explainVi}</div>
+          </div>
+        )}
+        {answered && <button className="btn qnext" onClick={next}>{i + 1 < items.length ? "Câu tiếp →" : "Xem kết quả →"}</button>}
+      </div>
+    </GameShell>
+  );
+}
+
 /* ============ Echo Challenge (luyện nói, chấm sao tuỳ chọn bằng Web Speech API) ============ */
 function EchoChallenge({ accent, onExit, cb }: { accent: "US" | "CA"; onExit: () => void; cb: GameCallbacks }) {
   const phrases = ECHO;
@@ -817,6 +970,7 @@ export function GamePlay({ kind, refId, accent, cb, onExit }: {
   if (kind === "riddle") return <RiddleGame setId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "listen") return <ListenChallenge setId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "write") return <WriteChallenge setId={refId} cb={cb} accent={accent} onExit={onExit} />;
+  if (kind === "grammar") return <GrammarChallenge unitId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "echo") return <EchoChallenge accent={accent} onExit={onExit} cb={cb} />;
   return null;
 }

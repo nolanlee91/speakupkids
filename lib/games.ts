@@ -15,11 +15,12 @@ export const STICKERS: Sticker[] = [
   { id: "st-maple", emoji: "🍁", name: "Bạn của Maple" },
   { id: "st-crown", emoji: "👑", name: "Vua từ vựng" },
   { id: "st-pencil", emoji: "✍️", name: "Cây bút nhí" },
+  { id: "st-grammar", emoji: "🧭", name: "Nhà ngữ pháp" },
 ];
 export const stickerById = (id: string) => STICKERS.find((s) => s.id === id);
 
 /* ---------- GAME: danh mục khu Practice ---------- */
-export type GameKind = "picdet" | "puzzle" | "riddle" | "listen" | "write";
+export type GameKind = "picdet" | "puzzle" | "riddle" | "listen" | "write" | "grammar";
 // Loại phiên chơi do GamePlay điều phối: các game chính + Echo (luyện nói tùy chọn).
 export type StopKind = GameKind | "echo";
 
@@ -35,14 +36,16 @@ export const GAMES: GameInfo[] = [
     blurb: "Đọc/nghe manh mối rồi chọn đáp án, luyện đọc hiểu.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "listen", name: "Listen & Choose", vi: "Nghe & chọn", emoji: "🎧", image: "/assets/images/gen/game-listen.webp", tint: "#eaf3ff",
     blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "write", name: "Writing Coach", vi: "Luyện viết câu", emoji: "✍️", tint: "#fff1e2",
-    blurb: "Viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí.", assetNote: "Thumbnail 4:3 · 800×600 (chưa có, dùng emoji)" },
+  { id: "write", name: "Writing Coach", vi: "Luyện viết câu", emoji: "✍️", image: "/assets/images/gen/game-writing.webp", tint: "#fff1e2",
+    blurb: "Viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí.", assetNote: "Thumbnail 4:3 · 800×600" },
+  { id: "grammar", name: "Grammar Path", vi: "Trục ngữ pháp", emoji: "🧭", tint: "#eef0ff",
+    blurb: "Học quy tắc rồi luyện theo trục: các thì → câu hỏi → so sánh. Ôn thi cấp 2.", assetNote: "Thumbnail 4:3 · 800×600 (chưa có, dùng emoji)" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 
 // Sticker theo game-type (MVP): tặng MỘT LẦN khi khám phá hết câu/task của một topic bất kỳ thuộc game đó.
 export const STICKER_FOR_GAME: Record<GameKind, string> = {
-  picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star", write: "st-pencil",
+  picdet: "st-detective", puzzle: "st-puzzle", riddle: "st-owl", listen: "st-star", write: "st-pencil", grammar: "st-grammar",
 };
 
 // Bốn sticker còn lại cũng thuộc Practice, mở theo tổng số lượt chơi.
@@ -55,7 +58,7 @@ export const PRACTICE_MILESTONE_STICKERS = [
 ];
 // Số câu/task mỗi lượt theo game. picdet gộp 2 hoạt động nên lấy 6 câu/lượt.
 // Viết tốn sức hơn trắc nghiệm nên mỗi lượt chỉ 4 bài.
-export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5, write: 4 };
+export const ROUND_SIZE: Record<GameKind, number> = { picdet: 6, puzzle: 6, riddle: 5, listen: 5, write: 4, grammar: 6 };
 
 /* ---------- Kiểu dữ liệu ngân hàng chữ (dùng bởi lib/banks.ts) ---------- */
 export type Puzzle = { id: string; solution: string[]; vi: string; difficulty?: Difficulty; grammarFocus?: string };

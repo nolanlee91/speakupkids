@@ -6,6 +6,7 @@ import { isPremium, type AppState } from "./state";
 import { DETECTIVE_SCENES } from "./scenes";
 import { PUZZLE_SETS, RIDDLE_SETS, LISTEN_SETS } from "./banks";
 import { WRITE_SETS } from "./writing";
+import { GRAMMAR_UNITS } from "./grammar";
 
 const FREE_N = 3;
 const firstIds = (arr: { id: string }[], n: number) => new Set(arr.slice(0, n).map((x) => x.id));
@@ -15,6 +16,7 @@ const PUZZLE_FREE = firstIds(PUZZLE_SETS, FREE_N);
 const RIDDLE_FREE = firstIds(RIDDLE_SETS, FREE_N);
 const LISTEN_FREE = firstIds(LISTEN_SETS, 2);   // Nghe & chọn chỉ có 4 bộ → mở 2
 const WRITE_FREE = firstIds(WRITE_SETS, FREE_N);
+const GRAMMAR_FREE = firstIds(GRAMMAR_UNITS, FREE_N);   // 3 unit đầu trục Thì
 
 // Learn: khóa theo cấp + vị trí bài trong cấp (L3 tính theo từng collection).
 export function learnLocked(state: AppState, levelId: string, indexInGroup: number): boolean {
@@ -33,6 +35,7 @@ export function practiceItemLocked(premium: boolean, kind: string, id: string): 
   if (kind === "riddle") return !RIDDLE_FREE.has(id);
   if (kind === "listen") return !LISTEN_FREE.has(id);
   if (kind === "write") return !WRITE_FREE.has(id);
+  if (kind === "grammar") return !GRAMMAR_FREE.has(id);
   return false;
 }
 
