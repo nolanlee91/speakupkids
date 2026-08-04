@@ -10,7 +10,21 @@ describe("normalizeState / migration", () => {
     const s = normalizeState({});
     expect(s.membership).toBe("free");
     expect(s.learn.currentLesson).toBeTruthy();
-    expect(s.clubhouse.coins).toBeGreaterThanOrEqual(0);
+    expect(s.clubhouse.coins).toBe(40);
+    expect(s.clubhouse.cash).toBe(10);
+  });
+
+  it("tài khoản mới và state cũ thiếu ví nhận cùng số dư khởi đầu", () => {
+    expect(defaultState().clubhouse.coins).toBe(40);
+    expect(defaultState().clubhouse.cash).toBe(10);
+    expect(normalizeState({ clubhouse: {} }).clubhouse.coins).toBe(40);
+    expect(normalizeState({ clubhouse: {} }).clubhouse.cash).toBe(10);
+  });
+
+  it("giữ nguyên số dư hiện tại khi migrate", () => {
+    const s = normalizeState({ clubhouse: { coins: 155, cash: 7 } });
+    expect(s.clubhouse.coins).toBe(155);
+    expect(s.clubhouse.cash).toBe(7);
   });
 
   it('membership cũ "premium" migrate thành "pro"', () => {

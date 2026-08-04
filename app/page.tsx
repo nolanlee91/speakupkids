@@ -141,7 +141,6 @@ function App() {
       ns = finishGameRound(ns, key, stars, todayStr());
       const roundReward = awardCoinsOnce(ns, roundKey, 10);
       ns = roundReward.state;
-      ns = awardCashOnce(ns, roundKey, 1).state;
       if (ns.daily.learn && ns.daily.practice) {
         ns = awardCoinsOnce(ns, dailyKey, 15).state;
         ns = awardCashOnce(ns, dailyKey, 2).state;
@@ -162,8 +161,6 @@ function App() {
     let ns = done.state;
     const coinReward = newly ? awardCoinsOnce(ns, `learn:${lessonId}`, 20) : { state: ns, awarded: 0 };
     ns = coinReward.state;
-    const cashReward = newly ? awardCashOnce(ns, `learn:${lessonId}`, 1) : { state: ns, awarded: 0 };
-    ns = cashReward.state;
     const dailyReward = ns.daily.practice ? awardCoinsOnce(ns, `daily-core:${todayStr()}`, 15) : { state: ns, awarded: 0 };
     ns = dailyReward.state;
     const dailyCash = ns.daily.practice ? awardCashOnce(ns, `daily-core:${todayStr()}`, 2) : { state: ns, awarded: 0 };
@@ -178,7 +175,7 @@ function App() {
       html: `Bạn hoàn thành Unit <b>${les?.title || ""}</b> — đúng <b>${score}/${total}</b> ở Kiểm tra nhỏ.<br>Học tiếp Unit sau hoặc luyện tập cho nhớ lâu nhé!`,
       stars: st,
       coins: coinReward.awarded + dailyReward.awarded,
-      cash: cashReward.awarded + dailyCash.awarded,
+      cash: dailyCash.awarded,
       sticker: null,
     });
   }

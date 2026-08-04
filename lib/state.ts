@@ -106,7 +106,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 0, cash: 0, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" } },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 40, cash: 10, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" } },
   };
 }
 
