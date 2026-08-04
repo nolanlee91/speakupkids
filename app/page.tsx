@@ -13,9 +13,11 @@ import {
   GAMES, stickerById, STICKER_FOR_GAME, PRACTICE_MILESTONE_STICKERS,
   type StopKind, type GameKind,
 } from "@/lib/games";
-import { SECTIONS, learnLessonById, LEVEL1_UNITS, LEVEL2_UNITS, LEVEL3_COLLECTIONS } from "@/lib/learn";
+// Bundle GĐ2: Today chỉ đọc catalog NHẸ (lib/catalog.gen.ts ~13KB) thay vì kéo
+// lib/learn (517KB) + lib/adventures (218KB) — nội dung đầy đủ vẫn nằm trong
+// chunk dynamic của khu Learn/Adventure, chỉ tải khi bé bấm vào.
+import { CATALOG, catalogLesson, TOTAL_LEARN_UNITS, lostCompassSeason, resumeChapterLite } from "@/lib/catalog";
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
-import { SEASONS, SEASON_LOST_COMPASS, chapterPlayable, resumeChapter } from "@/lib/adventures";
 import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
 import dynamic from "next/dynamic";
 
@@ -37,7 +39,7 @@ const GEN = "/assets/images/gen/";
 
 const AVATARS = ["🦊", "🐰", "🐼", "🦉", "🐨", "🦫", "🐬", "🦄", "🐧", "🐝"];
 // Tổng số Unit của cả 3 Level (dùng cho thanh tiến độ ở dashboard Home desktop).
-const TOTAL_UNITS = LEVEL0_UNITS.length + LEVEL1_UNITS.length + LEVEL2_UNITS.length + LEVEL3_COLLECTIONS.reduce((a, c) => a + c.units.length, 0);
+const TOTAL_UNITS = LEVEL0_UNITS.length + TOTAL_LEARN_UNITS;
 
 type View = "home" | "learn" | "adventure" | "games";
 type NavTarget = View | "clubhouse";
@@ -168,7 +170,7 @@ function App() {
     setState(ns);
     celebrate(state.prefs.motion !== false);
     playSuccessSound();
-    const les = learnLessonById(lessonId) || phonicsUnitById(lessonId);
+    const les = catalogLesson(lessonId) || phonicsUnitById(lessonId);
     const st = score >= total ? 3 : score >= total - 1 ? 2 : 1;
     setReward({
       title: score >= total ? "Xuất sắc! 🌟" : score >= total - 1 ? "Làm tốt lắm! 👍" : "Cố lên nhé! 💪",
@@ -278,16 +280,17 @@ function Today({ state, go, openLesson, openClubhouse }: {
 }) {
   const name = state.nickname || "bạn nhỏ";
   const lessonId = state.learn.currentLesson;
-  const lesson = learnLessonById(lessonId) || learnLessonById("park")!;
+  const lesson = catalogLesson(lessonId) || catalogLesson("park")!;
+  const SECTIONS = CATALOG.sections;
   const doneCount = SECTIONS.filter((sc) => sectionDone(state, lesson.id, sc.key)).length;
   const nextSection = SECTIONS.find((sc) => !sectionDone(state, lesson.id, sc.key));
   const lessonDone = learnLessonDone(state, lesson.id);
 
   // Chiến dịch Phiêu lưu (tiến độ RIÊNG của Adventure, không liên quan Learn):
   // chương nên chơi tiếp = chương đang mở/chơi dở đầu tiên của Season 1.
-  const advSeason = SEASON_LOST_COMPASS;
+  const advSeason = lostCompassSeason();
   const advProg = adventureOf(state, advSeason.id);
-  const advResume = resumeChapter(advSeason, (id) => isChapterCompleted(state, advSeason.id, id), advProg.currentChapterId);
+  const advResume = resumeChapterLite(advSeason, (id) => isChapterCompleted(state, advSeason.id, id), advProg.currentChapterId);
   const advStarted = advProg.completedChapterIds.length > 0 || !!advProg.currentChapterId;
 
   // CTA lớn: tiếp tục hoạt động gần nhất — KHÔNG ép ba module thành một chuỗi bắt buộc.
@@ -303,7 +306,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
   } else if (!lessonDone) {
     cta = { kicker: "Sắp xong Unit", title: `${lesson.title} · Kiểm tra nhỏ`, sub: "Làm bài kiểm tra để hoàn thành", label: "Làm Kiểm tra nhỏ", run: () => openLesson(lesson.id) };
   } else if (advStarted && advResume) {
-    cta = { kicker: "Tiếp tục chiến dịch", title: `Phiêu lưu · ${advResume.vi}`, sub: "Chương tiếp theo trên bản đồ", label: "Chơi tiếp", run: () => go("adventure"), bg: advResume.sceneImage };
+    cta = { kicker: "Tiếp tục chiến dịch", title: `Phiêu lưu · ${advResume.vi}`, sub: "Chương tiếp theo trên bản đồ", label: "Chơi tiếp", run: () => go("adventure"), bg: advResume.sceneImage ?? undefined };
   } else {
     cta = { kicker: "Luyện cho nhớ lâu", title: "Luyện tập cùng Maple", sub: "Chơi một lượt có chấm điểm", label: "Luyện tập", run: () => go("games") };
   }
@@ -321,8 +324,8 @@ function Today({ state, go, openLesson, openClubhouse }: {
   // Số liệu thật cho các panel/cổng ở dashboard desktop (không tạo dữ liệu giả).
   const learnedUnits = learnLessonsDone(state);
   const advDone = adventuresDone(state);
-  const journeysDone = SEASONS.filter((season) => {
-    const playable = season.chapters.filter(chapterPlayable);
+  const journeysDone = CATALOG.seasons.filter((season) => {
+    const playable = season.chapters.filter((c) => c.playable);
     return playable.length > 0 && playable.every((chapter) => isChapterCompleted(state, season.id, chapter.id));
   }).length;
   const roomOwned = CLUBHOUSE_SHOP.filter((item) => state.clubhouse.purchasedItemIds.includes(item.id)).length;
@@ -361,7 +364,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
 
       {/* CTA chính duy nhất */}
       <button className="next-card" onClick={cta.run}>
-        {(cta.bg || lesson.sceneImage) && <img className="nc-img" src={cta.bg || lesson.sceneImage} alt="" />}
+        {(cta.bg || lesson.sceneImage) && <img className="nc-img" src={cta.bg || lesson.sceneImage || undefined} alt="" />}
         <span className="nc-body">
           <span className="nc-kicker">{cta.kicker}</span>
           <span className="nc-title">{cta.title}</span>
@@ -425,7 +428,7 @@ function Today({ state, go, openLesson, openClubhouse }: {
         </button>
         <button className="tp-card tp-adv" onClick={() => go("adventure")}>
           <span className="tp-ic" aria-hidden="true"><AppIcon name="adventure" /></span>
-          <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone} chương · {journeysDone}/{SEASONS.length} bản đồ</span></span>
+          <span className="tp-txt"><span className="tp-t">Phiêu lưu</span><span className="tp-s">{advDone} chương · {journeysDone}/{CATALOG.seasons.length} bản đồ</span></span>
           <span className="tp-go">▸</span>
         </button>
       </nav>
