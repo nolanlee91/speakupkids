@@ -4,9 +4,11 @@ import { describe, it, expect } from "vitest";
 import { GRAMMAR_TRACKS, GRAMMAR_UNITS, checkFill, grammarUnitById } from "@/lib/grammar";
 
 describe("dữ liệu GRAMMAR", () => {
-  it("4 trục: Thì (4) · Câu hỏi (2) · So sánh (2) · Nền tảng (4), mỗi unit ≥12 câu", () => {
+  it("4 trục: Thì (4) · Câu hỏi (2) · So sánh (2) · Nền tảng (4), tổng 640 câu", () => {
     expect(GRAMMAR_TRACKS.map((t) => t.units.length)).toEqual([4, 2, 2, 4]);
-    for (const u of GRAMMAR_UNITS) expect(u.drills.length, u.id).toBeGreaterThanOrEqual(12);
+    for (const u of GRAMMAR_UNITS) expect(u.drills.length, u.id).toBeGreaterThanOrEqual(48);
+    const total = GRAMMAR_UNITS.reduce((n, u) => n + u.drills.length, 0);
+    expect(total).toBe(640);
   });
 
   it("id unit + id drill không trùng nhau", () => {
