@@ -11,6 +11,7 @@
 - `clubhouse-shop-sprites.png` — transparent 4×2 sprite sheet for eight Shop items.
 - `clubhouse-shop-sprites-02.png` — transparent 4×2 Cosmic Club collection (eight more items).
 - `clubhouse-shop-sprites-03.png` — transparent 4×2 Studio Club collection (eight more items).
+- `clubhouse-shop-sprites-04.png` — transparent 4×2 Prestige Club collection (eight long-term Coin sinks, 250–600 Coins).
 - `maple-outfit-explorer.webp`, `maple-outfit-creative.webp`, `maple-outfit-cosmic.webp` — transparent 3×2 pose sheets used by Maple Closet.
 - Runtime item definitions, prices and default coordinates live in `lib/clubhouse.ts`.
 - The house has `lounge`, `study`, `rooftop`, `loft`, and `maker` rooms. `clubhouse.itemRoomIds` assigns each item to one room.
@@ -29,6 +30,8 @@ The room uses one fixed perspective with a responsive crop. New items need safe 
 - Shop prices are fixed. No loot boxes, random rolls or paid coin packs in MVP.
 - Purchased furniture is owned permanently and can be equipped/stored without paying again.
 - Legacy/new local accounts receive a small starter balance so the Shop is understandable immediately.
+- Cash is earned from the daily Learn + Practice combo, not from finite lesson/topic/chapter completions.
+- Prestige Club adds 3,000 Coins of permanent furniture goals; the full Shop costs 5,185 Coins.
 
 ## Reward roles
 

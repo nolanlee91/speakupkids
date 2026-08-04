@@ -43,6 +43,14 @@ const INTERACTIONS: Record<string, FurnitureInteraction> = {
   "shop-telescope": { pose: "think", lines: ["I can see something near the moon!", "The sky is full of clues."], xOffset: 7 },
   "shop-aurora-projector": { pose: "think", lines: ["The colours look like northern lights.", "What makes an aurora glow?"], xOffset: 6 },
   "shop-map": { pose: "think", lines: ["Where should we explore next?", "I found Vancouver on the map."], xOffset: 7 },
+  "shop-grand-aquarium": { pose: "think", lines: ["I spotted the orange fish!", "An aquarium is a tiny underwater world."], xOffset: 7, needs: { energy: 3, hunger: -2, happiness: 10 } },
+  "shop-reading-pod": { pose: "sit", lines: ["This pod is perfect for a long story.", "Quiet, cozy, and full of ideas."], xOffset: 1, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 8 } },
+  "shop-mini-cinema": { pose: "sit", lines: ["The next scene is my favourite!", "Let’s watch it in English."], xOffset: 2, yOffset: 2, needs: { energy: 5, hunger: -4, happiness: 12 } },
+  "shop-treehouse-loft": { pose: "create", lines: ["This is the best lookout in the house!", "Every treehouse needs a secret plan."], xOffset: 3, needs: { energy: -5, hunger: -4, happiness: 14 } },
+  "shop-aurora-window": { pose: "think", lines: ["The aurora is dancing across the sky.", "I can see green, blue, and violet light."], xOffset: 7, needs: { energy: 4, hunger: -2, happiness: 12 } },
+  "shop-command-station": { pose: "play", lines: ["Command station online!", "Let’s solve this mission together."], xOffset: 3, needs: { energy: -8, hunger: -5, happiness: 14 } },
+  "shop-pet-retreat": { pose: "cheer", lines: ["A cozy home for a future pet.", "The food bowl goes right here."], xOffset: 5, needs: { energy: -2, hunger: -2, happiness: 10 } },
+  "shop-adventure-gallery": { pose: "think", lines: ["Every treasure has a story.", "Look how far we have travelled!"], xOffset: 6, needs: { energy: 2, hunger: -2, happiness: 12 } },
 };
 
 const ROOMS = [
@@ -52,7 +60,7 @@ const ROOMS = [
   { id: "loft", name: "Dream Loft", en: "dream loft", icon: "☾", image: "/assets/images/clubhouse/maple-house-dream-loft.webp", maple: { x: 16, y: 91 }, line: "Welcome to the dream loft. Let's make it cozy!" },
   { id: "maker", name: "Maker Den", en: "maker den", icon: "✹", image: "/assets/images/clubhouse/maple-house-maker-den.webp", maple: { x: 17, y: 91 }, line: "This is our maker den. What will we create today?" },
 ] as const;
-const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png", "/assets/images/clubhouse/clubhouse-shop-sprites-03.png", "/assets/images/clubhouse/clubhouse-learn-rewards.png"];
+const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png", "/assets/images/clubhouse/clubhouse-shop-sprites-03.png", "/assets/images/clubhouse/clubhouse-learn-rewards.png", "/assets/images/clubhouse/clubhouse-shop-sprites-04.png"];
 const BDG = "/assets/images/badges/";
 
 function ShopArt({ item, className = "" }: { item: ShopItem; className?: string }) {
@@ -262,9 +270,9 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
       {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap to place; select an item in the room to adjust it</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
-        <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Three collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
+        <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Four collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
         {shopMessage && <div className="shop-message" role="status">◆ {shopMessage}</div>}
-        <div className="shop-grid">{CLUBHOUSE_SHOP.map((item) => { const owned = purchased.has(item.id); const canBuy = state.clubhouse.coins >= item.price; return <article key={item.id} role="button" tabIndex={owned ? -1 : 0} aria-disabled={owned} aria-label={`${owned ? "Owned" : "Buy"} ${item.en}, ${item.price} Coins`} className={`${owned ? "owned" : ""} ${!owned && !canBuy ? "needs-coins" : ""}`} onClick={() => buy(item)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); buy(item); } }}><span className={`shop-card-badge ${owned ? "is-owned" : ""}`}>{owned ? "OWNED ✓" : <>◆ {item.price}</>}</span><ShopArt item={item} className="large" /><div><small>{item.collection === "cosmic" ? "COSMIC CLUB" : item.collection === "studio" ? "STUDIO CLUB" : "TRAIL CLUB"}</small><h4>{item.en}</h4><p>{item.vi}</p></div><button type="button" disabled={owned} tabIndex={-1} onClick={(e) => { e.stopPropagation(); buy(item); }}>{owned ? "In your inventory" : canBuy ? "Buy item" : `Need ${item.price - state.clubhouse.coins} more Coins`}</button></article>; })}</div>
+        <div className="shop-grid">{CLUBHOUSE_SHOP.map((item) => { const owned = purchased.has(item.id); const canBuy = state.clubhouse.coins >= item.price; return <article key={item.id} role="button" tabIndex={owned ? -1 : 0} aria-disabled={owned} aria-label={`${owned ? "Owned" : "Buy"} ${item.en}, ${item.price} Coins`} className={`${owned ? "owned" : ""} ${!owned && !canBuy ? "needs-coins" : ""}`} onClick={() => buy(item)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); buy(item); } }}><span className={`shop-card-badge ${owned ? "is-owned" : ""}`}>{owned ? "OWNED ✓" : <>◆ {item.price}</>}</span><ShopArt item={item} className="large" /><div><small>{item.collection === "prestige" ? "PRESTIGE CLUB" : item.collection === "cosmic" ? "COSMIC CLUB" : item.collection === "studio" ? "STUDIO CLUB" : "TRAIL CLUB"}</small><h4>{item.en}</h4><p>{item.vi}</p></div><button type="button" disabled={owned} tabIndex={-1} onClick={(e) => { e.stopPropagation(); buy(item); }}>{owned ? "In your inventory" : canBuy ? "Buy item" : `Need ${item.price - state.clubhouse.coins} more Coins`}</button></article>; })}</div>
       </section>}
 
       {panel === "wardrobe" && <section className="clubhouse-drawer clubhouse-wardrobe">

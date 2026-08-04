@@ -4,6 +4,7 @@ import {
   defaultState, normalizeState, isPremium,
   awardCoinsOnce, awardCashOnce, buyClubhouseItem, claimClubhouseItem,
 } from "@/lib/state";
+import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
 
 describe("normalizeState / migration", () => {
   it("state rỗng → về mặc định, không nổ", () => {
@@ -47,6 +48,12 @@ describe("normalizeState / migration", () => {
 });
 
 describe("kinh tế Clubhouse — chống farm/âm tiền", () => {
+  it("Prestige Club nâng trần Shop lên đúng 32 món / 5.185 Coins", () => {
+    expect(CLUBHOUSE_SHOP).toHaveLength(32);
+    expect(CLUBHOUSE_SHOP.reduce((sum, item) => sum + item.price, 0)).toBe(5185);
+    expect(CLUBHOUSE_SHOP.filter((item) => item.collection === "prestige")).toHaveLength(8);
+  });
+
   it("awardCoinsOnce chỉ cộng một lần cho mỗi key", () => {
     let s = defaultState();
     const first = awardCoinsOnce(s, "learn:park", 20);

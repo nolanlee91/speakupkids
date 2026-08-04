@@ -19,8 +19,8 @@ export type SeasonSouvenir = ClubhouseItem & { seasonId: string };
 export type ShopItem = {
   id: string; en: string; vi: string; price: number; sprite: number;
   x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
-  sheet?: 1 | 2 | 3 | 4;
-  collection?: "trail" | "cosmic" | "studio" | "learn";
+  sheet?: 1 | 2 | 3 | 4 | 5;
+  collection?: "trail" | "cosmic" | "studio" | "learn" | "prestige";
 };
 
 export type MapleOutfit = { id: string; en: string; vi: string; price: number; sheet?: string; collection: string };
@@ -57,6 +57,14 @@ export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-art-easel", en: "Mountain Easel", vi: "Giá vẽ núi", price: 95, sprite: 5, sheet: 3, collection: "studio", x: 35, y: 68, scale: .86, z: 6, slot: "floor" },
   { id: "shop-skate-rack", en: "Skate Rack", vi: "Giá ván skateboard", price: 115, sprite: 6, sheet: 3, collection: "studio", x: 78, y: 61, scale: .9, z: 5, slot: "floor" },
   { id: "shop-cloud-cushion", en: "Cloud Cushion", vi: "Ghế mây êm", price: 85, sprite: 7, sheet: 3, collection: "studio", x: 55, y: 79, scale: 1, z: 5, slot: "floor" },
+  { id: "shop-grand-aquarium", en: "Grand Aquarium", vi: "Bể cá đại dương", price: 250, sprite: 0, sheet: 5, collection: "prestige", x: 29, y: 60, scale: 1.02, z: 5, slot: "floor" },
+  { id: "shop-reading-pod", en: "Reading Pod", vi: "Góc đọc sách con nhộng", price: 250, sprite: 1, sheet: 5, collection: "prestige", x: 73, y: 72, scale: .95, z: 6, slot: "floor" },
+  { id: "shop-mini-cinema", en: "Mini Cinema", vi: "Rạp phim thu nhỏ", price: 300, sprite: 2, sheet: 5, collection: "prestige", x: 53, y: 62, scale: 1.08, z: 5, slot: "floor" },
+  { id: "shop-treehouse-loft", en: "Treehouse Loft", vi: "Gác cây trong nhà", price: 300, sprite: 3, sheet: 5, collection: "prestige", x: 69, y: 58, scale: 1.08, z: 6, slot: "floor" },
+  { id: "shop-aurora-window", en: "Aurora Window", vi: "Cửa sổ cực quang", price: 400, sprite: 4, sheet: 5, collection: "prestige", x: 24, y: 39, scale: .92, z: 4, slot: "wall" },
+  { id: "shop-command-station", en: "Command Station", vi: "Trạm điều khiển game", price: 400, sprite: 5, sheet: 5, collection: "prestige", x: 56, y: 68, scale: 1.08, z: 6, slot: "floor" },
+  { id: "shop-pet-retreat", en: "Pet Retreat", vi: "Ngôi nhà thú cưng", price: 500, sprite: 6, sheet: 5, collection: "prestige", x: 72, y: 73, scale: 1.02, z: 6, slot: "floor" },
+  { id: "shop-adventure-gallery", en: "Adventure Gallery", vi: "Tủ hành trình danh giá", price: 600, sprite: 7, sheet: 5, collection: "prestige", x: 77, y: 57, scale: 1.02, z: 5, slot: "floor" },
 ];
 
 // Phần thưởng độc quyền từ Learn, có sprite thật và không bán trong Shop.
