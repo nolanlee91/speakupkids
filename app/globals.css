@@ -798,6 +798,11 @@
   .lh-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--green)); }
   .lh-bar > span { position: absolute; right: 8px; top: -1px; font-size: .66rem; font-weight: 800; color: #4a5568; }
   .learn-cta { width: 100%; justify-content: center; }
+  /* Desktop (chốt 2026-08-03): ảnh scene gần vuông → cắt thành banner ngang để
+     các chặng học hiện ngay không phải cuộn. Mobile vẫn full ảnh, không crop. */
+  @media (min-width: 880px) {
+    .lh-img { height: 300px; object-fit: cover; object-position: center 32%; }
+  }
 
   /* Difficulty */
   .diff-row { display: flex; align-items: center; gap: 8px; margin: 14px 4px 2px; flex-wrap: wrap; }
