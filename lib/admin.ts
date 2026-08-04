@@ -5,7 +5,11 @@ import { supabase } from "./supabase";
 export type AdminParent = { id: string; email: string; name: string | null; created_at: string };
 export type AdminChild = { id: string; parent_id: string; ingame_name: string; avatar: string; age: number };
 export type AdminEntitlement = { parent_id: string; plan: "pro" | "family"; purchased_at: string; order_ref: string | null };
-export type AdminAgent = { id: string; name: string; phone: string | null; note: string | null; created_at: string };
+export type AdminAgent = {
+  id: string; name: string; phone: string | null; note: string | null; created_at: string;
+  parent_id: string | null;      // null = đại lý cấp 1; có giá trị = cấp 2 trực thuộc đại lý đó
+  commission_pct: number;        // % hoa hồng đã deal trên giá bán
+};
 export type AdminCode = {
   code: string; plan: "pro" | "family"; agent_id: string | null; note: string | null;
   created_at: string; redeemed_by: string | null; redeemed_at: string | null;
@@ -57,11 +61,24 @@ export async function listAgents(): Promise<AdminAgent[]> {
   if (error) throw error;
   return (data ?? []) as AdminAgent[];
 }
-export async function createAgent(name: string, phone?: string, note?: string): Promise<AdminAgent> {
+export async function createAgent(
+  name: string, phone?: string, note?: string,
+  parentId?: string | null, commissionPct?: number,
+): Promise<AdminAgent> {
   const { data, error } = await need().from("agents")
-    .insert({ name, phone: phone || null, note: note || null }).select("*").single();
+    .insert({
+      name, phone: phone || null, note: note || null,
+      parent_id: parentId || null,
+      commission_pct: Math.max(0, Math.min(100, commissionPct ?? 20)),
+    }).select("*").single();
   if (error) throw error;
   return data as AdminAgent;
+}
+// Sửa % hoa hồng sau khi deal lại — báo cáo hoa hồng tự tính theo % mới.
+export async function updateAgentPct(agentId: string, commissionPct: number) {
+  const { error } = await need().from("agents")
+    .update({ commission_pct: Math.max(0, Math.min(100, commissionPct)) }).eq("id", agentId);
+  if (error) throw error;
 }
 export async function listCodes(): Promise<AdminCode[]> {
   const { data, error } = await need().from("codes").select("*").order("created_at", { ascending: false });

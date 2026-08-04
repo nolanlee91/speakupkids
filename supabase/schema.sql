@@ -309,3 +309,16 @@ drop trigger if exists child_state_touch on public.child_state;
 create trigger child_state_touch
   before update on public.child_state
   for each row execute function public.touch_updated_at();
+
+-- ────────────────────────────────────────────────────────────
+-- 10. Đại lý cấp bậc + hoa hồng (2026-08-03)
+--     parent_id: đại lý cấp 2 trực thuộc một đại lý cấp 1 (null = cấp 1).
+--     commission_pct: % hoa hồng ĐÃ DEAL cho đại lý này trên giá bán.
+--     Hoa hồng cấp trên = phần CHÊNH LỆCH: cấp 1 deal 20%, cấp 2 deal 15%
+--     → đơn của cấp 2: cấp 2 hưởng 15%, cấp 1 hưởng 5%. (Tính ở trang admin,
+--     không lưu DB — đổi % là báo cáo tự tính lại.)
+-- ────────────────────────────────────────────────────────────
+alter table public.agents add column if not exists parent_id uuid references public.agents(id) on delete set null;
+alter table public.agents add column if not exists commission_pct int not null default 20
+  check (commission_pct between 0 and 100);
+create index if not exists agents_parent_idx on public.agents(parent_id);

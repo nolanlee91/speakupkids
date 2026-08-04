@@ -7,7 +7,7 @@ import { cloudEnabled } from "@/lib/supabase";
 import { signIn, signOut, currentUser } from "@/lib/cloud";
 import {
   isAdminUser, listParents, listAllChildren, listEntitlements, grantPlan, revokePlan,
-  listAgents, createAgent, listCodes, generateCodes, sendGift, listGifts, runWeeklyReport,
+  listAgents, createAgent, updateAgentPct, listCodes, generateCodes, sendGift, listGifts, runWeeklyReport,
   type AdminParent, type AdminChild, type AdminEntitlement, type AdminAgent, type AdminCode, type AdminGift, type ReportResult,
 } from "@/lib/admin";
 
@@ -174,7 +174,8 @@ function Overview({ parents, kids, ents, agents, codes }: {
   const redeemed = codes.filter((c) => c.redeemed_by).length;
   const perAgent = agents.map((a) => {
     const mine = codes.filter((c) => c.agent_id === a.id);
-    return { name: a.name, issued: mine.length, sold: mine.filter((c) => c.redeemed_by).length };
+    const lvl = a.parent_id ? "cấp 2" : "cấp 1";
+    return { name: `${a.name} (${lvl})`, issued: mine.length, sold: mine.filter((c) => c.redeemed_by).length };
   });
   return (
     <section className="adm-body">
@@ -199,20 +200,46 @@ function Overview({ parents, kids, ents, agents, codes }: {
 }
 
 /* ═══════════ Đại lý & mã kích hoạt ═══════════ */
+// Giá bán lifetime — khớp PLAN_PRICE ở app/page.tsx; đổi giá thì đổi cả đây.
+const PLAN_VALUE: Record<"pro" | "family", number> = { pro: 360_000, family: 480_000 };
+const vnd = (n: number) => n.toLocaleString("vi-VN") + "đ";
+
 function Agents({ agents, codes, onChange }: { agents: AdminAgent[]; codes: AdminCode[]; onChange: () => Promise<void> }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [parentId, setParentId] = useState<string>("");     // "" = đại lý cấp 1
+  const [pct, setPct] = useState(20);
   const [genAgent, setGenAgent] = useState<string>("");     // "" = mã không gắn đại lý (bán trực tiếp)
   const [genPlan, setGenPlan] = useState<"pro" | "family">("pro");
   const [genCount, setGenCount] = useState(5);
   const [fresh, setFresh] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
 
+  const tops = agents.filter((a) => !a.parent_id);
+  const childrenOf = (id: string) => agents.filter((a) => a.parent_id === id);
+
   async function addAgent() {
     if (!name.trim()) return;
+    const parent = agents.find((a) => a.id === parentId);
+    if (parent && pct > parent.commission_pct) {
+      alert(`% của đại lý cấp 2 không được cao hơn cấp trên (${parent.name}: ${parent.commission_pct}%) — phần chênh là hoa hồng của cấp trên.`);
+      return;
+    }
     setBusy(true);
-    try { await createAgent(name.trim(), phone.trim() || undefined); setName(""); setPhone(""); await onChange(); }
-    catch { alert("Không tạo được đại lý."); }
+    try {
+      await createAgent(name.trim(), phone.trim() || undefined, undefined, parentId || null, pct);
+      setName(""); setPhone(""); setParentId(""); setPct(20); await onChange();
+    } catch { alert("Không tạo được đại lý (đã chạy SQL mục 10 trong schema.sql chưa?)."); }
+    setBusy(false);
+  }
+  async function editPct(a: AdminAgent) {
+    const raw = prompt(`% hoa hồng mới cho "${a.name}" (hiện ${a.commission_pct}%):`, String(a.commission_pct));
+    if (raw == null) return;
+    const v = Math.max(0, Math.min(100, +raw || 0));
+    const parent = agents.find((x) => x.id === a.parent_id);
+    if (parent && v > parent.commission_pct) { alert(`Không được cao hơn cấp trên (${parent.commission_pct}%).`); return; }
+    setBusy(true);
+    try { await updateAgentPct(a.id, v); await onChange(); } catch { alert("Không sửa được %."); }
     setBusy(false);
   }
   async function gen() {
@@ -222,20 +249,74 @@ function Agents({ agents, codes, onChange }: { agents: AdminAgent[]; codes: Admi
     setBusy(false);
   }
   const agentName = (id: string | null) => agents.find((a) => a.id === id)?.name || "— trực tiếp —";
+
+  // Doanh thu = tổng mệnh giá gói của mã ĐÃ BÁN. Hoa hồng của đại lý =
+  // doanh thu của họ × %họ + Σ(doanh thu cấp dưới × (%họ − %cấp dưới)).
+  const revenueOf = (id: string) =>
+    codes.filter((c) => c.agent_id === id && c.redeemed_by).reduce((s, c) => s + PLAN_VALUE[c.plan], 0);
+  const soldOf = (id: string) => codes.filter((c) => c.agent_id === id && c.redeemed_by).length;
+  const issuedOf = (id: string) => codes.filter((c) => c.agent_id === id).length;
+  const commissionOf = (a: AdminAgent) => {
+    const own = (revenueOf(a.id) * a.commission_pct) / 100;
+    const override = childrenOf(a.id).reduce(
+      (s, c) => s + (revenueOf(c.id) * Math.max(0, a.commission_pct - c.commission_pct)) / 100, 0);
+    return { own, override, total: own + override };
+  };
+
+  const AgentRow = ({ a, sub }: { a: AdminAgent; sub: boolean }) => {
+    const comm = commissionOf(a);
+    return (
+      <tr>
+        <td>{sub ? <span style={{ opacity: .55 }}>↳ </span> : null}{a.name}{a.phone ? <span className="mono" style={{ opacity: .6 }}> · {a.phone}</span> : null}</td>
+        <td>{sub ? "Cấp 2" : "Cấp 1"}</td>
+        <td><b>{a.commission_pct}%</b> <button className="adm-btn sm" disabled={busy} onClick={() => editPct(a)}>sửa</button></td>
+        <td>{soldOf(a.id)}/{issuedOf(a.id)}</td>
+        <td>{vnd(revenueOf(a.id))}</td>
+        <td><b>{vnd(comm.total)}</b>{comm.override > 0 && <span style={{ opacity: .6 }}> (chênh cấp dưới {vnd(comm.override)})</span>}</td>
+      </tr>
+    );
+  };
+
   return (
     <section className="adm-body">
       <h2>Tạo đại lý</h2>
       <div className="adm-form">
         <input placeholder="Tên đại lý (VD: Cô Lan - Q7)" value={name} onChange={(e) => setName(e.target.value)} />
         <input placeholder="SĐT/Zalo (tuỳ chọn)" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <select value={parentId} onChange={(e) => setParentId(e.target.value)}>
+          <option value="">— Đại lý cấp 1 (trực thuộc tổng) —</option>
+          {tops.map((a) => <option key={a.id} value={a.id}>Cấp 2 thuộc: {a.name} ({a.commission_pct}%)</option>)}
+        </select>
+        <label className="adm-inline">%&nbsp;hoa hồng
+          <input type="number" min={0} max={100} value={pct} onChange={(e) => setPct(+e.target.value || 0)} style={{ width: 70 }} />
+        </label>
         <button className="adm-btn" disabled={busy} onClick={addAgent}>+ Thêm đại lý</button>
       </div>
+      <p className="adm-empty" style={{ marginTop: 4 }}>
+        Hoa hồng tính kiểu chênh lệch: cấp 1 deal 20%, cấp 2 deal 15% → đơn của cấp 2: cấp 2 hưởng 15%, cấp 1 hưởng 5%.
+      </p>
+
+      <h2>Cây đại lý & hoa hồng</h2>
+      {agents.length === 0 ? <p className="adm-empty">Chưa có đại lý.</p> : (
+        <table className="adm-table">
+          <thead><tr><th>Đại lý</th><th>Cấp</th><th>% deal</th><th>Đã bán/phát</th><th>Doanh thu</th><th>Hoa hồng</th></tr></thead>
+          <tbody>
+            {tops.map((t) => [
+              <AgentRow key={t.id} a={t} sub={false} />,
+              ...childrenOf(t.id).map((c) => <AgentRow key={c.id} a={c} sub />),
+            ])}
+          </tbody>
+        </table>
+      )}
 
       <h2>Sinh mã kích hoạt</h2>
       <div className="adm-form">
         <select value={genAgent} onChange={(e) => setGenAgent(e.target.value)}>
           <option value="">— Không gắn đại lý (bán trực tiếp) —</option>
-          {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+          {tops.map((a) => [
+            <option key={a.id} value={a.id}>{a.name} (cấp 1)</option>,
+            ...childrenOf(a.id).map((c) => <option key={c.id} value={c.id}>↳ {c.name} (cấp 2, thuộc {a.name})</option>),
+          ])}
         </select>
         <select value={genPlan} onChange={(e) => setGenPlan(e.target.value as "pro" | "family")}>
           <option value="pro">Pro (1 bé)</option><option value="family">Family (4 bé)</option>
