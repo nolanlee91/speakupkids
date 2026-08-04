@@ -67,7 +67,8 @@ const ROOMS = [
   { id: "loft", name: "Dream Loft", en: "dream loft", icon: "☾", image: "/assets/images/clubhouse/maple-house-dream-loft.webp", maple: { x: 16, y: 91 }, line: "Welcome to the dream loft. Let's make it cozy!" },
   { id: "maker", name: "Maker Den", en: "maker den", icon: "✹", image: "/assets/images/clubhouse/maple-house-maker-den.webp", maple: { x: 17, y: 91 }, line: "This is our maker den. What will we create today?" },
 ] as const;
-const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.png", "/assets/images/clubhouse/clubhouse-shop-sprites-02.png", "/assets/images/clubhouse/clubhouse-shop-sprites-03.png", "/assets/images/clubhouse/clubhouse-learn-rewards.png", "/assets/images/clubhouse/clubhouse-shop-sprites-04.png"];
+// WebP nén từ PNG gốc (7,3MB → 1,04MB, −86%) — nhẹ tải + nhẹ decode khi cuộn shop.
+const SHEETS = ["/assets/images/clubhouse/clubhouse-shop-sprites.webp", "/assets/images/clubhouse/clubhouse-shop-sprites-02.webp", "/assets/images/clubhouse/clubhouse-shop-sprites-03.webp", "/assets/images/clubhouse/clubhouse-learn-rewards.webp", "/assets/images/clubhouse/clubhouse-shop-sprites-04.webp"];
 const BDG = "/assets/images/badges/";
 
 function ShopArt({ item, className = "" }: { item: ShopItem; className?: string }) {
