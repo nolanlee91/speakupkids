@@ -26,6 +26,12 @@ export type GamesState = {
 
 // Nhiệm vụ hôm nay tách theo module (Learn / Practice / Adventure)
 export type DailyTasks = { date: string; learn: boolean; practice: boolean; adventure: boolean };
+export type ClubhousePetKind = "dog" | "cat";
+export type ClubhousePetState = {
+  kind: ClubhousePetKind | null;
+  name: string;
+  needs: { hunger: number; happiness: number; lastCareDay: string };
+};
 
 // Tiến trình khu Phiêu lưu (module kể chuyện riêng, KHÔNG dùng chung câu hỏi/tiến độ với Games/Learn).
 // Lưu theo ID ổn định của Season & Chapter (KHÔNG dùng array index).
@@ -56,6 +62,7 @@ export type ClubhouseState = {
   activeRoomId: string;
   itemTransforms: Record<string, { scale: number; rotation: number }>;
   needs: { hunger: number; energy: number; happiness: number; lastCareDay: string };
+  pet: ClubhousePetState;
 };
 
 export type AppState = {
@@ -106,7 +113,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 40, cash: 10, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" } },
+    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 40, cash: 10, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" }, pet: { kind: null, name: "", needs: { hunger: 85, happiness: 90, lastCareDay: "" } } },
   };
 }
 
@@ -147,10 +154,17 @@ function migrateClubhouse(c: unknown): ClubhouseState {
   const src = (c || {}) as Partial<ClubhouseState>;
   const ownedOutfitIds = Array.isArray(src.ownedOutfitIds) && src.ownedOutfitIds.length ? [...new Set(["default", ...src.ownedOutfitIds])] : ["default"];
   const oldNeeds = src.needs || { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" };
+  const oldPet = src.pet || { kind: null, name: "", needs: { hunger: 85, happiness: 90, lastCareDay: "" } };
+  const oldPetNeeds = oldPet.needs || { hunger: 85, happiness: 90, lastCareDay: "" };
   const isNewDay = oldNeeds.lastCareDay !== todayStr();
   const careValue = (value: unknown, fallback: number, dailyFloor: number) => {
     const safe = Number.isFinite(value) ? Number(value) : fallback;
     return Math.max(0, Math.min(100, isNewDay ? Math.max(safe, dailyFloor) : safe));
+  };
+  const petIsNewDay = oldPetNeeds.lastCareDay !== todayStr();
+  const petCareValue = (value: unknown, fallback: number, dailyFloor: number) => {
+    const safe = Number.isFinite(value) ? Number(value) : fallback;
+    return Math.max(0, Math.min(100, petIsNewDay ? Math.max(safe, dailyFloor) : safe));
   };
   const legacy = Array.isArray(src.unlockedItemIds)
     ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
@@ -178,6 +192,15 @@ function migrateClubhouse(c: unknown): ClubhouseState {
       energy: careValue(oldNeeds.energy, 90, 85),
       happiness: careValue(oldNeeds.happiness, 90, 75),
       lastCareDay: todayStr(),
+    },
+    pet: {
+      kind: oldPet.kind === "dog" || oldPet.kind === "cat" ? oldPet.kind : null,
+      name: typeof oldPet.name === "string" ? oldPet.name.slice(0, 16) : "",
+      needs: {
+        hunger: petCareValue(oldPetNeeds.hunger, 85, 75),
+        happiness: petCareValue(oldPetNeeds.happiness, 90, 75),
+        lastCareDay: todayStr(),
+      },
     },
   };
 }
@@ -578,6 +601,30 @@ export function buyMapleSnack(s: AppState, price = 5): AppState {
   if (s.clubhouse.coins < price || s.clubhouse.needs.hunger >= 100) return s;
   const fed = adjustMapleNeeds(s, { hunger: 25, happiness: 4 });
   return { ...fed, clubhouse: { ...fed.clubhouse, coins: fed.clubhouse.coins - price } };
+}
+
+export function adoptClubhousePet(s: AppState, kind: ClubhousePetKind): AppState {
+  if (s.clubhouse.pet.kind || !s.clubhouse.purchasedItemIds.includes("shop-pet-retreat")) return s;
+  const name = kind === "dog" ? "Scout" : "Misty";
+  return { ...s, clubhouse: { ...s.clubhouse, pet: {
+    kind, name, needs: { hunger: 90, happiness: 90, lastCareDay: todayStr() },
+  } } };
+}
+
+export function renameClubhousePet(s: AppState, name: string): AppState {
+  if (!s.clubhouse.pet.kind) return s;
+  const safeName = name.trim().replace(/\s+/g, " ").slice(0, 16);
+  if (!safeName || safeName === s.clubhouse.pet.name) return s;
+  return { ...s, clubhouse: { ...s.clubhouse, pet: { ...s.clubhouse.pet, name: safeName } } };
+}
+
+export function adjustPetNeeds(s: AppState, change: Partial<Record<"hunger" | "happiness", number>>): AppState {
+  if (!s.clubhouse.pet.kind) return s;
+  const current = s.clubhouse.pet.needs;
+  const apply = (key: "hunger" | "happiness") => Math.max(0, Math.min(100, current[key] + (change[key] || 0)));
+  return { ...s, clubhouse: { ...s.clubhouse, pet: { ...s.clubhouse.pet, needs: {
+    hunger: apply("hunger"), happiness: apply("happiness"), lastCareDay: todayStr(),
+  } } } };
 }
 // Reset tiến độ Phiêu lưu (chỉ dùng ở khu debug/development).
 // seasonId: chỉ reset một mùa; không truyền → reset toàn bộ.

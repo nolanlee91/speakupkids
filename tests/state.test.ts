@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import {
   defaultState, normalizeState, isPremium,
-  awardCoinsOnce, awardCashOnce, buyClubhouseItem, claimClubhouseItem,
+  awardCoinsOnce, awardCashOnce, buyClubhouseItem, claimClubhouseItem, adoptClubhousePet, adjustPetNeeds, renameClubhousePet,
 } from "@/lib/state";
 import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
 
@@ -96,5 +96,19 @@ describe("kinh tế Clubhouse — chống farm/âm tiền", () => {
     expect(s.clubhouse.itemRoomIds["learn-story-tent"]).toBe("study");
     const again = claimClubhouseItem(s, "learn-story-tent", "study");
     expect(again.clubhouse.claimedMilestones).toBe(1);
+  });
+
+  it("chỉ nhận nuôi pet sau khi sở hữu Pet Retreat", () => {
+    const locked = adoptClubhousePet(defaultState(), "dog");
+    expect(locked.clubhouse.pet.kind).toBeNull();
+    let ready = { ...defaultState(), clubhouse: { ...defaultState().clubhouse, purchasedItemIds: ["shop-pet-retreat"] } };
+    ready = adoptClubhousePet(ready, "cat");
+    expect(ready.clubhouse.pet.kind).toBe("cat");
+    expect(ready.clubhouse.pet.name).toBe("Misty");
+    ready = renameClubhousePet(ready, "  Luna   Moon  ");
+    expect(ready.clubhouse.pet.name).toBe("Luna Moon");
+    ready = adjustPetNeeds(ready, { hunger: -200, happiness: 20 });
+    expect(ready.clubhouse.pet.needs.hunger).toBe(0);
+    expect(ready.clubhouse.pet.needs.happiness).toBe(100);
   });
 });

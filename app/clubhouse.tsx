@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { adjustMapleNeeds, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, claimClubhouseItem, moveClubhouseItem, placeClubhouseItem, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit } from "@/lib/state";
+import { adjustMapleNeeds, adjustPetNeeds, adoptClubhousePet, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, claimClubhouseItem, moveClubhouseItem, placeClubhouseItem, renameClubhousePet, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit, type ClubhousePetKind } from "@/lib/state";
 import { ALL_CLUBHOUSE_FURNITURE, CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, clubhouseChoices, clubhouseLearnTotal, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
@@ -10,6 +10,7 @@ import { celebrate, playSuccessSound, speak } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
 
 type MaplePose = "cheer" | "think" | "sit" | "sleep" | "create" | "play";
+type PetPose = "idle" | "walk" | "sit" | "sleep" | "eat" | "play";
 type FurnitureInteraction = { pose: MaplePose; lines: string[]; xOffset?: number; yOffset?: number; needs?: Partial<Record<"hunger" | "energy" | "happiness", number>> };
 
 const POSE_IMAGE: Record<MaplePose, string> = {
@@ -26,6 +27,12 @@ function MapleArt({ pose, outfit, alt = "" }: { pose: MaplePose; outfit: MapleOu
   if (!outfit.sheet) return <img src={POSE_IMAGE[pose]} alt={alt} />;
   const index = POSE_INDEX[pose], col = index % 3, row = Math.floor(index / 3);
   return <span role={alt ? "img" : undefined} aria-label={alt || undefined} className="maple-outfit-sprite" style={{ backgroundImage: `url(${outfit.sheet})`, backgroundPosition: `${col * 50}% ${row * 100}%` }} />;
+}
+
+const PET_POSE_INDEX: Record<PetPose, number> = { idle: 0, walk: 1, sit: 2, sleep: 3, eat: 4, play: 5 };
+function PetArt({ kind, pose, alt = "" }: { kind: ClubhousePetKind; pose: PetPose; alt?: string }) {
+  const index = PET_POSE_INDEX[pose], col = index % 3, row = Math.floor(index / 3);
+  return <span role={alt ? "img" : undefined} aria-label={alt || undefined} className="clubhouse-pet-sprite" style={{ backgroundImage: `url(/assets/images/clubhouse/clubhouse-pet-${kind}.webp)`, backgroundPosition: `${col * 50}% ${row * 100}%` }} />;
 }
 
 const INTERACTIONS: Record<string, FurnitureInteraction> = {
@@ -70,7 +77,7 @@ function ShopArt({ item, className = "" }: { item: ShopItem; className?: string 
 }
 
 export function Clubhouse({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
-  const [panel, setPanel] = useState<"none" | "shop" | "wardrobe" | "journal">("none");
+  const [panel, setPanel] = useState<"none" | "shop" | "wardrobe" | "pet" | "journal">("none");
   const [editing, setEditing] = useState(false);
   const [drag, setDrag] = useState<{ id: string; x: number; y: number } | null>(null);
   const [delivery, setDelivery] = useState<ShopItem | null>(null);
@@ -82,6 +89,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [pendingOutfit, setPendingOutfit] = useState<MapleOutfit | null>(null);
   const [maplePose, setMaplePose] = useState<MaplePose>("cheer");
   const [mapleLine, setMapleLine] = useState("Tap a favourite thing and I’ll try it!");
+  const [petPose, setPetPose] = useState<PetPose>("idle");
   const [careNotice, setCareNotice] = useState("");
   const [rewardDismissed, setRewardDismissed] = useState(false);
   const roomRef = useRef<HTMLElement>(null);
@@ -102,13 +110,16 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const activeOutfit = MAPLE_OUTFITS.find((outfit) => outfit.id === state.clubhouse.activeOutfitId) || MAPLE_OUTFITS[0];
   const ownedOutfits = new Set(state.clubhouse.ownedOutfitIds);
   const rewardChoices = rewardDismissed ? [] : clubhouseChoices(state);
+  const pet = state.clubhouse.pet;
+  const hasPetRetreat = purchased.has("shop-pet-retreat");
 
   useEffect(() => {
-    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer");
+    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk");
     setMapleLine(room.line);
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (idleTimer.current) window.clearTimeout(idleTimer.current);
     if (walkTimer.current) window.clearTimeout(walkTimer.current);
+    walkTimer.current = window.setTimeout(() => { setMapleWalking(false); setPetPose("idle"); }, 760);
   }, [room.id, room.maple, room.line]);
 
   useEffect(() => () => {
@@ -119,7 +130,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   }, []);
 
   useEffect(() => {
-    const decay = window.setInterval(() => setState((s) => adjustMapleNeeds(s, { hunger: -1, energy: -1 })), 120000);
+    const decay = window.setInterval(() => setState((s) => adjustPetNeeds(adjustMapleNeeds(s, { hunger: -1, energy: -1 }), { hunger: -1 })), 120000);
     return () => window.clearInterval(decay);
   }, [setState]);
 
@@ -168,6 +179,28 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     setState((s) => buyMapleSnack(s, 5));
     setMaplePose("sit"); setMapleLine("Yum! That hit the spot."); showCareNotice("+25 Hunger · +4 Happiness");
     speak("Yum! That hit the spot.", state.prefs.accent, .84);
+  }
+
+  function adoptPet(kind: ClubhousePetKind) {
+    setState((s) => adoptClubhousePet(s, kind));
+    setPetPose("sit"); celebrate(state.prefs.motion !== false); playSuccessSound();
+    const line = kind === "dog" ? "Welcome home, Scout!" : "Welcome home, Misty!";
+    setMapleLine(line); speak(line, state.prefs.accent, .84);
+  }
+
+  function careForPet(action: "feed" | "play") {
+    if (!pet.kind) return;
+    if (action === "feed") {
+      if (pet.needs.hunger >= 100) { showCareNotice(`${pet.name} is already full!`); return; }
+      setState((s) => adjustPetNeeds(s, { hunger: 25, happiness: 3 })); setPetPose("eat");
+      showCareNotice(`${pet.name}: +25 Hunger`);
+    } else {
+      if (pet.needs.happiness >= 100) { showCareNotice(`${pet.name} is already super happy!`); return; }
+      setState((s) => adjustPetNeeds(s, { happiness: 20, hunger: -3 })); setPetPose("play");
+      showCareNotice(`${pet.name}: +20 Happiness`);
+    }
+    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    idleTimer.current = window.setTimeout(() => setPetPose("idle"), 4500);
   }
 
   function chooseOutfit(outfit: MapleOutfit) {
@@ -239,6 +272,10 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <MapleArt pose={maplePose} outfit={activeOutfit} alt={`Maple is ${maplePose}`} />
           <span className="maple-speech">{editing ? "Drag things anywhere you like!" : mapleLine}</span>
         </button>
+        {pet.kind && <button className={`clubhouse-pet pet-${petPose}`} style={{ left: "43%", top: "91%" }} aria-label={`${pet.name}, your ${pet.kind}`}
+          onClick={(e) => { e.stopPropagation(); setPetPose("play"); setState((s) => adjustPetNeeds(s, { happiness: 5, hunger: -1 })); showCareNotice(`${pet.name} loves the attention!`); if (idleTimer.current) window.clearTimeout(idleTimer.current); idleTimer.current = window.setTimeout(() => setPetPose("idle"), 3500); }}>
+          <PetArt kind={pet.kind} pose={petPose} alt={`${pet.name} is ${petPose}`} /><span>{pet.name}</span>
+        </button>}
         {displayed.map((item, index) => {
           const saved = state.clubhouse.itemPositions[`${room.id}:${item.id}`] || (room.id === "lounge" ? state.clubhouse.itemPositions[item.id] : undefined);
           const pos = drag?.id === item.id ? drag : saved || item;
@@ -262,6 +299,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button className={editing ? "on" : ""} onClick={() => { setEditing((v) => !v); setSelectedId(null); setPanel("none"); }}>✦ <span>{editing ? "Done" : "Decorate"}</span></button>
           <button className={panel === "shop" ? "on" : ""} onClick={() => { setPanel(panel === "shop" ? "none" : "shop"); setEditing(false); }}>◆ <span>Shop</span></button>
           <button className={panel === "wardrobe" ? "on" : ""} onClick={() => { setPanel(panel === "wardrobe" ? "none" : "wardrobe"); setEditing(false); }}>♢ <span>Closet</span></button>
+          <button className={panel === "pet" ? "on" : ""} onClick={() => { setPanel(panel === "pet" ? "none" : "pet"); setEditing(false); }}>● <span>Pet</span></button>
           <button className={panel === "journal" ? "on" : ""} onClick={() => { setPanel(panel === "journal" ? "none" : "journal"); setEditing(false); }}>▣ <span>Journey</span></button>
         </nav>
         <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
@@ -278,6 +316,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
       {panel === "wardrobe" && <section className="clubhouse-drawer clubhouse-wardrobe">
         <header><div><span className="rl-kicker">MAPLE CLOSET · {MAPLE_OUTFITS.length} LOOKS</span><h3>Choose Maple's look</h3><p>Keep every unlocked outfit and wear it in every pose.</p></div><strong className="cash-balance">✦ {state.clubhouse.cash}</strong><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
         <div className="wardrobe-grid">{MAPLE_OUTFITS.map((outfit) => { const owned = ownedOutfits.has(outfit.id), wearing = activeOutfit.id === outfit.id; return <article key={outfit.id} className={`${owned ? "owned" : ""} ${wearing ? "wearing" : ""}`}><span className="wardrobe-preview"><MapleArt pose="cheer" outfit={outfit} alt={outfit.en} /></span><small>{outfit.collection}</small><h4>{outfit.en}</h4><p>{outfit.vi}</p><button type="button" disabled={wearing} onClick={() => chooseOutfit(outfit)}>{wearing ? "WEARING ✓" : owned ? "Wear this look" : `Unlock · ✦ ${outfit.price}`}</button></article>; })}</div>
+      </section>}
+
+      {panel === "pet" && <section className="clubhouse-drawer clubhouse-pets">
+        <header><div><span className="rl-kicker">MAPLE PETS</span><h3>{pet.kind ? `${pet.name}'s corner` : "Meet your new companion"}</h3><p>Pets follow Maple from room to room. Care is gentle and never decreases while you are away.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>
+        {!hasPetRetreat ? <div className="pet-locked"><ShopArt item={CLUBHOUSE_SHOP.find((item) => item.id === "shop-pet-retreat")!} className="large" /><h4>Build a Pet Retreat first</h4><p>Find the Pet Retreat in Prestige Club. Once it is yours, you can adopt one companion for free.</p><button onClick={() => setPanel("shop")}>Open Maple Market</button></div>
+          : !pet.kind ? <div className="pet-adoption"><button onClick={() => adoptPet("dog")}><PetArt kind="dog" pose="sit" alt="Golden retriever" /><b>Scout</b><span>Playful golden retriever</span><em>Adopt for free</em></button><button onClick={() => adoptPet("cat")}><PetArt kind="cat" pose="sit" alt="Silver tabby cat" /><b>Misty</b><span>Curious silver tabby</span><em>Adopt for free</em></button></div>
+          : <div className="pet-profile"><div className="pet-profile-art"><PetArt kind={pet.kind} pose="sit" alt={pet.name} /></div><div className="pet-profile-info"><label>Pet name<input defaultValue={pet.name} maxLength={16} onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }} onBlur={(e) => setState((s) => renameClubhousePet(s, e.currentTarget.value))} /></label><div className="pet-need"><span>● Hunger</span><i><em style={{ width: `${pet.needs.hunger}%` }} /></i><b>{Math.round(pet.needs.hunger)}</b></div><div className="pet-need happy"><span>♥ Happiness</span><i><em style={{ width: `${pet.needs.happiness}%` }} /></i><b>{Math.round(pet.needs.happiness)}</b></div><div className="pet-care-actions"><button disabled={pet.needs.hunger >= 100} onClick={() => careForPet("feed")}>Feed</button><button disabled={pet.needs.happiness >= 100} onClick={() => careForPet("play")}>Play</button></div><p>Food and toy choices will arrive in the next pet update. Care is free in this MVP.</p></div></div>}
       </section>}
 
       {panel === "journal" && <section className="clubhouse-drawer keepsake-journal">

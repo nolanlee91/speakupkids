@@ -13,6 +13,7 @@
 - `clubhouse-shop-sprites-03.png` — transparent 4×2 Studio Club collection (eight more items).
 - `clubhouse-shop-sprites-04.png` — transparent 4×2 Prestige Club collection (eight long-term Coin sinks, 250–600 Coins).
 - `maple-outfit-explorer.webp`, `maple-outfit-creative.webp`, `maple-outfit-cosmic.webp` — transparent 3×2 pose sheets used by Maple Closet.
+- `clubhouse-pet-dog.webp`, `clubhouse-pet-cat.webp` — transparent 3×2 pet sheets: idle, walk, sit, sleep, eat and play.
 - Runtime item definitions, prices and default coordinates live in `lib/clubhouse.ts`.
 - The house has `lounge`, `study`, `rooftop`, `loft`, and `maker` rooms. `clubhouse.itemRoomIds` assigns each item to one room.
 - Player placement is stored per room as percentage coordinates in `clubhouse.itemPositions`; dragging only writes on pointer release.
@@ -32,6 +33,7 @@ The room uses one fixed perspective with a responsive crop. New items need safe 
 - Legacy/new local accounts receive a small starter balance so the Shop is understandable immediately.
 - Cash is earned from the daily Learn + Practice combo, not from finite lesson/topic/chapter completions.
 - Prestige Club adds 3,000 Coins of permanent furniture goals; the full Shop costs 5,185 Coins.
+- Buying Pet Retreat unlocks one free permanent adoption (dog or cat). Pet care is free in the MVP; no offline decay or neglect penalty.
 
 ## Reward roles
 
