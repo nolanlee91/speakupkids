@@ -38,8 +38,8 @@ export const GAMES: GameInfo[] = [
     blurb: "Nghe Maple đọc câu rồi chọn nghĩa đúng — luyện tai nghe.", assetNote: "Thumbnail 4:3 · 800×600" },
   { id: "write", name: "Writing Coach", vi: "Luyện viết câu", emoji: "✍️", image: "/assets/images/gen/game-writing.webp", tint: "#fff1e2",
     blurb: "Viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí.", assetNote: "Thumbnail 4:3 · 800×600" },
-  { id: "grammar", name: "Grammar Path", vi: "Trục ngữ pháp", emoji: "🧭", tint: "#eef0ff",
-    blurb: "Học quy tắc rồi luyện theo trục: các thì → câu hỏi → so sánh. Ôn thi cấp 2.", assetNote: "Thumbnail 4:3 · 800×600 (chưa có, dùng emoji)" },
+  { id: "grammar", name: "Grammar Path", vi: "Trục ngữ pháp", emoji: "🧭", image: "/assets/images/gen/game-grammar.webp", tint: "#eef0ff",
+    blurb: "Học quy tắc rồi luyện theo trục: các thì → câu hỏi → so sánh. Ôn thi cấp 2.", assetNote: "Thumbnail 4:3 · 800×600" },
 ];
 export const gameInfo = (id: GameKind) => GAMES.find((g) => g.id === id)!;
 

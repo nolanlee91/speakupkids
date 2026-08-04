@@ -780,7 +780,10 @@ function GrammarChallenge({ unitId, cb, accent, onExit }: { unitId?: string; cb:
         <p className="gallery-intro">Mỗi chặng: đọc quy tắc ngắn rồi luyện ngay. Đi lần lượt ba trục để ôn thi cấp 2: <b>Các thì → Câu hỏi → So sánh</b>.</p>
         {GRAMMAR_TRACKS.map((track) => (
           <div key={track.id} className="gpath-track">
-            <div className="gpath-track-name">{track.name}</div>
+            <div className="gpath-track-head">
+              <img src={track.image} alt="" />
+              <div><b>{track.name}</b><small>{track.units.length} chặng học</small></div>
+            </div>
             <div className="gpath-units">
               {track.units.map((u) => {
                 const locked = practiceItemLocked(cb.premium, "grammar", u.id);

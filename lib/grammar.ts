@@ -23,11 +23,11 @@ export type GrammarUnit = {
   drills: GrammarDrill[];
 };
 
-export type GrammarTrack = { id: string; name: string; units: GrammarUnit[] };
+export type GrammarTrack = { id: string; name: string; image: string; units: GrammarUnit[] };
 
 export const GRAMMAR_TRACKS: GrammarTrack[] = [
   {
-    id: "tense", name: "Trục 1 · Các thì",
+    id: "tense", name: "Trục 1 · Các thì", image: "/assets/images/gen/grammar/track-tenses.webp",
     units: [
       {
         id: "g-present", title: "Present Simple", vi: "Hiện tại đơn",
@@ -152,7 +152,7 @@ export const GRAMMAR_TRACKS: GrammarTrack[] = [
     ],
   },
   {
-    id: "question", name: "Trục 2 · Câu hỏi",
+    id: "question", name: "Trục 2 · Câu hỏi", image: "/assets/images/gen/grammar/track-questions.webp",
     units: [
       {
         id: "g-yesno", title: "Yes/No Questions", vi: "Câu hỏi Có/Không",
@@ -216,7 +216,7 @@ export const GRAMMAR_TRACKS: GrammarTrack[] = [
     ],
   },
   {
-    id: "compare", name: "Trục 3 · So sánh",
+    id: "compare", name: "Trục 3 · So sánh", image: "/assets/images/gen/grammar/track-comparisons.webp",
     units: [
       {
         id: "g-compare", title: "Comparatives", vi: "So sánh hơn",
@@ -281,7 +281,7 @@ export const GRAMMAR_TRACKS: GrammarTrack[] = [
     ],
   },
   {
-    id: "foundation", name: "Trục 4 · Nền tảng câu",
+    id: "foundation", name: "Trục 4 · Nền tảng câu", image: "/assets/images/gen/grammar/track-foundations.webp",
     units: [
       {
         id: "g-articles", title: "Articles — a / an / the", vi: "Mạo từ",
