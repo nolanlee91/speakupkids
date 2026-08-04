@@ -26,6 +26,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wi3", vi: "Kể một điều em thích làm", frame: "I like ___.", keywords: [["i"], ["like"]], minWords: 3, maxWords: 9, model: "I like reading books.", difficulty: "medium" },
       { id: "wi4", vi: "Kể một việc em làm giỏi", frame: "I can ___ very well.", keywords: [["i"], ["can"], ["well"]], minWords: 5, maxWords: 9, model: "I can swim very well.", difficulty: "medium" },
       { id: "wi5", vi: "Viết 2 câu: tên em + điều em thích", frame: "My name is ___. I like ___.", keywords: [["name"], ["is"], ["i"], ["like"]], minWords: 7, maxWords: 16, model: "My name is Nam. I like playing football.", difficulty: "hard" },
+      { id: "wi6", vi: "Em học lớp mấy?", frame: "I am in grade ___.", keywords: [["i"], ["am"], ["grade"]], minWords: 4, maxWords: 8, model: "I am in grade five.", difficulty: "easy" },
+      { id: "wi7", vi: "Môn thể thao em chơi cùng bạn", frame: "I play ___ with my friends.", keywords: [["play"], ["with"], ["friends"]], minWords: 5, maxWords: 10, model: "I play badminton with my friends.", difficulty: "medium" },
+      { id: "wi8", vi: "Viết 2 câu: em đến từ đâu + em giỏi gì", frame: "I am from ___. I am good at ___.", keywords: [["from"], ["good"], ["at"]], minWords: 7, maxWords: 16, model: "I am from Da Nang. I am good at drawing.", difficulty: "hard" },
     ],
   },
   {
@@ -36,6 +39,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "ws3", vi: "Thứ Hai em có mấy tiết học?", frame: "I have ___ lessons on Monday.", keywords: [["have"], ["lessons"], ["monday"]], minWords: 6, maxWords: 9, model: "I have four lessons on Monday.", difficulty: "medium" },
       { id: "ws4", vi: "Tả cô/thầy giáo của em (1 câu)", frame: "My teacher is ___.", keywords: [["my"], ["teacher"], ["is"]], minWords: 4, maxWords: 10, model: "My teacher is kind and funny.", difficulty: "medium" },
       { id: "ws5", vi: "Viết 2 câu: trường em + vì sao em thích", frame: "My school is ___. I like it because ___.", keywords: [["school"], ["is"], ["like"], ["because"]], minWords: 8, maxWords: 18, model: "My school is big. I like it because my friends are there.", difficulty: "hard" },
+      { id: "ws6", vi: "Trường em tên gì?", frame: "My school's name is ___.", keywords: [["school's", "school"], ["name"], ["is"]], minWords: 5, maxWords: 10, model: "My school's name is Le Loi Primary School.", difficulty: "easy" },
+      { id: "ws7", vi: "Giờ ra chơi em làm gì?", frame: "At break time, I ___ with my friends.", keywords: [["at"], ["break"], ["i"]], minWords: 6, maxWords: 12, model: "At break time, I play games with my friends.", difficulty: "medium" },
+      { id: "ws8", vi: "Viết 2 câu: bạn cùng bàn + vì sao em quý bạn", frame: "My deskmate is ___. I like her/him because ___.", keywords: [["is"], ["like"], ["because"]], minWords: 8, maxWords: 18, model: "My deskmate is Thu. I like her because she always helps me.", difficulty: "hard" },
     ],
   },
   {
@@ -46,6 +52,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wf3", vi: "Bố em thích làm gì?", frame: "My father likes ___.", keywords: [["father", "dad"], ["likes"]], minWords: 4, maxWords: 9, model: "My father likes watching football.", difficulty: "medium" },
       { id: "wf4", vi: "Nhà em có mấy phòng?", frame: "My house has ___ rooms.", keywords: [["house"], ["has"], ["rooms"]], minWords: 5, maxWords: 8, model: "My house has five rooms.", difficulty: "medium" },
       { id: "wf5", vi: "Chủ nhật gia đình em thường làm gì?", frame: "On Sundays, my family ___.", keywords: [["on"], ["sundays", "sunday"], ["family"]], minWords: 6, maxWords: 14, model: "On Sundays, my family cooks lunch together.", difficulty: "hard" },
+      { id: "wf6", vi: "Kể về anh/chị/em của em", frame: "I have a ___ .", keywords: [["have"], ["sister", "brother"]], minWords: 4, maxWords: 10, model: "I have a little sister.", difficulty: "easy" },
+      { id: "wf7", vi: "Bữa tối nhà em ăn gì?", frame: "For dinner, my family has ___.", keywords: [["for"], ["dinner"], ["family"]], minWords: 6, maxWords: 12, model: "For dinner, my family has fish and rice.", difficulty: "medium" },
+      { id: "wf8", vi: "Viết 2 câu: người em yêu quý nhất nhà + vì sao", frame: "I love my ___ the most. She/He always ___.", keywords: [["love"], ["most"], ["always"]], minWords: 8, maxWords: 16, model: "I love my grandmother the most. She always tells me funny stories.", difficulty: "hard" },
     ],
   },
   {
@@ -56,6 +65,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wd3", vi: "Bữa sáng em ăn gì?", frame: "For breakfast, I eat ___.", keywords: [["for"], ["breakfast"], ["eat"]], minWords: 5, maxWords: 9, model: "For breakfast, I eat noodles.", difficulty: "medium" },
       { id: "wd4", vi: "Món em KHÔNG thích và lý do", frame: "I don't like ___ because ___.", keywords: [["don't", "dont"], ["like"], ["because"]], minWords: 6, maxWords: 12, model: "I don't like carrots because they are hard.", difficulty: "medium" },
       { id: "wd5", vi: "Viết 2 câu: món em thích + ai nấu món đó", frame: "My favorite dish is ___. ___ cooks it ___.", keywords: [["favorite", "favourite"], ["is"], ["cooks"]], minWords: 8, maxWords: 16, model: "My favorite dish is pho. My mother cooks it every weekend.", difficulty: "hard" },
+      { id: "wd6", vi: "Trái cây em thích nhất", frame: "I like ___ best.", keywords: [["i"], ["like"], ["best"]], minWords: 4, maxWords: 9, model: "I like mangoes best.", difficulty: "easy" },
+      { id: "wd7", vi: "Em có thể nấu món gì?", frame: "I can cook ___.", keywords: [["can"], ["cook"]], minWords: 4, maxWords: 10, model: "I can cook fried eggs.", difficulty: "medium" },
+      { id: "wd8", vi: "Viết 2 câu: món ăn ngày Tết + vị của nó", frame: "At Tet, my family eats ___. It tastes ___.", keywords: [["tet"], ["eats", "eat"], ["tastes"]], minWords: 8, maxWords: 16, model: "At Tet, my family eats banh chung. It tastes really good.", difficulty: "hard" },
     ],
   },
   {
@@ -66,6 +78,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wa3", vi: "Một con vật làm được gì?", frame: "A ___ can ___.", keywords: [["a"], ["can"]], minWords: 4, maxWords: 9, model: "A bird can fly high.", difficulty: "medium" },
       { id: "wa4", vi: "Con vật em thích nhất và lý do", frame: "My favorite animal is ___ because ___.", keywords: [["favorite", "favourite"], ["animal"], ["because"]], minWords: 7, maxWords: 14, model: "My favorite animal is the cat because it is cute.", difficulty: "medium" },
       { id: "wa5", vi: "Viết 1 câu về khu rừng", frame: "In the forest, ___.", keywords: [["in"], ["the"], ["forest"]], minWords: 5, maxWords: 14, model: "In the forest, monkeys jump from tree to tree.", difficulty: "hard" },
+      { id: "wa6", vi: "Những con vật sống ở trang trại", frame: "___ live on a farm.", keywords: [["live"], ["on"], ["farm"]], minWords: 4, maxWords: 10, model: "Cows and chickens live on a farm.", difficulty: "easy" },
+      { id: "wa7", vi: "Tả một con vật bằng 2 tính từ", frame: "The ___ is ___ and ___.", keywords: [["the"], ["is"], ["and"]], minWords: 5, maxWords: 10, model: "The rabbit is small and soft.", difficulty: "medium" },
+      { id: "wa8", vi: "Viết 2 câu: vì sao cần bảo vệ động vật hoang dã", frame: "We must protect ___. They are ___.", keywords: [["must"], ["protect"], ["are"]], minWords: 7, maxWords: 16, model: "We must protect wild animals. They are part of our world.", difficulty: "hard" },
     ],
   },
   {
@@ -76,6 +91,9 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wt3", vi: "Cuối tuần em làm gì với bạn?", frame: "On weekends, I ___ with my friends.", keywords: [["on"], ["weekends", "weekend"], ["friends"]], minWords: 6, maxWords: 12, model: "On weekends, I play soccer with my friends.", difficulty: "medium" },
       { id: "wt4", vi: "Thời tiết hôm nay thế nào?", frame: "Today the weather is ___.", keywords: [["today"], ["weather"], ["is"]], minWords: 5, maxWords: 9, model: "Today the weather is sunny and hot.", difficulty: "medium" },
       { id: "wt5", vi: "Viết 2 câu: nơi em sống + nơi em thích nhất ở đó", frame: "I live in ___. My favorite place is ___.", keywords: [["live"], ["favorite", "favourite"], ["place"]], minWords: 8, maxWords: 16, model: "I live in a small town. My favorite place is the old market.", difficulty: "hard" },
+      { id: "wt6", vi: "Em đi chợ/siêu thị với ai?", frame: "I go to the market with ___.", keywords: [["go"], ["market", "supermarket"], ["with"]], minWords: 6, maxWords: 10, model: "I go to the market with my mom.", difficulty: "easy" },
+      { id: "wt7", vi: "Mùa hè này em muốn đi đâu?", frame: "This summer, I want to visit ___.", keywords: [["summer"], ["want"], ["visit"]], minWords: 6, maxWords: 12, model: "This summer, I want to visit the beach.", difficulty: "medium" },
+      { id: "wt8", vi: "Viết 2 câu: thành phố em nổi tiếng về gì", frame: "My city is famous for ___. Many people ___.", keywords: [["famous"], ["for"], ["people"]], minWords: 8, maxWords: 16, model: "My city is famous for its old bridge. Many people visit it every year.", difficulty: "hard" },
     ],
   },
   // ── Hai bộ ĐOẠN VĂN cho nhóm L3 (lớp 6–7): 3–4 câu theo dàn ý, toàn bộ mức hard ──
@@ -117,6 +135,16 @@ export const WRITE_SETS: WriteSet[] = [
       { id: "wq5", vi: "Viết 3 câu về bảo vệ Trái Đất: vấn đề · em làm gì mỗi ngày · lời kêu gọi", frame: "Our planet needs help. I ___ every day. Let's ___ together.",
         keywords: [["planet", "earth"], ["i"], ["every"], ["let's", "lets"]], minWords: 12, maxWords: 35, minSentences: 3,
         model: "Our planet needs help. I recycle bottles and save water every day. Let's protect the Earth together.", difficulty: "hard" },
+    ],
+  },
+  {
+    id: "w-para-plans", title: "Paragraph · My Plans", vi: "Đoạn văn: dự định của em (L3)", image: "/assets/images/gen/writing/paragraph-my-world.webp",
+    items: [
+      { id: "wr1", vi: "Viết 3 câu về kế hoạch cuối tuần: làm gì · rồi làm gì · cảm nghĩ", frame: "This weekend, I am going to ___. Then I will ___. I think it will be ___.", keywords: [["weekend"], ["going"], ["will"]], minWords: 12, maxWords: 35, minSentences: 3, model: "This weekend, I am going to visit my grandparents. Then I will play with my cousins. I think it will be fun.", difficulty: "hard" },
+      { id: "wr2", vi: "Viết 3 câu về nghề mơ ước: nghề gì · sẽ làm gì mỗi ngày · bố mẹ sẽ thế nào", frame: "In the future, I want to be ___. I will ___ every day. My parents will be ___.", keywords: [["future"], ["want"], ["will"]], minWords: 12, maxWords: 35, minSentences: 3, model: "In the future, I want to be a pilot. I will study English every day. My parents will be proud of me.", difficulty: "hard" },
+      { id: "wr3", vi: "Viết 3 câu về kỳ nghỉ hè mơ ước: mong làm gì · đi với ai · sẽ cùng làm gì", frame: "Next summer, I hope to ___. I will go with ___. We will ___.", keywords: [["summer"], ["hope"], ["will"]], minWords: 12, maxWords: 35, minSentences: 3, model: "Next summer, I hope to see the sea. I will go with my family. We will build sandcastles together.", difficulty: "hard" },
+      { id: "wr4", vi: "Viết 3 câu về mục tiêu năm nay: mục tiêu · sẽ luyện gì · sẽ KHÔNG làm gì", frame: "This year, my goal is ___. I will practice ___. I won't ___.", keywords: [["goal"], ["practice"], ["won't", "wont"]], minWords: 12, maxWords: 35, minSentences: 3, model: "This year, my goal is to speak English well. I will practice with Maple every day. I won't give up.", difficulty: "hard" },
+      { id: "wr5", vi: "Viết 3 câu lời hứa với bản thân: hứa gì · thêm việc gì · sẽ cảm thấy sao", frame: "I promise to ___. I will also ___. Then I will feel ___.", keywords: [["promise"], ["also"], ["feel"]], minWords: 12, maxWords: 35, minSentences: 3, model: "I promise to read one book every month. I will also help my mom at home. Then I will feel proud of myself.", difficulty: "hard" },
     ],
   },
 ];

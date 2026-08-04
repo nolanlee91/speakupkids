@@ -4,9 +4,9 @@ import { describe, it, expect } from "vitest";
 import { GRAMMAR_TRACKS, GRAMMAR_UNITS, checkFill, grammarUnitById } from "@/lib/grammar";
 
 describe("dữ liệu GRAMMAR", () => {
-  it("3 trục: Thì (4 unit) · Câu hỏi (2) · So sánh (2), mỗi unit 8 câu luyện", () => {
-    expect(GRAMMAR_TRACKS.map((t) => t.units.length)).toEqual([4, 2, 2]);
-    for (const u of GRAMMAR_UNITS) expect(u.drills.length, u.id).toBe(8);
+  it("4 trục: Thì (4) · Câu hỏi (2) · So sánh (2) · Nền tảng (4), mỗi unit ≥12 câu", () => {
+    expect(GRAMMAR_TRACKS.map((t) => t.units.length)).toEqual([4, 2, 2, 4]);
+    for (const u of GRAMMAR_UNITS) expect(u.drills.length, u.id).toBeGreaterThanOrEqual(12);
   });
 
   it("id unit + id drill không trùng nhau", () => {
