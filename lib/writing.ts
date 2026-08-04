@@ -15,11 +15,11 @@ export type WriteTask = {
   difficulty?: Difficulty;
   minSentences?: number; // bài ĐOẠN VĂN (L3): số câu tối thiểu — thêm tiêu chí đếm câu
 };
-export type WriteSet = { id: string; title: string; vi: string; items: WriteTask[] };
+export type WriteSet = { id: string; title: string; vi: string; image: string; items: WriteTask[] };
 
 export const WRITE_SETS: WriteSet[] = [
   {
-    id: "w-intro", title: "About Me", vi: "Giới thiệu bản thân",
+    id: "w-intro", title: "About Me", vi: "Giới thiệu bản thân", image: "/assets/images/gen/writing/about-me.webp",
     items: [
       { id: "wi1", vi: "Giới thiệu tên của em", frame: "My name is ___.", keywords: [["my"], ["name"], ["is"]], minWords: 4, maxWords: 8, model: "My name is Mai.", difficulty: "easy" },
       { id: "wi2", vi: "Nói tuổi của em", frame: "I am ___ years old.", keywords: [["i"], ["am"], ["years"], ["old"]], minWords: 5, maxWords: 8, model: "I am ten years old.", difficulty: "easy" },
@@ -29,7 +29,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-school", title: "My School Day", vi: "Một ngày ở trường",
+    id: "w-school", title: "My School Day", vi: "Một ngày ở trường", image: "/assets/images/gen/writing/school-day.webp",
     items: [
       { id: "ws1", vi: "Em đến trường bằng gì?", frame: "I go to school by ___.", keywords: [["go"], ["to"], ["school"], ["by"]], minWords: 6, maxWords: 9, model: "I go to school by bike.", difficulty: "easy" },
       { id: "ws2", vi: "Môn học em thích nhất", frame: "My favorite subject is ___.", keywords: [["favorite", "favourite"], ["subject"], ["is"]], minWords: 5, maxWords: 8, model: "My favorite subject is English.", difficulty: "easy" },
@@ -39,7 +39,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-family", title: "Family & Home", vi: "Gia đình và ngôi nhà",
+    id: "w-family", title: "Family & Home", vi: "Gia đình và ngôi nhà", image: "/assets/images/gen/writing/family-home.webp",
     items: [
       { id: "wf1", vi: "Gia đình em có mấy người?", frame: "There are ___ people in my family.", keywords: [["there"], ["are"], ["people"], ["family"]], minWords: 7, maxWords: 10, model: "There are four people in my family.", difficulty: "easy" },
       { id: "wf2", vi: "Nghề của mẹ em", frame: "My mother is a ___.", keywords: [["my"], ["mother", "mom", "mum"], ["is"]], minWords: 5, maxWords: 8, model: "My mother is a nurse.", difficulty: "easy" },
@@ -49,7 +49,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-food", title: "Food I Like", vi: "Món ăn em thích",
+    id: "w-food", title: "Food I Like", vi: "Món ăn em thích", image: "/assets/images/gen/writing/food-i-like.webp",
     items: [
       { id: "wd1", vi: "Món ăn em thích nhất", frame: "My favorite food is ___.", keywords: [["favorite", "favourite"], ["food"], ["is"]], minWords: 5, maxWords: 8, model: "My favorite food is pho.", difficulty: "easy" },
       { id: "wd2", vi: "Em uống gì mỗi ngày?", frame: "I drink ___ every day.", keywords: [["drink"], ["every"], ["day"]], minWords: 5, maxWords: 8, model: "I drink milk every day.", difficulty: "easy" },
@@ -59,7 +59,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-animals", title: "Animals & Nature", vi: "Động vật và thiên nhiên",
+    id: "w-animals", title: "Animals & Nature", vi: "Động vật và thiên nhiên", image: "/assets/images/gen/writing/animals-nature.webp",
     items: [
       { id: "wa1", vi: "Em nuôi con vật gì?", frame: "I have a pet ___.", keywords: [["i"], ["have"], ["pet"]], minWords: 5, maxWords: 8, model: "I have a pet dog.", difficulty: "easy" },
       { id: "wa2", vi: "Tả con voi (1 câu)", frame: "Elephants are ___.", keywords: [["elephants", "elephant"], ["are"]], minWords: 3, maxWords: 8, model: "Elephants are big and strong.", difficulty: "easy" },
@@ -69,7 +69,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-town", title: "My Town & Weekend", vi: "Nơi em sống và cuối tuần",
+    id: "w-town", title: "My Town & Weekend", vi: "Nơi em sống và cuối tuần", image: "/assets/images/gen/writing/town-weekend.webp",
     items: [
       { id: "wt1", vi: "Em sống ở đâu?", frame: "I live in ___.", keywords: [["i"], ["live"], ["in"]], minWords: 4, maxWords: 8, model: "I live in Ha Noi.", difficulty: "easy" },
       { id: "wt2", vi: "Gần nhà em có gì?", frame: "There is a ___ near my house.", keywords: [["there"], ["is"], ["near"], ["house"]], minWords: 7, maxWords: 10, model: "There is a park near my house.", difficulty: "easy" },
@@ -80,7 +80,7 @@ export const WRITE_SETS: WriteSet[] = [
   },
   // ── Hai bộ ĐOẠN VĂN cho nhóm L3 (lớp 6–7): 3–4 câu theo dàn ý, toàn bộ mức hard ──
   {
-    id: "w-para-me", title: "Paragraph · My World", vi: "Đoạn văn: thế giới của em (L3)",
+    id: "w-para-me", title: "Paragraph · My World", vi: "Đoạn văn: thế giới của em (L3)", image: "/assets/images/gen/writing/paragraph-my-world.webp",
     items: [
       { id: "wp1", vi: "Giới thiệu bản thân bằng 3 câu: tên · tuổi · sở thích", frame: "My name is ___. I am ___ years old. I like ___.",
         keywords: [["name"], ["is"], ["am"], ["years"], ["old"], ["like"]], minWords: 12, maxWords: 30, minSentences: 3,
@@ -100,7 +100,7 @@ export const WRITE_SETS: WriteSet[] = [
     ],
   },
   {
-    id: "w-para-world", title: "Paragraph · Around Me", vi: "Đoạn văn: quanh em (L3)",
+    id: "w-para-world", title: "Paragraph · Around Me", vi: "Đoạn văn: quanh em (L3)", image: "/assets/images/gen/writing/paragraph-around-me.webp",
     items: [
       { id: "wq1", vi: "Tả căn phòng của em bằng 3 câu: có gì · màu sắc · em thích nhất thứ gì", frame: "My room has ___. The walls are ___. I love my ___ best.",
         keywords: [["room"], ["has"], ["are"], ["love"]], minWords: 12, maxWords: 35, minSentences: 3,

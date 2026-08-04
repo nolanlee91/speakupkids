@@ -74,8 +74,8 @@ not need to appear in every Learn image.
 
 When Maple is explicitly required:
 
-- Maple is a small female red-fox mascot.
-- Keep her fully animal-like: fox muzzle, paws, tail and compact fox body.
+- Maple is a young female Canadian beaver mascot.
+- Match the canonical `gen/mascot-wave.webp` identity: short cream muzzle, two small front teeth, paws, broad crosshatched beaver tail and compact balanced body.
 - She may use a small accessory, but must not have a human torso, human hands,
   human legs, large belly or hoodie-shaped human silhouette.
 - Match the established mascot reference assets instead of inventing a new

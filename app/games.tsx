@@ -674,7 +674,7 @@ function WriteChallenge({ setId, cb, accent, onExit }: { setId?: string; cb: Gam
   if (galleryMode && !chosen) {
     return <GameGallery emoji="✍️" title="Writing Coach" vi="Chọn một bộ luyện viết"
       intro="Đọc yêu cầu, viết câu tiếng Anh theo khung gợi ý — Maple chấm từng tiêu chí và cho xem câu mẫu."
-      items={WRITE_SETS.map((s) => ({ id: s.id, name: s.title, sub: s.vi, emoji: "✍️", total: s.items.length,
+      items={WRITE_SETS.map((s) => ({ id: s.id, name: s.title, sub: s.vi, image: s.image, emoji: "✍️", total: s.items.length,
         counts: countByDifficulty(s.items, (r) => r.difficulty || "medium") }))}
       prefix="write" topics={cb.topics} onPick={setChosen} onExit={onExit} premium={cb.premium} onPremium={cb.onPremium} />;
   }
