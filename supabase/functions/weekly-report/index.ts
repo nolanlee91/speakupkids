@@ -5,8 +5,9 @@
 // Deploy:   npx supabase functions deploy weekly-report --no-verify-jwt
 // Secrets:  npx supabase secrets set RESEND_API_KEY=re_xxx REPORT_SECRET=chuoi-bi-mat
 // Cron:     Dashboard → Integrations → Cron → gọi function này '0 1 * * 6' (08:00 VN thứ Bảy)
-// Test tay: GET .../weekly-report?key=REPORT_SECRET&dry=1        → xem JSON, không gửi
-//           GET .../weekly-report?key=REPORT_SECRET&only=a@b.com → chỉ gửi 1 người
+// Test tay: curl -H "x-report-key: REPORT_SECRET" ".../weekly-report?dry=1"        → xem JSON, không gửi
+//           curl -H "x-report-key: REPORT_SECRET" ".../weekly-report?only=a@b.com" → chỉ gửi 1 người
+//           (?key= vẫn nhận để tương thích cron pg_net cũ; ưu tiên header vì query string lọt vào log)
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 type TopicAcc = Record<string, { c: number; w: number }>;
@@ -219,19 +220,32 @@ function childBlock(
 
   return `
   <div style="background:#fff;border:1px solid #eee2cc;border-radius:14px;padding:16px 18px;margin:0 0 14px">
-    <h3 style="margin:0 0 8px;font-size:16px;color:#2b2f3f">${avatar} ${name}</h3>
+    <h3 style="margin:0 0 8px;font-size:16px;color:#2b2f3f">${esc(avatar)} ${esc(name)}</h3>
     <table style="border-collapse:collapse;font-size:14px;width:100%">${rows.join("")}</table>
     ${extras.join("")}
   </div>`;
 }
 
-// CORS: trang /admin (app.speakupkids.net) gọi từ trình duyệt nên cần preflight + header.
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Escape chuỗi người dùng nhập (tên bé, tên ba mẹ…) trước khi nội suy vào HTML email —
+// ingame_name là input tự do, không escape thì thành đường chèn HTML/link lạ vào mail của mình.
+function esc(s: unknown): string {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
+
+// CORS: KHÔNG mở "*" — response dry-run chứa email phụ huynh; chỉ trang /admin của mình
+// (và localhost khi dev) được đọc từ trình duyệt.
+const ALLOWED_ORIGINS = ["https://app.speakupkids.net", "http://localhost:3000"];
+function corsFor(req: Request): Record<string, string> {
+  const origin = req.headers.get("Origin") || "";
+  return {
+    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-report-key",
+  };
+}
 
 Deno.serve(async (req) => {
+  const CORS = corsFor(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const url = new URL(req.url);
   const body = req.method === "POST" ? await req.json().catch(() => ({} as Record<string, unknown>)) : {} as Record<string, unknown>;
@@ -240,10 +254,13 @@ Deno.serve(async (req) => {
 
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-  // Hai đường vào hợp lệ: (1) cron với ?key=REPORT_SECRET, (2) admin đăng nhập (JWT
-  // thuộc bảng admins) — trang /admin dùng đường này, không cần nhúng secret vào client.
+  // Hai đường vào hợp lệ: (1) cron với secret (header x-report-key, hoặc ?key= cho
+  // pg_cron cũ), (2) admin đăng nhập (JWT thuộc bảng admins) — trang /admin dùng đường này.
+  // FAIL-CLOSED: thiếu env REPORT_SECRET (xóa nhầm/gõ sai tên khi deploy) thì đường secret
+  // KHÓA hẳn, chỉ còn đường admin JWT — tuyệt đối không mặc định mở cho mọi người.
   const secret = Deno.env.get("REPORT_SECRET");
-  const keyOk = !secret || url.searchParams.get("key") === secret;
+  const givenKey = req.headers.get("x-report-key") || url.searchParams.get("key");
+  const keyOk = !!secret && !!givenKey && givenKey === secret;
   let authOk = keyOk;
   if (!authOk) {
     const authHdr = req.headers.get("Authorization") || "";
@@ -325,8 +342,8 @@ Deno.serve(async (req) => {
     <div style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#f7efe0;padding:24px 14px">
       <div style="max-width:560px;margin:0 auto">
         <p style="font-size:22px;margin:0 0 2px">🍁 <b style="color:#e2593f">SpeakUp Kids</b></p>
-        <h2 style="margin:0 0 4px;color:#2b2f3f">Báo cáo tuần của ${kidNames}</h2>
-        <p style="margin:0 0 16px;color:#8b7c66;font-size:13px">Chào ${parent.name || "ba mẹ"}, đây là tiến bộ của bé trong tuần qua.</p>
+        <h2 style="margin:0 0 4px;color:#2b2f3f">Báo cáo tuần của ${esc(kidNames)}</h2>
+        <p style="margin:0 0 16px;color:#8b7c66;font-size:13px">Chào ${esc(parent.name || "ba mẹ")}, đây là tiến bộ của bé trong tuần qua.</p>
         ${blocks.join("")}
         <p style="font-size:12px;color:#8b7c66;margin:16px 0 0">
           Bạn nhận email này vì bật "Báo cáo tuần" trong SpeakUp Kids.

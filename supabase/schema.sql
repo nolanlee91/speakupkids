@@ -78,10 +78,21 @@ alter table public.children        enable row level security;
 alter table public.child_state     enable row level security;
 alter table public.weekly_snapshots enable row level security;
 
--- parents: chỉ chính chủ
+-- parents: chính chủ chỉ ĐỌC + SỬA (name, weekly_email). KHÔNG cho client insert/delete
+-- (dòng do trigger handle_new_user tạo) và KHÔNG cho sửa cột email: email là địa chỉ
+-- nhận báo cáo tuần — để user tự đổi được thì kẻ xấu trỏ sang hộp thư người khác và
+-- biến hệ thống email của mình thành máy gửi phishing ký tên domain thật.
 drop policy if exists parents_self on public.parents;
-create policy parents_self on public.parents
-  for all using (id = auth.uid()) with check (id = auth.uid());
+drop policy if exists parents_self_read on public.parents;
+drop policy if exists parents_self_update on public.parents;
+create policy parents_self_read on public.parents
+  for select using (id = auth.uid());
+create policy parents_self_update on public.parents
+  for update using (id = auth.uid()) with check (id = auth.uid());
+-- RLS không giới hạn được THEO CỘT → dùng column-level grant: thu hồi mọi quyền ghi,
+-- chỉ cấp lại UPDATE đúng 2 cột an toàn.
+revoke insert, update, delete on public.parents from anon, authenticated;
+grant update (name, weekly_email) on public.parents to authenticated;
 
 -- children: parent_id = mình
 drop policy if exists children_own on public.children;
@@ -212,9 +223,13 @@ declare
   cur_plan text;
 begin
   if auth.uid() is null then return 'unauthenticated'; end if;
-  select * into c from public.codes where code = upper(trim(p_code));
+  -- FOR UPDATE: khóa dòng mã trong transaction — hai người đổi CÙNG một mã song song
+  -- thì người sau phải chờ và thấy mã đã dùng, không còn cấp gói được 2 lần.
+  select * into c from public.codes where code = upper(trim(p_code)) for update;
   if not found then return 'invalid'; end if;
-  if c.redeemed_by is not null then return 'used'; end if;
+  -- Kiểm cả redeemed_at: redeemed_by là FK on delete set null — tài khoản đã đổi mã
+  -- bị xóa sẽ làm redeemed_by về NULL, không kiểm redeemed_at thì mã "hồi sinh" dùng lại được.
+  if c.redeemed_by is not null or c.redeemed_at is not null then return 'used'; end if;
   select plan into cur_plan from public.entitlements where parent_id = auth.uid();
   if cur_plan is not null then
     if cur_plan = 'family' or c.plan = cur_plan then return 'already'; end if;
