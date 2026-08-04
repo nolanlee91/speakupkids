@@ -376,7 +376,9 @@ function ChapterPlayer({ season, chapter, accent, alreadyCompleted, alreadyHasIt
   return (
     <div id="adv-game" className="game-overlay">
       <div className="game-top">
-        <button className="bk" onClick={onExit}>← Bản đồ</button>
+        {/* Ở màn kết quả chương ĐÃ hoàn thành — thoát bằng nút nào cũng phải ghi nhận
+            (bé hay bấm back góc trên theo phản xạ thay vì nút "Về bản đồ" bên dưới). */}
+        <button className="bk" onClick={() => (phase === "result" ? onFinish(stars) : onExit())}>← Bản đồ</button>
         <h3>🧭 {chapter.vi}</h3>
         <span className="game-vi">
           {phase === "steps" ? `Bước ${si + 1}/${steps.length}` : phase === "result" ? "Hoàn thành" : "Câu chuyện"}

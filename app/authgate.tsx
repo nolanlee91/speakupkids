@@ -31,7 +31,7 @@ function viError(e: unknown): string {
   return m || "Có lỗi xảy ra, thử lại nhé.";
 }
 
-type Phase = "loading" | "auth" | "recovery" | "picker" | "ready";
+type Phase = "loading" | "auth" | "recovery" | "picker" | "ready" | "error";
 
 // Nền scenery (giống desktop app) → 2 bên không còn trống; veil kem để chữ/card dễ đọc.
 // Không đặt font-family: kế thừa Nunito từ body cho đồng bộ toàn app.
@@ -80,6 +80,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState<string | null>(null);
   const [kids, setKids] = useState<ChildProfile[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [pickErr, setPickErr] = useState("");
 
   useEffect(() => {
     if (!supabase) return; // offline: phase đã là "ready"
@@ -95,47 +96,84 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
     (async () => {
       if (isRecovery) { setPhase("recovery"); return; }
-      const { data } = await supabase!.auth.getUser();
+      // getSession đọc từ localStorage, KHÔNG cần mạng (getUser là network call) —
+      // bé đã đăng nhập thì mất mạng vẫn vào được app chơi bằng tiến độ trên máy.
+      const { data } = await supabase!.auth.getSession();
       if (!alive) return;
-      if (!data.user) { setPhase("auth"); return; }
-      setEmail(data.user.email ?? null);
+      const user = data.session?.user;
+      if (!user) { setPhase("auth"); return; }
+      setEmail(user.email ?? null);
       await enterAfterLogin();
     })();
 
     return () => { alive = false; sub.subscription.unsubscribe(); };
   }, []);
 
+  // Mọi lời gọi mạng ở đây đều có thể reject (rớt mạng thoáng qua) — không catch thì
+  // phase kẹt "loading" vĩnh viễn ("Đang kết nối…" không có lối ra).
   async function enterAfterLogin() {
-    const list = await listChildren();
-    setKids(list);
-    const saved = getActiveChildId();
-    const prof = saved ? list.find((k) => k.id === saved) : undefined;
-    if (prof) {
-      await activateChild(prof);
-      setActiveId(prof.id);
-      setPhase("ready");
-    } else {
-      setPhase("picker");
+    try {
+      const list = await listChildren();
+      setKids(list);
+      const saved = getActiveChildId();
+      const prof = saved ? list.find((k) => k.id === saved) : undefined;
+      if (prof) {
+        try {
+          await activateChild(prof);
+        } catch {
+          // Không kéo được state cloud (offline): vào chơi bằng bản localStorage,
+          // syncSave sẽ tự đẩy lên khi có mạng lại.
+        }
+        setActiveId(prof.id);
+        setPhase("ready");
+      } else {
+        setPhase("picker");
+      }
+    } catch {
+      // Không hỏi được danh sách con: đã từng chọn hồ sơ trên máy này → chơi offline;
+      // chưa từng chọn thì hiện màn lỗi có nút thử lại.
+      const saved = getActiveChildId();
+      if (saved) { setActiveId(saved); setPhase("ready"); }
+      else setPhase("error");
     }
   }
 
   async function pick(child: ChildProfile) {
-    await activateChild(child);
-    setActiveId(child.id);
-    setPhase("ready");
+    setPickErr("");
+    try {
+      await activateChild(child);
+      setActiveId(child.id);
+      setPhase("ready");
+    } catch {
+      setPickErr("Chưa kết nối được máy chủ — kiểm tra mạng rồi bấm lại nhé.");
+    }
   }
 
   if (phase === "loading") return <div style={shell}><p style={{ color: "var(--muted,#8b7c66)" }}>Đang kết nối…</p></div>;
+  if (phase === "error")
+    return (
+      <div style={shell}>
+        <div style={card}>
+          <img src={MAPLE} alt="Maple" style={{ height: 96, width: "auto", display: "block", margin: "0 auto 6px" }} />
+          <h1 style={{ ...headStyle, fontSize: 20, fontWeight: 800, textAlign: "center", margin: "4px 0 6px" }}>Chưa kết nối được</h1>
+          <p style={{ textAlign: "center", color: "var(--muted,#8b7c66)", fontSize: 14, margin: "0 0 14px" }}>
+            Kiểm tra mạng giúp Maple rồi thử lại nhé.
+          </p>
+          <button className="btn" style={{ width: "100%" }}
+            onClick={() => { setPhase("loading"); enterAfterLogin(); }}>Thử lại</button>
+        </div>
+      </div>
+    );
   if (phase === "recovery")
     return <RecoveryForm onDone={async () => {
-      const { data } = await supabase!.auth.getUser();
-      setEmail(data.user?.email ?? null);
+      const { data } = await supabase!.auth.getSession();
+      setEmail(data.session?.user?.email ?? null);
       setPhase("loading");
       await enterAfterLogin();
     }} />;
   if (phase === "auth") return <AuthForm onLoggedIn={async (e) => { setEmail(e); setPhase("loading"); await enterAfterLogin(); }} />;
   if (phase === "picker")
-    return <ChildPicker kids={kids} email={email} onPick={pick} onAdded={(k) => setKids((cs) => [...cs, k])}
+    return <ChildPicker kids={kids} email={email} extErr={pickErr} onPick={pick} onAdded={(k) => setKids((cs) => [...cs, k])}
       onSignOut={async () => { await signOut(); }} />;
   // ready — remount App khi đổi hồ sơ con để nạp lại tiến độ
   return <div key={activeId ?? "offline"} style={{ display: "contents" }}>{children}</div>;
@@ -279,8 +317,8 @@ function RecoveryForm({ onDone }: { onDone: () => void | Promise<void> }) {
 }
 
 /* ───────────── Chọn / thêm hồ sơ con ───────────── */
-function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
-  kids: ChildProfile[]; email: string | null;
+function ChildPicker({ kids, email, extErr, onPick, onAdded, onSignOut }: {
+  kids: ChildProfile[]; email: string | null; extErr?: string;
   onPick: (child: ChildProfile) => Promise<void>;
   onAdded: (k: ChildProfile) => void;
   onSignOut: () => Promise<void>;
@@ -316,6 +354,7 @@ function ChildPicker({ kids, email, onPick, onAdded, onSignOut }: {
           <button type="button" onClick={onSignOut} style={linkBtn}>Đăng xuất</button>
         </div>
         {email && <p style={{ color: "var(--muted,#8b7c66)", fontSize: 13, margin: "2px 0 14px" }}>{email}</p>}
+        {extErr && <p style={{ color: "var(--coral,#e2593f)", fontSize: 14, margin: "0 0 10px" }}>{extErr}</p>}
 
         {kids.length > 0 && (
           <div style={{ display: "grid", gap: 10, marginBottom: 14 }}>

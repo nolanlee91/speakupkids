@@ -57,19 +57,22 @@ export async function updatePassword(newPassword: string) {
 
 /* ═══════════ Gói thành viên (entitlements — lifetime) ═══════════ */
 // Đọc gói từ bảng entitlements (nguồn chuẩn phía server, client không ghi được).
-// Chưa mua / offline / lỗi mạng → "free" (không nổ, không chặn app).
-export async function fetchMembership(): Promise<Membership> {
-  if (!supabase) return "free";
+// Phân biệt 2 trường hợp: server XÁC NHẬN chưa mua → "free"; KHÔNG HỎI ĐƯỢC server
+// (offline/lỗi mạng) → null để giữ nguyên cache — khách đã trả tiền mở app lúc mạng
+// chập chờn không bị hạ về Free giữa buổi học.
+export async function fetchMembership(): Promise<Membership | null> {
+  if (!supabase) return null;
   try {
     // Lọc tường minh theo user hiện tại: tài khoản ADMIN có quyền đọc mọi dòng
     // (policy entitlements_admin) nên nếu chỉ dựa vào RLS sẽ dính gói của người khác.
     const user = await currentUser();
-    if (!user) return "free";
+    if (!user) return null;                    // getUser là network call — fail thì đừng kết luận gì
     const { data, error } = await supabase.from("entitlements").select("plan").eq("parent_id", user.id).maybeSingle();
-    if (error || !data) return "free";
+    if (error) return null;
+    if (!data) return "free";                  // server trả rõ: không có entitlement
     return data.plan === "family" ? "family" : data.plan === "pro" ? "pro" : "free";
   } catch {
-    return "free";
+    return null;
   }
 }
 
@@ -98,15 +101,18 @@ export async function claimGifts(childId: string): Promise<{ coins: number; cash
       .is("claimed_at", null);
     if (error || !data || data.length === 0) return { coins: 0, cash: 0 };
     const ids = data.map((g) => g.id);
-    const { error: upErr } = await supabase
+    // .select() sau update: chỉ cộng những dòng TAB NÀY thật sự claim được — mở 2 tab
+    // cùng lúc thì tab thua race update 0 dòng (không phải error) và không được cộng đúp.
+    const { data: claimed, error: upErr } = await supabase
       .from("gifts")
       .update({ claimed_at: new Date().toISOString() })
       .in("id", ids)
-      .is("claimed_at", null);   // chống nhận đúp khi mở 2 tab
-    if (upErr) return { coins: 0, cash: 0 };
+      .is("claimed_at", null)
+      .select("coins, cash");
+    if (upErr || !claimed) return { coins: 0, cash: 0 };
     return {
-      coins: data.reduce((a, g) => a + (g.coins || 0), 0),
-      cash: data.reduce((a, g) => a + (g.cash || 0), 0),
+      coins: claimed.reduce((a, g) => a + (g.coins || 0), 0),
+      cash: claimed.reduce((a, g) => a + (g.cash || 0), 0),
     };
   } catch {
     return { coins: 0, cash: 0 };

@@ -77,9 +77,12 @@ function App() {
     setState(s);
     setReady(true);
     // Gói thành viên: nguồn chuẩn là bảng entitlements phía server (client chỉ đọc).
-    // Giá trị trong state/localStorage chỉ là cache — mỗi lần mở app ghi đè lại từ server.
+    // Server trả lời thật mới ghi đè cache; null = không hỏi được (offline/lỗi mạng)
+    // → giữ nguyên, đừng hạ khách Pro về Free chỉ vì rớt mạng.
     if (cloudEnabled()) {
-      fetchMembership().then((m) => setState((cur) => (cur.membership === m ? cur : { ...cur, membership: m })));
+      fetchMembership().then((m) => {
+        if (m) setState((cur) => (cur.membership === m ? cur : { ...cur, membership: m }));
+      });
       // Quà Coins/Cash admin tặng (bảng gifts): nhận một lần rồi cộng vào ví của bé.
       const childId = getActiveChildId();
       if (childId) claimGifts(childId).then((g) => {
@@ -158,6 +161,7 @@ function App() {
 
   // Hoàn thành bài Learn (sau Mini Check)
   function completeLearn(lessonId: string, score: number, total: number) {
+    // Số coins/cash cho MÀN THƯỞNG tính từ state hiện tại (chỉ để hiển thị)…
     const done = completeLearnLesson(state, lessonId, score, total);
     const newly = done.newly;
     let ns = done.state;
@@ -166,8 +170,18 @@ function App() {
     const dailyReward = ns.daily.practice ? awardCoinsOnce(ns, `daily-core:${todayStr()}`, 15) : { state: ns, awarded: 0 };
     ns = dailyReward.state;
     const dailyCash = ns.daily.practice ? awardCashOnce(ns, `daily-core:${todayStr()}`, 2) : { state: ns, awarded: 0 };
-    ns = dailyCash.state;
-    setState(ns);
+    // …nhưng GHI qua updater form, tính lại trên state MỚI NHẤT: setState(ns) từ closure
+    // sẽ đè mất update async đến giữa chừng (quà admin claimGifts, membership vừa fetch).
+    setState((s) => {
+      const d = completeLearnLesson(s, lessonId, score, total);
+      let cur = d.state;
+      if (d.newly) cur = awardCoinsOnce(cur, `learn:${lessonId}`, 20).state;
+      if (cur.daily.practice) {
+        cur = awardCoinsOnce(cur, `daily-core:${todayStr()}`, 15).state;
+        cur = awardCashOnce(cur, `daily-core:${todayStr()}`, 2).state;
+      }
+      return cur;
+    });
     celebrate(state.prefs.motion !== false);
     playSuccessSound();
     const les = catalogLesson(lessonId) || phonicsUnitById(lessonId);
