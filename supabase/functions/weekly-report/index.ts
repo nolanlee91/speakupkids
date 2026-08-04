@@ -69,7 +69,7 @@ const TIP: Record<string, string> = {
   grammar: "mở lại bảng quy tắc của phần đó, đọc ví dụ cùng bé trước khi luyện tiếp",
 };
 
-// Mỗi tuần 1 câu gợi chuyện để ba mẹ hỏi con — xoay vòng theo số tuần.
+// Câu gợi chuyện dự phòng — xoay vòng theo số tuần khi không bắt được chủ đề bé vừa luyện.
 const TALK_IDEAS = [
   "What did you eat today? — đố bé kể bữa ăn hôm nay bằng tiếng Anh",
   "What's your favorite animal? — và hỏi thêm Why do you like it?",
@@ -80,6 +80,65 @@ const TALK_IDEAS = [
   "What color is your shirt? — chỉ đồ vật quanh nhà, đố bé nói màu",
   "Who is your best friend? — để bé kể về bạn thân bằng 2 câu tiếng Anh",
 ];
+
+// Câu gợi chuyện THEO CHỦ ĐỀ bé vừa luyện — trùng kiến thức đang nóng để bé trả lời được ngay.
+const TOPIC_TALK: Record<string, string> = {
+  "g-present": "What do you do every day? — để bé kể thói quen hằng ngày",
+  "g-present-cont": "What are you doing? — hỏi bất chợt lúc bé đang làm gì đó",
+  "g-past": "What did you do yesterday? — để bé kể lại ngày hôm qua",
+  "g-future": "What will you do this weekend? — nghe kế hoạch của bé",
+  "g-yesno": "Do you like ice cream? — hỏi liền 3 câu Yes/No cho vui",
+  "g-wh": "Where is your schoolbag? — hỏi Where/What về đồ vật quanh nhà",
+  "g-compare": "Who is taller, Mom or Dad? — đố bé so sánh người trong nhà",
+  "g-superlative": "What is the biggest animal in the world? — đố bé về những cái 'nhất'",
+  "g-articles": "What's this? — chỉ đồ vật quanh nhà, để bé trả lời It's a/an…",
+  "g-prep": "Where is the cat? — đố bé dùng in/on/under với đồ vật trong nhà",
+  "g-pronouns": "Whose book is this? — chỉ đồ của từng người, để bé nói his/her/mine",
+  "g-thereis": "What's in your room? — để bé kể There is/There are…",
+  "w-intro": "Can you introduce yourself? — để bé tự giới thiệu 3 câu tiếng Anh",
+  "w-school": "What's your favorite subject? — chuyện trường lớp của bé",
+  "w-family": "Who is in your family? — để bé kể về cả nhà bằng tiếng Anh",
+  "w-food": "What did you eat today? — đố bé kể bữa ăn bằng tiếng Anh",
+  "w-animals": "What's your favorite animal? — và hỏi thêm Why do you like it?",
+  "w-town": "What's near our house? — để bé kể về khu phố bằng tiếng Anh",
+  "w-para-me": "Tell me about your best friend! — thử thách bé nói 3 câu liền",
+  "w-para-world": "Tell me about your room! — để bé tả phòng của mình",
+  "w-para-plans": "What are you going to do tomorrow? — nghe dự định của bé",
+};
+// Chủ đề của các game khác (id tự do) — đoán theo từ khóa trong id.
+const KEYWORD_TALK: [string, string][] = [
+  ["food", "What did you eat today? — đố bé kể bữa ăn bằng tiếng Anh"],
+  ["animal", "What's your favorite animal? — và hỏi thêm Why do you like it?"],
+  ["family", "Who is in your family? — để bé kể về cả nhà bằng tiếng Anh"],
+  ["school", "What's your favorite subject? — chuyện trường lớp của bé"],
+  ["weather", "How's the weather today? — để bé tả thời tiết hôm nay"],
+  ["color", "What color is your shirt? — chỉ đồ quanh nhà, đố bé nói màu"],
+  ["number", "Can you count from 1 to 20 in English? — thi đếm nhanh cùng bé"],
+  ["town", "What's near our house? — để bé kể về khu phố bằng tiếng Anh"],
+  ["city", "What's near our house? — để bé kể về khu phố bằng tiếng Anh"],
+];
+function talkFor(key: string): string | null {
+  const topic = key.split(":")[1] || "";
+  if (TOPIC_TALK[topic]) return TOPIC_TALK[topic];
+  const t = topic.toLowerCase();
+  for (const [kw, q] of KEYWORD_TALK) if (t.includes(kw)) return q;
+  return null;
+}
+// Chọn câu gợi chuyện: ưu tiên chủ đề bé LUYỆN NHIỀU tuần này và làm TỐT (≥70% đúng —
+// câu hỏi là dịp khoe, không phải bài kiểm tra); không bắt được gì thì xoay vòng chung.
+function pickTalk(m: Metrics, prevTopics: TopicAcc | null, weekIdx: number): string {
+  const cand = Object.entries(m.topicAcc).map(([k, v]) => {
+    const p = prevTopics?.[k];
+    const weekN = v.c + v.w - ((p?.c || 0) + (p?.w || 0));
+    return { k, weekN, pct: Math.round((v.c / (v.c + v.w)) * 100) };
+  }).filter((x) => x.weekN >= 3);
+  cand.sort((a, b) => ((b.pct >= 70 ? 1 : 0) - (a.pct >= 70 ? 1 : 0)) || b.weekN - a.weekN);
+  for (const c of cand) {
+    const q = talkFor(c.k);
+    if (q) return q;
+  }
+  return TALK_IDEAS[weekIdx % TALK_IDEAS.length];
+}
 
 type Delta = { lessons: number; sentences: number; stars: number; practice: number };
 
@@ -98,6 +157,7 @@ function milestones(prev: { lessons: number; sentences: number; stars: number },
 function childBlock(
   name: string, avatar: string, m: Metrics,
   d: Delta, dPrev: Delta | null, marks: string[], weekIdx: number,
+  prevTopics: TopicAcc | null,
 ): string {
   // Mũi tên xu hướng: so mức tăng tuần này với mức tăng tuần trước (có đủ 2 tuần dữ liệu mới hiện).
   const arrow = (cur: number, prev: number | undefined) =>
@@ -129,7 +189,7 @@ function childBlock(
   const active = d.lessons + d.sentences + d.practice > 0;
   if (active) {
     if (m.streak >= 2) extras.push(line("🔥", "#1b8a4b", `Chuỗi học hiện tại: <b>${m.streak} ngày liên tục</b> — ba mẹ khen bé một câu để giữ lửa nhé!`));
-    extras.push(line("🗣️", "#2b2f3f", `Gợi chuyện tuần này: <b>${TALK_IDEAS[weekIdx % TALK_IDEAS.length]}</b>.`));
+    extras.push(line("🗣️", "#2b2f3f", `Gợi chuyện tuần này: <b>${pickTalk(m, prevTopics, weekIdx)}</b>.`));
   } else {
     extras.push(line("💤", "#c9741a", `Tuần này bé chưa vào học. Bé đã có <b>${m.sentences} câu</b> và <b>${m.stars} sao</b> tích lũy — đừng để nguội! Gợi ý: hẹn cố định 10 phút sau bữa tối, bắt đầu bằng game bé thích nhất.`));
   }
@@ -205,7 +265,7 @@ Deno.serve(async (req) => {
       // 2 snapshot gần nhất TRƯỚC tuần này: [0] tính "tuần này tăng bao nhiêu",
       // [1] tính mức tăng của tuần trước → mũi tên xu hướng.
       const { data: prevRows } = await db.from("weekly_snapshots")
-        .select("lessons_done, sentences_done, stars, practice_seen")
+        .select("lessons_done, sentences_done, stars, practice_seen, topics")
         .eq("child_id", child.id).lt("week_start", ws)
         .order("week_start", { ascending: false }).limit(2);
       const prev = prevRows?.[0] || null;
@@ -226,7 +286,7 @@ Deno.serve(async (req) => {
         { lessons: prev?.lessons_done || 0, sentences: prev?.sentences_done || 0, stars: prev?.stars || 0 }, m);
       wkLessons += d.lessons; wkSentences += d.sentences; wkStars += d.stars; wkPractice += d.practice;
       anyActive = anyActive || d.lessons + d.sentences + d.practice > 0;
-      blocks.push(childBlock(child.ingame_name, child.avatar, m, d, dPrev, marks, weekIdx));
+      blocks.push(childBlock(child.ingame_name, child.avatar, m, d, dPrev, marks, weekIdx, (prev?.topics as TopicAcc) || null));
       if (!dry) {
         await db.from("weekly_snapshots").upsert({
           child_id: child.id, week_start: ws,
