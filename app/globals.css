@@ -638,13 +638,14 @@
   .portal { display: block; width: 100%; border: none; cursor: pointer; font-family: inherit; text-align: left;
     border-radius: 26px; position: relative; overflow: hidden; box-shadow: 0 10px 26px rgba(45,49,66,.12); transition: transform .14s; }
   .portal:hover { transform: translateY(-3px) rotate(-.4deg); }
+  /* 6 trò · 6 màu riêng biệt — hàng trên tông lạnh (dương/tím/lá), hàng dưới tông ấm (vàng/cam/hồng) */
   .theme-g-picdet { background: linear-gradient(135deg, #d8ecff, #f0f8ff); }
   .theme-g-talk { background: linear-gradient(135deg, #ffe4d8, #fff2ec); }
   .theme-g-puzzle { background: linear-gradient(135deg, #ece0ff, #f7f2ff); }
   .theme-g-riddle { background: linear-gradient(135deg, #dff5e7, #f0fbf2); }
-  .theme-g-listen { background: linear-gradient(135deg, #dbe9ff, #eef5ff); }
-  .theme-g-write { background: linear-gradient(135deg, #ffe7cc, #fff5e9); }
-  .theme-g-grammar { background: linear-gradient(135deg, #e4e6ff, #f4f3ff); }
+  .theme-g-listen { background: linear-gradient(135deg, #ffefc2, #fff8e3); }
+  .theme-g-write { background: linear-gradient(135deg, #ffdfd0, #fff0e9); }
+  .theme-g-grammar { background: linear-gradient(135deg, #ffdcec, #fff0f7); }
   .portal.featured { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; padding: 22px;
     min-height: 168px; margin-bottom: 16px; }
   .portal-scene { width: 118px; height: 118px; border-radius: 50%; background: rgba(255,255,255,.55);
