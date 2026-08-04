@@ -77,13 +77,13 @@ describe("đoạn văn L3 (minSentences)", () => {
 });
 
 describe("dữ liệu WRITE_SETS", () => {
-  it("9 bộ: 6 bộ câu × 8 bài + 3 bộ đoạn văn L3 × 5 bài, id không trùng", () => {
+  it("9 bộ: 6 bộ câu × 12 bài + 3 bộ đoạn văn L3 × 8 bài, id không trùng", () => {
     expect(WRITE_SETS.length).toBe(9);
     const ids = WRITE_SETS.flatMap((s) => s.items.map((t) => t.id));
     expect(new Set(ids).size).toBe(ids.length);
     for (const s of WRITE_SETS) {
       const isPara = s.id.startsWith("w-para");
-      expect(s.items.length, s.id).toBe(isPara ? 5 : 8);
+      expect(s.items.length, s.id).toBe(isPara ? 8 : 12);
     }
   });
 
