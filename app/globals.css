@@ -643,6 +643,8 @@
   .theme-g-puzzle { background: linear-gradient(135deg, #ece0ff, #f7f2ff); }
   .theme-g-riddle { background: linear-gradient(135deg, #dff5e7, #f0fbf2); }
   .theme-g-listen { background: linear-gradient(135deg, #dbe9ff, #eef5ff); }
+  .theme-g-write { background: linear-gradient(135deg, #ffe7cc, #fff5e9); }
+  .theme-g-grammar { background: linear-gradient(135deg, #e4e6ff, #f4f3ff); }
   .portal.featured { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; padding: 22px;
     min-height: 168px; margin-bottom: 16px; }
   .portal-scene { width: 118px; height: 118px; border-radius: 50%; background: rgba(255,255,255,.55);
@@ -667,6 +669,16 @@
   .pos-0 { transform: translateY(0) rotate(-1.6deg); } .pos-1 { transform: translateY(18px) rotate(1.2deg); }
   .pos-2 { transform: translateY(6px) rotate(-.8deg); }
   .pos-0:hover, .pos-1:hover, .pos-2:hover { transform: translateY(-4px); }
+  .portal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
+  .portal.game-tile { display: flex; flex-direction: column; min-width: 0; height: 100%; padding: 0; transform: none; border: 1px solid rgba(255,255,255,.76); }
+  .portal.game-tile:hover { transform: translateY(-4px); }
+  .portal.game-tile .portal-thumb { width: 100%; margin: 0; border-radius: 25px 25px 14px 14px; background: rgba(255,255,255,.45); }
+  .portal.game-tile .portal-thumb .portal-obj { display: grid; width: 100%; height: 100%; place-items: center; }
+  .portal.game-tile .portal-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; width: 100%; padding: 15px 16px 16px; }
+  .portal.game-tile .po-name { font-size: 1rem; line-height: 1.2; }
+  .portal.game-tile .po-vi { min-height: 1.25em; margin-top: 2px; }
+  .portal.game-tile .po-blurb { flex: 1; min-height: 3.25em; margin: 8px 0 13px; line-height: 1.45; }
+  .portal.game-tile .po-go { padding: 7px 13px; font-size: .78rem; }
 
   /* ---------- Shadowing filmstrip (dùng trong Learn › Speaking) ---------- */
   .filmstrip { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; }
@@ -700,6 +712,7 @@
     .journey { flex: 1; }
     .region-head { max-width: 560px; }
     .voca-list { grid-template-columns: 1fr 1fr; }
+    .portal-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   }
   @media (min-width: 1100px) {
     .arrival-copy { max-width: 440px; }
@@ -708,6 +721,11 @@
   @media (max-width: 400px) {
     .portal-row { gap: 8px; } .portal.small { padding: 16px 6px 18px; min-height: 120px; }
     .po-en { display: none; }
+    .portal-grid { gap: 9px; }
+    .portal.game-tile .portal-copy { padding: 11px 10px 12px; }
+    .portal.game-tile .po-name { font-size: .86rem; }
+    .portal.game-tile .po-blurb { display: none; }
+    .portal.game-tile .po-go { margin-top: 9px; padding: 6px 10px; font-size: .7rem; }
   }
 
   /* ============================================================

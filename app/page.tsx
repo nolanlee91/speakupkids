@@ -445,29 +445,20 @@ function Today({ state, go, openLesson, openClubhouse }: {
 
 /* ==================== LUYỆN TẬP — bốn game, vai trò rõ ==================== */
 function GamesHub({ launch }: { launch: (kind: GameKind) => void }) {
-  const feat = GAMES[0];
-  const rest = GAMES.slice(1);
   return (
     <section className="playground">
       <h2 className="chapter">Luyện tập cùng Maple</h2>
       <p className="pg-sub">Mỗi trò chơi luyện một kỹ năng — chơi có chủ đích, được máy chấm.</p>
-
-      <button className={`portal featured theme-g-${feat.id}`} onClick={() => launch(feat.id)}>
-        <span className="portal-scene" aria-hidden="true">{feat.image ? <img src={feat.image} alt="" /> : <span className="portal-obj">{feat.emoji}</span>}</span>
-        <span className="portal-copy">
-          <span className="po-name">{feat.name}</span>
-          <span className="po-vi">{feat.vi}</span>
-          <span className="po-blurb">{feat.blurb}</span>
-          <span className="po-go">Vào luyện ▶</span>
-        </span>
-      </button>
-
-      <div className="portal-row">
-        {rest.map((g, i) => (
-          <button key={g.id} className={`portal small theme-g-${g.id} pos-${i}`} onClick={() => launch(g.id)}>
-            {g.image ? <span className="portal-thumb"><img src={g.image} alt="" /></span> : <span className="portal-obj">{g.emoji}</span>}
-            <span className="po-name sm">{g.name}</span>
-            <span className="po-en">{g.vi}</span>
+      <div className="portal-grid">
+        {GAMES.map((g) => (
+          <button key={g.id} className={`portal game-tile theme-g-${g.id}`} onClick={() => launch(g.id)}>
+            <span className="portal-thumb" aria-hidden="true">{g.image ? <img src={g.image} alt="" /> : <span className="portal-obj">{g.emoji}</span>}</span>
+            <span className="portal-copy">
+              <span className="po-name">{g.name}</span>
+              <span className="po-vi">{g.vi}</span>
+              <span className="po-blurb">{g.blurb}</span>
+              <span className="po-go">Vào luyện <span aria-hidden="true">→</span></span>
+            </span>
           </button>
         ))}
       </div>
