@@ -817,6 +817,25 @@
   .lh-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--green)); }
   .lh-bar > span { position: absolute; right: 8px; top: -1px; font-size: .66rem; font-weight: 800; color: #4a5568; }
   .learn-cta { width: 100%; justify-content: center; }
+  /* Clip mở cảnh (bài có sceneVideo). Video dùng CHUNG class .lh-img nên khung hình,
+     chiều cao và kiểu crop desktop giống hệt bài chỉ có ảnh — không lệch layout. */
+  .lh-media { position: relative; display: block; line-height: 0; }
+  .lh-video { background: #cfe3f2; }
+  .lh-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 74px; height: 74px; border-radius: 50%; border: 3px solid #fff; cursor: pointer;
+    background: rgba(20, 32, 48, .55); color: #fff; font-size: 1.6rem; line-height: 1;
+    display: grid; place-items: center; padding-left: 5px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .35); backdrop-filter: blur(2px);
+    transition: transform .14s ease, background .14s ease; }
+  .lh-play:hover, .lh-play:focus-visible { background: rgba(20, 32, 48, .72); transform: translate(-50%, -50%) scale(1.06); }
+  /* bottom 58px: nằm HẲN trên thanh điều khiển gốc của trình duyệt (cao ~32–48px),
+     không đè lên nút toàn màn hình khi clip vừa chạy xong. */
+  .lh-replay { position: absolute; right: 10px; bottom: 58px; cursor: pointer;
+    background: rgba(20, 32, 48, .68); color: #fff; border: 2px solid rgba(255, 255, 255, .85);
+    border-radius: 999px; padding: 7px 14px; font-family: inherit; font-weight: 800; font-size: .82rem;
+    line-height: 1; box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
+  .lh-replay:hover, .lh-replay:focus-visible { background: rgba(20, 32, 48, .85); }
+  @media (prefers-reduced-motion: reduce) { .lh-play { transition: none; } .lh-play:hover { transform: translate(-50%, -50%); } }
   /* Desktop (chốt 2026-08-03): ảnh scene gần vuông → cắt thành banner ngang để
      các chặng học hiện ngay không phải cuộn. Mobile vẫn full ảnh, không crop. */
   @media (min-width: 880px) {

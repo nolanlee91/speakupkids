@@ -45,6 +45,9 @@ export const SECTIONS: LearningSection[] = [
 export type Lesson = {
   id: string; theme: string; title: string; vi: string; ageRange: string;
   sceneImage?: string;
+  // Clip mở cảnh (tùy chọn, đang thử nghiệm ở bài "park"). Bài KHÔNG có trường này
+  // vẫn hiển thị sceneImage y như cũ — hero không đổi layout.
+  sceneVideo?: string;
   shadowIds?: string[];        // id bài video (data.ts) dùng cho Shadowing
   vocab: VocabularyItem[];
   patterns: SentencePattern[];
@@ -58,6 +61,7 @@ export type CourseTheme = { id: string; name: string; vi: string; emoji: string;
 const AT_THE_PARK: Lesson = {
   id: "park", theme: "everyday-town", title: "At the Park", vi: "Ở công viên", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-park.webp",
+  sceneVideo: "/assets/videos/learn/level-1/level-1-unit-01-at-the-park.mp4",
   shadowIds: ["zoo", "like"],
   vocab: [
     { word: "bench", ipa: "/bentʃ/", vi: "ghế dài", emoji: "🪑", example: "Let's sit on the bench.", exampleVi: "Mình ngồi ghế dài nhé." },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
@@ -104,7 +104,7 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete, onPr
       <button className="bk course-back" onClick={() => setScreen("map")}>← Chương trình học</button>
       {/* Hero + Continue learning */}
       <div className="learn-hero fullbleed">
-        {lesson.sceneImage && <img className="lh-img" src={lesson.sceneImage} alt="" />}
+        <LessonHeroMedia lesson={lesson} />
         <div className="lh-panel">
           <div className="lh-eyebrow">📚 Đang học · {theme?.name}</div>
           <div className="lh-title">{lesson.title} <small>· {lesson.vi}</small></div>
@@ -158,6 +158,49 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete, onPr
 }
 
 /* ---------- Chương trình học: 6 Unit (thư viện chặng học) ---------- */
+/* Hero của bài học: có clip mở cảnh thì ưu tiên video, không thì giữ nguyên ảnh như cũ.
+   Bé phải CHỦ ĐỘNG bấm Play (không autoplay, không tự phát tiếng); ảnh scene làm poster
+   nên khung hình đầu giống hệt bản chỉ-có-ảnh. Video lỗi/không tải được → quay về ảnh. */
+function LessonHeroMedia({ lesson }: { lesson: Lesson }) {
+  const [failed, setFailed] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [ended, setEnded] = useState(false);
+  const ref = useRef<HTMLVideoElement>(null);
+
+  // Rời bài học giữa lúc clip đang chạy → dừng hẳn, không để tiếng đuổi theo màn khác.
+  useEffect(() => () => { ref.current?.pause(); }, []);
+
+  if (!lesson.sceneVideo || failed) {
+    return lesson.sceneImage ? <img className="lh-img" src={lesson.sceneImage} alt="" /> : null;
+  }
+
+  function play() {
+    stopSpeaking();          // Maple đang đọc thì im, kẻo chồng tiếng với narration trong clip
+    setEnded(false);
+    ref.current?.play().then(() => setStarted(true)).catch(() => setFailed(true));
+  }
+
+  return (
+    <div className="lh-media">
+      <video
+        ref={ref} className="lh-img lh-video" src={lesson.sceneVideo} poster={lesson.sceneImage}
+        playsInline preload="metadata" controls={started}
+        onPlay={() => { setStarted(true); setEnded(false); }}
+        onEnded={() => setEnded(true)}
+        onError={() => setFailed(true)}
+      />
+      {!started && (
+        <button type="button" className="lh-play" onClick={play} aria-label={`Xem clip ${lesson.title}`}>
+          <span aria-hidden="true">▶</span>
+        </button>
+      )}
+      {ended && (
+        <button type="button" className="lh-replay" onClick={play}>↻ Xem lại</button>
+      )}
+    </div>
+  );
+}
+
 function CourseMap({ state, onPick, onPremium }: { state: AppState; onPick: (u: CourseUnit) => void; onPremium: () => void }) {
   const [openLevel, setOpenLevel] = useState<string>("");
   const renderUnit = (u: CourseUnit, index: number, levelId: string) => {
