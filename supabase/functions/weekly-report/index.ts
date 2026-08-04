@@ -42,37 +42,103 @@ function weekStart(now = new Date()): string {
 
 const TOPIC_LABEL: Record<string, string> = {
   picdet: "Thám tử hình ảnh", puzzle: "Xếp câu", riddle: "Đố vui", listen: "Nghe & chọn", talk: "Talk",
+  write: "Luyện viết", grammar: "Ngữ pháp",
+};
+// Tên tiếng Việt cho unit/bộ của 2 game mới — không import được lib/ của app vào Deno,
+// nên duy trì map nhỏ ở đây (thêm unit mới thì thêm dòng).
+const SUB_LABEL: Record<string, string> = {
+  "g-present": "Hiện tại đơn", "g-present-cont": "Hiện tại tiếp diễn", "g-past": "Quá khứ đơn", "g-future": "Tương lai",
+  "g-yesno": "Câu hỏi Có/Không", "g-wh": "Câu hỏi Wh-", "g-compare": "So sánh hơn", "g-superlative": "So sánh nhất",
+  "g-articles": "Mạo từ a/an/the", "g-prep": "Giới từ in/on/at", "g-pronouns": "Đại từ & sở hữu", "g-thereis": "There is/are",
+  "w-intro": "Giới thiệu bản thân", "w-school": "Trường học", "w-family": "Gia đình", "w-food": "Món ăn",
+  "w-animals": "Động vật", "w-town": "Nơi em sống", "w-para-me": "Đoạn văn về em", "w-para-world": "Đoạn văn quanh em", "w-para-plans": "Đoạn văn dự định",
 };
 function topicName(key: string): string {
   const [game, topic] = key.split(":");
-  return `${TOPIC_LABEL[game] || game}${topic ? ` · ${topic}` : ""}`;
+  const g = TOPIC_LABEL[game] || game;
+  return topic ? `${g} · ${SUB_LABEL[topic] || topic}` : g;
 }
 
-function childBlock(name: string, avatar: string, m: Metrics, d: { lessons: number; sentences: number; stars: number; practice: number }): string {
+// Gợi ý hành động cụ thể cho ba mẹ theo game bé đang đuối.
+const TIP: Record<string, string> = {
+  picdet: "cùng bé mở Thám tử hình ảnh, để bé tả bức tranh thành lời trước khi chọn đáp án",
+  puzzle: "sau khi bé xếp xong câu, nhờ bé đọc to cả câu lên một lần",
+  riddle: "ba mẹ đọc to câu đố, để bé đoán trước rồi mới xem đáp án",
+  listen: "cho bé nghe lại mỗi câu 2 lần rồi mới chọn — không cần vội",
+  write: "đề nghị bé viết 1 câu về bữa tối hôm nay, rồi cùng xem máy chấm từng tiêu chí",
+  grammar: "mở lại bảng quy tắc của phần đó, đọc ví dụ cùng bé trước khi luyện tiếp",
+};
+
+// Mỗi tuần 1 câu gợi chuyện để ba mẹ hỏi con — xoay vòng theo số tuần.
+const TALK_IDEAS = [
+  "What did you eat today? — đố bé kể bữa ăn hôm nay bằng tiếng Anh",
+  "What's your favorite animal? — và hỏi thêm Why do you like it?",
+  "How's the weather today? — để bé tả thời tiết rồi ba mẹ nhắc lại theo bé",
+  "What will you do this weekend? — nghe bé kể kế hoạch cuối tuần",
+  "What's your favorite subject? — hỏi bé môn học bé mê nhất ở trường",
+  "Can you count from 1 to 20 in English? — thi đếm nhanh cùng bé",
+  "What color is your shirt? — chỉ đồ vật quanh nhà, đố bé nói màu",
+  "Who is your best friend? — để bé kể về bạn thân bằng 2 câu tiếng Anh",
+];
+
+type Delta = { lessons: number; sentences: number; stars: number; practice: number };
+
+// Cột mốc — chỉ báo đúng TUẦN bé vượt qua (so tổng tuần trước với tổng hiện tại).
+function milestones(prev: { lessons: number; sentences: number; stars: number }, m: Metrics): string[] {
+  const out: string[] = [];
+  const check = (label: (t: number) => string, prevV: number, curV: number, marks: number[]) => {
+    for (const t of marks) if (prevV < t && curV >= t) { out.push(label(t)); break; }
+  };
+  check((t) => `Vượt mốc <b>${t} bài học</b> hoàn thành!`, prev.lessons, m.lessons, [5, 10, 20, 30, 50, 75, 100, 150, 200, 300]);
+  check((t) => `Thuộc <b>${t} câu tiếng Anh</b>!`, prev.sentences, m.sentences, [25, 50, 100, 200, 300, 500, 750, 1000]);
+  check((t) => `Gom đủ <b>${t} sao</b>!`, prev.stars, m.stars, [25, 50, 100, 200, 300, 500]);
+  return out.slice(0, 2);
+}
+
+function childBlock(
+  name: string, avatar: string, m: Metrics,
+  d: Delta, dPrev: Delta | null, marks: string[], weekIdx: number,
+): string {
+  // Mũi tên xu hướng: so mức tăng tuần này với mức tăng tuần trước (có đủ 2 tuần dữ liệu mới hiện).
+  const arrow = (cur: number, prev: number | undefined) =>
+    prev == null || cur === prev ? "" :
+    cur > prev ? ` <span style="color:#1b8a4b;font-size:11px">▲</span>` : ` <span style="color:#a7adb8;font-size:11px">▼</span>`;
   const rows: string[] = [];
   const row = (label: string, week: string, total: string) =>
-    rows.push(`<tr><td style="padding:6px 10px;color:#5c6470">${label}</td><td style="padding:6px 10px;font-weight:700;color:#0b6a64">${week}</td><td style="padding:6px 10px;color:#8a8f98">${total}</td></tr>`);
-  row("Bài học hoàn thành", `+${d.lessons}`, `tổng ${m.lessons}`);
-  row("Câu đã thuộc", `+${d.sentences}`, `tổng ${m.sentences}`);
-  row("Sao đạt được", `+${d.stars}`, `tổng ${m.stars}`);
-  row("Câu luyện tập đã gặp", `+${d.practice}`, `tổng ${m.practiceSeen}`);
+    rows.push(`<tr><td style="padding:6px 10px;color:#5c6470">${label}</td><td style="padding:6px 10px;font-weight:700;color:#0b6a64;white-space:nowrap">${week}</td><td style="padding:6px 10px;color:#8a8f98">${total}</td></tr>`);
+  row("📚 Bài học hoàn thành", `+${d.lessons}${arrow(d.lessons, dPrev?.lessons)}`, `tổng ${m.lessons}`);
+  row("💬 Câu đã thuộc", `+${d.sentences}${arrow(d.sentences, dPrev?.sentences)}`, `tổng ${m.sentences}`);
+  row("⭐ Sao đạt được", `+${d.stars}${arrow(d.stars, dPrev?.stars)}`, `tổng ${m.stars}`);
+  row("🎯 Câu luyện tập đã gặp", `+${d.practice}${arrow(d.practice, dPrev?.practice)}`, `tổng ${m.practiceSeen}`);
 
-  // Top 3 chủ đề có dữ liệu: khen chỗ tốt, nhắc chỗ cần luyện.
+  const line = (emoji: string, color: string, html: string) =>
+    `<p style="margin:8px 0 0;font-size:13px;color:${color};line-height:1.5">${emoji} ${html}</p>`;
+  const extras: string[] = [];
+
+  // 🏅 Cột mốc vừa đạt trong tuần
+  for (const mk of marks) extras.push(line("🏅", "#8a5c00", `Cột mốc tuần này: ${mk} Ba mẹ chúc mừng bé nhé.`));
+
+  // 💪 Điểm sáng + 🧩 chỗ cần tiếp sức (kèm việc cụ thể cho ba mẹ)
   const accs = Object.entries(m.topicAcc)
-    .map(([k, v]) => ({ k, pct: Math.round((v.c / (v.c + v.w)) * 100), n: v.c + v.w }))
-    .sort((a, b) => b.n - a.n).slice(0, 3);
-  const accHtml = accs.length
-    ? `<p style="margin:10px 0 4px;font-size:13px;color:#5c6470">Độ chính xác gần đây: ${accs.map((a) => `<b style="color:${a.pct >= 70 ? "#1b8a4b" : "#c9741a"}">${topicName(a.k)} ${a.pct}%</b>`).join(" · ")}</p>`
-    : "";
+    .map(([k, v]) => ({ k, pct: Math.round((v.c / (v.c + v.w)) * 100), n: v.c + v.w }));
+  const best = [...accs].sort((a, b) => b.pct - a.pct).find((a) => a.pct >= 75);
+  const weak = [...accs].sort((a, b) => a.pct - b.pct).find((a) => a.pct < 65);
+  if (best) extras.push(line("💪", "#1b8a4b", `Điểm sáng: <b>${topicName(best.k)}</b> — đúng <b>${best.pct}%</b> trong ${best.n} câu gần đây. Bé làm chắc phần này!`));
+  if (weak) extras.push(line("🧩", "#c9741a", `Cần tiếp sức: <b>${topicName(weak.k)}</b> mới đúng ${weak.pct}% — gợi ý: ${TIP[weak.k.split(":")[0]] || "cùng bé luyện lại phần này 5 phút mỗi tối"}.`));
+
   const active = d.lessons + d.sentences + d.practice > 0;
-  const note = active
-    ? `<p style="margin:8px 0 0;font-size:13px;color:#1b8a4b">🔥 Chuỗi học hiện tại: <b>${m.streak} ngày</b> — bé đang học đều, ba mẹ khen bé một câu nhé!</p>`
-    : `<p style="margin:8px 0 0;font-size:13px;color:#c9741a">Tuần này bé chưa vào học — ba mẹ nhắc bé mở SpeakUp 10 phút mỗi ngày nhé.</p>`;
+  if (active) {
+    if (m.streak >= 2) extras.push(line("🔥", "#1b8a4b", `Chuỗi học hiện tại: <b>${m.streak} ngày liên tục</b> — ba mẹ khen bé một câu để giữ lửa nhé!`));
+    extras.push(line("🗣️", "#2b2f3f", `Gợi chuyện tuần này: <b>${TALK_IDEAS[weekIdx % TALK_IDEAS.length]}</b>.`));
+  } else {
+    extras.push(line("💤", "#c9741a", `Tuần này bé chưa vào học. Bé đã có <b>${m.sentences} câu</b> và <b>${m.stars} sao</b> tích lũy — đừng để nguội! Gợi ý: hẹn cố định 10 phút sau bữa tối, bắt đầu bằng game bé thích nhất.`));
+  }
+
   return `
   <div style="background:#fff;border:1px solid #eee2cc;border-radius:14px;padding:16px 18px;margin:0 0 14px">
     <h3 style="margin:0 0 8px;font-size:16px;color:#2b2f3f">${avatar} ${name}</h3>
     <table style="border-collapse:collapse;font-size:14px;width:100%">${rows.join("")}</table>
-    ${accHtml}${note}
+    ${extras.join("")}
   </div>`;
 }
 
@@ -130,22 +196,37 @@ Deno.serve(async (req) => {
     if (!children?.length) { skipped++; continue; }
 
     const blocks: string[] = [];
+    let wkLessons = 0, wkSentences = 0, wkStars = 0, wkPractice = 0, anyActive = false;
+    const weekIdx = Math.floor(Date.parse(ws) / (7 * 86400000));
     for (const child of children) {
       const { data: st } = await db.from("child_state").select("state").eq("child_id", child.id).maybeSingle();
       if (!st?.state) continue;
       const m = metrics(st.state);
-      // Snapshot gần nhất TRƯỚC tuần này để tính "tuần này tăng bao nhiêu".
-      const { data: prev } = await db.from("weekly_snapshots")
+      // 2 snapshot gần nhất TRƯỚC tuần này: [0] tính "tuần này tăng bao nhiêu",
+      // [1] tính mức tăng của tuần trước → mũi tên xu hướng.
+      const { data: prevRows } = await db.from("weekly_snapshots")
         .select("lessons_done, sentences_done, stars, practice_seen")
         .eq("child_id", child.id).lt("week_start", ws)
-        .order("week_start", { ascending: false }).limit(1).maybeSingle();
+        .order("week_start", { ascending: false }).limit(2);
+      const prev = prevRows?.[0] || null;
+      const prev2 = prevRows?.[1] || null;
       const d = {
         lessons: Math.max(0, m.lessons - (prev?.lessons_done || 0)),
         sentences: Math.max(0, m.sentences - (prev?.sentences_done || 0)),
         stars: Math.max(0, m.stars - (prev?.stars || 0)),
         practice: Math.max(0, m.practiceSeen - (prev?.practice_seen || 0)),
       };
-      blocks.push(childBlock(child.ingame_name, child.avatar, m, d));
+      const dPrev = prev && prev2 ? {
+        lessons: Math.max(0, prev.lessons_done - (prev2.lessons_done || 0)),
+        sentences: Math.max(0, prev.sentences_done - (prev2.sentences_done || 0)),
+        stars: Math.max(0, prev.stars - (prev2.stars || 0)),
+        practice: Math.max(0, prev.practice_seen - (prev2.practice_seen || 0)),
+      } : null;
+      const marks = milestones(
+        { lessons: prev?.lessons_done || 0, sentences: prev?.sentences_done || 0, stars: prev?.stars || 0 }, m);
+      wkLessons += d.lessons; wkSentences += d.sentences; wkStars += d.stars; wkPractice += d.practice;
+      anyActive = anyActive || d.lessons + d.sentences + d.practice > 0;
+      blocks.push(childBlock(child.ingame_name, child.avatar, m, d, dPrev, marks, weekIdx));
       if (!dry) {
         await db.from("weekly_snapshots").upsert({
           child_id: child.id, week_start: ws,
@@ -171,14 +252,24 @@ Deno.serve(async (req) => {
       </div>
     </div>`;
 
-    if (dry) { preview.push({ to: parent.email, kids: kidNames }); sent++; continue; }
+    // Tiêu đề mang số liệu thật của tuần — chọn chỉ số CÓ số liệu, không hiện "+0".
+    const subjParts: string[] = [];
+    if (wkLessons > 0) subjParts.push(`+${wkLessons} bài học`);
+    if (wkSentences > 0) subjParts.push(`+${wkSentences} câu mới`);
+    if (!subjParts.length && wkStars > 0) subjParts.push(`+${wkStars} sao`);
+    if (!subjParts.length && wkPractice > 0) subjParts.push(`+${wkPractice} câu luyện tập`);
+    const subject = anyActive
+      ? `🍁 ${kidNames} tuần này: ${subjParts.join(" · ") || "vẫn chăm chỉ luyện tập"} — SpeakUp Kids`
+      : `🍁 SpeakUp Kids nhớ ${kidNames} — cùng bé quay lại học nhé`;
+
+    if (dry) { preview.push({ to: parent.email, kids: kidNames, subject }); sent++; continue; }
     const rs = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from: "SpeakUp Kids <no-reply@speakupkids.net>",
         to: [parent.email],
-        subject: `🍁 Báo cáo tuần của ${kidNames} — SpeakUp Kids`,
+        subject,
         html,
       }),
     });
