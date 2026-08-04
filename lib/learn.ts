@@ -134,6 +134,7 @@ const AT_THE_PARK: Lesson = {
 const IN_THE_KITCHEN: Lesson = {
   id: "kitchen", theme: "everyday-town", title: "In the Kitchen", vi: "Trong bếp", ageRange: "9–12",
   sceneImage: "/assets/images/gen/scene-kitchen.webp",
+  sceneVideo: "/assets/videos/learn/level-1/level-1-unit-02-in-the-kitchen.mp4",
   vocab: [
     { word: "stove", ipa: "/stoʊv/", vi: "bếp lò", emoji: "🔥", example: "The pan is on the stove.", exampleVi: "Cái chảo ở trên bếp lò." },
     { word: "pan", ipa: "/pæn/", vi: "cái chảo", emoji: "🍳", example: "She cooks an egg in a pan.", exampleVi: "Cô ấy nấu trứng trong chảo." },
