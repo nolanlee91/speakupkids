@@ -89,31 +89,16 @@ export async function redeemCode(code: string): Promise<string> {
   }
 }
 
-// Nhận quà Maple Coins/Cash admin tặng cho bé (nếu có): đọc quà chưa nhận,
-// đánh dấu đã nhận rồi trả tổng để cộng vào state. Lỗi/offline → {0,0}, không nổ.
+// Nhận quà Maple Coins/Cash admin tặng cho bé (nếu có). Ghi qua RPC claim_gifts:
+// server đánh dấu đã nhận và trả về đúng tổng CLAIM ĐƯỢC trong lần gọi này, nên mở 2 tab
+// cũng không cộng đúp. Lỗi/offline/chưa chạy migration → {0,0}: quà nằm chờ, không mất.
 export async function claimGifts(childId: string): Promise<{ coins: number; cash: number }> {
   if (!supabase || !childId) return { coins: 0, cash: 0 };
   try {
-    const { data, error } = await supabase
-      .from("gifts")
-      .select("id, coins, cash")
-      .eq("child_id", childId)
-      .is("claimed_at", null);
-    if (error || !data || data.length === 0) return { coins: 0, cash: 0 };
-    const ids = data.map((g) => g.id);
-    // .select() sau update: chỉ cộng những dòng TAB NÀY thật sự claim được — mở 2 tab
-    // cùng lúc thì tab thua race update 0 dòng (không phải error) và không được cộng đúp.
-    const { data: claimed, error: upErr } = await supabase
-      .from("gifts")
-      .update({ claimed_at: new Date().toISOString() })
-      .in("id", ids)
-      .is("claimed_at", null)
-      .select("coins, cash");
-    if (upErr || !claimed) return { coins: 0, cash: 0 };
-    return {
-      coins: claimed.reduce((a, g) => a + (g.coins || 0), 0),
-      cash: claimed.reduce((a, g) => a + (g.cash || 0), 0),
-    };
+    const { data, error } = await supabase.rpc("claim_gifts", { p_child: childId });
+    if (error) return { coins: 0, cash: 0 };
+    const row = (Array.isArray(data) ? data[0] : data) as { coins?: number; cash?: number } | null;
+    return { coins: row?.coins || 0, cash: row?.cash || 0 };
   } catch {
     return { coins: 0, cash: 0 };
   }
@@ -183,12 +168,21 @@ function setVer(childId: string, v: number) {
 let remoteAdoptedCb: ((s: AppState) => void) | null = null;
 export function onRemoteStateAdopted(cb: (s: AppState) => void) { remoteAdoptedCb = cb; }
 
-// Điểm "tiến độ" thô để phân xử xung đột: bản nào bé học được nhiều hơn thì thắng.
+// Điểm "tiến độ" thô để phân xử xung đột: bản nào bé làm được nhiều hơn thì thắng.
+// Phải đếm CẢ hoạt động Clubhouse (mua đồ, đổi trang phục, nhận thú cưng): những việc này
+// không tạo ra bài học/câu mới nào, nên nếu chỉ đếm học tập thì máy vừa mua đồ sẽ hòa điểm
+// với máy cầm bản cũ → nhánh "hòa thì local thắng" đè mất toàn bộ giao dịch của bé.
 function progressScore(s: AppState): number {
   const lessons = Object.values(s.learn?.lessons || {}).filter((l) => l?.done).length;
   const seen = Object.values(s.games?.topics || {}).reduce((a, t) => a + (t?.seen?.length || 0), 0);
   const adv = Object.values(s.adventure?.seasons || {}).reduce((a, p) => a + (p?.completedChapterIds?.length || 0), 0);
-  return lessons * 10 + adv * 5 + seen + (s.clubhouse?.rewardedKeys?.length || 0);
+  const c = s.clubhouse;
+  const club = (c?.rewardedKeys?.length || 0)
+    + (c?.purchasedItemIds?.length || 0)
+    + (c?.ownedOutfitIds?.length || 0)
+    + (c?.unlockedItemIds?.length || 0)
+    + (c?.pet?.kind ? 1 : 0);
+  return lessons * 10 + adv * 5 + seen + club;
 }
 
 export async function pullState(childId: string): Promise<AppState | null> {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { speak, shuffle, celebrate, playFeedbackSound, playSuccessSound } from "@/lib/fx";
+import { speak, stopSpeaking, shuffle, celebrate, playFeedbackSound, playSuccessSound } from "@/lib/fx";
 import { speechScoringSupported } from "@/lib/speech";
 import { MicCheck } from "./speakcheck";
 import { ECHO, ROUND_SIZE, type StopKind } from "@/lib/games";
@@ -35,7 +35,7 @@ function RoundDiff({ difficulty }: { difficulty: Difficulty }) {
 }
 
 /* Thông tin trả về sau khi hoàn thành một lượt — dùng để hiển thị màn kết quả. */
-export type FinishInfo = { newly: number; explored: number; total: number; coins?: number; sticker?: { id: string; name: string; emoji: string } };
+export type FinishInfo = { newly: number; explored: number; total: number; coins?: number; cash?: number; sticker?: { id: string; name: string; emoji: string } };
 /* Cầu nối state ↔ game: tiến độ topic + ghi câu trả lời + hoàn thành lượt + Echo. */
 export type GameCallbacks = {
   topics: Record<string, GameTopicProgress>;
@@ -76,6 +76,7 @@ function GameResult({ title, stars, info, doneLabel, onDone, secondary }: {
       )}
       {info?.sticker && <p className="reward-newsticker">🎁 Sticker mới: <b>{info.sticker.name}</b>!</p>}
       {!!info?.coins && <div className="coin-reward"><span>◆</span> +{info.coins} Maple Coins</div>}
+      {!!info?.cash && <div className="cash-reward"><span>✦</span> +{info.cash} Maple Cash</div>}
       <button className="btn green" onClick={onDone}>{doneLabel}</button>
       {secondary && <button className="btn ghost sm" onClick={secondary.onClick}>{secondary.label}</button>}
     </div>
@@ -256,10 +257,15 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
   const info = useFinish(fin, () => cb.finish(key, results, stars, total));
   const exit = () => { cb.commit(key, results); onExit(); };
 
-  useEffect(() => {
+  // Sang câu mới: reset NGAY trong handler cùng lúc với setI (xem nút "Thử thách tiếp" bên dưới).
+  // Nếu reset trong useEffect thì effect chạy SAU khi vẽ → có một khung hình vẽ câu mới
+  // ở trạng thái "đã trả lời", tô xanh sẵn đáp án đúng của chính câu đó.
+  function goNext() {
+    const n = i + 1;
     setPicked(null); setChecked(null); setPlaced([]);
-    setBank(items[i].mode === "arrange" ? shuffle(items[i].solution || []) : []);
-  }, [i, items]);
+    setBank(items[n].mode === "arrange" ? shuffle(items[n].solution || []) : []);
+    setI(n);
+  }
 
   if (fin) {
     const a = {
@@ -344,7 +350,7 @@ function PictureRound({ sceneId, cb, accent, onExit, onNext, onReplay }: {
                 <span className="talk-say-note">(nói cho vui, không tính điểm)</span>
               </div>
             )}
-            <button className="btn qnext" onClick={() => { if (last) setFin(true); else setI(i + 1); }}>
+            <button className="btn qnext" onClick={() => { if (last) setFin(true); else goNext(); }}>
               {last ? "Xem kết quả →" : "Thử thách tiếp →"}
             </button>
           </>
@@ -411,7 +417,13 @@ function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string;
   const info = useFinish(fin, () => cb.finish(key, results, stars, total));
   const exit = () => { cb.commit(key, results); onExit(); };
 
-  useEffect(() => { setBank(shuffle(items[i].solution)); setPlaced([]); setResult(null); }, [i, items]);
+  // Reset ngay trong handler (không dùng useEffect): effect chạy sau khi vẽ nên có một
+  // khung hình hiện câu MỚI kèm feedback câu cũ — lộ luôn "Đáp án: <câu mới>".
+  function goNext() {
+    const n = i + 1;
+    setBank(shuffle(items[n].solution)); setPlaced([]); setResult(null);
+    setI(n);
+  }
 
   if (fin) {
     const a = resultActions(onNext, onExit, "Chủ đề khác →");
@@ -453,7 +465,7 @@ function PuzzleRound({ setId, difficulty, cb, onExit, onNext }: { setId: string;
       ) : (
         <>
           <div className="qfb">{result ? <span className="ok">✓ Chuẩn luôn!</span> : <><span className="no">✗ Chưa đúng.</span> Đáp án: <b>{target}</b></>}</div>
-          <button className="btn qnext" onClick={() => { if (i + 1 < items.length) setI(i + 1); else setFin(true); }}>
+          <button className="btn qnext" onClick={() => { if (i + 1 < items.length) goNext(); else setFin(true); }}>
             {i + 1 < items.length ? "Câu tiếp →" : "Xem kết quả →"}
           </button>
         </>
@@ -968,6 +980,9 @@ function EchoChallenge({ accent, onExit, cb }: { accent: "US" | "CA"; onExit: ()
 export function GamePlay({ kind, refId, accent, cb, onExit }: {
   kind: StopKind; refId?: string; accent: "US" | "CA"; cb: GameCallbacks; onExit: () => void;
 }) {
+  // Thoát khu Trò chơi giữa lúc Maple đang đọc (Nghe & chọn, Echo) → ngắt lời,
+  // không để tiếng đọc đuổi theo bé sang màn khác.
+  useEffect(() => stopSpeaking, []);
   if (kind === "picdet") return <PictureGame sceneId={refId} cb={cb} accent={accent} onExit={onExit} />;
   if (kind === "puzzle") return <SentencePuzzle setId={refId} cb={cb} onExit={onExit} />;
   if (kind === "riddle") return <RiddleGame setId={refId} cb={cb} accent={accent} onExit={onExit} />;

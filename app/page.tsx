@@ -141,6 +141,9 @@ function App() {
     const roundCoins = state.clubhouse.rewardedKeys.includes(roundKey) ? 0 : 10;
     const dailyCoins = state.daily.learn && !state.clubhouse.rewardedKeys.includes(dailyKey) ? 15 : 0;
     const coinsAwarded = roundCoins + dailyCoins;
+    // Cash thưởng khi xong CẶP Học+Luyện trong ngày — trước đây có cộng nhưng màn kết quả
+    // không hiện, ví bé tự nhiên tăng mà không biết vì sao.
+    const cashAwarded = state.daily.learn && !state.clubhouse.cashRewardedKeys.includes(dailyKey) ? 2 : 0;
     setState((s) => {
       let ns = recordGameAnswers(s, key, results);
       ns = finishGameRound(ns, key, stars, todayStr());
@@ -154,7 +157,7 @@ function App() {
       return ns;
     });
     const sk = awardId ? stickerById(awardId) : undefined;
-    return { newly, explored: explored.size, total: topicTotal, coins: coinsAwarded, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
+    return { newly, explored: explored.size, total: topicTotal, coins: coinsAwarded, cash: cashAwarded, sticker: sk ? { id: sk.id, name: sk.name, emoji: sk.emoji } : undefined };
   }
   // Echo (luyện nói tùy chọn): chỉ đánh dấu đã luyện Practice hôm nay.
   function echoDone() { setState((s) => markPracticeDone(s)); }
@@ -294,6 +297,9 @@ function Today({ state, go, openLesson, openClubhouse }: {
 }) {
   const name = state.nickname || "bạn nhỏ";
   const lessonId = state.learn.currentLesson;
+  // Bé đang học Level 0 thì currentLesson là id unit Phonics — catalog (chỉ có bài L1-L3)
+  // không biết id này, không tách riêng thì CTA rơi về bài "park" và cắt mạch học của bé.
+  const phonicsUnit = phonicsUnitById(lessonId);
   const lesson = catalogLesson(lessonId) || catalogLesson("park")!;
   const SECTIONS = CATALOG.sections;
   const doneCount = SECTIONS.filter((sc) => sectionDone(state, lesson.id, sc.key)).length;
@@ -309,7 +315,12 @@ function Today({ state, go, openLesson, openClubhouse }: {
 
   // CTA lớn: tiếp tục hoạt động gần nhất — KHÔNG ép ba module thành một chuỗi bắt buộc.
   let cta: { kicker: string; title: string; sub: string; label: string; run: () => void; bg?: string };
-  if (!lessonDone && nextSection) {
+  if (phonicsUnit && !learnLessonDone(state, phonicsUnit.id)) {
+    cta = {
+      kicker: "Tiếp tục học", title: `Level 0 · ${phonicsUnit.title}`, sub: phonicsUnit.vi,
+      label: "Học tiếp", run: () => openLesson(phonicsUnit.id),
+    };
+  } else if (!lessonDone && nextSection) {
     cta = {
       kicker: doneCount > 0 ? "Tiếp tục học" : "Bắt đầu Unit",
       title: `${lesson.title} · ${nextSection.vi}`,

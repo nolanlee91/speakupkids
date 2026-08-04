@@ -7,12 +7,12 @@
 // Không dùng ảnh: chữ + emoji + TTS speak(). Xem lib/phonics.ts.
 // ============================================================================
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, lessonPct } from "@/lib/state";
 import type { LearningSectionKey } from "@/lib/learn";
 import { phonicsKeywordImage, type PhonicsSound, type PhonicsUnit, type PhonMCQ } from "@/lib/phonics";
-import { speak, shuffle } from "@/lib/fx";
+import { speak, stopSpeaking, shuffle } from "@/lib/fx";
 
 type PhView = "overview" | LearningSectionKey | "check";
 
@@ -32,6 +32,7 @@ export function PhonicsLesson({ state, setState, unit, accent, onExit, onComplet
   onComplete: (id: string, score: number, total: number) => void;
 }) {
   const [view, setView] = useState<PhView>("overview");
+  useEffect(() => stopSpeaking, []);   // thoát bài phonics → ngắt lời Maple đang đọc
   const done = PH_SECTIONS.filter((sc) => sectionDone(state, unit.id, sc.key)).length;
   const pct = lessonPct(state, unit.id, PH_SECTIONS.length);
   const next = PH_SECTIONS.find((sc) => !sectionDone(state, unit.id, sc.key));

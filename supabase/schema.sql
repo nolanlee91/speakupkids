@@ -30,6 +30,21 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
+-- Ba mẹ đổi email trong Auth → cập nhật luôn parents.email, kẻo báo cáo tuần
+-- cứ gửi mãi về địa chỉ cũ (trigger trên chỉ chạy lúc đăng ký).
+create or replace function public.sync_parent_email()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  update public.parents set email = new.email
+   where id = new.id and email is distinct from new.email;
+  return new;
+end; $$;
+
+drop trigger if exists on_auth_user_email_changed on auth.users;
+create trigger on_auth_user_email_changed
+  after update of email on auth.users
+  for each row execute function public.sync_parent_email();
+
 -- ────────────────────────────────────────────────────────────
 -- 2. children: hồ sơ từng con
 -- ────────────────────────────────────────────────────────────
@@ -144,6 +159,9 @@ declare
   max_children int;
   cnt int;
 begin
+  -- Khóa theo tài khoản: count(*) rồi insert mà không khóa thì hai request song song
+  -- cùng thấy cnt=0 và cùng chèn → vượt giới hạn gói.
+  perform pg_advisory_xact_lock(hashtext(new.parent_id::text));
   select plan into cur_plan from public.entitlements where parent_id = new.parent_id;
   max_children := case when cur_plan = 'family' then 4 else 1 end;
   select count(*) into cnt from public.children where parent_id = new.parent_id;
@@ -204,8 +222,10 @@ create table if not exists public.codes (
   note        text,
   created_at  timestamptz not null default now(),
   redeemed_by uuid references auth.users(id) on delete set null,
-  redeemed_at timestamptz
+  redeemed_at timestamptz,
+  is_upgrade  boolean not null default false   -- mã Family dùng để NÂNG CẤP từ Pro (thực thu phần chênh)
 );
+alter table public.codes add column if not exists is_upgrade boolean not null default false;
 create index if not exists codes_agent_idx on public.codes(agent_id);
 alter table public.codes enable row level security;
 drop policy if exists codes_admin on public.codes;
@@ -221,6 +241,7 @@ returns text language plpgsql security definer set search_path = public as $$
 declare
   c record;
   cur_plan text;
+  upgraded boolean := false;
 begin
   if auth.uid() is null then return 'unauthenticated'; end if;
   -- FOR UPDATE: khóa dòng mã trong transaction — hai người đổi CÙNG một mã song song
@@ -237,11 +258,14 @@ begin
     update public.entitlements
       set plan = c.plan, order_ref = 'code:' || c.code, purchased_at = now()
       where parent_id = auth.uid();
+    upgraded := true;
   else
     insert into public.entitlements (parent_id, plan, order_ref)
     values (auth.uid(), c.plan, 'code:' || c.code);
   end if;
-  update public.codes set redeemed_by = auth.uid(), redeemed_at = now() where code = c.code;
+  update public.codes
+     set redeemed_by = auth.uid(), redeemed_at = now(), is_upgrade = upgraded
+   where code = c.code;
   return 'ok:' || c.plan;
 end; $$;
 
@@ -261,19 +285,35 @@ alter table public.gifts enable row level security;
 drop policy if exists gifts_admin on public.gifts;
 create policy gifts_admin on public.gifts
   for all using (public.is_admin()) with check (public.is_admin());
--- Ba mẹ đọc + đánh dấu đã nhận quà của con mình (không tự tạo quà được).
+-- Ba mẹ chỉ ĐỌC quà của con mình. KHÔNG có policy update: policy update cả dòng
+-- cho phép tự đặt lại claimed_at = null (nhận quà lặp) hoặc sửa coins trước khi nhận
+-- → nhận quà đi qua RPC claim_gifts bên dưới.
 drop policy if exists gifts_parent_read on public.gifts;
 create policy gifts_parent_read on public.gifts
   for select using (
     exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
   );
 drop policy if exists gifts_parent_claim on public.gifts;
-create policy gifts_parent_claim on public.gifts
-  for update using (
-    exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
-  ) with check (
-    exists (select 1 from public.children c where c.id = gifts.child_id and c.parent_id = auth.uid())
-  );
+
+-- Nhận quà: đánh dấu claimed_at và trả về đúng tổng CLAIM ĐƯỢC trong lần gọi này
+-- (mở 2 tab thì tab thua chỉ nhận 0, không cộng đúp).
+create or replace function public.claim_gifts(p_child uuid)
+returns table (coins int, cash int)
+language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then return; end if;
+  -- security definer nên phải TỰ kiểm quyền: chỉ nhận quà của con mình.
+  if not exists (select 1 from public.children c where c.id = p_child and c.parent_id = auth.uid()) then
+    return;
+  end if;
+  return query
+    with claimed as (
+      update public.gifts g set claimed_at = now()
+       where g.child_id = p_child and g.claimed_at is null
+      returning g.coins as c, g.cash as k
+    )
+    select coalesce(sum(claimed.c), 0)::int, coalesce(sum(claimed.k), 0)::int from claimed;
+end; $$;
 
 -- Admin xem được danh sách tài khoản/hồ sơ/gói (chỉ ĐỌC; cấp gói ghi qua entitlements).
 drop policy if exists parents_admin_read on public.parents;
@@ -337,3 +377,28 @@ alter table public.agents add column if not exists parent_id uuid references pub
 alter table public.agents add column if not exists commission_pct int not null default 20
   check (commission_pct between 0 and 100);
 create index if not exists agents_parent_idx on public.agents(parent_id);
+
+-- Báo cáo hoa hồng ở /admin chỉ hiểu ĐÚNG 2 cấp: đại lý tự-làm-cha hoặc cây sâu 3 cấp
+-- sẽ tàng hình trong bảng (doanh số không ai nhận). Chặn ngay ở DB.
+alter table public.agents drop constraint if exists agents_no_self_parent;
+alter table public.agents add constraint agents_no_self_parent
+  check (parent_id is null or parent_id <> id);
+
+create or replace function public.enforce_agent_depth()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if new.parent_id is not null then
+    if exists (select 1 from public.agents a where a.id = new.parent_id and a.parent_id is not null) then
+      raise exception 'AGENT_DEPTH: cấp trên phải là đại lý cấp 1 (mô hình chỉ có 2 cấp)';
+    end if;
+    if exists (select 1 from public.agents a where a.parent_id = new.id) then
+      raise exception 'AGENT_DEPTH: đại lý này đang có cấp dưới nên không thể thành cấp 2';
+    end if;
+  end if;
+  return new;
+end; $$;
+
+drop trigger if exists agents_depth on public.agents;
+create trigger agents_depth
+  before insert or update of parent_id on public.agents
+  for each row execute function public.enforce_agent_depth();

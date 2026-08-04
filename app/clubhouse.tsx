@@ -6,7 +6,7 @@ import { adjustMapleNeeds, adjustPetNeeds, adoptClubhousePet, buyClubhouseItem, 
 import { ALL_CLUBHOUSE_FURNITURE, CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, clubhouseChoices, clubhouseLearnTotal, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
-import { celebrate, playSuccessSound, speak } from "@/lib/fx";
+import { celebrate, playSuccessSound, speak, stopSpeaking } from "@/lib/fx";
 import { StickerArt } from "./reward-art";
 
 type MaplePose = "cheer" | "think" | "sit" | "sleep" | "create" | "play";
@@ -93,9 +93,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [petPose, setPetPose] = useState<PetPose>("idle");
   const [careNotice, setCareNotice] = useState("");
   const [rewardDismissed, setRewardDismissed] = useState(false);
+  useEffect(() => stopSpeaking, []);   // đóng Clubhouse → ngắt lời đang đọc tên đồ vật
   const roomRef = useRef<HTMLElement>(null);
   const interactionTimer = useRef<number | null>(null);
-  const idleTimer = useRef<number | null>(null);
+  // Maple và thú cưng có nhịp "trở về tư thế đứng yên" RIÊNG — dùng chung một ref thì
+  // vuốt pet sẽ huỷ luôn hẹn giờ của Maple, để Maple kẹt pose + câu thoại cũ vĩnh viễn.
+  const mapleIdleTimer = useRef<number | null>(null);
+  const petIdleTimer = useRef<number | null>(null);
   const walkTimer = useRef<number | null>(null);
   const noticeTimer = useRef<number | null>(null);
   const interactionCooldown = useRef<Record<string, number>>({});
@@ -118,14 +122,16 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk");
     setMapleLine(room.line);
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
-    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
+    if (petIdleTimer.current) window.clearTimeout(petIdleTimer.current);
     if (walkTimer.current) window.clearTimeout(walkTimer.current);
     walkTimer.current = window.setTimeout(() => { setMapleWalking(false); setPetPose("idle"); }, 760);
   }, [room.id, room.maple, room.line]);
 
   useEffect(() => () => {
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
-    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
+    if (petIdleTimer.current) window.clearTimeout(petIdleTimer.current);
     if (walkTimer.current) window.clearTimeout(walkTimer.current);
     if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
   }, []);
@@ -137,7 +143,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
 
   function moveMaple(x: number, y: number) {
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
-    if (idleTimer.current) window.clearTimeout(idleTimer.current);
+    if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
     if (walkTimer.current) window.clearTimeout(walkTimer.current);
     setMaplePose("cheer");
     setMaplePos({ x: Math.max(9, Math.min(91, x)), y: Math.max(62, Math.min(93, y)) });
@@ -157,7 +163,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
       setMapleWalking(false); setMaplePose(action.pose); setMapleLine(line);
       setState((s) => adjustMapleNeeds(s, action.needs || ({ energy: -3, hunger: -2, happiness: 6 })));
       speak(line, state.prefs.accent, .84);
-      idleTimer.current = window.setTimeout(() => { setMaplePose("cheer"); setMapleLine("What should I try next?"); }, 8500);
+      mapleIdleTimer.current = window.setTimeout(() => { setMaplePose("cheer"); setMapleLine("What should I try next?"); }, 8500);
     }, 720);
   }
 
@@ -200,8 +206,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
       setState((s) => adjustPetNeeds(s, { happiness: 20, hunger: -3 })); setPetPose("play");
       showCareNotice(`${pet.name}: +20 Happiness`);
     }
-    if (idleTimer.current) window.clearTimeout(idleTimer.current);
-    idleTimer.current = window.setTimeout(() => setPetPose("idle"), 4500);
+    if (petIdleTimer.current) window.clearTimeout(petIdleTimer.current);
+    petIdleTimer.current = window.setTimeout(() => setPetPose("idle"), 4500);
   }
 
   function chooseOutfit(outfit: MapleOutfit) {
@@ -274,7 +280,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <span className="maple-speech">{editing ? "Drag things anywhere you like!" : mapleLine}</span>
         </button>
         {pet.kind && <button className={`clubhouse-pet pet-${petPose}`} style={{ left: "43%", top: "91%" }} aria-label={`${pet.name}, your ${pet.kind}`}
-          onClick={(e) => { e.stopPropagation(); setPetPose("play"); setState((s) => adjustPetNeeds(s, { happiness: 5, hunger: -1 })); showCareNotice(`${pet.name} loves the attention!`); if (idleTimer.current) window.clearTimeout(idleTimer.current); idleTimer.current = window.setTimeout(() => setPetPose("idle"), 3500); }}>
+          onClick={(e) => { e.stopPropagation(); setPetPose("play"); setState((s) => adjustPetNeeds(s, { happiness: 5, hunger: -1 })); showCareNotice(`${pet.name} loves the attention!`); if (petIdleTimer.current) window.clearTimeout(petIdleTimer.current); petIdleTimer.current = window.setTimeout(() => setPetPose("idle"), 3500); }}>
           <PetArt kind={pet.kind} pose={petPose} alt={`${pet.name} is ${petPose}`} /><span>{pet.name}</span>
         </button>}
         {displayed.map((item, index) => {

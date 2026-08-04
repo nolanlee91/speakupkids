@@ -47,6 +47,15 @@ export function speak(text: string, accent: "US" | "CA" = "US", rate = 0.9) {
   }
 }
 
+// Ngắt lời đang đọc — gọi khi bé rời màn (unmount). Không có nó thì Maple đọc tiếp
+// cả đoạn văn dài sau khi bé đã thoát sang màn khác.
+// Tăng speakRequest để vô hiệu hoá luôn các play() đang chờ voiceschanged/timeout 350ms.
+export function stopSpeaking() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  speakRequest++;
+  window.speechSynthesis.cancel();
+}
+
 export function celebrate(motion: boolean) {
   if (!motion || typeof document === "undefined") return;
   const colors = ["#ff7a59", "#ffcc33", "#17a2a2", "#3bb273", "#a05be0", "#ff5d8f"];

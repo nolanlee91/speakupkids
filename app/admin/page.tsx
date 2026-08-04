@@ -202,6 +202,9 @@ function Overview({ parents, kids, ents, agents, codes }: {
 /* ═══════════ Đại lý & mã kích hoạt ═══════════ */
 // Giá bán lifetime — khớp PLAN_PRICE ở app/page.tsx; đổi giá thì đổi cả đây.
 const PLAN_VALUE: Record<"pro" | "family", number> = { pro: 360_000, family: 480_000 };
+// Mã Family dùng để NÂNG CẤP từ Pro chỉ thu thêm phần chênh (120k) — tính đủ mệnh giá
+// thì doanh thu phồng gấp 4 và hoa hồng trả dư trên mỗi đơn nâng cấp.
+const codeValue = (c: AdminCode) => (c.is_upgrade ? PLAN_VALUE.family - PLAN_VALUE.pro : PLAN_VALUE[c.plan]);
 const vnd = (n: number) => n.toLocaleString("vi-VN") + "đ";
 
 function Agents({ agents, codes, onChange }: { agents: AdminAgent[]; codes: AdminCode[]; onChange: () => Promise<void> }) {
@@ -253,7 +256,7 @@ function Agents({ agents, codes, onChange }: { agents: AdminAgent[]; codes: Admi
   // Doanh thu = tổng mệnh giá gói của mã ĐÃ BÁN. Hoa hồng của đại lý =
   // doanh thu của họ × %họ + Σ(doanh thu cấp dưới × (%họ − %cấp dưới)).
   const revenueOf = (id: string) =>
-    codes.filter((c) => c.agent_id === id && c.redeemed_by).reduce((s, c) => s + PLAN_VALUE[c.plan], 0);
+    codes.filter((c) => c.agent_id === id && c.redeemed_by).reduce((s, c) => s + codeValue(c), 0);
   const soldOf = (id: string) => codes.filter((c) => c.agent_id === id && c.redeemed_by).length;
   const issuedOf = (id: string) => codes.filter((c) => c.agent_id === id).length;
   const commissionOf = (a: AdminAgent) => {

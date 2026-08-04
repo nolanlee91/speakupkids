@@ -16,7 +16,7 @@ import {
   SEASONS, seasonById, chapterById, itemById, chapterStatesFor, chapterPlayable, resumeChapter,
   type AdventureSeason, type AdventureChapter, type StoryStep, type ChapterUiState,
 } from "@/lib/adventures";
-import { speak, shuffle, celebrate } from "@/lib/fx";
+import { speak, stopSpeaking, shuffle, celebrate } from "@/lib/fx";
 import { adventureSeasonLocked } from "@/lib/gating";
 import { seasonSouvenirBySeason } from "@/lib/clubhouse";
 
@@ -48,6 +48,7 @@ export function Adventure({ state, setState, accent, onPremium }: {
   const [playing, setPlaying] = useState<string | null>(null);
   const [travelFrom, setTravelFrom] = useState<string | null>(null); // chương vừa xong → Maple đi tiếp
   const [seasonRewardId, setSeasonRewardId] = useState<string | null>(null);
+  useEffect(() => stopSpeaking, []);   // thoát Adventure → ngắt lời Maple đang kể
 
   const reduce = usePrefersReducedMotion();
   const animate = state.prefs.motion !== false && !reduce;

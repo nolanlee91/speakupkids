@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AppState } from "@/lib/state";
 import { markSection, sectionDone, setDifficulty, setCurrentLesson, learnLessonDone, lessonPct } from "@/lib/state";
 import {
@@ -10,13 +10,28 @@ import {
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
 import { learnLocked } from "@/lib/gating";
 import { PhonicsLesson } from "./phonics";
-import { playFeedbackSound, speak, shuffle } from "@/lib/fx";
+import { playFeedbackSound, speak, stopSpeaking, shuffle } from "@/lib/fx";
 import { speechScoringSupported } from "@/lib/speech";
 import { MicCheck } from "./speakcheck";
 import { AppIcon, type AppIconName } from "./icons";
 
 const GEN = "/assets/images/gen/";
 type SecView = "overview" | LearningSectionKey | "check";
+
+// Bài Learn này có đang khóa Pro không (theo vị trí trong cấp — L3 tính riêng từng collection).
+// CourseMap đã chặn bài khóa, nhưng đường vào THẲNG bài (CTA "Hôm nay" đọc learn.currentLesson)
+// thì chưa — sửa localStorage là mở được bài Pro nếu không kiểm ở đây.
+function lessonLockedById(state: AppState, lessonId: string): boolean {
+  const i1 = LEVEL1_UNITS.findIndex((u) => u.lessonId === lessonId);
+  if (i1 >= 0) return learnLocked(state, "1", i1);
+  const i2 = LEVEL2_UNITS.findIndex((u) => u.lessonId === lessonId);
+  if (i2 >= 0) return learnLocked(state, "2", i2);
+  for (const g of LEVEL3_COLLECTIONS) {
+    const i3 = g.units.findIndex((u) => u.lessonId === lessonId);
+    if (i3 >= 0) return learnLocked(state, "3", i3);
+  }
+  return false;
+}
 
 export function Learn({ state, setState, entry, onEcho, onTalk, onComplete, onPremium }: {
   state: AppState;
@@ -30,9 +45,15 @@ export function Learn({ state, setState, entry, onEcho, onTalk, onComplete, onPr
   const lesson = learnLessonById(state.learn.currentLesson) || allLearnLessons()[0];
   const diff = state.learn.difficulty;
   const accent = state.prefs.accent;
-  const [screen, setScreen] = useState<"map" | "lesson">(entry);
+  // Vào thẳng bài đang học (CTA "Hôm nay"): nếu bài đó là unit Phonics thì mở player
+  // phonics, không rơi về bài Learn thường (currentLesson của bé Level 0 là id phonics).
+  const entryPhonics = entry === "lesson" && phonicsUnitById(state.learn.currentLesson) ? state.learn.currentLesson : null;
+  const [screen, setScreen] = useState<"map" | "lesson">(
+    entry === "lesson" && !entryPhonics && lessonLockedById(state, state.learn.currentLesson) ? "map" : entry);
   const [view, setView] = useState<SecView>("overview");
-  const [phonicsId, setPhonicsId] = useState<string | null>(null);
+  const [phonicsId, setPhonicsId] = useState<string | null>(entryPhonics);
+
+  useEffect(() => stopSpeaking, []);   // rời khu Học → ngắt đoạn Maple đang đọc
 
   // Màn chương trình học: chọn Unit trước khi vào bài
   if (screen === "map") {

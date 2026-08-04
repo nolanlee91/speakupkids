@@ -13,6 +13,7 @@ export type AdminAgent = {
 export type AdminCode = {
   code: string; plan: "pro" | "family"; agent_id: string | null; note: string | null;
   created_at: string; redeemed_by: string | null; redeemed_at: string | null;
+  is_upgrade: boolean;           // mã Family dùng để nâng cấp từ Pro → thực thu phần chênh
 };
 export type AdminGift = { id: string; child_id: string; coins: number; cash: number; note: string | null; created_at: string; claimed_at: string | null };
 

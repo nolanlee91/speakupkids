@@ -1,6 +1,9 @@
 import type { AppState } from "./state";
 import { isChapterCompleted, learnLessonsDone } from "./state";
-import { SEASONS, chapterPlayable } from "./adventures";
+// Dùng CATALOG (metadata nhẹ, cờ playable sinh sẵn) thay vì lib/adventures: file này được
+// app/page.tsx import ngay màn đầu (CLUBHOUSE_SHOP), kéo theo adventures là +187KB JS
+// vào lần tải đầu. tests/catalog.test.ts gác cho CATALOG luôn khớp SEASONS.
+import { CATALOG } from "./catalog.gen";
 
 export type ClubhouseItem = {
   id: string;
@@ -125,9 +128,9 @@ export function nextClubhouseMilestone(state: AppState): number | null {
 }
 
 export function seasonComplete(state: AppState, seasonId: string): boolean {
-  const season = SEASONS.find((s) => s.id === seasonId);
+  const season = CATALOG.seasons.find((s) => s.id === seasonId);
   if (!season) return false;
-  const playable = season.chapters.filter(chapterPlayable);
+  const playable = season.chapters.filter((ch) => ch.playable);
   return playable.length > 0 && playable.every((ch) => isChapterCompleted(state, season.id, ch.id));
 }
 
