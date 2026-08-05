@@ -128,6 +128,7 @@ function DreamLoftCanopy({ occupied }: { occupied: boolean }) {
 
 type FurnitureZone = "wall" | "surface" | "rug" | "large" | "seat" | "floor";
 type RoomSlot = { x: number; y: number; scale?: number; z?: number };
+type PlacementSlot = RoomSlot & { id: string; zone: FurnitureZone };
 
 const LARGE_FURNITURE = new Set(["shop-canopy-bed", "shop-maple-bookshelf", "shop-gaming-corner", "shop-grand-aquarium", "shop-reading-pod", "shop-mini-cinema", "shop-treehouse-loft", "shop-command-station", "shop-pet-retreat", "shop-adventure-gallery", "shop-music-keyboard"]);
 const SEAT_FURNITURE = new Set(["shop-beanbag", "shop-astro-chair", "shop-cloud-cushion", "learn-story-tent", "learn-book-chair"]);
@@ -184,21 +185,27 @@ const ROOM_SLOTS: Record<string, Record<FurnitureZone, RoomSlot[]>> = {
   },
 };
 
-function arrangeFurniture(items: ShopItem[], roomId: string): Map<string, RoomSlot & { zone: FurnitureZone }> {
-  const result = new Map<string, RoomSlot & { zone: FurnitureZone }>();
-  const counts: Record<FurnitureZone, number> = { wall: 0, surface: 0, rug: 0, large: 0, seat: 0, floor: 0 };
+function placementSlots(item: ShopItem, roomId: string): PlacementSlot[] {
+  const zone = furnitureZone(item);
+  const roomChoices = ROOM_SLOTS[roomId]?.[zone] || ROOM_SLOTS.lounge[zone];
+  const indexed = roomChoices.map((slot, index) => ({ ...slot, id: `${roomId}:${zone}:${index}`, zone }));
+  if (roomId === "loft" && zone === "large") {
+    return item.id === "shop-canopy-bed" ? indexed.slice(0, 1) : indexed.slice(1);
+  }
+  return indexed;
+}
+
+function arrangeFurniture(items: ShopItem[], roomId: string, savedSlotIds: Record<string, string>): Map<string, PlacementSlot> {
+  const result = new Map<string, PlacementSlot>();
+  const occupied = new Set<string>();
   for (const item of items) {
-    const zone = furnitureZone(item);
-    if (roomId === "loft" && item.id === "shop-canopy-bed") {
-      result.set(item.id, { ...DREAM_LOFT_CANOPY, scale: 1, zone: "large" });
-      continue;
-    }
-    const roomChoices = ROOM_SLOTS[roomId]?.[zone] || ROOM_SLOTS.lounge[zone];
-    const choices = roomId === "loft" && zone === "large" ? roomChoices.slice(1) : roomChoices;
-    const index = counts[zone]++;
-    const base = choices[index % choices.length];
-    const cycle = Math.floor(index / choices.length);
-    result.set(item.id, { ...base, x: base.x + cycle * 2, y: base.y + cycle * 2, scale: (base.scale ?? 1) * Math.max(.72, 1 - cycle * .1), zone });
+    const choices = placementSlots(item, roomId);
+    const saved = choices.find((slot) => slot.id === savedSlotIds[item.id] && !occupied.has(slot.id));
+    const open = saved || choices.find((slot) => !occupied.has(slot.id));
+    const base = open || choices[0];
+    if (!base) continue;
+    occupied.add(base.id);
+    result.set(item.id, base);
   }
   return result;
 }
@@ -219,6 +226,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [careNotice, setCareNotice] = useState("");
   const [rewardDismissed, setRewardDismissed] = useState(false);
   const [sittingOn, setSittingOn] = useState<string | null>(null);   // món Maple đang ngồi/nằm lọt vào
+  const [placingItemId, setPlacingItemId] = useState<string | null>(null);
   useEffect(() => stopSpeaking, []);   // đóng Clubhouse → ngắt lời đang đọc tên đồ vật
   const roomRef = useRef<HTMLElement>(null);
   const interactionTimer = useRef<number | null>(null);
@@ -233,7 +241,10 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const equipped = new Set(state.clubhouse.equippedItemIds);
   const room = ROOMS.find((r) => r.id === state.clubhouse.activeRoomId) || ROOMS[0];
   const displayed = ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
-  const furnitureLayout = arrangeFurniture(displayed, room.id);
+  const furnitureLayout = arrangeFurniture(displayed, room.id, state.clubhouse.itemSlotIds);
+  const placingItem = placingItemId ? ALL_CLUBHOUSE_FURNITURE.find((item) => item.id === placingItemId) || null : null;
+  const suggestedSlots = placingItem ? placementSlots(placingItem, room.id) : [];
+  const occupiedSlotIds = new Set([...furnitureLayout.entries()].filter(([itemId]) => itemId !== placingItemId).map(([, slot]) => slot.id));
   const souvenirs = earnedSeasonSouvenirs(state);
   const souvenirIds = new Set(souvenirs.map((item) => item.id));
   const gotStickers = new Set(state.stickers || []);
@@ -247,7 +258,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const mapleInsideComposite = Boolean(sittingOn && (OCCUPIED_FURNITURE_ART[sittingOn] || (room.id === "loft" && sittingOn === "shop-canopy-bed")));
 
   useEffect(() => {
-    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk");
+    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk"); setPlacingItemId(null);
     setMapleLine(room.line);
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
@@ -402,6 +413,10 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         onClick={(e) => { if (editing || panel !== "none" || (e.target as HTMLElement).closest("button,nav")) return; const p = point(e); if (p) moveMaple(p.x, p.y); }}>
         <img className="clubhouse-bg" src={room.image} alt={`Maple's ${room.name} overlooking Vancouver`} />
         <div className="clubhouse-glow" aria-hidden="true" /><div className="clubhouse-edit-grid" aria-hidden="true" />
+        {placingItem && <div className="placement-guide" role="group" aria-label={`Choose a spot for ${placingItem.en}`}>
+          <div className="placement-guide-copy"><b>Place {placingItem.en}</b><span>Choose one of the glowing spots</span><button type="button" onClick={() => setPlacingItemId(null)}>Cancel</button></div>
+          {suggestedSlots.map((slot, index) => { const unavailable = occupiedSlotIds.has(slot.id); return <button key={slot.id} type="button" className={`placement-spot zone-${slot.zone} ${unavailable ? "is-occupied" : ""}`} style={{ left: `${slot.x}%`, top: `${slot.y}%` }} disabled={unavailable} aria-label={unavailable ? `Spot ${index + 1} is occupied` : `Place ${placingItem.en} in spot ${index + 1}`} onClick={(e) => { e.stopPropagation(); setState((s) => placeClubhouseItem(s, placingItem.id, room.id, slot.id)); setPlacingItemId(null); setSelectedId(placingItem.id); }}><i>{unavailable ? "×" : "+"}</i><span>{unavailable ? "In use" : `Spot ${index + 1}`}</span></button>; })}
+        </div>}
         <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span><span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
         <aside className="maple-needs" aria-label="Maple's needs">
           <div className="need-row energy"><span>⚡ Energy</span><b>{Math.round(state.clubhouse.needs.energy)}</b><i><em style={{ width: `${state.clubhouse.needs.energy}%` }} /></i></div>
@@ -422,7 +437,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         </button>}
         {displayed.map((item, index) => {
           const isDreamLoftCanopy = room.id === "loft" && item.id === "shop-canopy-bed";
-          const placement = furnitureLayout.get(item.id) || { x: item.x, y: item.y, scale: 1, zone: furnitureZone(item) };
+          const placement: PlacementSlot = furnitureLayout.get(item.id) || { id: `${room.id}:fallback:${item.id}`, x: item.x, y: item.y, scale: 1, zone: furnitureZone(item) };
           const pos = isDreamLoftCanopy ? DREAM_LOFT_CANOPY : placement;
           // Đồ đứng trên sàn theo phối cảnh phòng: món ở xa (y nhỏ) nhỏ lại, món gần to ra.
           // Đồ treo tường không áp vì nó không nằm trên mặt sàn.
@@ -440,7 +455,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         {!displayed.length && <div className="clubhouse-empty"><b>This room is waiting for your style.</b><span>Complete activities, earn Coins and choose your first item.</span></div>}
 
         {editing && selectedItem && <div className="item-transform-controls fixed-slot-controls" aria-label={`Adjust ${selectedItem.en}`}>
-          <b>{selectedItem.en}</b><span>Placed in the best spot</span><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); }}>Store</button>
+          <b>{selectedItem.en}</b><button type="button" onClick={() => setPlacingItemId(selectedItem.id)}>Move</button><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); }}>Store</button>
         </div>}
 
         <nav className="clubhouse-actions" aria-label="Clubhouse controls">
@@ -453,7 +468,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
       </section>
 
-      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap an item and Maple House will find its best spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
+      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Choose an item, then pick one suggested spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={`${here ? "equipped" : ""} ${placingItemId === item.id ? "placing" : ""}`} onClick={() => { setPlacingItemId(item.id); if (here) setSelectedId(item.id); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Four collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>

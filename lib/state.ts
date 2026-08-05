@@ -47,6 +47,7 @@ export type AdventureState = {
 // Maple Clubhouse: phần thưởng meta-game dùng chung cho Learn / Practice / Adventure.
 // `claimedMilestones` là số mốc đã nhận quà; item không chọn vẫn ở lại pool cho mốc sau.
 export type ClubhouseState = {
+  layoutVersion: number;
   unlockedItemIds: string[];
   claimedMilestones: number;
   coins: number;
@@ -59,6 +60,7 @@ export type ClubhouseState = {
   activeOutfitId: string;
   itemPositions: Record<string, { x: number; y: number }>;
   itemRoomIds: Record<string, string>;
+  itemSlotIds: Record<string, string>;
   activeRoomId: string;
   itemTransforms: Record<string, { scale: number; rotation: number }>;
   needs: { hunger: number; energy: number; happiness: number; lastCareDay: string };
@@ -113,7 +115,7 @@ export function defaultState(): AppState {
     games: { topics: {} },
     daily: { date: "", learn: false, practice: false, adventure: false },
     adventure: { seasons: {} },
-    clubhouse: { unlockedItemIds: [], claimedMilestones: 0, coins: 40, cash: 10, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" }, pet: { kind: null, name: "", needs: { hunger: 85, happiness: 90, lastCareDay: "" } } },
+    clubhouse: { layoutVersion: 2, unlockedItemIds: [], claimedMilestones: 0, coins: 40, cash: 10, purchasedItemIds: [], equippedItemIds: [], rewardedKeys: [], cashRewardedKeys: [], ownedOutfitIds: ["default"], activeOutfitId: "default", itemPositions: {}, itemRoomIds: {}, itemSlotIds: {}, activeRoomId: "lounge", itemTransforms: {}, needs: { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" }, pet: { kind: null, name: "", needs: { hunger: 85, happiness: 90, lastCareDay: "" } } },
   };
 }
 
@@ -152,6 +154,9 @@ function migrateMembership(m: unknown): Membership {
 
 function migrateClubhouse(c: unknown): ClubhouseState {
   const src = (c || {}) as Partial<ClubhouseState>;
+  // Layout v2 đổi từ kéo tự do sang kho + slot. Chỉ reset đồ ĐANG BÀY một lần;
+  // quyền sở hữu, tiền, outfit, pet và toàn bộ tiến độ học vẫn giữ nguyên.
+  const resetDisplayedFurniture = (Number.isFinite(src.layoutVersion) ? Number(src.layoutVersion) : 0) < 2;
   const ownedOutfitIds = Array.isArray(src.ownedOutfitIds) && src.ownedOutfitIds.length ? [...new Set(["default", ...src.ownedOutfitIds])] : ["default"];
   const oldNeeds = src.needs || { hunger: 85, energy: 90, happiness: 90, lastCareDay: "" };
   const oldPet = src.pet || { kind: null, name: "", needs: { hunger: 85, happiness: 90, lastCareDay: "" } };
@@ -170,6 +175,7 @@ function migrateClubhouse(c: unknown): ClubhouseState {
     ? [...new Set(src.unlockedItemIds.filter((id): id is string => typeof id === "string"))]
     : [];
   return {
+    layoutVersion: 2,
     unlockedItemIds: legacy,
     claimedMilestones: Number.isFinite(src.claimedMilestones)
       ? Math.max(0, Math.floor(src.claimedMilestones || 0))
@@ -178,15 +184,16 @@ function migrateClubhouse(c: unknown): ClubhouseState {
     coins: Number.isFinite(src.coins) ? Math.max(0, Math.floor(src.coins || 0)) : 40,
     cash: Number.isFinite(src.cash) ? Math.max(0, Math.floor(src.cash || 0)) : 10,
     purchasedItemIds: Array.isArray(src.purchasedItemIds) ? [...new Set(src.purchasedItemIds)] : [],
-    equippedItemIds: Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
+    equippedItemIds: resetDisplayedFurniture ? [] : Array.isArray(src.equippedItemIds) ? [...new Set(src.equippedItemIds)] : [],
     rewardedKeys: Array.isArray(src.rewardedKeys) ? [...new Set(src.rewardedKeys)] : [],
     cashRewardedKeys: Array.isArray(src.cashRewardedKeys) ? [...new Set(src.cashRewardedKeys)] : [],
     ownedOutfitIds,
     activeOutfitId: typeof src.activeOutfitId === "string" && ownedOutfitIds.includes(src.activeOutfitId) ? src.activeOutfitId : "default",
-    itemPositions: src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
-    itemRoomIds: src.itemRoomIds && typeof src.itemRoomIds === "object" ? src.itemRoomIds : {},
+    itemPositions: resetDisplayedFurniture ? {} : src.itemPositions && typeof src.itemPositions === "object" ? src.itemPositions : {},
+    itemRoomIds: resetDisplayedFurniture ? {} : src.itemRoomIds && typeof src.itemRoomIds === "object" ? src.itemRoomIds : {},
+    itemSlotIds: resetDisplayedFurniture ? {} : src.itemSlotIds && typeof src.itemSlotIds === "object" ? src.itemSlotIds : {},
     activeRoomId: typeof src.activeRoomId === "string" ? src.activeRoomId : "lounge",
-    itemTransforms: src.itemTransforms && typeof src.itemTransforms === "object" ? src.itemTransforms : {},
+    itemTransforms: resetDisplayedFurniture ? {} : src.itemTransforms && typeof src.itemTransforms === "object" ? src.itemTransforms : {},
     needs: {
       hunger: careValue(oldNeeds.hunger, 85, 75),
       energy: careValue(oldNeeds.energy, 90, 85),
@@ -478,7 +485,6 @@ export function adventuresDone(s: AppState): number {
 export function claimClubhouseItem(s: AppState, itemId: string, roomId = "lounge"): AppState {
   if (!itemId || s.clubhouse.unlockedItemIds.includes(itemId)) return s;
   const purchasedItemIds = s.clubhouse.purchasedItemIds.includes(itemId) ? s.clubhouse.purchasedItemIds : [...s.clubhouse.purchasedItemIds, itemId];
-  const equippedItemIds = s.clubhouse.equippedItemIds.includes(itemId) ? s.clubhouse.equippedItemIds : [...s.clubhouse.equippedItemIds, itemId];
   return {
     ...s,
     clubhouse: {
@@ -486,8 +492,8 @@ export function claimClubhouseItem(s: AppState, itemId: string, roomId = "lounge
       unlockedItemIds: [...s.clubhouse.unlockedItemIds, itemId],
       claimedMilestones: s.clubhouse.claimedMilestones + 1,
       purchasedItemIds,
-      equippedItemIds,
-      itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
+      // Quà mới đi vào kho; bé tự chọn phòng và slot để không phá bố cục.
+      equippedItemIds: s.clubhouse.equippedItemIds.filter((id) => id !== itemId),
     },
   };
 }
@@ -536,8 +542,8 @@ export function buyClubhouseItem(s: AppState, itemId: string, price: number, roo
       ...s.clubhouse,
       coins: s.clubhouse.coins - price,
       purchasedItemIds: [...s.clubhouse.purchasedItemIds, itemId],
-      equippedItemIds: [...s.clubhouse.equippedItemIds, itemId],
-      itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
+      // Mua xong vào kho, không tự nhảy lên phòng.
+      equippedItemIds: s.clubhouse.equippedItemIds.filter((id) => id !== itemId),
     },
   };
 }
@@ -573,11 +579,16 @@ export function setClubhouseRoom(s: AppState, roomId: string): AppState {
   return { ...s, clubhouse: { ...s.clubhouse, activeRoomId: roomId } };
 }
 
-export function placeClubhouseItem(s: AppState, itemId: string, roomId: string): AppState {
+export function placeClubhouseItem(s: AppState, itemId: string, roomId: string, slotId?: string): AppState {
   if (!s.clubhouse.purchasedItemIds.includes(itemId)) return s;
   const equippedItemIds = s.clubhouse.equippedItemIds.includes(itemId)
     ? s.clubhouse.equippedItemIds : [...s.clubhouse.equippedItemIds, itemId];
-  return { ...s, clubhouse: { ...s.clubhouse, equippedItemIds, itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId } } };
+  return { ...s, clubhouse: {
+    ...s.clubhouse,
+    equippedItemIds,
+    itemRoomIds: { ...s.clubhouse.itemRoomIds, [itemId]: roomId },
+    itemSlotIds: slotId ? { ...s.clubhouse.itemSlotIds, [itemId]: slotId } : s.clubhouse.itemSlotIds,
+  } };
 }
 
 export function transformClubhouseItem(s: AppState, itemId: string, roomId: string, scale: number, rotation: number): AppState {

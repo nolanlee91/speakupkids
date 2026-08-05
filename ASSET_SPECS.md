@@ -118,9 +118,13 @@ thước nhỏ. Trạng thái thường vẫn dùng sprite shop; khi tương tá
 
 ### 4.5 Slot cố định theo TỪNG phòng (đã có nền tảng, 2026-08-05)
 `ROOM_SLOTS` trong `app/clubhouse.tsx` khai báo riêng cho cả 5 phòng, gồm 6 vùng:
-**wall**, **surface**, **rug**, **large**, **seat** và **floor**. `arrangeFurniture()` phân loại
-đồ rồi tự chọn slot theo đúng phối cảnh phòng. Người chơi vẫn chọn phòng và cất/lấy đồ, nhưng
-không kéo, xoay hoặc phóng đồ tự do làm hỏng bố cục.
+**wall**, **surface**, **rug**, **large**, **seat** và **floor**. Đồ mua/nhận thưởng đi vào kho.
+Người chơi chọn món rồi chọn một trong các điểm sáng hợp lệ; lựa chọn được lưu bằng
+`itemSlotIds`. Không kéo, xoay hoặc phóng đồ tự do làm hỏng bố cục.
+
+`layoutVersion: 2` đưa toàn bộ đồ đang bày của state cũ về kho đúng một lần nhưng giữ nguyên
+quyền sở hữu, Coins, Cash, outfit, pet và tiến độ. Sau migration, tài khoản tự dựng lại phòng
+bằng các slot mới để từng món được kiểm thử độc lập.
 
 Dream Loft dành riêng slot `L1` cho Dream Canopy. Những món lớn khác không được dùng lại slot
 này. Khi thêm phòng hoặc đổi ảnh nền phải đo lại toàn bộ slot của phòng đó trước khi phát hành.

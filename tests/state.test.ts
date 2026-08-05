@@ -28,6 +28,16 @@ describe("normalizeState / migration", () => {
     expect(s.clubhouse.cash).toBe(7);
   });
 
+  it("layout v1 chỉ đưa đồ đang bày về kho, không xóa quyền sở hữu hay tiền", () => {
+    const s = normalizeState({ clubhouse: { layoutVersion: 1, coins: 155, purchasedItemIds: ["shop-lamp"], equippedItemIds: ["shop-lamp"], itemRoomIds: { "shop-lamp": "study" }, itemPositions: { "study:shop-lamp": { x: 40, y: 60 } } } });
+    expect(s.clubhouse.layoutVersion).toBe(2);
+    expect(s.clubhouse.coins).toBe(155);
+    expect(s.clubhouse.purchasedItemIds).toEqual(["shop-lamp"]);
+    expect(s.clubhouse.equippedItemIds).toEqual([]);
+    expect(s.clubhouse.itemRoomIds).toEqual({});
+    expect(s.clubhouse.itemSlotIds).toEqual({});
+  });
+
   it('membership cũ "premium" migrate thành "pro"', () => {
     const s = normalizeState({ membership: "premium" });
     expect(s.membership).toBe("pro");
@@ -88,12 +98,13 @@ describe("kinh tế Clubhouse — chống farm/âm tiền", () => {
     expect(again.clubhouse.coins).toBe(65);
   });
 
-  it("claimClubhouseItem không nhận trùng, có đặt vào phòng", () => {
+  it("claimClubhouseItem không nhận trùng và đưa quà mới vào kho", () => {
     let s = defaultState();
     s = claimClubhouseItem(s, "learn-story-tent", "study");
     expect(s.clubhouse.unlockedItemIds).toContain("learn-story-tent");
     expect(s.clubhouse.claimedMilestones).toBe(1);
-    expect(s.clubhouse.itemRoomIds["learn-story-tent"]).toBe("study");
+    expect(s.clubhouse.purchasedItemIds).toContain("learn-story-tent");
+    expect(s.clubhouse.equippedItemIds).not.toContain("learn-story-tent");
     const again = claimClubhouseItem(s, "learn-story-tent", "study");
     expect(again.clubhouse.claimedMilestones).toBe(1);
   });
