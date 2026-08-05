@@ -18,7 +18,7 @@ import {
 // chunk dynamic của khu Learn/Adventure, chỉ tải khi bé bấm vào.
 import { CATALOG, catalogLesson, TOTAL_LEARN_UNITS, lostCompassSeason, resumeChapterLite } from "@/lib/catalog";
 import { LEVEL0_UNITS, phonicsUnitById } from "@/lib/phonics";
-import { CLUBHOUSE_SHOP } from "@/lib/clubhouse";
+import { ALL_CLUBHOUSE_FURNITURE, CLUBHOUSE_SHOP } from "@/lib/clubhouse";
 import dynamic from "next/dynamic";
 
 // Các khu lớn tách khỏi bundle màn đầu (dynamic import): mỗi khu kéo theo cả trăm KB
@@ -67,7 +67,9 @@ function App() {
   const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
-    let s = loadState();
+    const qaMode = process.env.NODE_ENV === "development" && new URLSearchParams(window.location.search).get("qa") === "clubhouse";
+    let s = qaMode ? defaultState() : loadState();
+    if (qaMode) s = { ...s, nickname: "Maple QA", membership: "family", clubhouse: { ...s.clubhouse, coins: 9999, cash: 999, purchasedItemIds: ALL_CLUBHOUSE_FURNITURE.map((item) => item.id), equippedItemIds: [] } };
     s = touchStreak(s);
     s = resetDailyIfNeeded(s);
     s = resetDailyTasks(s);
@@ -79,7 +81,7 @@ function App() {
     // Gói thành viên: nguồn chuẩn là bảng entitlements phía server (client chỉ đọc).
     // Server trả lời thật mới ghi đè cache; null = không hỏi được (offline/lỗi mạng)
     // → giữ nguyên, đừng hạ khách Pro về Free chỉ vì rớt mạng.
-    if (cloudEnabled()) {
+    if (cloudEnabled() && !qaMode) {
       fetchMembership().then((m) => {
         if (m) setState((cur) => (cur.membership === m ? cur : { ...cur, membership: m }));
       });

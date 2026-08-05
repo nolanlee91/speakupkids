@@ -144,44 +144,44 @@ function furnitureZone(item: ShopItem): FurnitureZone {
 
 const ROOM_SLOTS: Record<string, Record<FurnitureZone, RoomSlot[]>> = {
   lounge: {
-    wall: [{ x: 18, y: 35 }, { x: 83, y: 34 }, { x: 50, y: 27 }],
-    surface: [{ x: 18, y: 58, scale: .78 }, { x: 80, y: 56, scale: .78 }, { x: 32, y: 56, scale: .72 }],
+    wall: [{ x: 18, y: 45 }, { x: 83, y: 40 }, { x: 50, y: 30 }],
+    surface: [{ x: 38, y: 73, scale: .9 }, { x: 84, y: 64, scale: .9 }, { x: 25, y: 73, scale: .84 }],
     rug: [{ x: 50, y: 82, scale: 1.25 }, { x: 72, y: 84, scale: .9 }],
-    large: [{ x: 72, y: 66, scale: 1.02 }, { x: 28, y: 67, scale: .96 }, { x: 51, y: 70, scale: .94 }],
-    seat: [{ x: 73, y: 78 }, { x: 30, y: 79 }, { x: 52, y: 82, scale: .92 }],
-    floor: [{ x: 62, y: 72, scale: .85 }, { x: 39, y: 73, scale: .84 }, { x: 84, y: 72, scale: .78 }, { x: 18, y: 74, scale: .78 }],
+    large: [{ x: 72, y: 87, scale: 1.02 }, { x: 28, y: 87, scale: .96 }, { x: 51, y: 89, scale: .94 }],
+    seat: [{ x: 73, y: 89 }, { x: 30, y: 89 }, { x: 52, y: 91, scale: .92 }],
+    floor: [{ x: 62, y: 87, scale: .9 }, { x: 39, y: 88, scale: .9 }, { x: 84, y: 86, scale: .84 }, { x: 18, y: 88, scale: .84 }],
   },
   study: {
     wall: [{ x: 51, y: 31, scale: 1.05 }, { x: 81, y: 34, scale: .72 }, { x: 25, y: 33, scale: .72 }],
-    surface: [{ x: 83, y: 57, scale: .75 }, { x: 25, y: 57, scale: .72 }, { x: 69, y: 56, scale: .68 }],
+    surface: [{ x: 84, y: 63, scale: .9 }, { x: 27, y: 62, scale: .84 }, { x: 69, y: 62, scale: .82 }],
     rug: [{ x: 50, y: 82, scale: 1.2 }, { x: 72, y: 84, scale: .86 }],
-    large: [{ x: 74, y: 68 }, { x: 30, y: 69, scale: .96 }, { x: 52, y: 70, scale: .92 }],
-    seat: [{ x: 72, y: 79 }, { x: 31, y: 80 }, { x: 51, y: 82, scale: .9 }],
-    floor: [{ x: 62, y: 72, scale: .84 }, { x: 40, y: 73, scale: .84 }, { x: 84, y: 73, scale: .76 }, { x: 18, y: 74, scale: .76 }],
+    large: [{ x: 74, y: 87 }, { x: 30, y: 87, scale: .96 }, { x: 52, y: 89, scale: .92 }],
+    seat: [{ x: 72, y: 89 }, { x: 31, y: 89 }, { x: 51, y: 91, scale: .9 }],
+    floor: [{ x: 62, y: 87, scale: .9 }, { x: 40, y: 88, scale: .9 }, { x: 84, y: 86, scale: .82 }, { x: 18, y: 88, scale: .82 }],
   },
   rooftop: {
     wall: [{ x: 18, y: 36, scale: .78 }, { x: 83, y: 37, scale: .72 }, { x: 50, y: 28, scale: .7 }],
-    surface: [{ x: 20, y: 58, scale: .74 }, { x: 82, y: 58, scale: .74 }, { x: 50, y: 60, scale: .7 }],
+    surface: [{ x: 18, y: 68, scale: .86 }, { x: 84, y: 68, scale: .86 }, { x: 50, y: 67, scale: .82 }],
     rug: [{ x: 50, y: 82, scale: 1.18 }, { x: 73, y: 84, scale: .84 }],
-    large: [{ x: 72, y: 67, scale: .96 }, { x: 28, y: 68, scale: .94 }, { x: 51, y: 71, scale: .9 }],
-    seat: [{ x: 72, y: 79 }, { x: 29, y: 80 }, { x: 51, y: 83, scale: .9 }],
-    floor: [{ x: 62, y: 72, scale: .82 }, { x: 40, y: 73, scale: .82 }, { x: 84, y: 73, scale: .74 }, { x: 17, y: 74, scale: .74 }],
+    large: [{ x: 72, y: 87, scale: .96 }, { x: 28, y: 87, scale: .94 }, { x: 51, y: 89, scale: .9 }],
+    seat: [{ x: 72, y: 89 }, { x: 29, y: 89 }, { x: 51, y: 91, scale: .9 }],
+    floor: [{ x: 62, y: 87, scale: .88 }, { x: 40, y: 88, scale: .88 }, { x: 84, y: 86, scale: .8 }, { x: 17, y: 88, scale: .8 }],
   },
   loft: {
     wall: [{ x: 52, y: 29, scale: .78 }, { x: 83, y: 37, scale: .7 }, { x: 18, y: 38, scale: .68 }],
-    surface: [{ x: 82, y: 57, scale: .72 }, { x: 18, y: 57, scale: .7 }, { x: 55, y: 58, scale: .68 }],
+    surface: [{ x: 82, y: 65, scale: .86 }, { x: 18, y: 65, scale: .84 }, { x: 55, y: 65, scale: .82 }],
     rug: [{ x: 59, y: 83, scale: 1.12 }, { x: 80, y: 85, scale: .82 }],
-    large: [{ x: 33.3, y: 52.2 }, { x: 76, y: 66, scale: .94 }, { x: 55, y: 70, scale: .88 }],
-    seat: [{ x: 75, y: 79 }, { x: 54, y: 81, scale: .92 }, { x: 87, y: 81, scale: .82 }],
-    floor: [{ x: 63, y: 72, scale: .8 }, { x: 84, y: 71, scale: .75 }, { x: 50, y: 75, scale: .78 }],
+    large: [{ x: 33.3, y: 52.2 }, { x: 76, y: 87, scale: .94 }, { x: 55, y: 89, scale: .88 }],
+    seat: [{ x: 75, y: 89 }, { x: 54, y: 90, scale: .92 }, { x: 87, y: 88, scale: .82 }],
+    floor: [{ x: 63, y: 87, scale: .86 }, { x: 84, y: 86, scale: .82 }, { x: 50, y: 89, scale: .84 }],
   },
   maker: {
     wall: [{ x: 20, y: 35, scale: .8 }, { x: 81, y: 35, scale: .8 }, { x: 50, y: 29, scale: .72 }],
-    surface: [{ x: 20, y: 58, scale: .76 }, { x: 81, y: 58, scale: .76 }, { x: 50, y: 59, scale: .7 }],
+    surface: [{ x: 20, y: 68, scale: .88 }, { x: 81, y: 66, scale: .88 }, { x: 50, y: 68, scale: .82 }],
     rug: [{ x: 50, y: 83, scale: 1.18 }, { x: 73, y: 85, scale: .86 }],
-    large: [{ x: 74, y: 68 }, { x: 28, y: 68, scale: .98 }, { x: 51, y: 71, scale: .92 }],
-    seat: [{ x: 73, y: 80 }, { x: 29, y: 80 }, { x: 51, y: 83, scale: .9 }],
-    floor: [{ x: 62, y: 72, scale: .84 }, { x: 40, y: 73, scale: .84 }, { x: 84, y: 73, scale: .76 }, { x: 17, y: 74, scale: .76 }],
+    large: [{ x: 74, y: 87 }, { x: 28, y: 87, scale: .98 }, { x: 51, y: 89, scale: .92 }],
+    seat: [{ x: 73, y: 89 }, { x: 29, y: 89 }, { x: 51, y: 91, scale: .9 }],
+    floor: [{ x: 62, y: 87, scale: .9 }, { x: 40, y: 88, scale: .9 }, { x: 84, y: 86, scale: .82 }, { x: 17, y: 88, scale: .82 }],
   },
 };
 
@@ -246,7 +246,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const placingItem = placingItemId ? ALL_CLUBHOUSE_FURNITURE.find((item) => item.id === placingItemId) || null : null;
   const transferItem = transferItemId ? ALL_CLUBHOUSE_FURNITURE.find((item) => item.id === transferItemId) || null : null;
   const suggestedSlots = placingItem ? placementSlots(placingItem, room.id) : [];
-  const occupiedSlotIds = new Set([...furnitureLayout.entries()].filter(([itemId]) => itemId !== placingItemId).map(([, slot]) => slot.id));
+  const occupiedSlots = [...furnitureLayout.entries()].filter(([itemId]) => itemId !== placingItemId).map(([, slot]) => slot);
+  const occupiedSlotIds = new Set(occupiedSlots.map((slot) => slot.id));
   const souvenirs = earnedSeasonSouvenirs(state);
   const souvenirIds = new Set(souvenirs.map((item) => item.id));
   const gotStickers = new Set(state.stickers || []);
@@ -417,7 +418,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <div className="clubhouse-glow" aria-hidden="true" /><div className="clubhouse-edit-grid" aria-hidden="true" />
         {placingItem && <div className="placement-guide" role="group" aria-label={`Choose a spot for ${placingItem.en}`}>
           <div className="placement-guide-copy"><b>Place {placingItem.en}</b><span>Choose one of the glowing spots</span><button type="button" onClick={() => setPlacingItemId(null)}>Cancel</button></div>
-          {suggestedSlots.map((slot, index) => { const unavailable = occupiedSlotIds.has(slot.id); return <button key={slot.id} type="button" className={`placement-spot zone-${slot.zone} ${unavailable ? "is-occupied" : ""}`} style={{ left: `${slot.x}%`, top: `${slot.y}%` }} disabled={unavailable} aria-label={unavailable ? `Spot ${index + 1} is occupied` : `Place ${placingItem.en} in spot ${index + 1}`} onClick={(e) => { e.stopPropagation(); setState((s) => placeClubhouseItem(s, placingItem.id, room.id, slot.id)); setPlacingItemId(null); setSelectedId(placingItem.id); }}><i>{unavailable ? "×" : "+"}</i><span>{unavailable ? "In use" : `Spot ${index + 1}`}</span></button>; })}
+          {suggestedSlots.map((slot, index) => { const floorZones: FurnitureZone[] = ["large", "seat", "floor"]; const unavailable = occupiedSlotIds.has(slot.id) || occupiedSlots.some((used) => floorZones.includes(slot.zone) && floorZones.includes(used.zone) && Math.abs(used.x - slot.x) < 16 && Math.abs(used.y - slot.y) < 10); return <button key={slot.id} type="button" className={`placement-spot zone-${slot.zone} ${unavailable ? "is-occupied" : ""}`} style={{ left: `${slot.x}%`, top: `${slot.y}%` }} disabled={unavailable} aria-label={unavailable ? `Spot ${index + 1} is occupied` : `Place ${placingItem.en} in spot ${index + 1}`} onClick={(e) => { e.stopPropagation(); setState((s) => placeClubhouseItem(s, placingItem.id, room.id, slot.id)); setPlacingItemId(null); setSelectedId(placingItem.id); }}><i>{unavailable ? "×" : "+"}</i><span>{unavailable ? "In use" : `Spot ${index + 1}`}</span></button>; })}
         </div>}
         <span className="clubhouse-dust dust-one" aria-hidden="true">✦</span><span className="clubhouse-dust dust-two" aria-hidden="true">✦</span>
         <aside className="maple-needs" aria-label="Maple's needs">
@@ -443,12 +444,15 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           const pos = isDreamLoftCanopy ? DREAM_LOFT_CANOPY : placement;
           // Đồ đứng trên sàn theo phối cảnh phòng: món ở xa (y nhỏ) nhỏ lại, món gần to ra.
           // Đồ treo tường không áp vì nó không nằm trên mặt sàn.
-          const depth = item.slot === "wall" ? 1 : depthScale(pos.y + 6);
+          // Slot surface/floor là điểm TIẾP XÚC (đáy vật / chân vật), không phải tâm sprite.
+          // Chỉ đồ đứng trên sàn mới cần scale xa-gần; đồ tường và đồ trên mặt bàn giữ cỡ ổn định.
+          const depth = item.slot === "wall" || placement.zone === "surface" ? 1 : depthScale(pos.y + 6);
+          const anchorY = placement.zone === "wall" || placement.zone === "rug" ? 50 : 88;
           // Maple đang ngồi/nằm lọt vào món này → vẽ món ĐÈ lên cô (z cao hơn z của Maple là 12).
           const sittingHere = sittingOn === item.id;
           const occupiedArt = OCCUPIED_FURNITURE_ART[item.id];
           return <button key={item.id} className={`room-shop-item slot-${item.slot} zone-${placement.zone} item-${item.id} fixed-room-slot ${isDreamLoftCanopy ? "dream-loft-canopy" : ""} ${selectedId === item.id ? "selected" : ""} ${item.flat ? "is-flat" : ""}`}
-            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: isDreamLoftCanopy ? "translate(-50%,-50%)" : `translate(-50%,-50%) scale(${item.scale * (placement.scale ?? 1) * depth})`, zIndex: selectedId === item.id ? 30 : sittingHere ? 26 : placement.z ?? item.z, animationDelay: `${index * 80}ms` }}
+            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: isDreamLoftCanopy ? "translate(-50%,-50%)" : `translate(-50%,-${anchorY}%) scale(${(placement.scale ?? 1) * depth})`, transformOrigin: "center bottom", zIndex: selectedId === item.id ? 30 : sittingHere ? 26 : placement.z ?? item.z, animationDelay: `${index * 80}ms` }}
             onPointerDown={() => { if (editing) setSelectedId(item.id); }}
             onClick={(e) => { e.stopPropagation(); if (!editing) interactWithFurniture(item, pos); }} aria-label={`Use ${item.en} — ${item.vi}`}>
             {isDreamLoftCanopy ? <DreamLoftCanopy occupied={sittingHere} /> : sittingHere && occupiedArt ? <img className="occupied-furniture-art" src={occupiedArt} alt="" aria-hidden="true" /> : <ShopArt item={item} />}<i>{editing ? "Auto-arranged" : item.en}</i>
@@ -461,7 +465,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         </div>}
 
         <nav className="clubhouse-actions" aria-label="Clubhouse controls">
-          <button className={editing ? "on" : ""} onClick={() => { setEditing((v) => !v); setSelectedId(null); setPanel("none"); }}>✦ <span>{editing ? "Done" : "Decorate"}</span></button>
+          <button className={editing ? "on" : ""} onClick={() => { setEditing((v) => !v); setSelectedId(null); setPlacingItemId(null); setTransferItemId(null); setPanel("none"); }}>✦ <span>{editing ? "Done" : "Decorate"}</span></button>
           <button className={panel === "shop" ? "on" : ""} onClick={() => { setPanel(panel === "shop" ? "none" : "shop"); setEditing(false); }}>◆ <span>Shop</span></button>
           <button className={panel === "wardrobe" ? "on" : ""} onClick={() => { setPanel(panel === "wardrobe" ? "none" : "wardrobe"); setEditing(false); }}>♢ <span>Closet</span></button>
           <button className={panel === "pet" ? "on" : ""} onClick={() => { setPanel(panel === "pet" ? "none" : "pet"); setEditing(false); }}>● <span>Pet</span></button>
@@ -474,7 +478,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <section className="room-transfer-dialog"><header><div><small>MOVE FURNITURE</small><h3>Where should {transferItem.en} go?</h3><p>Choose a room, then choose one of its suggested spots.</p></div><button type="button" onClick={() => setTransferItemId(null)} aria-label="Close">×</button></header><div className="room-transfer-grid">{ROOMS.map((targetRoom) => <button key={targetRoom.id} type="button" className={targetRoom.id === room.id ? "current" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, targetRoom.id)); setPlacingItemId(transferItem.id); setSelectedId(null); setTransferItemId(null); setPanel("none"); setEditing(true); }}><i>{targetRoom.icon}</i><b>{targetRoom.name}</b><span>{targetRoom.id === room.id ? "Current room" : "Choose room"}</span></button>)}</div></section>
       </div>}
 
-      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Choose an item, then pick one suggested spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={`${here ? "equipped" : ""} ${placingItemId === item.id ? "placing" : ""}`} onClick={() => { setPlacingItemId(item.id); if (here) setSelectedId(item.id); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
+      {editing && !placingItem && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Choose an item, then pick one suggested spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={`${here ? "equipped" : ""} ${placingItemId === item.id ? "placing" : ""}`} onClick={() => { setPlacingItemId(item.id); if (here) setSelectedId(item.id); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Four collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>

@@ -76,13 +76,15 @@ function PasswordInput({ value, onChange, placeholder }: {
 }
 
 export function AuthGate({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<Phase>(cloudEnabled() ? "loading" : "ready");
+  const qaMode = process.env.NODE_ENV === "development" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("qa") === "clubhouse";
+  const [phase, setPhase] = useState<Phase>(qaMode ? "ready" : cloudEnabled() ? "loading" : "ready");
   const [email, setEmail] = useState<string | null>(null);
   const [kids, setKids] = useState<ChildProfile[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [pickErr, setPickErr] = useState("");
 
   useEffect(() => {
+    if (qaMode) return;
     if (!supabase) return; // offline: phase đã là "ready"
     let alive = true;
 
@@ -107,7 +109,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     })();
 
     return () => { alive = false; sub.subscription.unsubscribe(); };
-  }, []);
+  }, [qaMode]);
 
   // Mọi lời gọi mạng ở đây đều có thể reject (rớt mạng thoáng qua) — không catch thì
   // phase kẹt "loading" vĩnh viễn ("Đang kết nối…" không có lối ra).
