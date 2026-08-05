@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AppState } from "@/lib/state";
-import { adjustMapleNeeds, adjustPetNeeds, adoptClubhousePet, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, claimClubhouseItem, moveClubhouseItem, placeClubhouseItem, renameClubhousePet, setClubhouseRoom, toggleClubhouseItem, transformClubhouseItem, wearClubhouseOutfit, type ClubhousePetKind } from "@/lib/state";
+import { adjustMapleNeeds, adjustPetNeeds, adoptClubhousePet, buyClubhouseItem, buyClubhouseOutfit, buyMapleSnack, claimClubhouseItem, placeClubhouseItem, renameClubhousePet, setClubhouseRoom, toggleClubhouseItem, wearClubhouseOutfit, type ClubhousePetKind } from "@/lib/state";
 import { ALL_CLUBHOUSE_FURNITURE, CLUBHOUSE_SHOP, MAPLE_OUTFITS, SEASON_SOUVENIRS, clubhouseChoices, clubhouseLearnTotal, earnedSeasonSouvenirs, type MapleOutfit, type ShopItem } from "@/lib/clubhouse";
 import { STICKERS } from "@/lib/games";
 import { BADGES, earnedBadges, keepsakeCount } from "@/lib/rewards";
@@ -103,10 +103,109 @@ function ShopArt({ item, className = "" }: { item: ShopItem; className?: string 
   return <span className={`shop-art ${className}`} style={{ backgroundImage: `url(${SHEETS[(item.sheet || 1) - 1]})`, backgroundPosition: `${col * 100 / 3}% ${row * 100}%` }} />;
 }
 
+const DREAM_LOFT_CANOPY = {
+  x: 33.3,
+  y: 52.2,
+  back: "/assets/images/clubhouse/shop-canopy-bed-back.webp",
+  maple: "/assets/images/clubhouse/maple-pose-sleep-in-bed.webp",
+  front: "/assets/images/clubhouse/shop-canopy-bed-front.webp",
+} as const;
+
+const OCCUPIED_FURNITURE_ART: Record<string, string> = {
+  "shop-beanbag": "/assets/images/clubhouse/shop-beanbag-occupied.webp",
+  "shop-astro-chair": "/assets/images/clubhouse/shop-astro-chair-occupied.webp",
+  "shop-cloud-cushion": "/assets/images/clubhouse/shop-cloud-cushion-occupied.webp",
+  "shop-reading-pod": "/assets/images/clubhouse/shop-reading-pod-occupied.webp",
+};
+
+function DreamLoftCanopy({ occupied }: { occupied: boolean }) {
+  return <span className="dream-loft-canopy-art" aria-hidden="true">
+    <img className="canopy-layer canopy-back" src={DREAM_LOFT_CANOPY.back} alt="" />
+    {occupied && <img className="canopy-layer canopy-sleeping-maple" src={DREAM_LOFT_CANOPY.maple} alt="" />}
+    <img className="canopy-layer canopy-front" src={DREAM_LOFT_CANOPY.front} alt="" />
+  </span>;
+}
+
+type FurnitureZone = "wall" | "surface" | "rug" | "large" | "seat" | "floor";
+type RoomSlot = { x: number; y: number; scale?: number; z?: number };
+
+const LARGE_FURNITURE = new Set(["shop-canopy-bed", "shop-maple-bookshelf", "shop-gaming-corner", "shop-grand-aquarium", "shop-reading-pod", "shop-mini-cinema", "shop-treehouse-loft", "shop-command-station", "shop-pet-retreat", "shop-adventure-gallery", "shop-music-keyboard"]);
+const SEAT_FURNITURE = new Set(["shop-beanbag", "shop-astro-chair", "shop-cloud-cushion", "learn-story-tent", "learn-book-chair"]);
+
+function furnitureZone(item: ShopItem): FurnitureZone {
+  if (item.flat) return "rug";
+  if (item.slot === "wall") return "wall";
+  if (item.slot === "desk") return "surface";
+  if (LARGE_FURNITURE.has(item.id)) return "large";
+  if (SEAT_FURNITURE.has(item.id)) return "seat";
+  return "floor";
+}
+
+const ROOM_SLOTS: Record<string, Record<FurnitureZone, RoomSlot[]>> = {
+  lounge: {
+    wall: [{ x: 18, y: 35 }, { x: 83, y: 34 }, { x: 50, y: 27 }],
+    surface: [{ x: 18, y: 58, scale: .78 }, { x: 80, y: 56, scale: .78 }, { x: 32, y: 56, scale: .72 }],
+    rug: [{ x: 50, y: 82, scale: 1.25 }, { x: 72, y: 84, scale: .9 }],
+    large: [{ x: 72, y: 66, scale: 1.02 }, { x: 28, y: 67, scale: .96 }, { x: 51, y: 70, scale: .94 }],
+    seat: [{ x: 73, y: 78 }, { x: 30, y: 79 }, { x: 52, y: 82, scale: .92 }],
+    floor: [{ x: 62, y: 72, scale: .85 }, { x: 39, y: 73, scale: .84 }, { x: 84, y: 72, scale: .78 }, { x: 18, y: 74, scale: .78 }],
+  },
+  study: {
+    wall: [{ x: 51, y: 31, scale: 1.05 }, { x: 81, y: 34, scale: .72 }, { x: 25, y: 33, scale: .72 }],
+    surface: [{ x: 83, y: 57, scale: .75 }, { x: 25, y: 57, scale: .72 }, { x: 69, y: 56, scale: .68 }],
+    rug: [{ x: 50, y: 82, scale: 1.2 }, { x: 72, y: 84, scale: .86 }],
+    large: [{ x: 74, y: 68 }, { x: 30, y: 69, scale: .96 }, { x: 52, y: 70, scale: .92 }],
+    seat: [{ x: 72, y: 79 }, { x: 31, y: 80 }, { x: 51, y: 82, scale: .9 }],
+    floor: [{ x: 62, y: 72, scale: .84 }, { x: 40, y: 73, scale: .84 }, { x: 84, y: 73, scale: .76 }, { x: 18, y: 74, scale: .76 }],
+  },
+  rooftop: {
+    wall: [{ x: 18, y: 36, scale: .78 }, { x: 83, y: 37, scale: .72 }, { x: 50, y: 28, scale: .7 }],
+    surface: [{ x: 20, y: 58, scale: .74 }, { x: 82, y: 58, scale: .74 }, { x: 50, y: 60, scale: .7 }],
+    rug: [{ x: 50, y: 82, scale: 1.18 }, { x: 73, y: 84, scale: .84 }],
+    large: [{ x: 72, y: 67, scale: .96 }, { x: 28, y: 68, scale: .94 }, { x: 51, y: 71, scale: .9 }],
+    seat: [{ x: 72, y: 79 }, { x: 29, y: 80 }, { x: 51, y: 83, scale: .9 }],
+    floor: [{ x: 62, y: 72, scale: .82 }, { x: 40, y: 73, scale: .82 }, { x: 84, y: 73, scale: .74 }, { x: 17, y: 74, scale: .74 }],
+  },
+  loft: {
+    wall: [{ x: 52, y: 29, scale: .78 }, { x: 83, y: 37, scale: .7 }, { x: 18, y: 38, scale: .68 }],
+    surface: [{ x: 82, y: 57, scale: .72 }, { x: 18, y: 57, scale: .7 }, { x: 55, y: 58, scale: .68 }],
+    rug: [{ x: 59, y: 83, scale: 1.12 }, { x: 80, y: 85, scale: .82 }],
+    large: [{ x: 33.3, y: 52.2 }, { x: 76, y: 66, scale: .94 }, { x: 55, y: 70, scale: .88 }],
+    seat: [{ x: 75, y: 79 }, { x: 54, y: 81, scale: .92 }, { x: 87, y: 81, scale: .82 }],
+    floor: [{ x: 63, y: 72, scale: .8 }, { x: 84, y: 71, scale: .75 }, { x: 50, y: 75, scale: .78 }],
+  },
+  maker: {
+    wall: [{ x: 20, y: 35, scale: .8 }, { x: 81, y: 35, scale: .8 }, { x: 50, y: 29, scale: .72 }],
+    surface: [{ x: 20, y: 58, scale: .76 }, { x: 81, y: 58, scale: .76 }, { x: 50, y: 59, scale: .7 }],
+    rug: [{ x: 50, y: 83, scale: 1.18 }, { x: 73, y: 85, scale: .86 }],
+    large: [{ x: 74, y: 68 }, { x: 28, y: 68, scale: .98 }, { x: 51, y: 71, scale: .92 }],
+    seat: [{ x: 73, y: 80 }, { x: 29, y: 80 }, { x: 51, y: 83, scale: .9 }],
+    floor: [{ x: 62, y: 72, scale: .84 }, { x: 40, y: 73, scale: .84 }, { x: 84, y: 73, scale: .76 }, { x: 17, y: 74, scale: .76 }],
+  },
+};
+
+function arrangeFurniture(items: ShopItem[], roomId: string): Map<string, RoomSlot & { zone: FurnitureZone }> {
+  const result = new Map<string, RoomSlot & { zone: FurnitureZone }>();
+  const counts: Record<FurnitureZone, number> = { wall: 0, surface: 0, rug: 0, large: 0, seat: 0, floor: 0 };
+  for (const item of items) {
+    const zone = furnitureZone(item);
+    if (roomId === "loft" && item.id === "shop-canopy-bed") {
+      result.set(item.id, { ...DREAM_LOFT_CANOPY, scale: 1, zone: "large" });
+      continue;
+    }
+    const roomChoices = ROOM_SLOTS[roomId]?.[zone] || ROOM_SLOTS.lounge[zone];
+    const choices = roomId === "loft" && zone === "large" ? roomChoices.slice(1) : roomChoices;
+    const index = counts[zone]++;
+    const base = choices[index % choices.length];
+    const cycle = Math.floor(index / choices.length);
+    result.set(item.id, { ...base, x: base.x + cycle * 2, y: base.y + cycle * 2, scale: (base.scale ?? 1) * Math.max(.72, 1 - cycle * .1), zone });
+  }
+  return result;
+}
+
 export function Clubhouse({ state, setState, onClose }: { state: AppState; setState: React.Dispatch<React.SetStateAction<AppState>>; onClose: () => void }) {
   const [panel, setPanel] = useState<"none" | "shop" | "wardrobe" | "pet" | "journal">("none");
   const [editing, setEditing] = useState(false);
-  const [drag, setDrag] = useState<{ id: string; x: number; y: number } | null>(null);
   const [delivery, setDelivery] = useState<ShopItem | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [maplePos, setMaplePos] = useState({ x: 14, y: 91 });
@@ -134,6 +233,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const equipped = new Set(state.clubhouse.equippedItemIds);
   const room = ROOMS.find((r) => r.id === state.clubhouse.activeRoomId) || ROOMS[0];
   const displayed = ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
+  const furnitureLayout = arrangeFurniture(displayed, room.id);
   const souvenirs = earnedSeasonSouvenirs(state);
   const souvenirIds = new Set(souvenirs.map((item) => item.id));
   const gotStickers = new Set(state.stickers || []);
@@ -144,6 +244,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const rewardChoices = rewardDismissed ? [] : clubhouseChoices(state);
   const pet = state.clubhouse.pet;
   const hasPetRetreat = purchased.has("shop-pet-retreat");
+  const mapleInsideComposite = Boolean(sittingOn && (OCCUPIED_FURNITURE_ART[sittingOn] || (room.id === "loft" && sittingOn === "shop-canopy-bed")));
 
   useEffect(() => {
     setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk");
@@ -264,12 +365,6 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     celebrate(state.prefs.motion !== false); playSuccessSound(); setPendingOutfit(null);
   }
 
-  function adjustSelected(scaleDelta: number, rotationDelta: number) {
-    if (!selectedItem) return;
-    const current = state.clubhouse.itemTransforms[`${room.id}:${selectedItem.id}`] || { scale: 1, rotation: 0 };
-    setState((s) => transformClubhouseItem(s, selectedItem.id, room.id, current.scale + scaleDelta, current.rotation + rotationDelta));
-  }
-
   function buy(item: ShopItem) {
     if (purchased.has(item.id)) return;
     if (state.clubhouse.coins < item.price) {
@@ -315,38 +410,37 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button type="button" onClick={giveSnack} disabled={state.clubhouse.needs.hunger >= 100}>Snack <small>◆ 5</small></button>
           {careNotice && <p role="status">{careNotice}</p>}
         </aside>
-        <button className={`clubhouse-maple pose-${maplePose} ${mapleWalking ? "walking" : ""}`}
+        <button className={`clubhouse-maple pose-${maplePose} ${mapleWalking ? "walking" : ""} ${mapleInsideComposite ? "inside-layered-furniture" : ""}`}
           style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%`, ["--depth" as string]: depthScale(maplePos.y) }}
-          onClick={(e) => { e.stopPropagation(); speak(editing ? "Drag things anywhere you like!" : mapleLine, state.prefs.accent, .86); }}>
+          onClick={(e) => { e.stopPropagation(); speak(editing ? "Choose an item and I will find its best spot!" : mapleLine, state.prefs.accent, .86); }}>
           <MapleArt pose={maplePose} outfit={activeOutfit} alt={`Maple is ${maplePose}`} />
-          <span className="maple-speech">{editing ? "Drag things anywhere you like!" : mapleLine}</span>
+          <span className="maple-speech">{editing ? "Choose an item and I’ll find its best spot!" : mapleLine}</span>
         </button>
         {pet.kind && <button className={`clubhouse-pet pet-${petPose}`} style={{ left: "43%", top: "91%" }} aria-label={`${pet.name}, your ${pet.kind}`}
           onClick={(e) => { e.stopPropagation(); setPetPose("play"); setState((s) => adjustPetNeeds(s, { happiness: 5, hunger: -1 })); showCareNotice(`${pet.name} loves the attention!`); if (petIdleTimer.current) window.clearTimeout(petIdleTimer.current); petIdleTimer.current = window.setTimeout(() => setPetPose("idle"), 3500); }}>
           <PetArt kind={pet.kind} pose={petPose} alt={`${pet.name} is ${petPose}`} /><span>{pet.name}</span>
         </button>}
         {displayed.map((item, index) => {
-          const saved = state.clubhouse.itemPositions[`${room.id}:${item.id}`] || (room.id === "lounge" ? state.clubhouse.itemPositions[item.id] : undefined);
-          const pos = drag?.id === item.id ? drag : saved || item;
-          const itemTransform = state.clubhouse.itemTransforms[`${room.id}:${item.id}`] || { scale: 1, rotation: 0 };
+          const isDreamLoftCanopy = room.id === "loft" && item.id === "shop-canopy-bed";
+          const placement = furnitureLayout.get(item.id) || { x: item.x, y: item.y, scale: 1, zone: furnitureZone(item) };
+          const pos = isDreamLoftCanopy ? DREAM_LOFT_CANOPY : placement;
           // Đồ đứng trên sàn theo phối cảnh phòng: món ở xa (y nhỏ) nhỏ lại, món gần to ra.
           // Đồ treo tường không áp vì nó không nằm trên mặt sàn.
           const depth = item.slot === "wall" ? 1 : depthScale(pos.y + 6);
           // Maple đang ngồi/nằm lọt vào món này → vẽ món ĐÈ lên cô (z cao hơn z của Maple là 12).
           const sittingHere = sittingOn === item.id;
-          return <button key={item.id} className={`room-shop-item slot-${item.slot} item-${item.id} ${selectedId === item.id ? "selected" : ""} ${drag?.id === item.id ? "dragging" : ""} ${item.flat ? "is-flat" : ""}`}
-            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: `translate(-50%,-50%) rotate(${itemTransform.rotation}deg) scale(${item.scale * itemTransform.scale * depth})`, zIndex: drag?.id === item.id || selectedId === item.id ? 30 : sittingHere ? 26 : item.z, animationDelay: `${index * 80}ms` }}
-            onPointerDown={(e) => { if (!editing) return; setSelectedId(item.id); e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
-            onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
-            onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
+          const occupiedArt = OCCUPIED_FURNITURE_ART[item.id];
+          return <button key={item.id} className={`room-shop-item slot-${item.slot} zone-${placement.zone} item-${item.id} fixed-room-slot ${isDreamLoftCanopy ? "dream-loft-canopy" : ""} ${selectedId === item.id ? "selected" : ""} ${item.flat ? "is-flat" : ""}`}
+            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: isDreamLoftCanopy ? "translate(-50%,-50%)" : `translate(-50%,-50%) scale(${item.scale * (placement.scale ?? 1) * depth})`, zIndex: selectedId === item.id ? 30 : sittingHere ? 26 : placement.z ?? item.z, animationDelay: `${index * 80}ms` }}
+            onPointerDown={() => { if (editing) setSelectedId(item.id); }}
             onClick={(e) => { e.stopPropagation(); if (!editing) interactWithFurniture(item, pos); }} aria-label={`Use ${item.en} — ${item.vi}`}>
-            <ShopArt item={item} /><i>{editing ? "Drag to place" : item.en}</i>
+            {isDreamLoftCanopy ? <DreamLoftCanopy occupied={sittingHere} /> : sittingHere && occupiedArt ? <img className="occupied-furniture-art" src={occupiedArt} alt="" aria-hidden="true" /> : <ShopArt item={item} />}<i>{editing ? "Auto-arranged" : item.en}</i>
           </button>;
         })}
         {!displayed.length && <div className="clubhouse-empty"><b>This room is waiting for your style.</b><span>Complete activities, earn Coins and choose your first item.</span></div>}
 
-        {editing && selectedItem && <div className="item-transform-controls" aria-label={`Adjust ${selectedItem.en}`}>
-          <b>{selectedItem.en}</b><button onClick={() => adjustSelected(0, -15)} title="Rotate left">↶</button><button onClick={() => adjustSelected(-.1, 0)} title="Make smaller">−</button><button onClick={() => adjustSelected(.1, 0)} title="Make bigger">＋</button><button onClick={() => adjustSelected(0, 15)} title="Rotate right">↷</button><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); }}>Store</button>
+        {editing && selectedItem && <div className="item-transform-controls fixed-slot-controls" aria-label={`Adjust ${selectedItem.en}`}>
+          <b>{selectedItem.en}</b><span>Placed in the best spot</span><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); }}>Store</button>
         </div>}
 
         <nav className="clubhouse-actions" aria-label="Clubhouse controls">
@@ -359,7 +453,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
       </section>
 
-      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap to place; select an item in the room to adjust it</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
+      {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Tap an item and Maple House will find its best spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={here ? "equipped" : ""} onClick={() => { if (here) setSelectedId(item.id); else setState((s) => placeClubhouseItem(s, item.id, room.id)); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
       {panel === "shop" && <section className="clubhouse-drawer clubhouse-shop">
         <header><div><span className="rl-kicker">MAPLE MARKET · {CLUBHOUSE_SHOP.length} ITEMS</span><h3>Build your own style</h3><p>Four collections · buy once, keep forever · scroll to explore.</p></div><button className="drawer-close" onClick={() => setPanel("none")}>×</button></header>

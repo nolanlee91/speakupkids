@@ -111,12 +111,16 @@ Món nào Maple ngồi/nằm vào (giường, ghế, beanbag, pod đọc sách) 
 - `<id>-back.webp` — phần sau lưng Maple (nệm, thân ghế)
 - `<id>-front.webp` — phần che trước (chăn, tay vịn, lưng ghế)
 
-Hiện app đã tạo được cảm giác "ngồi lọt vào" bằng cách vẽ **cả món** đè lên Maple
-(`sitIn` trong `app/clubhouse.tsx`). Tách 2 lớp là bước nâng cấp sau, cho phép thấy
-cả đầu lẫn chân bé thò ra đúng chỗ.
+Dream Canopy dùng **3 lớp thật**: giường sau → Maple ngủ → thành giường trước. Bốn ghế nhỏ
+(Beanbag, Astro Chair, Cloud Cushion, Reading Pod) dùng một **occupied composite** riêng vì
+Maple và mép đệm liên kết chặt, asset hoàn chỉnh cho đường viền sạch hơn ba ảnh ghép ở kích
+thước nhỏ. Trạng thái thường vẫn dùng sprite shop; khi tương tác mới đổi sang `<id>-occupied.webp`.
 
-### 4.5 Vị trí mặc định theo TỪNG phòng (việc còn thiếu, quan trọng)
-Hiện mỗi món chỉ có **một** toạ độ `x/y` dùng chung cho cả 5 phòng → mua cây bonsai ở
-phòng khách thì nó nằm giữa tường vì phòng đó không có mặt bàn ở đúng chỗ ấy.
-Cần khai báo cho mỗi phòng: vùng **sàn**, vùng **mặt bàn**, vùng **tường treo được**,
-và toạ độ mặc định của từng món theo phòng.
+### 4.5 Slot cố định theo TỪNG phòng (đã có nền tảng, 2026-08-05)
+`ROOM_SLOTS` trong `app/clubhouse.tsx` khai báo riêng cho cả 5 phòng, gồm 6 vùng:
+**wall**, **surface**, **rug**, **large**, **seat** và **floor**. `arrangeFurniture()` phân loại
+đồ rồi tự chọn slot theo đúng phối cảnh phòng. Người chơi vẫn chọn phòng và cất/lấy đồ, nhưng
+không kéo, xoay hoặc phóng đồ tự do làm hỏng bố cục.
+
+Dream Loft dành riêng slot `L1` cho Dream Canopy. Những món lớn khác không được dùng lại slot
+này. Khi thêm phòng hoặc đổi ảnh nền phải đo lại toàn bộ slot của phòng đó trước khi phát hành.
