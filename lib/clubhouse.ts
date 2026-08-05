@@ -24,6 +24,9 @@ export type ShopItem = {
   x: number; y: number; scale: number; z: number; slot: "wall" | "desk" | "floor";
   sheet?: 1 | 2 | 3 | 4 | 5;
   collection?: "trail" | "cosmic" | "studio" | "learn" | "prestige";
+  // Nằm sát mặt sàn (thảm): không đổ bóng tiếp đất và luôn ở lớp dưới cùng,
+  // vì đồ đặt LÊN nó phải che nó chứ không ngược lại.
+  flat?: boolean;
 };
 
 export type MapleOutfit = { id: string; en: string; vi: string; price: number; sheet?: string; collection: string };
@@ -38,7 +41,7 @@ export const MAPLE_OUTFITS: MapleOutfit[] = [
 export const CLUBHOUSE_SHOP: ShopItem[] = [
   { id: "shop-lamp", en: "Explorer Lamp", vi: "Đèn thám hiểm", price: 35, sprite: 0, x: 76, y: 58, scale: .75, z: 5, slot: "desk" },
   { id: "shop-map", en: "Vancouver Map", vi: "Bản đồ Vancouver", price: 55, sprite: 1, x: 18, y: 39, scale: 1.05, z: 3, slot: "wall" },
-  { id: "shop-rug", en: "Trail Rug", vi: "Thảm đường mòn", price: 45, sprite: 2, x: 51, y: 82, scale: 1.35, z: 2, slot: "floor" },
+  { id: "shop-rug", en: "Trail Rug", vi: "Thảm đường mòn", price: 45, sprite: 2, x: 51, y: 82, scale: 1.35, z: 2, slot: "floor", flat: true },
   { id: "shop-telescope", en: "Night Telescope", vi: "Kính thiên văn", price: 80, sprite: 3, x: 67, y: 61, scale: .9, z: 5, slot: "floor" },
   { id: "shop-player", en: "Record Player", vi: "Máy nghe nhạc", price: 65, sprite: 4, x: 29, y: 67, scale: .82, z: 5, slot: "desk" },
   { id: "shop-bonsai", en: "Maple Bonsai", vi: "Cây phong bonsai", price: 70, sprite: 5, x: 28, y: 54, scale: .78, z: 5, slot: "desk" },

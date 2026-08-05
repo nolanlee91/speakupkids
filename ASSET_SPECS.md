@@ -74,3 +74,49 @@ Hiện màn chơi hiển thị lưới emoji làm cảnh — cần tranh thật 
 - **Sticker & checkpoint icon**: nền trong suốt, có viền/đổ bóng nhẹ để "dán" lên trang giấy.
 - Tất cả asset tối ưu < 400KB (trừ nền lớn < 900KB). Ưu tiên WebP nếu pipeline hỗ trợ; hiện dùng PNG.
 - Vị trí đặt & khung đã cố định trong CSS (`app/globals.css`): chỉ cần thay đúng tỷ lệ là khớp, không cần chỉnh layout.
+
+---
+
+## 4. Maple House — asset dựng từ 3D rồi render về sprite 2D (2026-08-04)
+
+> **Vì sao:** 5 sprite sheet nội thất hiện tại được sinh ở các đợt khác nhau, mỗi món một
+> góc camera và một hướng sáng riêng → xếp chung vào phòng thì không ra cùng một không gian.
+> Cách chữa KHÔNG phải là chuyển app sang 3D, mà là **dựng model 3D rồi render tất cả về
+> sprite 2D qua ĐÚNG MỘT camera và ĐÚNG MỘT bộ đèn**. Runtime vẫn nhẹ như hiện nay.
+
+### 4.1 Camera chuẩn (bắt buộc giống nhau cho mọi món)
+| Thông số | Giá trị | Ghi chú |
+|---|---|---|
+| Kiểu | Perspective, tiêu cự **50mm** | Không dùng orthographic — phòng nền là ảnh phối cảnh thật |
+| Góc xoay ngang | **0°** (nhìn thẳng vào tường sau) | Đồ lệch trái/phải do VỊ TRÍ, không do xoay camera |
+| Góc ngẩng | **12° từ trên xuống** | Khớp tầm mắt của ảnh phòng hiện tại |
+| Chiều cao camera | 1,55m so với sàn | Ngang tầm mắt trẻ đứng |
+| Khoảng cách | 4,2m tới tâm vật thể | Giữ nguyên cho mọi món để tỉ lệ nhất quán |
+
+### 4.2 Đèn chuẩn
+- **Key light:** từ **phía sau-trái, cao 40°** (khớp cửa sổ hoàng hôn trong ảnh phòng), 5200K, ấm.
+- **Fill:** đối diện, cường độ 25% key, hơi lạnh (6500K) cho ra bóng xanh nhẹ.
+- **Rim:** sau-phải yếu, tách vật thể khỏi nền.
+- **Không bake bóng đổ xuống sàn vào sprite** — app tự vẽ bóng tiếp đất (`.room-shop-item::after`).
+  Sprite có sẵn bóng sàn sẽ thành hai lớp bóng chồng nhau.
+
+### 4.3 Xuất file
+- PNG nền trong suốt → nén WebP q85 (như đợt nén sheet cũ: 7,3MB → 1,04MB).
+- **Ô vuông 1:1**, vật thể canh **đáy** ô (chân vật chạm ~92% chiều cao ô), chừa lề 4% mỗi bên.
+  App neo món theo tâm ô nên chân vật lệch là món sẽ "lơ lửng".
+- Sheet 4 cột × N hàng, mỗi ô 512×512 (khớp `background-size: 400% 200%` hiện tại).
+
+### 4.4 Cần thêm cho từng món ngồi được
+Món nào Maple ngồi/nằm vào (giường, ghế, beanbag, pod đọc sách) nên render **2 lớp**:
+- `<id>-back.webp` — phần sau lưng Maple (nệm, thân ghế)
+- `<id>-front.webp` — phần che trước (chăn, tay vịn, lưng ghế)
+
+Hiện app đã tạo được cảm giác "ngồi lọt vào" bằng cách vẽ **cả món** đè lên Maple
+(`sitIn` trong `app/clubhouse.tsx`). Tách 2 lớp là bước nâng cấp sau, cho phép thấy
+cả đầu lẫn chân bé thò ra đúng chỗ.
+
+### 4.5 Vị trí mặc định theo TỪNG phòng (việc còn thiếu, quan trọng)
+Hiện mỗi món chỉ có **một** toạ độ `x/y` dùng chung cho cả 5 phòng → mua cây bonsai ở
+phòng khách thì nó nằm giữa tường vì phòng đó không có mặt bàn ở đúng chỗ ấy.
+Cần khai báo cho mỗi phòng: vùng **sàn**, vùng **mặt bàn**, vùng **tường treo được**,
+và toạ độ mặc định của từng món theo phòng.

@@ -11,7 +11,32 @@ import { StickerArt } from "./reward-art";
 
 type MaplePose = "cheer" | "think" | "sit" | "sleep" | "create" | "play";
 type PetPose = "idle" | "walk" | "sit" | "sleep" | "eat" | "play";
-type FurnitureInteraction = { pose: MaplePose; lines: string[]; xOffset?: number; yOffset?: number; needs?: Partial<Record<"hunger" | "energy" | "happiness", number>> };
+type FurnitureInteraction = {
+  pose: MaplePose; lines: string[]; xOffset?: number; yOffset?: number;
+  // anchor: điểm ĐẶT CHÂN Maple, tính lệch từ TÂM món đồ (đơn vị % sân khấu).
+  // Có anchor thì Maple đứng/ngồi đúng chỗ của món đó thay vì lệch chung chung.
+  anchor?: { x: number; y: number };
+  // sitIn: món đồ được vẽ ĐÈ lên Maple khi cô dùng nó → trông như ngồi lọt vào ghế,
+  // chui vào giường, thay vì dán đè lên trên (đây là lý do trước đây "ngồi trên không khí").
+  sitIn?: boolean;
+  needs?: Partial<Record<"hunger" | "energy" | "happiness", number>>;
+};
+
+/* ── Hệ toạ độ sàn (2.5D) ────────────────────────────────────────────────
+   y = ĐIỂM CHÂN chạm sàn, tính theo % chiều cao sân khấu (CSS đã neo Maple và
+   pet bằng translate(-50%,-100%) nên toạ độ y chính là chân).
+   FLOOR = vùng sàn đi lại được; ra ngoài vùng này là leo lên tường. */
+const FLOOR = { top: 63, bottom: 97, left: 7, right: 93 };
+const clampFloor = (x: number, y: number) => ({
+  x: Math.min(FLOOR.right, Math.max(FLOOR.left, x)),
+  y: Math.min(FLOOR.bottom, Math.max(FLOOR.top, y)),
+});
+// Xa nhỏ – gần to: chân càng thấp (y càng lớn) thì càng gần camera.
+// Giữ biên độ vừa phải (0,86–1,10) để là gợi ý phối cảnh, không làm đồ vật méo cỡ.
+function depthScale(y: number): number {
+  const t = (y - FLOOR.top) / (FLOOR.bottom - FLOOR.top);
+  return +(0.86 + Math.min(1, Math.max(0, t)) * 0.24).toFixed(3);
+}
 
 const POSE_IMAGE: Record<MaplePose, string> = {
   cheer: "/assets/images/gen/maple-pose-cheer.webp",
@@ -36,10 +61,10 @@ function PetArt({ kind, pose, alt = "" }: { kind: ClubhousePetKind; pose: PetPos
 }
 
 const INTERACTIONS: Record<string, FurnitureInteraction> = {
-  "shop-canopy-bed": { pose: "sleep", lines: ["A quick nap will recharge my ideas.", "This bed is seriously cozy."], xOffset: 0, yOffset: 2, needs: { energy: 35, hunger: -3, happiness: 5 } },
-  "shop-beanbag": { pose: "sit", lines: ["Perfect reading spot.", "I could sit here all afternoon."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 4 } },
-  "shop-astro-chair": { pose: "sit", lines: ["Captain Maple is ready for launch!", "This chair feels like a spaceship."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 5 } },
-  "shop-cloud-cushion": { pose: "sit", lines: ["It feels like sitting on a cloud.", "Soft, comfy, and totally mine."], xOffset: 0, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 4 } },
+  "shop-canopy-bed": { pose: "sleep", lines: ["A quick nap will recharge my ideas.", "This bed is seriously cozy."], anchor: { x: -1, y: 5 }, sitIn: true, needs: { energy: 35, hunger: -3, happiness: 5 } },
+  "shop-beanbag": { pose: "sit", lines: ["Perfect reading spot.", "I could sit here all afternoon."], anchor: { x: 0, y: 4 }, sitIn: true, needs: { energy: 8, hunger: -2, happiness: 4 } },
+  "shop-astro-chair": { pose: "sit", lines: ["Captain Maple is ready for launch!", "This chair feels like a spaceship."], anchor: { x: 0, y: 4 }, sitIn: true, needs: { energy: 8, hunger: -2, happiness: 5 } },
+  "shop-cloud-cushion": { pose: "sit", lines: ["It feels like sitting on a cloud.", "Soft, comfy, and totally mine."], anchor: { x: 0, y: 4 }, sitIn: true, needs: { energy: 8, hunger: -2, happiness: 4 } },
   "shop-music-keyboard": { pose: "play", lines: ["Let’s make a brand-new tune!", "One, two, three — music time!"], xOffset: -2, needs: { energy: -8, hunger: -5, happiness: 14 } },
   "shop-player": { pose: "play", lines: ["This beat makes my tail dance.", "Great choice — turn it up!"], xOffset: 6, needs: { energy: -6, hunger: -4, happiness: 12 } },
   "shop-game-console": { pose: "play", lines: ["Challenge accepted!", "Just one more level."], xOffset: 5, needs: { energy: -8, hunger: -6, happiness: 14 } },
@@ -51,8 +76,9 @@ const INTERACTIONS: Record<string, FurnitureInteraction> = {
   "shop-aurora-projector": { pose: "think", lines: ["The colours look like northern lights.", "What makes an aurora glow?"], xOffset: 6 },
   "shop-map": { pose: "think", lines: ["Where should we explore next?", "I found Vancouver on the map."], xOffset: 7 },
   "shop-grand-aquarium": { pose: "think", lines: ["I spotted the orange fish!", "An aquarium is a tiny underwater world."], xOffset: 7, needs: { energy: 3, hunger: -2, happiness: 10 } },
-  "shop-reading-pod": { pose: "sit", lines: ["This pod is perfect for a long story.", "Quiet, cozy, and full of ideas."], xOffset: 1, yOffset: 2, needs: { energy: 8, hunger: -2, happiness: 8 } },
-  "shop-mini-cinema": { pose: "sit", lines: ["The next scene is my favourite!", "Let’s watch it in English."], xOffset: 2, yOffset: 2, needs: { energy: 5, hunger: -4, happiness: 12 } },
+  "shop-reading-pod": { pose: "sit", lines: ["This pod is perfect for a long story.", "Quiet, cozy, and full of ideas."], anchor: { x: 0, y: 5 }, sitIn: true, needs: { energy: 8, hunger: -2, happiness: 8 } },
+  // Rạp phim: bé NGỒI TRƯỚC màn hình (không chui vào) → có anchor nhưng không sitIn.
+  "shop-mini-cinema": { pose: "sit", lines: ["The next scene is my favourite!", "Let’s watch it in English."], anchor: { x: 2, y: 9 }, needs: { energy: 5, hunger: -4, happiness: 12 } },
   "shop-treehouse-loft": { pose: "create", lines: ["This is the best lookout in the house!", "Every treehouse needs a secret plan."], xOffset: 3, needs: { energy: -5, hunger: -4, happiness: 14 } },
   "shop-aurora-window": { pose: "think", lines: ["The aurora is dancing across the sky.", "I can see green, blue, and violet light."], xOffset: 7, needs: { energy: 4, hunger: -2, happiness: 12 } },
   "shop-command-station": { pose: "play", lines: ["Command station online!", "Let’s solve this mission together."], xOffset: 3, needs: { energy: -8, hunger: -5, happiness: 14 } },
@@ -93,6 +119,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [petPose, setPetPose] = useState<PetPose>("idle");
   const [careNotice, setCareNotice] = useState("");
   const [rewardDismissed, setRewardDismissed] = useState(false);
+  const [sittingOn, setSittingOn] = useState<string | null>(null);   // món Maple đang ngồi/nằm lọt vào
   useEffect(() => stopSpeaking, []);   // đóng Clubhouse → ngắt lời đang đọc tên đồ vật
   const roomRef = useRef<HTMLElement>(null);
   const interactionTimer = useRef<number | null>(null);
@@ -146,7 +173,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
     if (walkTimer.current) window.clearTimeout(walkTimer.current);
     setMaplePose("cheer");
-    setMaplePos({ x: Math.max(9, Math.min(91, x)), y: Math.max(62, Math.min(93, y)) });
+    setSittingOn(null);                       // rời khỏi ghế/giường đang ngồi
+    setMaplePos(clampFloor(x, y));            // giữ trong vùng sàn, không leo lên tường
     setMapleWalking(true);
     walkTimer.current = window.setTimeout(() => setMapleWalking(false), 760);
   }
@@ -157,13 +185,26 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
     interactionCooldown.current[item.id] = now + 8000;
     const action = INTERACTIONS[item.id] || { pose: "cheer" as MaplePose, lines: [`I have an idea for the ${item.en}.`, `The ${item.en} makes this room feel like ours.`], needs: { energy: -2, hunger: -2, happiness: 5 } };
     const line = action.lines[Math.floor(Math.random() * action.lines.length)];
-    moveMaple(pos.x + (action.xOffset ?? (pos.x > 55 ? -9 : 9)), Math.max(66, pos.y + (action.yOffset ?? 6)));
+    // Món có anchor → đi đúng điểm ngồi/nằm của món đó. Món chưa khai báo anchor thì
+    // vẫn dùng lối cũ (đứng lệch sang bên) để không món nào bị hỏng.
+    const target = action.anchor
+      ? { x: pos.x + action.anchor.x, y: pos.y + action.anchor.y }
+      : { x: pos.x + (action.xOffset ?? (pos.x > 55 ? -9 : 9)), y: pos.y + (action.yOffset ?? 6) };
+    moveMaple(target.x, target.y);
     setMapleLine("On my way…");
     interactionTimer.current = window.setTimeout(() => {
       setMapleWalking(false); setMaplePose(action.pose); setMapleLine(line);
+      // Ngồi HẲN vào món đồ: món sẽ được vẽ đè lên Maple ở dưới (xem zIndex khi render).
+      if (action.sitIn) setSittingOn(item.id);
       setState((s) => adjustMapleNeeds(s, action.needs || ({ energy: -3, hunger: -2, happiness: 6 })));
       speak(line, state.prefs.accent, .84);
-      mapleIdleTimer.current = window.setTimeout(() => { setMaplePose("cheer"); setMapleLine("What should I try next?"); }, 8500);
+      // Hết lượt: đứng dậy BƯỚC RA khỏi món đồ rồi mới bỏ lớp che — nếu chỉ đổi tư thế
+      // mà vẫn để món vẽ đè thì Maple đứng bị chôn sau giường/ghế.
+      mapleIdleTimer.current = window.setTimeout(() => {
+        setMaplePose("cheer"); setMapleLine("What should I try next?");
+        setSittingOn(null);
+        setMaplePos((p) => clampFloor(p.x, p.y + 7));
+      }, 8500);
     }, 720);
   }
 
@@ -274,7 +315,8 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button type="button" onClick={giveSnack} disabled={state.clubhouse.needs.hunger >= 100}>Snack <small>◆ 5</small></button>
           {careNotice && <p role="status">{careNotice}</p>}
         </aside>
-        <button className={`clubhouse-maple pose-${maplePose} ${mapleWalking ? "walking" : ""}`} style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%` }}
+        <button className={`clubhouse-maple pose-${maplePose} ${mapleWalking ? "walking" : ""}`}
+          style={{ left: `${maplePos.x}%`, top: `${maplePos.y}%`, ["--depth" as string]: depthScale(maplePos.y) }}
           onClick={(e) => { e.stopPropagation(); speak(editing ? "Drag things anywhere you like!" : mapleLine, state.prefs.accent, .86); }}>
           <MapleArt pose={maplePose} outfit={activeOutfit} alt={`Maple is ${maplePose}`} />
           <span className="maple-speech">{editing ? "Drag things anywhere you like!" : mapleLine}</span>
@@ -287,8 +329,13 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           const saved = state.clubhouse.itemPositions[`${room.id}:${item.id}`] || (room.id === "lounge" ? state.clubhouse.itemPositions[item.id] : undefined);
           const pos = drag?.id === item.id ? drag : saved || item;
           const itemTransform = state.clubhouse.itemTransforms[`${room.id}:${item.id}`] || { scale: 1, rotation: 0 };
-          return <button key={item.id} className={`room-shop-item slot-${item.slot} item-${item.id} ${selectedId === item.id ? "selected" : ""} ${drag?.id === item.id ? "dragging" : ""}`}
-            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: `translate(-50%,-50%) rotate(${itemTransform.rotation}deg) scale(${item.scale * itemTransform.scale})`, zIndex: drag?.id === item.id || selectedId === item.id ? 30 : item.z, animationDelay: `${index * 80}ms` }}
+          // Đồ đứng trên sàn theo phối cảnh phòng: món ở xa (y nhỏ) nhỏ lại, món gần to ra.
+          // Đồ treo tường không áp vì nó không nằm trên mặt sàn.
+          const depth = item.slot === "wall" ? 1 : depthScale(pos.y + 6);
+          // Maple đang ngồi/nằm lọt vào món này → vẽ món ĐÈ lên cô (z cao hơn z của Maple là 12).
+          const sittingHere = sittingOn === item.id;
+          return <button key={item.id} className={`room-shop-item slot-${item.slot} item-${item.id} ${selectedId === item.id ? "selected" : ""} ${drag?.id === item.id ? "dragging" : ""} ${item.flat ? "is-flat" : ""}`}
+            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: `translate(-50%,-50%) rotate(${itemTransform.rotation}deg) scale(${item.scale * itemTransform.scale * depth})`, zIndex: drag?.id === item.id || selectedId === item.id ? 30 : sittingHere ? 26 : item.z, animationDelay: `${index * 80}ms` }}
             onPointerDown={(e) => { if (!editing) return; setSelectedId(item.id); e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerMove={(e) => { if (!editing || drag?.id !== item.id) return; const p = point(e); if (p) setDrag({ id: item.id, ...p }); }}
             onPointerUp={() => { if (drag?.id === item.id) setState((s) => moveClubhouseItem(s, item.id, room.id, drag.x, drag.y)); setDrag(null); }}
