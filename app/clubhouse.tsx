@@ -227,6 +227,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const [rewardDismissed, setRewardDismissed] = useState(false);
   const [sittingOn, setSittingOn] = useState<string | null>(null);   // món Maple đang ngồi/nằm lọt vào
   const [placingItemId, setPlacingItemId] = useState<string | null>(null);
+  const [transferItemId, setTransferItemId] = useState<string | null>(null);
   useEffect(() => stopSpeaking, []);   // đóng Clubhouse → ngắt lời đang đọc tên đồ vật
   const roomRef = useRef<HTMLElement>(null);
   const interactionTimer = useRef<number | null>(null);
@@ -243,6 +244,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const displayed = ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id);
   const furnitureLayout = arrangeFurniture(displayed, room.id, state.clubhouse.itemSlotIds);
   const placingItem = placingItemId ? ALL_CLUBHOUSE_FURNITURE.find((item) => item.id === placingItemId) || null : null;
+  const transferItem = transferItemId ? ALL_CLUBHOUSE_FURNITURE.find((item) => item.id === transferItemId) || null : null;
   const suggestedSlots = placingItem ? placementSlots(placingItem, room.id) : [];
   const occupiedSlotIds = new Set([...furnitureLayout.entries()].filter(([itemId]) => itemId !== placingItemId).map(([, slot]) => slot.id));
   const souvenirs = earnedSeasonSouvenirs(state);
@@ -258,7 +260,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
   const mapleInsideComposite = Boolean(sittingOn && (OCCUPIED_FURNITURE_ART[sittingOn] || (room.id === "loft" && sittingOn === "shop-canopy-bed")));
 
   useEffect(() => {
-    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk"); setPlacingItemId(null);
+    setMaplePos(room.maple); setMapleWalking(false); setMaplePose("cheer"); setPetPose("walk");
     setMapleLine(room.line);
     if (interactionTimer.current) window.clearTimeout(interactionTimer.current);
     if (mapleIdleTimer.current) window.clearTimeout(mapleIdleTimer.current);
@@ -455,7 +457,7 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
         {!displayed.length && <div className="clubhouse-empty"><b>This room is waiting for your style.</b><span>Complete activities, earn Coins and choose your first item.</span></div>}
 
         {editing && selectedItem && <div className="item-transform-controls fixed-slot-controls" aria-label={`Adjust ${selectedItem.en}`}>
-          <b>{selectedItem.en}</b><button type="button" onClick={() => setPlacingItemId(selectedItem.id)}>Move</button><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); }}>Store</button>
+          <b>{selectedItem.en}</b><button type="button" onClick={() => setPlacingItemId(selectedItem.id)}>Move here</button><button type="button" className="move-room-item" onClick={() => setTransferItemId(selectedItem.id)}>Other room</button><button className="store-item" onClick={() => { setState((s) => toggleClubhouseItem(s, selectedItem.id)); setSelectedId(null); setPlacingItemId(null); }}>Store</button>
         </div>}
 
         <nav className="clubhouse-actions" aria-label="Clubhouse controls">
@@ -465,8 +467,12 @@ export function Clubhouse({ state, setState, onClose }: { state: AppState; setSt
           <button className={panel === "pet" ? "on" : ""} onClick={() => { setPanel(panel === "pet" ? "none" : "pet"); setEditing(false); }}>● <span>Pet</span></button>
           <button className={panel === "journal" ? "on" : ""} onClick={() => { setPanel(panel === "journal" ? "none" : "journal"); setEditing(false); }}>▣ <span>Journey</span></button>
         </nav>
-        <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
+        <nav className="clubhouse-rooms" aria-label="Rooms in Maple House">{ROOMS.map((r) => <button key={r.id} className={r.id === room.id ? "on" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, r.id)); setSelectedId(null); setPlacingItemId(null); setTransferItemId(null); setPanel("none"); setEditing(false); }}><i>{r.icon}</i><span>{r.name}</span><small>{ALL_CLUBHOUSE_FURNITURE.filter((item) => equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === r.id).length}</small></button>)}</nav>
       </section>
+
+      {transferItem && <div className="room-transfer-backdrop" role="dialog" aria-modal="true" aria-label={`Move ${transferItem.en} to another room`}>
+        <section className="room-transfer-dialog"><header><div><small>MOVE FURNITURE</small><h3>Where should {transferItem.en} go?</h3><p>Choose a room, then choose one of its suggested spots.</p></div><button type="button" onClick={() => setTransferItemId(null)} aria-label="Close">×</button></header><div className="room-transfer-grid">{ROOMS.map((targetRoom) => <button key={targetRoom.id} type="button" className={targetRoom.id === room.id ? "current" : ""} onClick={() => { setState((s) => setClubhouseRoom(s, targetRoom.id)); setPlacingItemId(transferItem.id); setSelectedId(null); setTransferItemId(null); setPanel("none"); setEditing(true); }}><i>{targetRoom.icon}</i><b>{targetRoom.name}</b><span>{targetRoom.id === room.id ? "Current room" : "Choose room"}</span></button>)}</div></section>
+      </div>}
 
       {editing && <section className="clubhouse-inventory"><div><b>Inventory · {room.name}</b><small>Choose an item, then pick one suggested spot</small></div>{ALL_CLUBHOUSE_FURNITURE.filter((item) => purchased.has(item.id)).map((item) => { const here = equipped.has(item.id) && (state.clubhouse.itemRoomIds[item.id] || "lounge") === room.id; return <button key={item.id} className={`${here ? "equipped" : ""} ${placingItemId === item.id ? "placing" : ""}`} onClick={() => { setPlacingItemId(item.id); if (here) setSelectedId(item.id); }}><ShopArt item={item} /><span className="inventory-status">{here ? "✓" : "+"}</span></button>; })}{!state.clubhouse.purchasedItemIds.length && <p>No furniture yet — open the Shop to choose your first item.</p>}</section>}
 
