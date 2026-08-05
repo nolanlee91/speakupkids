@@ -185,9 +185,22 @@ const ROOM_SLOTS: Record<string, Record<FurnitureZone, RoomSlot[]>> = {
   },
 };
 
+// Các sprite có khoảng trong suốt và điểm tiếp đất khác nhau, nên đồ nhỏ đặt
+// trên mặt bàn phải có điểm neo riêng theo đúng mặt phẳng của từng ảnh phòng.
+// Không dùng lại surface slot chung: chỉ lệch vài % là chân đồ trông như bay.
+const ITEM_ROOM_SLOTS: Record<string, Record<string, RoomSlot[]>> = {
+  "shop-lamp": {
+    lounge: [{ x: 84, y: 63, scale: .78 }, { x: 25, y: 70, scale: .78 }, { x: 49, y: 66, scale: .72 }],
+    study: [{ x: 85, y: 62, scale: .78 }, { x: 34, y: 54, scale: .7 }, { x: 69, y: 54, scale: .68 }],
+    rooftop: [{ x: 28, y: 64, scale: .72 }, { x: 74, y: 64, scale: .7 }],
+    loft: [{ x: 20, y: 62, scale: .72 }, { x: 78, y: 62, scale: .7 }],
+    maker: [{ x: 18, y: 60, scale: .72 }],
+  },
+};
+
 function placementSlots(item: ShopItem, roomId: string): PlacementSlot[] {
   const zone = furnitureZone(item);
-  const roomChoices = ROOM_SLOTS[roomId]?.[zone] || ROOM_SLOTS.lounge[zone];
+  const roomChoices = ITEM_ROOM_SLOTS[item.id]?.[roomId] || ROOM_SLOTS[roomId]?.[zone] || ROOM_SLOTS.lounge[zone];
   const indexed = roomChoices.map((slot, index) => ({ ...slot, id: `${roomId}:${zone}:${index}`, zone }));
   if (roomId === "loft" && zone === "large") {
     return item.id === "shop-canopy-bed" ? indexed.slice(0, 1) : indexed.slice(1);

@@ -1721,6 +1721,9 @@
 .clubhouse-v2 .room-shop-item.zone-floor{width:clamp(90px,11vw,150px)}
 .clubhouse-v2 .room-shop-item.zone-surface{width:clamp(80px,9vw,125px)}
 .clubhouse-v2 .room-shop-item.zone-rug{width:clamp(150px,20vw,260px)}
+/* Explorer Lamp chỉ chiếm khoảng 80% chiều cao ô sprite. Hạ riêng artwork
+   xuống điểm neo để chân đèn chạm đúng mặt bàn thay vì lơ lửng. */
+.clubhouse-v2 .clubhouse-stage .item-shop-lamp .shop-art{transform:translateY(8%)}
 .clubhouse-v2 .room-shop-item.dream-loft-canopy::after{display:none}
 .dream-loft-canopy-art{position:absolute;inset:0;display:block;pointer-events:none}
 .dream-loft-canopy-art .canopy-layer{position:absolute;display:block;object-fit:contain;pointer-events:none}
